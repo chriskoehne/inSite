@@ -22,7 +22,7 @@ const dbConnection = require(path.resolve(__dirname, "./database/database"));
 
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send('hello')
 });
 
 
