@@ -32,10 +32,19 @@ export default class CreateAccount extends Component {
         e.preventDefault();
     
         //axios stuff
+        const body = {
+            "email": this.state.email,
+            "password": this.state.password
+        }
+        
+        axios
+        .post("http://localhost:5000/userCreation/", body)
+        .then((res) => console.log(res.data));
+        console.log("created user?")
     
         this.setState({
           name: "",
-          price: "",
+          password: "",
         });
       }
     
