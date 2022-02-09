@@ -15,11 +15,18 @@ const demoController = require(path.resolve(
   "../controllers/demoController"
 ));
 
+const userCreationController = require(path.resolve(
+  __dirname,
+  "../controllers/userCreationController"
+));
+
 router.get("/demo0", demoController.showDemo0);
 
 router.get("/demo1", demoController.showDemo1);
 
 router.post("/userDemo", demoController.userDemo);
+
+router.post("/userCreation", userCreationController.userCreation);
 
 
 module.exports = router;

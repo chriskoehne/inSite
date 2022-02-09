@@ -1,25 +1,31 @@
+import React from "react";
 import logo from './logo.svg';
 import './App.css';
+import { Route } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-function App() {
+import Login from './components/login';
+import Home from './components/home';
+import CreateAccount from './components/createAccount';
+
+const App = () => {
+  const history = useHistory();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div>
+       <Route exact path="/">
+         <Login 
+         history = {history}/>
+        </Route>
+        <Route exact path="/home">
+         <Home 
+         history = {history}/>
+        </Route>
+        <Route exact path="/createAccount">
+         <CreateAccount 
+         history = {history}/>
+        </Route>
+     </div>
   );
-}
+};
 
 export default App;

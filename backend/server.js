@@ -14,7 +14,14 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 
-//TODO: put cors shit here
+const corsOptions ={
+  origin:'*', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200,
+}
+
+app.use(cors(corsOptions)) // Use this after the variable declaration
+
 
 app.use(require(path.resolve(__dirname, "./routers/router")));
 
