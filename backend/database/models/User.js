@@ -3,15 +3,15 @@
  * @author Chris Koehne <cdkoehne@gmail.com>
  */
 
- const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
- const userSchema = new mongoose.Schema({
-   email: { type: String, required: true, lowercase: true, validate: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/},
-   password: { type: String , required: true },
-   
- 
- }, { timestamps: true });
- 
- const User = mongoose.model("User", userSchema);
- 
- module.exports = User;
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, lowercase: true, validate: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/},
+  password: { type: String , required: true },
+  authyId: { type: String, required: true, default: 'unset' },
+
+}, { timestamps: true });
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
