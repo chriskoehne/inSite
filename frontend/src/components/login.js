@@ -51,7 +51,8 @@ export default class Login extends Component {
     };
     axios.post("http://localhost:5000/verifyUser/", body).then((res) => {
     if (res.status == 200) {
-      this.props.history.push('/home');
+      console.log("status was 200")
+      // this.props.history.push('/home');
       
     } else {
         console.log("incorrect code")
