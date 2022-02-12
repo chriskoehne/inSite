@@ -15,11 +15,31 @@ const demoController = require(path.resolve(
   "../controllers/demoController"
 ));
 
+const userCreationController = require(path.resolve(
+  __dirname,
+  "../controllers/userCreationController"
+));
+
+const verifyController = require(path.resolve(
+  __dirname,
+  "../controllers/verifyController"
+));
+
+const userLoginController = require(path.resolve(
+  __dirname,
+  "../controllers/userLoginController"
+));
+
 router.get("/demo0", demoController.showDemo0);
 
 router.get("/demo1", demoController.showDemo1);
 
 router.post("/userDemo", demoController.userDemo);
 
+router.post("/userCreation", userCreationController.userCreation);
+
+router.post("/verifyUser", verifyController.verify);
+
+router.post("/login", userLoginController.login);
 
 module.exports = router;
