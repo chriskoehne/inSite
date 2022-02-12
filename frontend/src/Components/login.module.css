@@ -1,0 +1,39 @@
+.background {
+    background-color: #F9C449;
+    padding-top: 10vh;
+    padding-right: 35vw;
+    padding-left: 35vw;
+    padding-bottom: 20vh;
+    width: 30vw;
+}
+
+.login_background {
+    background-color: white;
+    width: 10vw;
+    height: 50vh;
+    padding-top: 10vh;
+    padding-left: 5vw;
+    padding-right: 10vw;
+    padding-bottom: 10vh;;
+    filter: drop-shadow(5px 5px 1px black);
+}
+
+.login_background input[type=text]{
+    border-radius: 5px;
+    height: 4vh;
+    width: 15vw;
+}
+
+.login_background input[type=password]{
+    border-radius: 5px;
+    height: 4vh;
+    width: 15vw;
+}
+
+.login_background input[type=submit] {
+    height: 5vh;
+    width: 15.5vw;
+    background-color: #F9C449;
+    border-radius: 5px;
+    color: white;
+}

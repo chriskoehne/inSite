@@ -1,32 +1,21 @@
 import React from "react";
 import logo from './logo.svg';
-import Login from './Components/Login/Login.js'
 import './App.css';
-import { Route } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useNavigate, Route, Routes } from 'react-router-dom';
 
-import Login from './components/login';
-import Home from './components/home';
-import CreateAccount from './components/createAccount';
+import Login from './Components/login';
+import Home from './Components/home';
+import CreateAccount from './Components/createAccount';
 
 const App = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
-    <div>
-       <Route exact path="/">
-         <Login
-         history = {history}/>
-        </Route>
-        <Route exact path="/home">
-         <Home
-         history = {history}/>
-        </Route>
-        <Route exact path="/createAccount">
-         <CreateAccount
-         history = {history}/>
-        </Route>
-     </div>
+
+      <Routes>
+        <Route path='/' element={<Login/>} />
+        <Route path='/home' element={<Home/>} />
+        <Route path='/createAccount' element={<CreateAccount/>} />
+      </Routes>
   );
 };
-
 export default App;

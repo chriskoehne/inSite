@@ -3,6 +3,7 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
+import styles from './login.module.css';
 
 export default class Login extends Component {
   constructor(props) {
@@ -87,59 +88,63 @@ export default class Login extends Component {
   render() {
     return (
       <div>
-        <h1>login</h1>
-        <Modal show={this.state.showModal}>
-        <Modal.Header>
-          <Modal.Title>Verify phone number</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Your phone number provided was used to create a two factor user. Please enter the code sent to your phone to verify this connection.
-        <form onSubmit={this.handleClose}>
-          <div className="form-group">
-            <label>Code: </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Code"
-              onChange={this.onChangeSMSCode}
-            />
+        <div className={styles.background}>
+          <div className={styles.login_background}>
+            <h1>inSite</h1>
+            <Modal show={this.state.showModal}>
+            <Modal.Header>
+              <Modal.Title>Verify phone number</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Your phone number provided was used to create a two factor user. Please enter the code sent to your phone to verify this connection.
+            <form onSubmit={this.handleClose}>
+              <div className="form-group">
+                <label>Code: </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Code"
+                  onChange={this.onChangeSMSCode}
+                />
+              </div>
+              <br></br>
+              <div className="form-group">
+                <input type="submit" value="Submit Code" className="btn btn-primary" />
+              </div>
+            </form>
+            </Modal.Body>
+            {/* <Modal.Footer>
+              <Button variant="primary" onClick={this.handleClose}>
+                Submit
+              </Button>
+            </Modal.Footer> */}
+          </Modal>
+          <div>
+            <form onSubmit={this.onSubmit}>
+              <div className="form-group">
+                <label>Email: </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  onChange={this.onChangeEmail}
+                />
+              </div>
+              <div className="form-group">
+                <label>Password: </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  onChange={this.onChangePassword}
+                />
+              </div>
+              <br />
+              <div className="form-group">
+                <input type="submit" value="LOGIN" className="btn btn-primary" />
+              </div>
+            </form>
+            </div>
+            <a href="/createAccount">Create Account</a>
           </div>
-          <br></br>
-          <div className="form-group">
-            <input type="submit" value="Submit Code" className="btn btn-primary" />
-          </div>
-        </form>
-        </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="primary" onClick={this.handleClose}>
-            Submit
-          </Button>
-        </Modal.Footer> */}
-      </Modal>
-        <form onSubmit={this.onSubmit}>
-          <div className="form-group">
-            <label>Email: </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="email"
-              onChange={this.onChangeEmail}
-            />
-          </div>
-          <div className="form-group">
-            <label>Password: </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="password"
-              onChange={this.onChangePassword}
-            />
-          </div>
-          <br></br>
-          <div className="form-group">
-            <input type="submit" value="Login" className="btn btn-primary" />
-          </div>
-        </form>
-        <a href="/createAccount">Create Account</a>
+        </div>
       </div>
     );
   }
