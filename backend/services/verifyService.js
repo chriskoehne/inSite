@@ -14,66 +14,36 @@ exports.check = async function (req, res) {
 
     let result = await User.find({ email: email });
 
-    return new Promise((resolve, reject) => {
-      authy.verify(
-        result[0].authyId,
-        (token = code),
-        (force = false),
-        function (err, authyres) {
-          if (!authyres || err) {
-            console.log("error caught");
-            reject(res.status(400).send({ message: "invalid code" }));
-            return;
-            // throw Error('Invalid code')
-            
-          } else {
-            console.log(authyres);
-            resolve(authyres)
-            return;
-          }
-        }
-      );
-    });
-
-    // await authy.verify(result[0].authyId, (token=code), (force=false), function (err, authyres) {
-    //       if (!authyres || err) {
-    //         console.log("error caught")
-    //         res.status(400).send({ message: "invalid code" });
-    //         return;
-    //       } else {
-    //         console.log(authyres)
-    //         return;
-    //       }
-    //     });
-
-    // await makeCall(result[0].authyId, code, process, res).then(function(ans) {
-    //   console.log("gtg")
-    //   return;
+    // let ans = await authy.verify(result[0].authyId, (token=code), (force=false), function (err, authyres) {
+    //   if (!authyres || err) {
+    //     console.log("error caught")
+    //     res.status(400).send({ message: "invalid code" });
+    //     return err;
+    //   } else {
+    //     console.log(authyres)
+    //     return authyres;
+    //   }
     // });
+    return new Promise(resolve => {
+      // api.on(event, response => resolve(response));
+      authy.verify(result[0].authyId, (token=code), (force=false), function (err, authyres) {
+        if (!authyres || err) {
+          console.log("error caught")
+          // res.status(400).send({ message: "invalid code" });
+          resolve(err);
+        } else {
+          console.log(authyres)
+          resolve(authyres);
+        }
+      });
+    });
+    // console.log("ans is")
+    // console.log(ans)
+    // return ans;
+
   } catch (err) {
+    console.log("big error catch")
     return err;
   }
 };
 
-// async function makeCall(id, code, callback, res){
-//   // console.log(id)7
-//   await authy.verify(id, (token=code), (force=false), function (err, authyres) {
-//     if (!authyres || err) {
-//       console.log("error caught")
-//       callback(id, code, err, res);
-//     } else {
-//       console.log(authyres)
-//       callback(id, code, authyres, res);
-//     }
-//   });
-// }
-
-// function process(id, code, finalresponse, res){
-//   console.log(finalresponse);
-//   if (!finalresponse.success) {
-//     console.log("invalid code caught")
-//     res.status(400).send({ message: "invalid code" });
-//   }
-//   console.log("returning")
-//   return;
-// }

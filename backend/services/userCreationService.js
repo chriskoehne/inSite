@@ -28,15 +28,16 @@ exports.signup = async function (req, res) {
       
       var authy = require('authy')(authToken);
 
-      authy.register_user(email, phone, async function (err, res) {
+      authy.register_user(email, phone, async function (err, regres) {
         console.log("made twilio user");
+        console.log(regres)
         let result = await User.findOneAndUpdate(
           {"email": email}, 
-          {"authyId": res.user.id},
+          {"authyId": regres.user.id},
           );
-        authy.request_sms(res.user.id, function (err, res) {
+        authy.request_sms(regres.user.id, function (err, smsres) {
           console.log("sent user code")
-          console.log(res.message);
+          console.log(smsres.message);
         });
       });
       
