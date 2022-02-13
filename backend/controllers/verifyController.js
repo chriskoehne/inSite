@@ -12,9 +12,11 @@ exports.verify = async function (req, res, next) {
     console.log(result);
     // console.log("still in controller")
     // console.log(res)
-    if (!success) {
+    if (!result.success) {
+      console.log("sending bad")
       return res.status(400).json({ status: 400, message: result.message });
     } else {
+      console.log("sending good")
       return res.status(200).json({ status: 200, message: result.message });
     }
   } catch (e) {
