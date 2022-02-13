@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/inSite407/inSite#readme",
   "dependencies": {
+    "authy": "^1.4.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.2",
