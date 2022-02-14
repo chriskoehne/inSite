@@ -37,8 +37,9 @@ export default class Home extends Component {
 
       saveCanvas() {
         //save to png
-        console.log(this.state.id)
-        const canvasSave = this.state.id
+        console.log("save attempt")
+        console.log(this.chartRef)
+        const canvasSave = this.chartRef.current.ctx.canvas
         canvasSave.toBlob(function (blob) {
             saveAs(blob, "testing.png")
         })
@@ -48,9 +49,8 @@ export default class Home extends Component {
     return (
       <div>
         <h1>Home</h1>
-        <div id="testChart">
         <BarChart onClick={this.onClick} chartRef={this.chartRef}/>
-        </div>
+        
         
         <RWebShare
           data={{
