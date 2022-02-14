@@ -6,6 +6,11 @@ import { RWebShare } from "react-web-share";
 // defaults.global.tooltips.enabled = false
 // defaults.global.legend.position = 'bottom'
 
+/*
+The idea is that you select a chart, then click the share button on the bottom which will have autofilled your chart selection and then provide you with sharing options such as
+url, reddit, twitter, etc
+*/
+
 export default class BarChart extends Component {
   constructor(props) {
     super(props);
@@ -13,16 +18,19 @@ export default class BarChart extends Component {
     this.onClick = this.onClick.bind(this);
     this.chartRef = React.createRef();
 
-  }
+    this.state = {
+        url: "",
+      };
 
-  componentDidMount() {
-    //   console.log(this.chartRef.current.toBase64Image());
   }
 
   onClick(e) {
     e.preventDefault();
     console.log("chart clicked");
     console.log(this.chartRef.current.toBase64Image());
+    this.setState({
+        url: this.chartRef.current.toBase64Image()
+    });
     // console.log(this.chartRef)
 
   }
@@ -61,18 +69,22 @@ export default class BarChart extends Component {
     return (
       <div>
         {/* <Pie data={data} onClick={this.onClick}/> */}
-        <Pie data={data} onClick={this.onClick} ref={this.chartRef}/>
-        <RWebShare
+        
+        <Pie data={data} onClick={this.onClick} ref={this.chartRef} 
+        width="30%"
+        options={{ maintainAspectRatio: false }}
+        />
+        {/* <RWebShare
           data={{
             text: "Example chart download",
-            url: "https://on.natgeo.com/2zHaNup",
+            url: this.state.url.toString(),
             title: "Chart",
           }}
           sites={["copy", "mail", "reddit", "twitter"]}
           onClick={() => console.log("shared successfully!")}
         >
             <button>Share 🔗</button>
-        </RWebShare>
+        </RWebShare> */}
       </div>
     );
   }
