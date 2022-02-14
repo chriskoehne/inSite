@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
-import { RWebShare } from "react-web-share";
 
 // defaults.global.tooltips.enabled = false
 // defaults.global.legend.position = 'bottom'
@@ -12,28 +11,6 @@ url, reddit, twitter, etc
 */
 
 export default class BarChart extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onClick = this.onClick.bind(this);
-    this.chartRef = React.createRef();
-
-    this.state = {
-        url: "",
-      };
-
-  }
-
-  onClick(e) {
-    e.preventDefault();
-    console.log("chart clicked");
-    console.log(this.chartRef.current.toBase64Image());
-    this.setState({
-        url: this.chartRef.current.toBase64Image()
-    });
-    // console.log(this.chartRef)
-
-  }
 
   render() {
     ChartJS.register(ArcElement, Tooltip, Legend);
@@ -70,21 +47,11 @@ export default class BarChart extends Component {
       <div>
         {/* <Pie data={data} onClick={this.onClick}/> */}
         
-        <Pie data={data} onClick={this.onClick} ref={this.chartRef} 
+        <Pie data={data} onClick={this.props.onClick} ref={this.props.chartRef} 
         width="30%"
         options={{ maintainAspectRatio: false }}
         />
-        {/* <RWebShare
-          data={{
-            text: "Example chart download",
-            url: this.state.url.toString(),
-            title: "Chart",
-          }}
-          sites={["copy", "mail", "reddit", "twitter"]}
-          onClick={() => console.log("shared successfully!")}
-        >
-            <button>Share 🔗</button>
-        </RWebShare> */}
+        
       </div>
     );
   }
