@@ -20,7 +20,7 @@ const CreateAccount = (props) => {
     };
     axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
       if (res.status === 200) {
-        props.navigate('/dashboard');
+        props.navigate('/dashboard', {state:{email: email}});
       } else {
         console.log('incorrect code');
       }

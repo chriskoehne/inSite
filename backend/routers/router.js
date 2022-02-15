@@ -47,6 +47,8 @@ router.post("/verifyUser", verifyController.verify);
 
 router.post("/login", userLoginController.login);
 
+router.get("/redditUser", redditController.getUser);
+
 router.post("/redditTest", redditController.test);
 
 module.exports = router;

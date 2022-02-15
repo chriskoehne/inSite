@@ -22,7 +22,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "mkcert": "^1.5.0",
-    "mongoose": "^6.2.1"
+    "mongoose": "^6.2.1",
+    "reddit": "^1.2.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

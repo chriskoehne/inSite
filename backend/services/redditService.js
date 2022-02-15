@@ -27,3 +27,17 @@ exports.test = async function (req, res) {
   }
 };
 
+exports.getUser = async function (req, res) {
+    try {
+      // console.log(req.body);
+      const email = req.body.email;
+      let result = await User.find({ email: email });
+  
+      return result;
+      
+  
+    } catch (err) {
+      console.log("big error catch")
+      return err;
+    }
+  };
