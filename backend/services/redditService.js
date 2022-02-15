@@ -41,3 +41,24 @@ exports.getUser = async function (req, res) {
       return err;
     }
   };
+
+  exports.login = async function (req, res) {
+    try {
+      // console.log(req.body);
+      const email = req.body.email;
+    const redditEmail = req.body.socEmail;
+    const redditPassword = req.body.socPassword;
+      // let result = await User.find({ email: email });
+      //TODO use reddit api to verify user
+      let result = await User.findOneAndUpdate(
+        {"email": email}, 
+        {"redditUsername": redditEmail, "redditPassword": redditPassword},
+        );
+      return result;
+      
+  
+    } catch (err) {
+      console.log("big error catch")
+      return err;
+    }
+  };
