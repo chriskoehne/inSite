@@ -19,7 +19,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   padding-left: 10vw;
   padding-top: 10vh;
   padding-bottom: 15%;
-  text-shadow: #000 0px 0px 1px;
+  text-shadow: black 0px 0px 1px;
   -webkit-font-smoothing: antialiased;
 }
 
