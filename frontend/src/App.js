@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Login from './components/login';
 import Home from './components/home';
 import CreateAccount from './components/createAccount';
+import Dashboard from './components/Dashboard/Dashboard';
 
 const App = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const App = () => {
         path='/createAccount'
         element={<CreateAccount navigate={navigate} />}
       />
+      <Route path='/dashboard' element={<Dashboard navigate={navigate} />} />
     </Routes>
   );
 };

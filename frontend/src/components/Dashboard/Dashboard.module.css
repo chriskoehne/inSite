@@ -1,0 +1,52 @@
+.dashboardNav {
+  background-color: #3d3d3d;
+  margin-bottom: 2%;
+  height: 10%;
+}
+
+.test {
+  background-color: greenyellow !important;
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+.in {
+  text-align: center;
+  display: inline-block;
+  color: white !important;
+}
+.site {
+  text-align: center;
+  display: inline-block;
+  color: #fed915 !important;
+}
+
+.test {
+  color: white !important;
+  background-color: #3d3d3d;
+}
+
+.inlineDiv {
+  display: inline;
+  
+}
+.cardRow {
+  height: 100%;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.cardCol {
+  height: 50%;
+  padding-bottom: 2%;
+}
+
+.socialsCard {
+  height: 100%;
+
+  
+}

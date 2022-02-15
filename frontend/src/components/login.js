@@ -21,7 +21,7 @@ const Login = (props) => {
     axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
       if (res.status === 200) {
         console.log('status was 200');
-        props.navigate('/home');
+        props.navigate('/dashboard');
       } else {
         console.log('incorrect code');
       }
