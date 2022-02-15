@@ -1,0 +1,81 @@
+html, body {margin: 0; height: 100%; overflow: hidden}
+
+.in {
+  font-size: 96px;
+  text-align: center;
+  display: inline-block;
+  color: white !important;
+}
+.site {
+  font-size: 96px;
+  text-align: center;
+  display: inline-block;
+  color: #fed915 !important;
+
+}
+
+.inlineDiv {
+  display: inline-block;
+  padding-left: 10vw;
+  padding-top: 10vh;
+  padding-bottom: 15%;
+  text-shadow: #000 0px 0px 1px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.taglineDiv {
+  display: inline-block;
+  width: 40vw;
+  padding-left: 10vw;
+  text-shadow: #3d3d3d 0px 0px 1px;
+  -webkit-font-smoothing: antialiased;
+
+}
+
+.taglinePt1 {
+  font-size: 32px;
+  color: white;
+  display: inline-block;
+}
+.taglinePt2 {
+  font-size: 32px;
+  color: #fed915;
+  display: inline-block;
+}
+
+.buttonsDiv {
+  padding-left: 64vw;
+  padding-top: 72vh;
+}
+
+.buttons {
+  font-size: 110%;
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  white-space: nowrap;
+  width: 12vw;
+  height: 7vh;
+  background-color: #fed915;
+  color:black;
+  font-weight: bold;
+  border-color: #fed915;
+}
+.buttons:hover {
+  background-color: #ebc400;
+  color:black;
+  font-weight: bold;
+  border-color: #ebc400;
+}
+
+.buttons:active {
+  background-color: #ebc400;
+  color:black;
+  font-weight: bold;
+  border-color: #ebc400;
+}
+.buttons:focus {
+  background-color: #ebc400;
+  color:black;
+  font-weight: bold;
+  border-color: #ebc400;
+}

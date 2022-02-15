@@ -21,14 +21,13 @@ const Dashboard = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {/* <Container className={styles.dashboardCont}> */}
-        <Row xs={1} md={2} className={styles.cardRow}>
-            <InsightCard title='Reddit' text='put Reddit stuff here'/>
-            <InsightCard title='Twitter' text='put Twitter stuff here'/>
-            <InsightCard title='Instagram' text='put Instagram stuff here'/>
-            <InsightCard title='YouTube' text='put YouTube stuff here'/>
-        </Row>
-      {/* </Container> */}
+      
+      <Row xs={1} md={2} className={styles.cardRow}>
+        <InsightCard title='Reddit' text='put Reddit stuff here' />
+        <InsightCard title='Twitter' text='put Twitter stuff here' />
+        <InsightCard title='Instagram' text='put Instagram stuff here' />
+        <InsightCard title='YouTube' text='put YouTube stuff here' />
+      </Row>
     </div>
   );
 };
