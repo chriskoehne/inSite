@@ -33,8 +33,7 @@ exports.signup = async function (req, res) {
 
     console.log
     if (result instanceof User) {
-      res.send({ message: 'User registered successfully!' });
-      return;
+      return ({ message: 'User registered successfully!' });
     } else {
       res.send({ message: 'Failure creating user' });
     }
