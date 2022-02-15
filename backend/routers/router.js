@@ -30,6 +30,11 @@ const userLoginController = require(path.resolve(
   "../controllers/userLoginController"
 ));
 
+const redditController = require(path.resolve(
+  __dirname,
+  "../controllers/redditController"
+));
+
 router.get("/demo0", demoController.showDemo0);
 
 router.get("/demo1", demoController.showDemo1);
@@ -41,5 +46,7 @@ router.post("/userCreation", userCreationController.userCreation);
 router.post("/verifyUser", verifyController.verify);
 
 router.post("/login", userLoginController.login);
+
+router.post("/redditTest", redditController.test);
 
 module.exports = router;
