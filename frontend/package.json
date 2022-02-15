@@ -27,6 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "altstart": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
     "https": "HTTPS=true SSL_CRT_FILE=$(grep SSL_CRT_FILE .env | cut -d '=' -f2) SSL_KEY_FILE=$(grep SSL_KEY_FILE .env | cut -d '=' -f2) react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
