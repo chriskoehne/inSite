@@ -10,7 +10,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   font-size: 96px;
   text-align: center;
   display: inline-block;
-  color: #fed915 !important;
+  color: #F9C449 !important;
 
 }
 
@@ -39,7 +39,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 }
 .taglinePt2 {
   font-size: 32px;
-  color: #fed915;
+  color: #F9C449;
   display: inline-block;
 }
 
@@ -55,27 +55,27 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   white-space: nowrap;
   width: 12vw;
   height: 7vh;
-  background-color: #fed915;
+  background-color: #F9C449;
   color:black;
   font-weight: bold;
-  border-color: #fed915;
+  border-color: #F9C449;
 }
 .buttons:hover {
-  background-color: #ebc400;
+  background-color: #F9C449;
   color:black;
   font-weight: bold;
-  border-color: #ebc400;
+  border-color: #F9C449;
 }
 
 .buttons:active {
-  background-color: #ebc400;
+  background-color: #F9C449;
   color:black;
   font-weight: bold;
-  border-color: #ebc400;
+  border-color: #F9C449;
 }
 .buttons:focus {
-  background-color: #ebc400;
+  background-color: #F9C449;
   color:black;
   font-weight: bold;
-  border-color: #ebc400;
+  border-color: #F9C449;
 }

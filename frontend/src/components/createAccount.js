@@ -10,6 +10,7 @@ const CreateAccount = (props) => {
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState('');
   const [phone, setPhone] = useState('');
+  const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
   const [smsCode, setSMSCode] = useState('');
 
   const handleClose = (e) => {
@@ -48,6 +49,21 @@ const CreateAccount = (props) => {
       }
     });
   };
+
+  // Formats Phone Number
+  function formatPhoneNumber(value) {
+    if (!value) return value;
+    const phoneNumber = value.replace(/[^\d]/g, '');
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength < 4) return phoneNumber;
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
 
   return (
     <div>
@@ -99,7 +115,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Password: </label>
               <input
-                type='text'
+                type='password'
                 className='form-control'
                 placeholder='password'
                 onChange={(e) => {
@@ -114,8 +130,16 @@ const CreateAccount = (props) => {
                 className='form-control'
                 placeholder='phone'
                 onChange={(e) => {
+                  const phoneNum = formatPhoneNumber(e.target.value)
+                  setFormatPhone(phoneNum)
                   setPhone(e.target.value);
                 }}
+                onKeyPress={(event) => {
+                  if (!/[0-9]/.test(event.key)) {
+                    event.preventDefault();
+                  }
+                }}
+                value = {formatPhone}
               />
             </div>
             <br></br>
