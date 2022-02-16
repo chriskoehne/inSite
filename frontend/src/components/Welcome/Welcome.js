@@ -84,7 +84,7 @@ const Welcome = (props) => {
             // (!) Konva specific method, it is very important
             context.fillStrokeShape(shape);
           }}
-          fill='#fed915'
+          fill='#F9C449'
         />
       </Layer>
     </Stage>
