@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 // import Popup from 'reactjs-popup';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
+import styles from './createAccount.module.css';
 
 const CreateAccount = (props) => {
   const [email, setEmail] = useState('');
@@ -50,23 +51,70 @@ const CreateAccount = (props) => {
 
   return (
     <div>
-      <h1>Create Account</h1>
-      <Modal show={showModal}>
-        <Modal.Header>
-          <Modal.Title>Verify phone number</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          The phone number provided was used to create a two factor user. Please
-          enter the code sent to your phone to verify this connection.
-          <form onSubmit={handleClose}>
+      <div className={styles.background}>
+        <div className={styles.createAcc_background}>
+          <h1>Create Account</h1>
+          <Modal show={showModal}>
+            <Modal.Header>
+              <Modal.Title>Verify phone number</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              The phone number provided was used to create a two factor user. Please
+              enter the code sent to your phone to verify this connection.
+              <form onSubmit={handleClose}>
+                <div className='form-group'>
+                  <label>Code: </label>
+                  <input
+                    type='text'
+                    className='form-control'
+                    placeholder='Code'
+                    onChange={(e) => {
+                      setSMSCode(e.target.value);
+                    }}
+                  />
+                </div>
+                <br></br>
+                <div className='form-group'>
+                  <input
+                    type='submit'
+                    value='Submit Code'
+                    className='btn btn-primary'
+                  />
+                </div>
+              </form>
+            </Modal.Body>
+          </Modal>
+          <form onSubmit={handleSubmit}>
             <div className='form-group'>
-              <label>Code: </label>
+              <label>Email: </label>
               <input
                 type='text'
                 className='form-control'
-                placeholder='Code'
+                placeholder='email'
                 onChange={(e) => {
-                  setSMSCode(e.target.value);
+                  setEmail(e.target.value);
+                }}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Password: </label>
+              <input
+                type='text'
+                className='form-control'
+                placeholder='password'
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Phone: </label>
+              <input
+                type='text'
+                className='form-control'
+                placeholder='phone'
+                onChange={(e) => {
+                  setPhone(e.target.value);
                 }}
               />
             </div>
@@ -74,56 +122,14 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <input
                 type='submit'
-                value='Submit Code'
+                value='Create Account'
                 className='btn btn-primary'
               />
             </div>
+            <a href='/login' className={styles.return}>Return to Login</a>
           </form>
-        </Modal.Body>
-      </Modal>
-      <form onSubmit={handleSubmit}>
-        <div className='form-group'>
-          <label>Email: </label>
-          <input
-            type='text'
-            className='form-control'
-            placeholder='email'
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
         </div>
-        <div className='form-group'>
-          <label>Password: </label>
-          <input
-            type='text'
-            className='form-control'
-            placeholder='password'
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-        </div>
-        <div className='form-group'>
-          <label>Phone: </label>
-          <input
-            type='text'
-            className='form-control'
-            placeholder='phone'
-            onChange={(e) => {
-              setPhone(e.target.value);
-            }}
-          />
-        </div>
-        <br></br>
-        <div className='form-group'>
-          <input
-            type='submit'
-            value='Create Account'
-            className='btn btn-primary'
-          />
-        </div>
-      </form>
+      </div>
     </div>
   );
 };

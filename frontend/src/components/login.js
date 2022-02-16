@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 // import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
+import styles from './login.module.css';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
@@ -51,62 +52,69 @@ const Login = (props) => {
 
   return (
     <div>
-      <h1>login</h1>
-      <Modal show={showModal}>
-        <Modal.Header>
-          <Modal.Title>Verify phone number</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Your phone number provided was used to create a two factor user.
-          Please enter the code sent to your phone to verify this connection.
-          <form onSubmit={handleClose}>
+      <div className={styles.background}>
+          <div className={styles.login_background}>
+          <div className={styles.inlineDiv}>
+            <h1 className={styles.in}>in</h1>
+            <h1 className={styles.site}>Site</h1>
+          </div>
+          <Modal show={showModal}>
+            <Modal.Header>
+              <Modal.Title>Verify phone number</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Your phone number provided was used to create a two factor user.
+              Please enter the code sent to your phone to verify this connection.
+              <form onSubmit={handleClose}>
+                <div className='form-group'>
+                  <label>Code: </label>
+                  <input
+                    type='text'
+                    className='form-control'
+                    placeholder='Code'
+                    onChange={(e) => setSMSCode(e.target.value)}
+                  />
+                </div>
+                <br></br>
+                <div className='form-group'>
+                  <input
+                    type='submit'
+                    value='Submit Code'
+                    className='btn btn-primary'
+                  />
+                </div>
+              </form>
+            </Modal.Body>
+          </Modal>
+          <form onSubmit={handleSubmit}>
             <div className='form-group'>
-              <label>Code: </label>
+              <label>Email: </label>
               <input
                 type='text'
                 className='form-control'
-                placeholder='Code'
-                onChange={(e) => setSMSCode(e.target.value)}
+                placeholder='email'
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Password: </label>
+              <input
+                type='text'
+                className='form-control'
+                placeholder='password'
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <br></br>
             <div className='form-group'>
-              <input
-                type='submit'
-                value='Submit Code'
-                className='btn btn-primary'
-              />
+              <input type='submit' value='Login' className='btn btn-primary' />
             </div>
           </form>
-        </Modal.Body>
-      </Modal>
-      <form onSubmit={handleSubmit}>
-        <div className='form-group'>
-          <label>Email: </label>
-          <input
-            type='text'
-            className='form-control'
-            placeholder='email'
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
+          <a href='/createAccount' className={styles.createAcc}>New User?</a>
         </div>
-        <div className='form-group'>
-          <label>Password: </label>
-          <input
-            type='text'
-            className='form-control'
-            placeholder='password'
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <br></br>
-        <div className='form-group'>
-          <input type='submit' value='Login' className='btn btn-primary' />
-        </div>
-      </form>
-      <a href='/createAccount'>Create Account</a>
+      </div>
     </div>
   );
 };
