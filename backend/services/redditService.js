@@ -60,49 +60,59 @@ exports.test = async function (req, res) {
       // console.log(req.body);
       console.log("in convert")
       const code = req.body.code;
-      //console.log("code" + req.body.code);
-      // const body = {
-      //   grant_type: "authorization_code",
-      //   code: code,
-      //   redirect_uri: "https://127.0.0.1:3000/dashboard/"
-      // }
-      // var form = new formData();
-      // form.set("grant_type", "authorization_code");
-      // form.set("code", code);
-      // form.set("redirect_uri", "https://127.0.0.1:3000/dashboard/");
-
+      
       var params = new searchParams();
       params.set("grant_type", "authorization_code");
       params.set("code", code);
       params.set("redirect_uri", "https://127.0.0.1:3000/dashboard/");
 
       const body = params;
-
-      console.log("doing btoa")
-      //TODO FIGURE OUT CORRECT HEADER AUTHORIZATION
-      const auth = btoa(config.redditAppId + ":" + config.redditSecret);
-      // const auth = btoa(config.redditAppId);
-      // const auth = config.redditAppId + ":" + config.redditSecret
+      const auth = btoa(config.redditAppId + ":" + config.redditSecret);   
       const finalAuth = "Basic " + auth
-      console.log("Authorization is ")
-      console.log(finalAuth)
+      
       const headers = {
         "Authorization": finalAuth,
         "User-Agent": "inSite by inSite",
         "Content-Type": "application/x-www-form-urlencoded"
       }
-      console.log("using this header")
-      console.log(headers)
-      console.log("using the following body")
-      console.log(body)
       //reddit post call
       const redditRes = await axios.post("https://www.reddit.com/api/v1/access_token", body, {headers: headers});
-      console.log("reddit res is")
-      console.log(redditRes.data)
-      //get token
+    
       return redditRes.data;
+    } catch (err) {
+      console.log("big error catch")
+      console.log(err)
+      return err;
+    }
+  };
+
+  exports.subReddits = async function (req, res) {
+    try {
+      // console.log(req.body);
+      console.log("in get subreddits service")
+      const token = req.body.accessToken;
+      const subReddit = req.body.subReddit;
       
-  
+      var params = new searchParams();
+      params.set("exact", false);
+      params.set("include_over_18", true);
+      params.set("include_unadvertisable", true);
+      params.set("query", subReddit);
+
+   
+      const body = params;
+      const finalAuth = "bearer " + token
+      
+      const headers = {
+        "Authorization": finalAuth,
+        "User-Agent": "inSite by inSite",
+      }
+      //reddit post call
+      const redditRes = await axios.get("https://oauth.reddit.com/api/search_reddit_names", body, {headers: headers});
+      console.log("service subreddit answer:")
+      console.log(redditRes.data)
+
+      return redditRes.data;
     } catch (err) {
       console.log("big error catch")
       console.log(err)

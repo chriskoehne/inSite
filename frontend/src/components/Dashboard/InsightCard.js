@@ -60,7 +60,15 @@ const InsightCard = (props) => {
     console.log("back in frontend")  
     console.log(res)
     setAccessToken(res.accessToken)
-      //get token
+    console.log("going to attempt to use access token now")
+    const redditQuery = {
+      accessToken: res.accessToken,
+      subReddit: "news"
+    }
+    axios.get("http://localhost:5000/redditSubReddits", redditQuery).then((ans) => {
+      console.log("subreddit request ans")
+      console.log(ans)
+    });
 
     });
   } else {
