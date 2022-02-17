@@ -22,9 +22,6 @@ const InsightCard = (props) => {
   console.log(text)
   console.log(isLoggedIn)
 
-  console.log("props in insite card");
-  console.log(props);
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -32,8 +29,6 @@ const InsightCard = (props) => {
     const body = {
       email: userEmail,
     }
-
-    
 
     axios
       .post("http://localhost:5000/" + text.toLowerCase() + "Login/", body)
@@ -57,18 +52,17 @@ const InsightCard = (props) => {
       code: code
     }
     axios.post("http://localhost:5000/" + text.toLowerCase() + "CodeToToken/", body).then((res) => {
-    console.log("back in frontend")  
+    console.log("should see token as:")  
     console.log(res)
     setAccessToken(res.accessToken)
     console.log("going to attempt to use access token now")
     const redditQuery = {
       accessToken: res.accessToken,
-      subReddit: "news"
     }
-    axios.get("http://localhost:5000/redditSubReddits", redditQuery).then((ans) => {
-      console.log("subreddit request ans")
-      console.log(ans)
-    });
+    // axios.get("http://localhost:5000/redditMe", redditQuery).then((ans) => {
+    //   console.log("subreddit request ans")
+    //   console.log(ans)
+    // });
 
     });
   } else {

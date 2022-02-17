@@ -77,7 +77,8 @@ exports.test = async function (req, res) {
       }
       //reddit post call
       const redditRes = await axios.post("https://www.reddit.com/api/v1/access_token", body, {headers: headers});
-    
+      console.log("in service")
+      console.log(redditRes.data)
       return redditRes.data;
     } catch (err) {
       console.log("big error catch")
@@ -86,33 +87,34 @@ exports.test = async function (req, res) {
     }
   };
 
-  exports.subReddits = async function (req, res) {
+  exports.redditMe = async function (req, res) {
     try {
       // console.log(req.body);
       console.log("in get subreddits service")
       const token = req.body.accessToken;
-      const subReddit = req.body.subReddit;
+      // const subReddit = req.body.subReddit;
       
-      var params = new searchParams();
-      params.set("exact", false);
-      params.set("include_over_18", true);
-      params.set("include_unadvertisable", true);
-      params.set("query", subReddit);
-
-   
-      const body = params;
+      // var params = new searchParams();
+      // params.set("exact", false);
+      // params.set("include_over_18", true);
+      // params.set("include_unadvertisable", true);
+      // params.set("query", subReddit);
+      console.log("in service, token is")
+      console.log(token)
+      // const body = params;
       const finalAuth = "bearer " + token
       
       const headers = {
         "Authorization": finalAuth,
         "User-Agent": "inSite by inSite",
       }
-      //reddit post call
-      const redditRes = await axios.get("https://oauth.reddit.com/api/search_reddit_names", body, {headers: headers});
+      const redditRes = await axios.get("https://oauth.reddit.com/api/v1/me", {headers: headers});
       console.log("service subreddit answer:")
-      console.log(redditRes.data)
+      ans = redditRes.toJSON();
+      console.log(ans.status)
+      console.log(ans.name)
 
-      return redditRes.data;
+      return ans;
     } catch (err) {
       console.log("big error catch")
       console.log(err)

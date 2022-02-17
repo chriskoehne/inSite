@@ -37,7 +37,9 @@ const Dashboard = (props) => {
       start = currentUrl.indexOf('code') + 5
       almost = currentUrl.substring(start)
       let code = almost.substring(0, almost.length - 2)
+      console.log("email:")
       console.log(email)
+      console.log("code:")
       console.log(code)
       setEmail(email)
       setCode(code)

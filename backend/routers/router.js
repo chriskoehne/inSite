@@ -51,7 +51,7 @@ router.post("/redditLogin", redditController.login);
 
 router.post("/redditCodeToToken", redditController.convert);
 
-router.get("/redditSubReddits", redditController.subReddits)
+router.get("/redditMe", redditController.redditMe)
 
 router.post("/redditTest", redditController.test);
 
