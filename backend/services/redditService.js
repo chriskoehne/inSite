@@ -91,7 +91,8 @@ exports.test = async function (req, res) {
     try {
       // console.log(req.body);
       console.log("in get subreddits service")
-      const token = req.body.accessToken;
+      console.log(req)
+      const token = req.query.accessToken;
       // const subReddit = req.body.subReddit;
       
       // var params = new searchParams();
@@ -113,7 +114,7 @@ exports.test = async function (req, res) {
       // console.log(ans.status)
       // console.log(ans.name)
 
-      return redditRes;
+      return ans;
     } catch (err) {
       console.log("big error catch")
       // console.log(err)

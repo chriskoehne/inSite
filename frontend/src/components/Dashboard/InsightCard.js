@@ -65,8 +65,10 @@ const InsightCard = (props) => {
           const redditQuery = {
             accessToken: res.data.accessToken,
           };
+          console.log("body is")
+          console.log(redditQuery)
           axios
-            .get("http://localhost:5000/redditMe", redditQuery)
+            .get("http://localhost:5000/redditMe", {params: redditQuery})
             .then((ans) => {
               if (ans.data.me) {
                 console.log("subreddit request ans");
