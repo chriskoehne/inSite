@@ -10,25 +10,36 @@ const Dashboard = (props) => {
 
   const { state } = useLocation();
   const [redditSuccess, setRedditSuccess] = useState(false);
-  const [redditLoading, setRedditLoading] = useState(true);
+  const [email, setEmail] = useState('');
   // const email = props.navigate.arguments.email || 'Invalid login occurred'
   
+  // console.log("logging")
+  // console.log(props)
+  // console.log(params)
   useEffect(() => {
-    getRedditStatus();
-  }, []);
+    // Update the document title using the browser API
+    getEmail();
+  });
 
-  const getRedditStatus = () => {
-    const body = {
-      email: state.email,
-    };
-    axios.get("http://localhost:5000/redditUser/", body).then((res) => {
-    setRedditSuccess(res.data.success)  
-    setRedditLoading(false);
-    });
-  };
+  const getEmail = () => {
+    if (state) {
+      setEmail(state.email)
+    } else {
+      setRedditSuccess(true);
+      const currentUrl = window.location.href;
+      let start = currentUrl.indexOf('state') + 6
+      const after = currentUrl.substring(start)
+      let end = after.indexOf('&');
+      let almost = after.substring(0, end)
+      let email = almost.replace('%40', '@')
+      console.log(email)
+      setEmail(email)
+      //get it from the url
+    }
+  }
   
 //clunky, but follow the above and add to the following if statements for the other social medias
-if (!redditLoading) {
+
   return (
     <div className={styles.box}>
       <Navbar className={styles.dashboardNav}>
@@ -47,16 +58,14 @@ if (!redditLoading) {
       </Navbar>
       
       <Row xs={1} md={2} className={styles.cardRow}>
-        <InsightCard title='Reddit' text='put Reddit stuff here' isLoggedIn={redditSuccess} email={state.email}/>
+        <InsightCard title='Reddit' text='Reddit' isLoggedIn={redditSuccess} email={email} navigate={props.navigate} setExternalUrl={props.setExternalUrl}/>
         <InsightCard title='Twitter' text='put Twitter stuff here' />
         <InsightCard title='Instagram' text='put Instagram stuff here' />
         <InsightCard title='YouTube' text='put YouTube stuff here' />
       </Row>
     </div>
   );
-} else {
-  return null
-}
+
 };
 
 export default Dashboard;

@@ -8,28 +8,16 @@ var redditService = require(path.resolve(
 exports.login = async function (req, res, next) {
   try {
     let result = await redditService.login(req, res); //add await?
-    // if (result.redditUsername) {
-    //   return res.status(200).json({ status: 200, success: true });
-    // } else {
-    //   return res.status(200).json({ status: 200, success: false });
-    // }
+    //two fields
+    if (result.link) {
+      return res.status(200).json({ status: 200, success: true, link: result.link, verificationString: result.verificationString });
+    } else {
+      return res.status(200).json({ status: 200, success: false });
+    }
   } catch (e) {
     return res.status(400).json({ status: 400, message: e.message });
   }
 };
-
-exports.getUser = async function (req, res, next) {
-    try {
-      let result = await redditService.getUser(req, res); //add await?
-      if (result.redditUsername) {
-        return res.status(200).json({ status: 200, success: true });
-      } else {
-        return res.status(200).json({ status: 200, success: false });
-      }
-    } catch (e) {
-      return res.status(400).json({ status: 400, message: e.message });
-    }
-  };
 
 exports.test = async function (req, res, next) {
   try {

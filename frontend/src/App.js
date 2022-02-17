@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import logo from './logo.svg';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -22,8 +22,10 @@ const App = () => {
         path='/createAccount'
         element={<CreateAccount navigate={navigate} />}
       />
-      <Route path='/dashboard' element={<Dashboard navigate={navigate} />} />
+      <Route path='/dashboard/*' element={<Dashboard navigate={navigate}/>} />
+      {/* <Route path='/dashboard?state=:state&code=:code' element={<Dashboard navigate={navigate} state={state} code={code}/>} /> */}
       <Route path='*' element={<Navigate replace to='/welcome' />} />
+      
     </Routes>
   );
 };

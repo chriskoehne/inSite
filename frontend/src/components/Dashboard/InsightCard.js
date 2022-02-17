@@ -20,22 +20,27 @@ const InsightCard = (props) => {
   console.log(text)
   console.log(isLoggedIn)
 
+  console.log("props in insite card");
+  console.log(props);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     //axios stuff
     const body = {
       email: userEmail,
-      socEmail: email,
-      socPassword: password,
-    };
+    }
+
+    
 
     axios
       .post("http://localhost:5000/" + text.toLowerCase() + "Login/", body)
       .then((res) => {
         console.log(res);
-        if (res.status === 200) {
-          console.log(text + " user logged in");
+        // res.link
+        if (res.data.success) {
+          console.log("got the link!")
+          window.location.href = res.data.link
         } else {
           console.log("there was an error in " + text + " user signup");
         }
@@ -48,27 +53,6 @@ const InsightCard = (props) => {
   } else {
     display = (
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email: </label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="email"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-        </div>
-        <div className="form-group">
-          <label>Password: </label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <br></br>
         <div className="form-group">
           <input type="submit" value="Login" className="btn btn-primary" />
         </div>
