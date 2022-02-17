@@ -5,6 +5,10 @@ const { link } = require("fs");
 const config = require(path.resolve(__dirname, "../config.json"));
 const User = require(path.resolve(__dirname, "../database/models/user"));
 var btoa = require('btoa');
+var axios = require("axios");
+const { Agent } = require("http");
+var formData = require("form-data");
+var searchParams = require("url-search-params");
 
 exports.test = async function (req, res) {
   try {
@@ -56,11 +60,24 @@ exports.test = async function (req, res) {
       // console.log(req.body);
       console.log("in convert")
       const code = req.body.code;
-      const body = {
-        grant_type: "authorization_code",
-        code: code,
-        redirect_uri: "https://127.0.0.1:3000/dashboard/"
-      }
+      //console.log("code" + req.body.code);
+      // const body = {
+      //   grant_type: "authorization_code",
+      //   code: code,
+      //   redirect_uri: "https://127.0.0.1:3000/dashboard/"
+      // }
+      // var form = new formData();
+      // form.set("grant_type", "authorization_code");
+      // form.set("code", code);
+      // form.set("redirect_uri", "https://127.0.0.1:3000/dashboard/");
+
+      var params = new searchParams();
+      params.set("grant_type", "authorization_code");
+      params.set("code", code);
+      params.set("redirect_uri", "https://127.0.0.1:3000/dashboard/");
+
+      const body = params;
+
       console.log("doing btoa")
       //TODO FIGURE OUT CORRECT HEADER AUTHORIZATION
       const auth = btoa(config.redditAppId + ":" + config.redditSecret);
@@ -70,7 +87,9 @@ exports.test = async function (req, res) {
       console.log("Authorization is ")
       console.log(finalAuth)
       const headers = {
-        Authorization: finalAuth
+        "Authorization": finalAuth,
+        "User-Agent": "inSite by inSite",
+        "Content-Type": "application/x-www-form-urlencoded"
       }
       console.log("using this header")
       console.log(headers)
@@ -86,6 +105,7 @@ exports.test = async function (req, res) {
   
     } catch (err) {
       console.log("big error catch")
+      console.log(err)
       return err;
     }
   };

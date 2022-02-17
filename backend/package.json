@@ -18,13 +18,16 @@
   "homepage": "https://github.com/inSite407/inSite#readme",
   "dependencies": {
     "authy": "^1.4.0",
+    "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "btoa": "^1.2.1",
     "cors": "^2.8.5",
     "express": "^4.17.2",
+    "form-data": "^4.0.0",
     "mkcert": "^1.5.0",
     "mongoose": "^6.2.1",
-    "reddit": "^1.2.1"
+    "reddit": "^1.2.1",
+    "url-search-params": "^1.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
