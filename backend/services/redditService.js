@@ -77,8 +77,8 @@ exports.test = async function (req, res) {
       }
       //reddit post call
       const redditRes = await axios.post("https://www.reddit.com/api/v1/access_token", body, {headers: headers});
-      console.log("in service")
-      console.log(redditRes.data)
+      // console.log("in service")
+      // console.log(redditRes.data)
       return redditRes.data;
     } catch (err) {
       console.log("big error catch")
@@ -110,9 +110,9 @@ exports.test = async function (req, res) {
       }
       const redditRes = await axios.get("https://oauth.reddit.com/api/v1/me", {headers: headers});
       console.log("service subreddit answer:")
-      ans = redditRes.toJSON();
-      console.log(ans.status)
-      console.log(ans.name)
+      let ans = redditRes.toJSON();
+      // console.log(ans.status)
+      // console.log(ans.name)
 
       return ans;
     } catch (err) {
