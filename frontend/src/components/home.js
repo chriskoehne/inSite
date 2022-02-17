@@ -6,7 +6,7 @@ import { saveAs } from "file-saver";
 
 // we need a secure site (https) for react-web-share to work
 
-import BarChart from "./exampleChart";
+import PieChart from "./charts/pieChart";
 
 export default class Home extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ export default class Home extends Component {
     return (
       <div>
         <h1>Home</h1>
-        <BarChart onClick={this.onClick} chartRef={this.chartRef} />
+        <PieChart onClick={this.onClick} chartRef={this.chartRef} />
 
         <RWebShare
           data={{
