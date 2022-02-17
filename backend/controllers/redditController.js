@@ -24,7 +24,7 @@ exports.convert = async function (req, res, next) {
     let result = await redditService.convert(req, res); //add await?
     //two fields
     if (result) {
-      return res.status(200).json({ status: 200, success: true, accessToken: result.access_token, refreshToken: result.refresh_token });
+      return res.status(200).json({ status: 200, success: true, accessToken: result.access_token });
     }
   } catch (e) {
     return res.status(400).json({ status: 400, message: e.message });

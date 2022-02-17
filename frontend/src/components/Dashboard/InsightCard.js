@@ -9,6 +9,7 @@ import styles from "./Dashboard.module.css";
 const InsightCard = (props) => {
   // const [redditStatus, setRedditStatus] = useState('');
   const [email, setEmail] = useState("");
+  const [redditAccessToken, setAccessToken] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(true);
 
@@ -58,6 +59,7 @@ const InsightCard = (props) => {
     axios.post("http://localhost:5000/" + text.toLowerCase() + "CodeToToken/", body).then((res) => {
     console.log("back in frontend")  
     console.log(res)
+    setAccessToken(res.accessToken)
       //get token
 
     });

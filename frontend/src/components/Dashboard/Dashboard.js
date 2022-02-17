@@ -35,8 +35,8 @@ const Dashboard = (props) => {
       let email = almost.replace('%40', '@')
       
       start = currentUrl.indexOf('code') + 5
-      let code = currentUrl.substring(start)
-      
+      almost = currentUrl.substring(start)
+      let code = almost.substring(0, almost.length - 2)
       console.log(email)
       console.log(code)
       setEmail(email)

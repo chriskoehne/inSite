@@ -98,9 +98,9 @@ exports.test = async function (req, res) {
       //reddit post call
       const redditRes = await axios.post("https://www.reddit.com/api/v1/access_token", body, {headers: headers});
       console.log("reddit res is")
-      console.log(redditRes)
+      console.log(redditRes.data)
       //get token
-      return redditRes;
+      return redditRes.data;
       
   
     } catch (err) {
