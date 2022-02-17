@@ -5,6 +5,7 @@ import axios from "axios";
 import { Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
+import BarChart from "../exampleChart";
 
 const InsightCard = (props) => {
   // const [redditStatus, setRedditStatus] = useState('');
@@ -51,7 +52,7 @@ const InsightCard = (props) => {
 
   let display;
   if (isLoggedIn) {
-    display = "chart should be displaying";
+    display = <BarChart/>;
     // convert code to token
     const body = {
       code: code
