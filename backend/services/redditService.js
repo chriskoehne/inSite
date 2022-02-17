@@ -82,7 +82,7 @@ exports.test = async function (req, res) {
       return redditRes.data;
     } catch (err) {
       console.log("big error catch")
-      console.log(err)
+      // console.log(err)
       return err;
     }
   };
@@ -106,18 +106,17 @@ exports.test = async function (req, res) {
       
       const headers = {
         "Authorization": finalAuth,
-        "User-Agent": "inSite by inSite",
       }
       const redditRes = await axios.get("https://oauth.reddit.com/api/v1/me", {headers: headers});
       console.log("service subreddit answer:")
-      let ans = redditRes.toJSON();
+      // let ans = redditRes.toJSON();
       // console.log(ans.status)
       // console.log(ans.name)
 
-      return ans;
+      return redditRes;
     } catch (err) {
       console.log("big error catch")
-      console.log(err)
+      // console.log(err)
       return err;
     }
   };

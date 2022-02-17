@@ -57,8 +57,6 @@ const InsightCard = (props) => {
         body
       )
       .then((res) => {
-        console.log("res is");
-        console.log(res);
         if (res.data.accessToken) {
           console.log("should see token as:");
           console.log(res);
@@ -70,8 +68,11 @@ const InsightCard = (props) => {
           axios
             .get("http://localhost:5000/redditMe", redditQuery)
             .then((ans) => {
-              console.log("subreddit request ans");
-              console.log(ans);
+              if (ans.data.me) {
+                console.log("subreddit request ans");
+                console.log(ans);
+              }
+              
             });
         }
       });
