@@ -49,6 +49,8 @@ router.post("/login", userLoginController.login);
 
 router.post("/redditLogin", redditController.login);
 
+router.post("/redditCodeToToken", redditController.convert);
+
 router.post("/redditTest", redditController.test);
 
 module.exports = router;
