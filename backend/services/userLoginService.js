@@ -27,7 +27,7 @@ exports.check = async function (req, res) {
       if (resulty) {
         console.log("user log in successful");
         console.log(result[0].authyId)
-        // console.log(type(result[0].authyId))
+        
         console.log("sending authy code")
         authy.request_sms((result[0].authyId), function (err, authyres) {
           console.log("sent user code")

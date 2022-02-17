@@ -25,6 +25,7 @@ const InsightCard = (props) => {
 
   console.log(text);
   console.log(isLoggedIn);
+  console.log(props)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ const InsightCard = (props) => {
     };
 
     axios
-      .post("http://localhost:5000/" + text.toLowerCase() + "Login/", body)
+      .post("http://localhost:5000/" + title.toLowerCase() + "Login/", body)
       .then((res) => {
         console.log(res);
         // res.link
@@ -50,14 +51,14 @@ const InsightCard = (props) => {
 
   let display;
   if (isLoggedIn) {
-    display = <LineChart/>;
+    display = <LineChart onClick={function(){props.navigate(title.toLowerCase(), {state:{email: email, accessToken: redditAccessToken}})}}/>;
     // convert code to token
     const body = {
       code: code,
     };
     axios
       .post(
-        "http://localhost:5000/" + text.toLowerCase() + "CodeToToken/",
+        "http://localhost:5000/" + title.toLowerCase() + "CodeToToken/",
         body
       )
       .then((res) => {

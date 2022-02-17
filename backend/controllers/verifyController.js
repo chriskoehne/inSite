@@ -7,11 +7,10 @@ var verifyService = require(path.resolve(
 
 exports.verify = async function (req, res, next) {
   try {
-    let result = await verifyService.check(req, res); //add await?
-    console.log("controller");
-    console.log(result);
-    // console.log("still in controller")
-    // console.log(res)
+    //FOR DEVELOPMENT ONLY
+    return res.status(200).json({ status: 200, message: "every username/password will work for development purposes" });
+    
+    let result = await verifyService.check(req, res);
     if (!result.success) {
       console.log("sending bad")
       return res.status(400).json({ status: 400, message: result.message });

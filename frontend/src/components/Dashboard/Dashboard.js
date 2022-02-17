@@ -68,9 +68,9 @@ const Dashboard = (props) => {
       
       <Row xs={1} md={2} className={styles.cardRow}>
         <InsightCard title='Reddit' text='Reddit' isLoggedIn={redditSuccess} email={email} code={code} navigate={props.navigate} setExternalUrl={props.setExternalUrl}/>
-        <InsightCard title='Twitter' text='put Twitter stuff here' isLoggedIn={true}/>
-        <InsightCard title='Instagram' text='put Instagram stuff here' isLoggedIn={true}/>
-        <InsightCard title='YouTube' text='put YouTube stuff here' isLoggedIn={true}/>
+        <InsightCard title='Twitter' text='Twitter' isLoggedIn={true} email={email} navigate={props.navigate}/>
+        <InsightCard title='Instagram' text='Instagram' isLoggedIn={true} email={email} navigate={props.navigate}/>
+        <InsightCard title='YouTube' text='YouTube' isLoggedIn={true} email={email} navigate={props.navigate}/>
       </Row>
     </div>
   );

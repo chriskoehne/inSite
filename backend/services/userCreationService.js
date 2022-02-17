@@ -24,7 +24,6 @@ exports.signup = async function (req, res) {
 
     if (result instanceof User) {
       console.log("user registered successfully")
-      // res.send({ message: "User registered successfully!" });
       
       var authy = require('authy')(authToken);
 
