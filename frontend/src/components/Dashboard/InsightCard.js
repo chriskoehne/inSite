@@ -16,6 +16,7 @@ const InsightCard = (props) => {
   const text = props.text || "Default Text";
   const isLoggedIn = props.isLoggedIn || false;
   const userEmail = props.email || "Invalid user loggedin";
+  const code = props.code;
 
   console.log(text)
   console.log(isLoggedIn)
@@ -50,6 +51,16 @@ const InsightCard = (props) => {
   let display;
   if (isLoggedIn) {
     display = "chart should be displaying";
+    // convert code to token
+    const body = {
+      code: code
+    }
+    axios.post("http://localhost:5000/" + text.toLowerCase() + "CodeToToken/", body).then((res) => {
+    console.log("back in frontend")  
+    console.log(res)
+      //get token
+
+    });
   } else {
     display = (
       <form onSubmit={handleSubmit}>
