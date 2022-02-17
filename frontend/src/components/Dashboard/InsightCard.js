@@ -71,7 +71,7 @@ const InsightCard = (props) => {
             .get("http://localhost:5000/redditMe", {params: redditQuery})
             .then((ans) => {
               if (ans.data.me) {
-                console.log("subreddit request ans");
+                console.log("subreddit request ans - see data name");
                 console.log(ans);
               }
               
