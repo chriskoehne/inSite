@@ -114,7 +114,7 @@ exports.test = async function (req, res) {
       // console.log(ans.status)
       // console.log(ans.name)
 
-      return ans;
+      return redditRes.data;
     } catch (err) {
       console.log("big error catch")
       // console.log(err)
