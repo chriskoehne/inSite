@@ -31,6 +31,21 @@ exports.convert = async function (req, res, next) {
   }
 };
 
+exports.redditMe = async function (req, res, next) {
+  try {
+    console.log("controller, getting subreddits")
+    let result = await redditService.redditMe(req, res); //add await?
+    //two fields
+    console.log("in controller")
+    console.log(result)
+    if (result) {
+      return res.status(200).json({ status: 200, success: true, me: result.name });
+    }
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};
+
 exports.test = async function (req, res, next) {
   try {
     let result = await redditService.test(req, res); //add await?

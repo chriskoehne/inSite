@@ -19,11 +19,8 @@ const InsightCard = (props) => {
   const userEmail = props.email || "Invalid user loggedin";
   const code = props.code;
 
-  console.log(text)
-  console.log(isLoggedIn)
-
-  console.log("props in insite card");
-  console.log(props);
+  console.log(text);
+  console.log(isLoggedIn);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,9 +28,7 @@ const InsightCard = (props) => {
     //axios stuff
     const body = {
       email: userEmail,
-    }
-
-    
+    };
 
     axios
       .post("http://localhost:5000/" + text.toLowerCase() + "Login/", body)
@@ -41,8 +36,8 @@ const InsightCard = (props) => {
         console.log(res);
         // res.link
         if (res.data.success) {
-          console.log("got the link!")
-          window.location.href = res.data.link
+          console.log("got the link!");
+          window.location.href = res.data.link;
         } else {
           console.log("there was an error in " + text + " user signup");
         }
@@ -54,15 +49,35 @@ const InsightCard = (props) => {
     display = "chart should be displaying";
     // convert code to token
     const body = {
-      code: code
-    }
-    axios.post("http://localhost:5000/" + text.toLowerCase() + "CodeToToken/", body).then((res) => {
-    console.log("back in frontend")  
-    console.log(res)
-    setAccessToken(res.accessToken)
-      //get token
-
-    });
+      code: code,
+    };
+    axios
+      .post(
+        "http://localhost:5000/" + text.toLowerCase() + "CodeToToken/",
+        body
+      )
+      .then((res) => {
+        if (res.data.accessToken) {
+          console.log("should see token as:");
+          console.log(res);
+          setAccessToken(res.data.accessToken);
+          console.log("going to attempt to use access token now");
+          const redditQuery = {
+            accessToken: res.data.accessToken,
+          };
+          console.log("body is")
+          console.log(redditQuery)
+          axios
+            .get("http://localhost:5000/redditMe", {params: redditQuery})
+            .then((ans) => {
+              if (ans.data.me) {
+                console.log("subreddit request ans - see data name");
+                console.log(ans);
+              }
+              
+            });
+        }
+      });
   } else {
     display = (
       <form onSubmit={handleSubmit}>
@@ -78,9 +93,7 @@ const InsightCard = (props) => {
       <Card className={styles.socialsCard}>
         <Card.Body>
           <Card.Title>{title}</Card.Title>
-          <Card.Text>
-            {text}
-          </Card.Text>
+          <Card.Text>{text}</Card.Text>
           {display}
         </Card.Body>
       </Card>
