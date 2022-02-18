@@ -8,7 +8,6 @@ var loginService = require(path.resolve(
 
 exports.login = async function (req, res, next) {
   try {
-    console.log('in login controller');
     // let result = await loginService.check(req.body.email, req.body.password);
     // console.log(result)
     let result = '620f3de16decd5056284765d';
@@ -21,7 +20,6 @@ exports.login = async function (req, res, next) {
         return res.status(400).json({ message: result });
     }
         //success
-        console.log('here1')
         return res.status(200).json({ message: result }); //should be the user's id
     
   } catch (e) {

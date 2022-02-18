@@ -5,6 +5,7 @@ import {useLocation} from 'react-router-dom';
 import InsightCard from './InsightCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
+import { authenticate } from '../../auth';
 
 const Dashboard = (props) => {
 
@@ -17,6 +18,11 @@ const Dashboard = (props) => {
   // console.log("logging")
   // console.log(props)
   // console.log(params)
+
+  useEffect(() => {
+    authenticate(props)
+  }, []);
+
   useEffect(() => {
     // Update the document title using the browser API
     getEmail();

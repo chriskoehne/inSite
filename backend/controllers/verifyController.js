@@ -10,8 +10,7 @@ const generateToken = require('../auth/authentication').generateToken;
 
 exports.verify = async function (req, res, next) {
   try {
-    console.log(req.body);
-    // let result = await verifyService.check(req.body.email, req.body.code); //add await?
+    // let result = await verifyService.check(req.body.email, req.body.code);
     let result = 'success';
 
     switch (result) {
