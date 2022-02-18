@@ -25,6 +25,6 @@ exports.login = async function (req, res, next) {
     return res.status(200).json({ message: result }); //should be the user's id
   } catch (e) {
     console.log(e);
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
