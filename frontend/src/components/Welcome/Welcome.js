@@ -11,8 +11,11 @@ const Welcome = (props) => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  console.log(document.cookie)
+
 
   useEffect(() => {
+    console.log(document.cookie)
     const checkSize = () => {
       setSize({ width: window.innerWidth, height: window.innerHeight });
     };

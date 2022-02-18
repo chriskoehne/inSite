@@ -35,6 +35,8 @@ const redditController = require(path.resolve(
   "../controllers/redditController"
 ));
 
+const verifyToken = require('../auth/authentication').verifyToken;
+
 router.get("/demo0", demoController.showDemo0);
 
 router.get("/demo1", demoController.showDemo1);
@@ -54,5 +56,7 @@ router.post("/redditCodeToToken", redditController.convert);
 router.get("/redditMe", redditController.redditMe)
 
 router.post("/redditTest", redditController.test);
+
+router.get("/cookieCheck", verifyToken, demoController.cookieCheck);
 
 module.exports = router;

@@ -10,6 +10,7 @@ const Login = (props) => {
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState('');
   const [smsCode, setSMSCode] = useState('');
+  const [id, setId] = useState('');
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -17,15 +18,23 @@ const Login = (props) => {
     console.log(smsCode);
     const body = {
       email: email,
+      id: id,
       code: smsCode,
     };
     axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
+      try {
       if (res.status === 200) {
         console.log('status was 200');
+        console.log('cookie is')
+        console.log(res.cookie)
         props.navigate('/dashboard', {state:{email: email}});
       } else {
         console.log('incorrect code');
       }
+    } catch (err) {
+      console.log('hereasdfasd')
+      console.log(err)
+    }
     });
   };
 
@@ -42,7 +51,7 @@ const Login = (props) => {
       console.log(res);
       if (res.status === 200) {
         console.log('the modal should popup now');
-
+        setId(res.message);
         setShowModal(true);
       } else {
         console.log('there was an error in user creation');

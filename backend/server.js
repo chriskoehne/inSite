@@ -6,16 +6,20 @@
 console.log("\x1b[36m%s\x1b[0m", "Starting BACKEND...");
 
 const express = require("express");
-const app = express();
 const path = require("path");
 var cors = require("cors");
-const PORT = process.env.PORT || 5000;
+const cookieParser = require('cookie-parser');
+
+const PORT = process.env.PORT || 5000; //config port in env or jwt (dotenv required)
+
+const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 
 const corsOptions ={
-  origin:'*', 
+  origin:'http://localhost:3000', 
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200,
 }

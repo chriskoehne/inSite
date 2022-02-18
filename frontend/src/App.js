@@ -7,6 +7,7 @@ import Home from './components/home';
 import CreateAccount from './components/createAccount';
 import Dashboard from './components/Dashboard/Dashboard';
 import Welcome from './components/Welcome/Welcome';
+import CookieCheck from './components/testing/CookieCheck';
 import './App.css';
 
 
@@ -17,6 +18,8 @@ const App = () => {
       <Route path='/' element={<Navigate replace to='/welcome' />} />
       <Route exact path='/welcome' element={<Welcome navigate={navigate} />} />
       <Route path='/login' element={<Login navigate={navigate} />} />
+      <Route path='/cookieCheck' element={<CookieCheck navigate={navigate} />} />
+
       <Route path='/home' element={<Home navigate={navigate} />} />
       <Route
         path='/createAccount'

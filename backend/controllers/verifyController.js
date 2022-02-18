@@ -1,26 +1,30 @@
-const path = require("path");
+const path = require('path');
+const c = require('../constants/constants');
 
 var verifyService = require(path.resolve(
   __dirname,
-  "../services/verifyService"
+  '../services/verifyService'
 ));
+
+const generateToken = require('../auth/authentication').generateToken;
 
 exports.verify = async function (req, res, next) {
   try {
-    let result = await verifyService.check(req, res); //add await?
-    console.log("controller");
-    console.log(result);
-    // console.log("still in controller")
-    // console.log(res)
-    if (!result.success) {
-      console.log("sending bad")
-      return res.status(400).json({ status: 400, message: result.message });
-    } else {
-      console.log("sending good")
-      return res.status(200).json({ status: 200, message: result.message });
+    console.log(req.body);
+    // let result = await verifyService.check(req.body.email, req.body.code); //add await?
+    let result = 'success';
+
+    switch (result) {
+      case c.USER_NOT_FOUND:
+      case c.AUTHY_VERIFY_ERROR:
+      case c.GENERAL_TRY_CATCH_ERR:
+        return res.status(400).json({ message: result });
     }
+
+    generateToken(req.body.id, req.body.email, res);
+    return res.status(200).json({ message: result.message });
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    console.log(e);
+    return res.status(400).json({ message: e.message });
   }
 };
-
