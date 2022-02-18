@@ -40,10 +40,15 @@
 }
 
 .createAcc_background input[type=submit]:hover {
-    background-color: black;
+    background-color: #f8b720;
 }
 
 .return {
     color: #C3C2C1;
+    text-decoration: none;
+}
+
+.return:hover {
+    color: #9b9997;
     text-decoration: none;
 }
