@@ -11,6 +11,7 @@ const User = require(path.resolve(__dirname, '../database/models/user'));
 exports.signup = async function (email, password, phone) {
   try {
     if ((await User.find({ email: email })).length > 0) {
+      console.log(c.EMAIL_TAKEN)
       return c.EMAIL_TAKEN;
     }
 
@@ -27,8 +28,9 @@ exports.signup = async function (email, password, phone) {
       return c.USER_CREATION_ERR;
     }
 
+    //TODO: test this works later
     return await new Promise((resolve) => {
-      authy.request_register_user(email, phone, async function (err, regres) {
+      authy.register_user(email, phone, async function (err, regres) {
         if (!regres || err) {
           console.log(err);
           resolve(c.AUTHY_REGISTER_ERR); //reject?
@@ -51,35 +53,7 @@ exports.signup = async function (email, password, phone) {
         }
       });
     });
-    // console.log('user registered successfully');
 
-    // const answer = authy.register_user(
-    //   email,
-    //   phone,
-    //   async function (err, regres) {
-    //     if (err) {
-    //       console.log(err);
-    //       return AUTHY_REGISTER_ERR;
-    //     }
-    //     console.log('made twilio user');
-    //     let result = await User.findOneAndUpdate(
-    //       { email: email },
-    //       { authyId: regres.user.id }
-    //     ); //TODO: error handle this
-    //     //error handle result here please
-    //     return authy.request_sms(regres.user.id, function (err, smsres) {
-    //       if (err) {
-    //         console.log(err);
-    //         return c.AUTHY_REQUEST_SMS_ERR;
-    //       }
-    //       console.log('sent user code');
-    //       console.log(smsres.message);
-    //       return result.id; //should use a constant for this
-    //     });
-    //   }
-    // );
-
-    // return answer; //this is wrong, do the other thing
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;

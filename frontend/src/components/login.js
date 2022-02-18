@@ -4,7 +4,7 @@ import axios from 'axios';
 // import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import styles from './login.module.css';
-import { unauthedOnly } from '../auth';
+import { unauthedOnly } from '../auth/auth';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');

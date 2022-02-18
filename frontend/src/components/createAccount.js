@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // import Popup from 'reactjs-popup';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
-import { unauthedOnly } from '../auth';
+import { unauthedOnly } from '../auth/auth';
 import styles from './createAccount.module.css';
 
 const CreateAccount = (props) => {

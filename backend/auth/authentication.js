@@ -7,9 +7,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 const jwtSecret = config.jwtSecret;
-const jwt_decode = require("jwt-decode");
-
-
+const jwt_decode = require('jwt-decode');
 
 exports.verifyToken = (req, res, next) => {
   try {
@@ -19,17 +17,17 @@ exports.verifyToken = (req, res, next) => {
       let verified = jwt.verify(token, jwtSecret);
       if (!verified) {
         this.removeToken(res);
-        return res.status(401).send({message: "User is not authorized!"});
+        return res.status(401).send({ message: 'User is not authorized!' });
       } else {
         let decoded = jwt_decode(token);
         this.generateToken(decoded.id, decoded.email, res, true);
       }
       return next();
     } else {
-      res.status(401).send({message: "Authorization headers missing!"});
+      res.status(401).send({ message: 'Authorization headers missing!' });
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).send(err.message);
   }
 };
@@ -42,21 +40,20 @@ exports.generateToken = (id, email, res, overwrite) => {
     expires: new Date(Date.now() + 3600000),
     secure: false, // set to true if your using https
     httpOnly: true,
-    overwrite: false || overwrite
+    overwrite: false || overwrite,
   });
 };
 
 exports.removeToken = (req, res) => {
   const token = req.cookies['inSite-token'];
   if (!token) {
-    return res.status(400).send({message: 'no token'});
+    return res.status(400).send({ message: 'no token' });
   }
   res.cookie('inSite-token', token, {
     expires: new Date(Date.now()),
     secure: false, // set to true if your using https
     httpOnly: true,
-    overwrite: true
+    overwrite: true,
   });
-  return res.send(200).send({message: 'logout successful'});
-}
-
+  return res.send(200).send({ message: 'logout successful' });
+};
