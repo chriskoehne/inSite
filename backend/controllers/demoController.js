@@ -39,7 +39,6 @@ exports.userDemo = async function (req, res, next) {
 
 exports.cookieCheck = async function (req, res, next) {
   try {
-    console.log('made it')
     let result = await demoService.cookieCheck(req, res);
     res.status(200).json(result);
   } catch (e) {

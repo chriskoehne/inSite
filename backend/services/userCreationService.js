@@ -25,49 +25,61 @@ exports.signup = async function (email, password, phone) {
     if (!(result instanceof User)) {
       console.log('failed to create user');
       return c.USER_CREATION_ERR;
-      
     }
 
-    // return await new Promise((resolve) => {
-    //   authy.request_sms(result.authyId, function (err, authyres) {
-    //     if (!authyres || err) {
-    //       console.log(err);
-    //       resolve(c.AUTHY_REQUEST_SMS_ERR); //reject?
-    //     } else {
-    //       console.log(authyres.message);
-    //       resolve(result.id);
-    //     }
-    //   });
-    // });
-    console.log('user registered successfully');
-
-    const answer = authy.register_user(
-      email,
-      phone,
-      async function (err, regres) {
-        if (err) {
+    return await new Promise((resolve) => {
+      authy.request_register_user(email, phone, async function (err, regres) {
+        if (!regres || err) {
           console.log(err);
-          return AUTHY_REGISTER_ERR;
+          resolve(c.AUTHY_REGISTER_ERR); //reject?
+        } else {
+          let result = await User.findOneAndUpdate(
+            { email: email },
+            { authyId: regres.user.id }
+          );
+          return await new Promise((resolve) => {
+            authy.request_sms(regres.user.id, function (err, smsres) {
+              if (err) {
+                console.log(err);
+                resolve(c.AUTHY_REQUEST_SMS_ERR);
+              }
+              console.log('sent user code');
+              console.log(smsres.message);
+              resolve(result.id); //should use a constant for this?
+            });
+          });
         }
-        console.log('made twilio user');
-        let result = await User.findOneAndUpdate(
-          { email: email },
-          { authyId: regres.user.id }
-        ); //TODO: error handle this
-        //error handle result here please
-        return authy.request_sms(regres.user.id, function (err, smsres) {
-          if (err) {
-            console.log(err);
-            return c.AUTHY_REQUEST_SMS_ERR;
-          }
-          console.log('sent user code');
-          console.log(smsres.message);
-          return result.id; //should use a constant for this
-        });
-      }
-    );
+      });
+    });
+    // console.log('user registered successfully');
 
-    return answer; //this is wrong, do the other thing
+    // const answer = authy.register_user(
+    //   email,
+    //   phone,
+    //   async function (err, regres) {
+    //     if (err) {
+    //       console.log(err);
+    //       return AUTHY_REGISTER_ERR;
+    //     }
+    //     console.log('made twilio user');
+    //     let result = await User.findOneAndUpdate(
+    //       { email: email },
+    //       { authyId: regres.user.id }
+    //     ); //TODO: error handle this
+    //     //error handle result here please
+    //     return authy.request_sms(regres.user.id, function (err, smsres) {
+    //       if (err) {
+    //         console.log(err);
+    //         return c.AUTHY_REQUEST_SMS_ERR;
+    //       }
+    //       console.log('sent user code');
+    //       console.log(smsres.message);
+    //       return result.id; //should use a constant for this
+    //     });
+    //   }
+    // );
+
+    // return answer; //this is wrong, do the other thing
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;

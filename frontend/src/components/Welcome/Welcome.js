@@ -3,6 +3,8 @@ import { Stage, Layer, Shape, Rect } from 'react-konva';
 import { Html } from 'react-konva-utils';
 import { Button } from 'react-bootstrap';
 
+import { unauthedOnly } from '../../auth';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Welcome.module.css';
 
@@ -11,11 +13,16 @@ const Welcome = (props) => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  console.log(document.cookie)
+
+  useEffect(() => {
+    async function callUnauthedOnly() {
+      await unauthedOnly(props);
+    }
+    callUnauthedOnly();
+  }, []);
 
 
   useEffect(() => {
-    console.log(document.cookie)
     const checkSize = () => {
       setSize({ width: window.innerWidth, height: window.innerHeight });
     };

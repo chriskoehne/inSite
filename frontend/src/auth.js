@@ -4,23 +4,31 @@
  * @author Chris Koehne <cdkoehne@gmail.com>
  */
 
-import axios from "axios";
+import axios from 'axios';
 
 export async function authenticate(props) {
   try {
-  let result = await axios.post('http://localhost:5000/cookieCheck/');
-  console.log(result);
-  } catch (err)
-   {
-      props.navigate('/welcome');
+    await axios.post('http://localhost:5000/cookieCheck/');
+    return 'authenticated';
+  } catch (err) {
+    props.navigate('/welcome');
   }
+}
+
+export async function unauthedOnly(props) {
+  try {
+    await axios.post('http://localhost:5000/cookieCheck/');
+  } catch (err) {
+    return
+  }
+  props.navigate('/dashboard');
 }
 
 export async function logout(props) {
   try {
-  let result = await axios.post('http://localhost:5000/logout/');
-  console.log(result);
+    let result = await axios.post('http://localhost:5000/logout/');
+    console.log(result);
   } catch (err) {
-      props.navigate('/welcome');
+    props.navigate('/welcome');
   }
 }

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
 // import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import styles from './login.module.css';
+import { unauthedOnly } from '../auth';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,13 @@ const Login = (props) => {
   const [showModal, setShowModal] = useState('');
   const [smsCode, setSMSCode] = useState('');
   const [id, setId] = useState('');
+
+  useEffect(() => {
+    async function callUnauthedOnly() {
+      await unauthedOnly(props);
+    }
+    callUnauthedOnly();
+  }, []);
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -23,18 +31,18 @@ const Login = (props) => {
     };
     axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
       try {
-      if (res.status === 200) {
-        console.log('status was 200');
-        console.log('cookie is')
-        console.log(res.cookie)
-        props.navigate('/dashboard', {state:{email: email}});
-      } else {
-        console.log('incorrect code');
+        if (res.status === 200) {
+          console.log('status was 200');
+          console.log('cookie is');
+          console.log(res.cookie);
+          props.navigate('/dashboard', { state: { email: email } });
+        } else {
+          console.log('incorrect code');
+        }
+      } catch (err) {
+        console.log('hereasdfasd');
+        console.log(err);
       }
-    } catch (err) {
-      console.log('hereasdfasd')
-      console.log(err)
-    }
     });
   };
 
@@ -62,7 +70,7 @@ const Login = (props) => {
   return (
     <div>
       <div className={styles.background}>
-          <div className={styles.login_background}>
+        <div className={styles.login_background}>
           <div className={styles.inlineDiv}>
             <h1 className={styles.in}>in</h1>
             <h1 className={styles.site}>Site</h1>
@@ -73,7 +81,8 @@ const Login = (props) => {
             </Modal.Header>
             <Modal.Body>
               Your phone number provided was used to create a two factor user.
-              Please enter the code sent to your phone to verify this connection.
+              Please enter the code sent to your phone to verify this
+              connection.
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>
@@ -121,7 +130,9 @@ const Login = (props) => {
               <input type='submit' value='Login' className='btn btn-primary' />
             </div>
           </form>
-          <a href='/createAccount' className={styles.createAcc}>New User?</a>
+          <a href='/createAccount' className={styles.createAcc}>
+            New User?
+          </a>
         </div>
       </div>
     </div>

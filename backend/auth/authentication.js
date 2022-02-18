@@ -13,24 +13,19 @@ const jwt_decode = require("jwt-decode");
 
 exports.verifyToken = (req, res, next) => {
   try {
-    console.log('yuh')
     const token = req.cookies['inSite-token'] || '';
 
     if (token) {
       let verified = jwt.verify(token, jwtSecret);
       if (!verified) {
-        console.log('removing cookie')
         this.removeToken(res);
-        res.status(401).send({message: "User is not authorized!"});
+        return res.status(401).send({message: "User is not authorized!"});
       } else {
         let decoded = jwt_decode(token);
-        console.log('redoing cookie')
         this.generateToken(decoded.id, decoded.email, res, true);
-
       }
       return next();
     } else {
-      console.log('missing')
       res.status(401).send({message: "Authorization headers missing!"});
     }
   } catch (err) {

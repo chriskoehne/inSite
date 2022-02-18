@@ -58,8 +58,7 @@ router.get("/redditMe", redditController.redditMe)
 router.post("/redditTest", redditController.test);
 
 router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
-router.post("/logout", auth.removeToken);
 
-// router.post("/logout", verifyToken, demoController.cookieCheck);
+router.post("/logout", auth.removeToken);
 
 module.exports = router;

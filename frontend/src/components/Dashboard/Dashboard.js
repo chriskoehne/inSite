@@ -19,14 +19,19 @@ const Dashboard = (props) => {
   // console.log(props)
   // console.log(params)
 
-  useEffect(() => {
-    authenticate(props)
+  useEffect(() => { 
+    async function callAuthenticate() {
+      await authenticate(props);
+      if (window.location.pathname !== '/dashboard') {
+        return;
+      }
+      getEmail(); // Update the document title using the browser API
+    }
+
+    callAuthenticate();
+  
   }, []);
 
-  useEffect(() => {
-    // Update the document title using the browser API
-    getEmail();
-  });
 
   const getEmail = () => {
     if (state) {
