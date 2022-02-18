@@ -142,11 +142,7 @@ const CreateAccount = (props) => {
                   setFormatPhone(phoneNum)
                   setPhone(e.target.value);
                 }}
-                onKeyPress={(event) => {
-                  if (!/[0-9]/.test(event.key)) {
-                    event.preventDefault();
-                  }
-                }}
+
                 value = {formatPhone}
               />
             </div>

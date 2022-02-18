@@ -61,10 +61,10 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   border-color: #F9C449;
 }
 .buttons:hover {
-  background-color: #F9C449;
+  background-color: #f8b720;
   color:black;
   font-weight: bold;
-  border-color: #F9C449;
+  border-color: #f8b720;
 }
 
 .buttons:active {
