@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 
 const corsOptions ={
-  origin:'http://localhost:3000', 
+  origin: ['http://localhost:3000', 'https://localhost:3000'],
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200,
 }
