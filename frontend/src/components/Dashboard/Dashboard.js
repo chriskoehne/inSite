@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Navbar, Row } from 'react-bootstrap';
+import { Container, Navbar, Row, Dropdown } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom';
 import InsightCard from './InsightCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-import Dropdown from './Dropdown'
+//import Dropdown from './Dropdown'
 
 
 const Dashboard = (props) => {
@@ -15,18 +15,6 @@ const Dashboard = (props) => {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('')
 
-  const items = [
-    {
-      id: 1,
-      value: "View Profile",
-
-    },
-    {
-      id: 2,
-      value: "Change Password",
-
-    },
-  ];
   // const email = props.navigate.arguments.email || 'Invalid login occurred'
   
   // console.log("logging")
@@ -76,7 +64,16 @@ const Dashboard = (props) => {
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className='justify-content-end'>
-            <Dropdown title="Settings" items={items} style={{color: 'red'}}/>
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-button-transparent">
+              Settings
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item href="#/action-1">View Profile</Dropdown.Item>
+              <Dropdown.Item href="#/action-2">Change password</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
           </Navbar.Collapse>
         </Container>
       </Navbar>
