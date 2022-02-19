@@ -37,9 +37,10 @@ exports.generateToken = (id, email, res, overwrite) => {
   });
   return res.cookie('inSite-token', token, {
     expires: new Date(Date.now() + 3600000),
-    secure: false, // set to true if your using https
+    secure: true, // set to true if you're using https
     httpOnly: true,
     overwrite: false || overwrite,
+    sameSite: 'none',
   });
 };
 
@@ -50,9 +51,10 @@ exports.removeToken = (req, res, force) => {
   }
   res.cookie('inSite-token', token, {
     expires: new Date(Date.now()),
-    secure: false, // set to true if your using https
+    secure: true, // set to true if you're using https
     httpOnly: true,
     overwrite: true,
+    sameSite: 'none',
   });
   if (force) {
     return res.status(401).send({ message: 'User is not authorized!' });
