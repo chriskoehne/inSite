@@ -19,9 +19,11 @@ const Dashboard = (props) => {
   useEffect(() => { 
     async function callAuthenticate() {
       await authenticate(props);
-      if (window.location.pathname !== '/dashboard') {
+      if (/^dashboard\/*$/.test(window.location.pathname)) {
+        console.log("window pathname is not dhasboard, so we are returning")
         return;
       }
+      console.log("window pathname is dashboard so we call get email")
       getEmail(); // Update the document title using the browser API
     }
 
@@ -32,8 +34,10 @@ const Dashboard = (props) => {
 
   const getEmail = () => {
     if (state) {
+      console.log("state is somehow still set?")
       setEmail(state.email)
     } else {
+      console.log("is state still true?")
       setRedditSuccess(true); // we should add further check of the query params to ensure we have error handling bc it can respond with an error code
       const currentUrl = window.location.href;
       let start = currentUrl.indexOf('state') + 6

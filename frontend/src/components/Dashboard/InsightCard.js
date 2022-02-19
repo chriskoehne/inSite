@@ -51,7 +51,7 @@ const InsightCard = (props) => {
 
   let display;
   if (isLoggedIn) {
-    display = <LineChart onClick={function(){props.navigate(title.toLowerCase(), {state:{email: email, accessToken: redditAccessToken}})}}/>;
+    display = <LineChart onClick={function(){props.navigate(title.toLowerCase(), {state:{email: userEmail, accessToken: redditAccessToken}})}}/>;
     // convert code to token
     const body = {
       code: code,
@@ -66,21 +66,6 @@ const InsightCard = (props) => {
           console.log("should see token as:");
           console.log(res);
           setAccessToken(res.data.accessToken);
-          console.log("going to attempt to use access token now");
-          const redditQuery = {
-            accessToken: res.data.accessToken,
-          };
-          console.log("body is")
-          console.log(redditQuery)
-          axios
-            .get("http://localhost:5000/redditMe", {params: redditQuery})
-            .then((ans) => {
-              if (ans.data.me) {
-                console.log("subreddit request ans - see data name");
-                console.log(ans);
-              }
-              
-            });
         }
       });
   } else {
