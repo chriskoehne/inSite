@@ -42,3 +42,37 @@
 
   
 }
+
+/* Dropdown */
+
+.ddWrapper {
+  display: flex;
+  min-height: 38px;
+  flex-wrap: wrap;
+}
+
+.ddHeader {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 100%;
+  padding: 0 20px;
+  
+}
+
+
+
+.ddList {
+  box-shadow: 0.125rem .25rem rgba(243, 240, 240, 0.918) !important;
+  padding: 0;
+  margin: 0;
+
+}
+
+/*
+<Navbar.Collapse className='justify-content-end'>
+            <Navbar.Text style={{ color: 'white' }}>settings</Navbar.Text>
+          </Navbar.Collapse>
+
+          <Navbar.Text style={{ color: 'white' }}>settings</Navbar.Text>
+          */ 

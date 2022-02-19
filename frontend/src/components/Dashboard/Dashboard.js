@@ -5,6 +5,8 @@ import {useLocation} from 'react-router-dom';
 import InsightCard from './InsightCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
+import Dropdown from './Dropdown'
+
 
 const Dashboard = (props) => {
 
@@ -12,6 +14,19 @@ const Dashboard = (props) => {
   const [redditSuccess, setRedditSuccess] = useState(false);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('')
+
+  const items = [
+    {
+      id: 1,
+      value: "View Profile",
+
+    },
+    {
+      id: 2,
+      value: "Change Password",
+
+    },
+  ];
   // const email = props.navigate.arguments.email || 'Invalid login occurred'
   
   // console.log("logging")
@@ -61,7 +76,7 @@ const Dashboard = (props) => {
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className='justify-content-end'>
-            <Navbar.Text style={{ color: 'white' }}>settings</Navbar.Text>
+            <Dropdown title="Settings" items={items} style={{color: 'red'}}/>
           </Navbar.Collapse>
         </Container>
       </Navbar>
