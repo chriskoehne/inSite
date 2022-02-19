@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 // import Popup from 'reactjs-popup';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
+import { unauthedOnly } from '../auth/auth';
 import styles from './createAccount.module.css';
 
 const CreateAccount = (props) => {
@@ -12,6 +13,13 @@ const CreateAccount = (props) => {
   const [phone, setPhone] = useState('');
   const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
   const [smsCode, setSMSCode] = useState('');
+
+  useEffect(() => {
+    async function callUnauthedOnly() {
+      await unauthedOnly(props);
+    }
+    callUnauthedOnly();
+  }, []);
 
   const handleClose = (e) => {
     e.preventDefault();

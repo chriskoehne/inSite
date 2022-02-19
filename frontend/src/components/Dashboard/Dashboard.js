@@ -5,6 +5,7 @@ import {useLocation} from 'react-router-dom';
 import InsightCard from './InsightCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
+import { authenticate } from '../../auth/auth';
 
 const Dashboard = (props) => {
 
@@ -14,13 +15,20 @@ const Dashboard = (props) => {
   const [code, setCode] = useState('')
   // const email = props.navigate.arguments.email || 'Invalid login occurred'
   
-  // console.log("logging")
-  // console.log(props)
-  // console.log(params)
-  useEffect(() => {
-    // Update the document title using the browser API
-    getEmail();
-  });
+
+  useEffect(() => { 
+    async function callAuthenticate() {
+      await authenticate(props);
+      if (window.location.pathname !== '/dashboard') {
+        return;
+      }
+      getEmail(); // Update the document title using the browser API
+    }
+
+    callAuthenticate();
+  
+  }, []);
+
 
   const getEmail = () => {
     if (state) {
