@@ -19,7 +19,7 @@ const Dashboard = (props) => {
   useEffect(() => { 
     async function callAuthenticate() {
       await authenticate(props);
-      if (window.location.pathname !== '/dashboard') {
+      if (/^dashboard\/*$/.test(window.location.pathname)) {
         return;
       }
       getEmail(); // Update the document title using the browser API
