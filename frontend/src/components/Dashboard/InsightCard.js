@@ -5,9 +5,10 @@ import axios from "axios";
 import { Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
-import BarChart from "../charts/barChart";
-import LineChart from "../charts/lineChart";
-import PieChart from "../charts/pieChart";
+import { barChart } from "../charts/barChart";
+import { pieChart } from "../charts/pieChart";
+import { lineChart } from "../charts/lineChart";
+
 
 
 const InsightCard = (props) => {
@@ -55,7 +56,7 @@ const InsightCard = (props) => {
 
   let display;
   if (isLoggedIn) {
-    display = <LineChart/>;
+    display = lineChart();
     // convert code to token
     const body = {
       code: code
