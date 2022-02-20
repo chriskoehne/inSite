@@ -8,6 +8,8 @@
   display: flex;
   flex-flow: column;
   height: 100vh;
+  background-color: #FF4500;
+  text-align: center;
 }
 
 .in {
@@ -38,7 +40,17 @@
 }
 
 .socialsCard {
-  height: 100%;
+  height: 76vh;
+  width: 80vw;
+  margin-left: 9vw;
+}
 
-  
+.slideshow {
+  width: 100vw;
+  height: 85vh;
+}
+
+.chartContainer {
+  height: 10vh;
+  width: 35vw;
 }

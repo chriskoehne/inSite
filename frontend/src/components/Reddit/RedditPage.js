@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Navbar, Row, Card, Col } from 'react-bootstrap';
+import { Container, Navbar, Row, Card, Col, Carousel } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import LineChart from "../charts/lineChart";
 import styles from './Reddit.module.css';
 
 
 const RedditPage = (props) => {
 
+  const [index, setIndex] = useState(0);
+  
   
   useEffect(() => {
     // Update the document title using the browser API
   });
+
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
 
   
 //clunky, but follow the above and add to the following if statements for the other social medias
@@ -32,16 +39,28 @@ const RedditPage = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <h1>Reddit Page</h1>
-      <Row xs={1} md={2} className={styles.cardRow}>
-      <Card className={styles.socialsCard}>
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>Card Text</Card.Text>
-          Display a chart
-        </Card.Body>
-      </Card>
-      </Row>
+
+      <div className={styles.backgroundstyle}>
+        <Carousel className={styles.slideshow} activeIndex={index} onSelect={handleSelect}>
+          <Carousel.Item>
+            <Row xs={1} md={2} className={styles.cardRow}>
+              <Card className={styles.socialsCard}>
+                <Row>
+                  <Col>
+                    <div className={styles.chartContainer}>
+                      <LineChart className={styles.chart} />
+                      <LineChart className={styles.chart} />
+                    </div>
+                  </Col>
+                  <Col>
+                    free karma woop
+                  </Col>
+                </Row>
+              </Card>
+            </Row>
+          </Carousel.Item>
+        </Carousel>
+      </div>
     </div>
   );
 
