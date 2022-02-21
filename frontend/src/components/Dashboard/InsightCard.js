@@ -10,6 +10,7 @@ import LineChart from "../charts/lineChart";
 import PieChart from "../charts/pieChart";
 
 
+
 const InsightCard = (props) => {
   // const [redditStatus, setRedditStatus] = useState('');
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ const InsightCard = (props) => {
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(true);
 
+  const image = props.image || "";
   const title = props.title || "Default Title";
   const text = props.text || "Default Text";
   const isLoggedIn = props.isLoggedIn || false;

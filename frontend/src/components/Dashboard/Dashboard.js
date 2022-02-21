@@ -5,6 +5,8 @@ import {useLocation} from 'react-router-dom';
 import InsightCard from './InsightCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
+import ChangePassword from './ChangePassword';
+//import Logos from './Logos'
 //import Dropdown from './Dropdown'
 
 
@@ -49,6 +51,14 @@ const Dashboard = (props) => {
       //get it from the url
     }
   }
+
+  const handleChangePassword = () => {
+    props.navigate('/ChangePassword');
+  };
+
+  const handleSignOut = () => {
+    props.navigate('/welcome');
+  };
   
 //clunky, but follow the above and add to the following if statements for the other social medias
 
@@ -70,8 +80,9 @@ const Dashboard = (props) => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">View Profile</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Change password</Dropdown.Item>
+
+              <Dropdown.Item onClick={handleChangePassword} href="#/action-1">Change password</Dropdown.Item>
+              <Dropdown.Item onClick={handleSignOut} href="#/action-2">Sign Out</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           </Navbar.Collapse>
