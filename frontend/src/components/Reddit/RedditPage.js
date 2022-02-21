@@ -9,15 +9,10 @@ const c = require('./constants/constants');
 const RedditPage = (props) => {
   const { state } = useLocation();
   const [me, setMe] = useState({});
-  const [kinds, setKinds] = useState({
-    comments: 0,
-    accounts: 0,
-    links: 0,
-    messages: 0,
-    subreddits: 0,
-    awards: 0,
-    promocampaigns: 0
-  });
+  const [comments, setComments] = useState(0);
+  const [messages, setMessages] = useState(0);
+  const [links, setLinks] = useState(0);
+  const [awards, setAwards] = useState(0);
   // use state.email and state.accessToken
 
   useEffect(() => {
@@ -51,44 +46,15 @@ const RedditPage = (props) => {
               array.forEach(function (item, index) {
                 switch(item.kind) {
                   case c.COMMENT:
-                    setKinds(prevState => ({
-                      ...prevState,
-                      comments: prevState.comments + 1
-                  }))
-                  case c.ACCOUNT:
-                    setKinds(prevState => ({
-                      ...prevState,
-                      accounts: prevState.accounts + 1
-                  }))
-                  case c.LINK:
-                    setKinds(prevState => ({
-                      ...prevState,
-                      links: prevState.links + 1
-                  }))
+                    setComments(comments+1)
                   case c.MESSAGE:
-                    setKinds(prevState => ({
-                      ...prevState,
-                      messages: prevState.messages + 1
-                  }))
-                  case c.SUBREDDIT:
-                    setKinds(prevState => ({
-                      ...prevState,
-                      subreddits: prevState.subreddits + 1
-                  }))
+                    setMessages(messages+1)
+                  case c.LINK:
+                    setLinks(links+1)
                   case c.AWARD:
-                    setKinds(prevState => ({
-                      ...prevState,
-                      awards: prevState.awards + 1
-                  }))
-                  case c.PROMOCAMPAIGN:
-                    setKinds(prevState => ({
-                      ...prevState,
-                      promocampaigns: prevState.promocampaigns + 1
-                  }))
+                    setAwards(awards+1)
                 }
               });
-              console.log("kinds is")
-              console.log(kinds)
             }
           });
         }
@@ -122,9 +88,10 @@ const RedditPage = (props) => {
             <Card.Title>Card Title</Card.Title>
             <Card.Text>Card Text</Card.Text>
             Some info:
-            Num comments: {kinds.comments}
-            Num messages: {kinds.messages}
-            Num awards: {kinds.awards}
+            Num comments: {comments}
+            Num messages: {messages}
+            Num links: {links}
+            Num awards: {awards}
           </Card.Body>
         </Card>
       </Row>
