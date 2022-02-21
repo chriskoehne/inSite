@@ -11,6 +11,8 @@ const Login = (props) => {
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState('');
   const [smsCode, setSMSCode] = useState('');
+  const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
+  const [showErrorModal, setErrorModal] = useState('')
   const [id, setId] = useState('');
 
   useEffect(() => {
@@ -19,6 +21,8 @@ const Login = (props) => {
     }
     callUnauthedOnly();
   }, []);
+
+  const handleCloseError = () => setErrorModal(false) // Handles Error Modal Close
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -64,6 +68,12 @@ const Login = (props) => {
       } else {
         console.log('there was an error in user creation');
       }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data.message)
+        setErrorModal(true);
+        setErrorText(error.response.data.message)
+      }
     });
   };
 
@@ -102,6 +112,14 @@ const Login = (props) => {
                   />
                 </div>
               </form>
+            </Modal.Body>
+          </Modal>
+          <Modal show={showErrorModal} onHide={handleCloseError}>
+            <Modal.Header closeButton>
+              <Modal.Title>Login Error</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {errorText}
             </Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>

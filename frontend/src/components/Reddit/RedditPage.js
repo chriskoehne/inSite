@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Container, Navbar, Row, Card, Col } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./Reddit.module.css";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Container, Navbar, Row, Card, Col, Carousel } from 'react-bootstrap';
+import {useLocation} from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import LineChart from "../charts/lineChart";
+import styles from './Reddit.module.css';
 const c = require('./constants/constants');
+
 
 const RedditPage = (props) => {
   const { state } = useLocation();
@@ -15,6 +17,9 @@ const RedditPage = (props) => {
   const [awards, setAwards] = useState(0);
   // use state.email and state.accessToken
 
+  const [index, setIndex] = useState(0);
+  
+  
   useEffect(() => {
     // Update the document title using the browser API
     console.log("going to attempt to use access token now");
@@ -63,7 +68,12 @@ const RedditPage = (props) => {
     
   });
 
-  //clunky, but follow the above and add to the following if statements for the other social medias
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
+
+  
+//clunky, but follow the above and add to the following if statements for the other social medias
 
   return (
     <div className={styles.box}>
@@ -81,20 +91,36 @@ const RedditPage = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <h1>Reddit Page for {me.name}</h1>
-      <Row xs={1} md={2} className={styles.cardRow}>
-        <Card className={styles.socialsCard}>
-          <Card.Body>
-            <Card.Title>Card Title</Card.Title>
-            <Card.Text>Card Text</Card.Text>
-            Some info:
-            Num comments: {comments}
-            Num messages: {messages}
-            Num links: {links}
-            Num awards: {awards}
-          </Card.Body>
-        </Card>
-      </Row>
+
+      <div className={styles.backgroundstyle}>
+        <Carousel className={styles.slideshow} activeIndex={index} onSelect={handleSelect}>
+          <Carousel.Item>
+            <Row xs={1} md={2} className={styles.cardRow}>
+              <Card className={styles.socialsCard}>
+                <Row>
+                  <Col>
+                    <div className={styles.chartContainer}>
+                      <LineChart className={styles.chart} />
+                      <LineChart className={styles.chart} />
+                    </div>
+                  </Col>
+                  <Col>
+                    free karma woop
+                    <br/>
+                    Num comments: {comments}
+                    <br/>
+                    Num messages: {messages}
+                    <br/>
+                    Num links: {links}
+                    <br/>
+                    Num awards: {awards}
+                  </Col>
+                </Row>
+              </Card>
+            </Row>
+          </Carousel.Item>
+        </Carousel>
+      </div>
     </div>
   );
 };

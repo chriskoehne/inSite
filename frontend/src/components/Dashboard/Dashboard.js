@@ -20,7 +20,6 @@ const Dashboard = (props) => {
     async function callAuthenticate() {
       await authenticate(props);
       if (/^dashboard\/*$/.test(window.location.pathname)) {
-        console.log("window pathname is not dhasboard, so we are returning")
         return;
       }
       console.log("window pathname is dashboard so we call get email")

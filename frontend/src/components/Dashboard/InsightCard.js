@@ -5,9 +5,11 @@ import axios from "axios";
 import { Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
-import BarChart from "../charts/barChart";
+import { barChart } from "../charts/barChart";
+import { pieChart } from "../charts/pieChart";
 import LineChart from "../charts/lineChart";
-import PieChart from "../charts/pieChart";
+import { SocialIcon } from 'react-social-icons';
+
 
 
 const InsightCard = (props) => {
@@ -50,8 +52,30 @@ const InsightCard = (props) => {
   };
 
   let display;
+  let icon;
   if (isLoggedIn) {
-    display = <LineChart onClick={function(){props.navigate(title.toLowerCase(), {state:{email: userEmail, accessToken: redditAccessToken}})}}/>;
+    switch (title) {
+      case 'Reddit':
+        display = <LineChart color={'#FF4500'} onClick={function(){props.navigate(title.toLowerCase(), {state:{email: userEmail, accessToken: redditAccessToken}})}}/>;
+        icon = <SocialIcon url="https://reddit.com/user/usernamehere" />; //can pass in username to the url, so if they click the icon they go their profile page
+        break;
+      case 'Twitter':
+        display = <LineChart color={'#55ADEE'}/>;
+        icon = <SocialIcon url="https://twitter.com/usernamehere" />;
+        break;
+      case 'Instagram':
+        display = <LineChart color={'#E94475'}/>;
+        icon = <SocialIcon url="https://instagram.com/kanyewest" />;
+        break;
+      case 'YouTube':
+        display = <LineChart color={'#FF0000'}/>;
+        icon = <SocialIcon url="https://youtube.com/kanyewest" />;
+        break;
+      default:
+        console.log("default case");
+        display = <LineChart />;
+    }
+    
     // convert code to token
     const body = {
       code: code,
@@ -82,8 +106,10 @@ const InsightCard = (props) => {
     <Col className={styles.cardCol}>
       <Card className={styles.socialsCard}>
         <Card.Body>
-          <Card.Title>{title}</Card.Title>
-          <Card.Text>{text}</Card.Text>
+          <Card.Title>{title} {icon}</Card.Title>
+          <Card.Text>
+            {text}
+          </Card.Text>
           {display}
         </Card.Body>
       </Card>
