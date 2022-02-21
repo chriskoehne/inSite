@@ -5,6 +5,7 @@ import {useLocation} from 'react-router-dom';
 import InsightCard from './InsightCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
+import { authenticate } from '../../auth/auth';
 
 const Dashboard = (props) => {
 
@@ -14,13 +15,20 @@ const Dashboard = (props) => {
   const [code, setCode] = useState('')
   // const email = props.navigate.arguments.email || 'Invalid login occurred'
   
-  // console.log("logging")
-  // console.log(props)
-  // console.log(params)
-  useEffect(() => {
-    // Update the document title using the browser API
-    getEmail();
-  });
+
+  useEffect(() => { 
+    async function callAuthenticate() {
+      await authenticate(props);
+      if (/^dashboard\/*$/.test(window.location.pathname)) {
+        return;
+      }
+      getEmail(); // Update the document title using the browser API
+    }
+
+    callAuthenticate();
+  
+  }, []);
+
 
   const getEmail = () => {
     if (state) {
@@ -37,7 +45,9 @@ const Dashboard = (props) => {
       start = currentUrl.indexOf('code') + 5
       almost = currentUrl.substring(start)
       let code = almost.substring(0, almost.length - 2)
+      console.log("email:")
       console.log(email)
+      console.log("code:")
       console.log(code)
       setEmail(email)
       setCode(code)
@@ -66,9 +76,9 @@ const Dashboard = (props) => {
       
       <Row xs={1} md={2} className={styles.cardRow}>
         <InsightCard title='Reddit' text='Reddit' isLoggedIn={redditSuccess} email={email} code={code} navigate={props.navigate} setExternalUrl={props.setExternalUrl}/>
-        <InsightCard title='Twitter' text='put Twitter stuff here' isLoggedIn={true}/>
-        <InsightCard title='Instagram' text='put Instagram stuff here' isLoggedIn={true}/>
-        <InsightCard title='YouTube' text='put YouTube stuff here' isLoggedIn={true}/>
+        <InsightCard title='Twitter' text='Twitter' isLoggedIn={true} email={email} navigate={props.navigate}/>
+        <InsightCard title='Instagram' text='Instagram' isLoggedIn={true} email={email} navigate={props.navigate}/>
+        <InsightCard title='YouTube' text='YouTube' isLoggedIn={true} email={email} navigate={props.navigate}/>
       </Row>
     </div>
   );

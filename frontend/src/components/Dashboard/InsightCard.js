@@ -25,11 +25,9 @@ const InsightCard = (props) => {
   const userEmail = props.email || "Invalid user loggedin";
   const code = props.code;
 
-  console.log(text)
-  console.log(isLoggedIn)
-
-  console.log("props in insite card");
-  console.log(props);
+  console.log(text);
+  console.log(isLoggedIn);
+  console.log(props)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,18 +35,16 @@ const InsightCard = (props) => {
     //axios stuff
     const body = {
       email: userEmail,
-    }
-
-    
+    };
 
     axios
-      .post("http://localhost:5000/" + text.toLowerCase() + "Login/", body)
+      .post("http://localhost:5000/" + title.toLowerCase() + "Login/", body)
       .then((res) => {
         console.log(res);
         // res.link
         if (res.data.success) {
-          console.log("got the link!")
-          window.location.href = res.data.link
+          console.log("got the link!");
+          window.location.href = res.data.link;
         } else {
           console.log("there was an error in " + text + " user signup");
         }
@@ -60,7 +56,7 @@ const InsightCard = (props) => {
   if (isLoggedIn) {
     switch (title) {
       case 'Reddit':
-        display = <LineChart color={'#FF4500'}/>;
+        display = <LineChart color={'#FF4500'} onClick={function(){props.navigate(title.toLowerCase(), {state:{email: email, accessToken: redditAccessToken}})}}/>;
         icon = <SocialIcon url="https://reddit.com/user/usernamehere" />; //can pass in username to the url, so if they click the icon they go their profile page
         break;
       case 'Twitter':
@@ -80,18 +76,37 @@ const InsightCard = (props) => {
         display = <LineChart />;
     }
     
-    
     // convert code to token
     const body = {
-      code: code
-    }
-    axios.post("http://localhost:5000/" + text.toLowerCase() + "CodeToToken/", body).then((res) => {
-    console.log("back in frontend")  
-    console.log(res)
-    setAccessToken(res.accessToken)
-      //get token
-
-    });
+      code: code,
+    };
+    axios
+      .post(
+        "http://localhost:5000/" + title.toLowerCase() + "CodeToToken/",
+        body
+      )
+      .then((res) => {
+        if (res.data.accessToken) {
+          console.log("should see token as:");
+          console.log(res);
+          setAccessToken(res.data.accessToken);
+          console.log("going to attempt to use access token now");
+          const redditQuery = {
+            accessToken: res.data.accessToken,
+          };
+          console.log("body is")
+          console.log(redditQuery)
+          axios
+            .get("http://localhost:5000/redditMe", {params: redditQuery})
+            .then((ans) => {
+              if (ans.data.me) {
+                console.log("subreddit request ans - see data name");
+                console.log(ans);
+              }
+              
+            });
+        }
+      });
   } else {
     display = (
       <form onSubmit={handleSubmit}>

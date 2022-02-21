@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
 // import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import styles from './login.module.css';
+import { unauthedOnly } from '../auth/auth';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState('');
   const [smsCode, setSMSCode] = useState('');
+  const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
+  const [showErrorModal, setErrorModal] = useState('')
+  const [id, setId] = useState('');
+
+  useEffect(() => {
+    async function callUnauthedOnly() {
+      await unauthedOnly(props);
+    }
+    callUnauthedOnly();
+  }, []);
+
+  const handleCloseError = () => setErrorModal(false) // Handles Error Modal Close
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -17,14 +30,22 @@ const Login = (props) => {
     console.log(smsCode);
     const body = {
       email: email,
+      id: id,
       code: smsCode,
     };
     axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
-      if (res.status === 200) {
-        console.log('status was 200');
-        props.navigate('/dashboard', {state:{email: email}});
-      } else {
-        console.log('incorrect code');
+      try {
+        if (res.status === 200) {
+          console.log('status was 200');
+          console.log('cookie is');
+          console.log(res.cookie);
+          props.navigate('/dashboard', { state: { email: email } });
+        } else {
+          console.log('incorrect code');
+        }
+      } catch (err) {
+        console.log('hereasdfasd');
+        console.log(err);
       }
     });
   };
@@ -42,10 +63,16 @@ const Login = (props) => {
       console.log(res);
       if (res.status === 200) {
         console.log('the modal should popup now');
-
+        setId(res.message);
         setShowModal(true);
       } else {
         console.log('there was an error in user creation');
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data.message)
+        setErrorModal(true);
+        setErrorText(error.response.data.message)
       }
     });
   };
@@ -53,7 +80,7 @@ const Login = (props) => {
   return (
     <div>
       <div className={styles.background}>
-          <div className={styles.login_background}>
+        <div className={styles.login_background}>
           <div className={styles.inlineDiv}>
             <h1 className={styles.in}>in</h1>
             <h1 className={styles.site}>Site</h1>
@@ -64,7 +91,8 @@ const Login = (props) => {
             </Modal.Header>
             <Modal.Body>
               Your phone number provided was used to create a two factor user.
-              Please enter the code sent to your phone to verify this connection.
+              Please enter the code sent to your phone to verify this
+              connection.
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>
@@ -84,6 +112,14 @@ const Login = (props) => {
                   />
                 </div>
               </form>
+            </Modal.Body>
+          </Modal>
+          <Modal show={showErrorModal} onHide={handleCloseError}>
+            <Modal.Header closeButton>
+              <Modal.Title>Login Error</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {errorText}
             </Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>
@@ -112,7 +148,9 @@ const Login = (props) => {
               <input type='submit' value='Login' className='btn btn-primary' />
             </div>
           </form>
-          <a href='/createAccount' className={styles.createAcc}>New User?</a>
+          <a href='/createAccount' className={styles.createAcc}>
+            New User?
+          </a>
         </div>
       </div>
     </div>
