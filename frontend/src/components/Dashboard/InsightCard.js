@@ -58,12 +58,6 @@ const InsightCard = (props) => {
   let display;
   let icon;
   if (isLoggedIn) {
-    /*
-    reddit: #FF4500
-twitter: #55ADEE
-insta: #C30096
-youtube: #FF0000
-    */
     switch (title) {
       case 'Reddit':
         display = <LineChart color={'#FF4500'}/>;
@@ -74,7 +68,7 @@ youtube: #FF0000
         icon = <SocialIcon url="https://twitter.com/usernamehere" />;
         break;
       case 'Instagram':
-        display = <LineChart color={'#C30096'}/>;
+        display = <LineChart color={'#E94475'}/>;
         icon = <SocialIcon url="https://instagram.com/kanyewest" />;
         break;
       case 'YouTube':
