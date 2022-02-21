@@ -7,7 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
 import { barChart } from "../charts/barChart";
 import { pieChart } from "../charts/pieChart";
-import { lineChart } from "../charts/lineChart";
+import LineChart from "../charts/lineChart";
+import { SocialIcon } from 'react-social-icons';
 
 
 
@@ -55,8 +56,37 @@ const InsightCard = (props) => {
   };
 
   let display;
+  let icon;
   if (isLoggedIn) {
-    display = lineChart();
+    /*
+    reddit: #FF4500
+twitter: #55ADEE
+insta: #C30096
+youtube: #FF0000
+    */
+    switch (title) {
+      case 'Reddit':
+        display = <LineChart color={'#FF4500'}/>;
+        icon = <SocialIcon url="https://reddit.com/user/usernamehere" />; //can pass in username to the url, so if they click the icon they go their profile page
+        break;
+      case 'Twitter':
+        display = <LineChart color={'#55ADEE'}/>;
+        icon = <SocialIcon url="https://twitter.com/usernamehere" />;
+        break;
+      case 'Instagram':
+        display = <LineChart color={'#C30096'}/>;
+        icon = <SocialIcon url="https://instagram.com/kanyewest" />;
+        break;
+      case 'YouTube':
+        display = <LineChart color={'#FF0000'}/>;
+        icon = <SocialIcon url="https://youtube.com/kanyewest" />;
+        break;
+      default:
+        console.log("default case");
+        display = <LineChart />;
+    }
+    
+    
     // convert code to token
     const body = {
       code: code
@@ -82,7 +112,7 @@ const InsightCard = (props) => {
     <Col className={styles.cardCol}>
       <Card className={styles.socialsCard}>
         <Card.Body>
-          <Card.Title>{title}</Card.Title>
+          <Card.Title>{title} {icon}</Card.Title>
           <Card.Text>
             {text}
           </Card.Text>
