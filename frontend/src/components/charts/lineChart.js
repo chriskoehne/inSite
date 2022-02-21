@@ -50,13 +50,9 @@ export default class LineChart extends Component {
     };
 
     return (
-      <div>        
         <Line data={data} onClick={this.props.onClick} ref={this.props.chartRef} 
-        width="30%"
-        options={{ maintainAspectRatio: false }}
+        options={{ responsive: true, maintainAspectRatio: false }}
         />
-        
-      </div>
     );
   }
 }

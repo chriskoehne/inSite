@@ -1,31 +1,30 @@
 // import React, { useState } from 'react';
-import React, { useState } from "react";
+import React, { useState } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
-import axios from "axios";
-import { Card, Col } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./Dashboard.module.css";
-import BarChart from "../charts/barChart";
-import LineChart from "../charts/lineChart";
-import PieChart from "../charts/pieChart";
-
+import axios from 'axios';
+import { Card, Col } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import styles from './Dashboard.module.css';
+import BarChart from '../charts/barChart';
+import LineChart from '../charts/lineChart';
+import PieChart from '../charts/pieChart';
 
 const InsightCard = (props) => {
   // const [redditStatus, setRedditStatus] = useState('');
-  const [email, setEmail] = useState("");
-  const [redditAccessToken, setAccessToken] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [redditAccessToken, setAccessToken] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(true);
 
-  const title = props.title || "Default Title";
-  const text = props.text || "Default Text";
+  const title = props.title || 'Default Title';
+  const text = props.text || 'Default Text';
   const isLoggedIn = props.isLoggedIn || false;
-  const userEmail = props.email || "Invalid user loggedin";
+  const userEmail = props.email || 'Invalid user loggedin';
   const code = props.code;
 
   console.log(text);
   console.log(isLoggedIn);
-  console.log(props)
+  console.log(props);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,58 +35,65 @@ const InsightCard = (props) => {
     };
 
     axios
-      .post("http://localhost:5000/" + title.toLowerCase() + "Login/", body)
+      .post('http://localhost:5000/' + title.toLowerCase() + 'Login/', body)
       .then((res) => {
         console.log(res);
         // res.link
         if (res.data.success) {
-          console.log("got the link!");
+          console.log('got the link!');
           window.location.href = res.data.link;
         } else {
-          console.log("there was an error in " + text + " user signup");
+          console.log('there was an error in ' + text + ' user signup');
         }
       });
   };
 
   let display;
   if (isLoggedIn) {
-    display = <LineChart onClick={function(){props.navigate(title.toLowerCase(), {state:{email: email, accessToken: redditAccessToken}})}}/>;
+    display = (
+      <LineChart
+        onClick={function () {
+          props.navigate(title.toLowerCase(), {
+            state: { email: email, accessToken: redditAccessToken },
+          });
+        }}
+      />
+    );
     // convert code to token
     const body = {
       code: code,
     };
     axios
       .post(
-        "http://localhost:5000/" + title.toLowerCase() + "CodeToToken/",
+        'http://localhost:5000/' + title.toLowerCase() + 'CodeToToken/',
         body
       )
       .then((res) => {
         if (res.data.accessToken) {
-          console.log("should see token as:");
+          console.log('should see token as:');
           console.log(res);
           setAccessToken(res.data.accessToken);
-          console.log("going to attempt to use access token now");
+          console.log('going to attempt to use access token now');
           const redditQuery = {
             accessToken: res.data.accessToken,
           };
-          console.log("body is")
-          console.log(redditQuery)
+          console.log('body is');
+          console.log(redditQuery);
           axios
-            .get("http://localhost:5000/redditMe", {params: redditQuery})
+            .get('http://localhost:5000/redditMe', { params: redditQuery })
             .then((ans) => {
               if (ans.data.me) {
-                console.log("subreddit request ans - see data name");
+                console.log('subreddit request ans - see data name');
                 console.log(ans);
               }
-              
             });
         }
       });
   } else {
     display = (
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input type="submit" value="Login" className="btn btn-primary" />
+        <div className='form-group'>
+          <input type='submit' value='Login' className='btn btn-primary' />
         </div>
       </form>
     );
@@ -95,11 +101,14 @@ const InsightCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
-      <Card className={styles.socialsCard}>
+      <Card
+        style={{ borderColor: props.borderColor }}
+        className={styles.socialsCard}
+      >
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>{text}</Card.Text>
-          {display}
+          <div>{display}</div>
         </Card.Body>
       </Card>
     </Col>
