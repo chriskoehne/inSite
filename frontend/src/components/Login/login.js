@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { Button, Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
-// import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import styles from './login.module.css';
 
@@ -10,7 +8,11 @@ const Login = (props) => {
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState('');
   const [smsCode, setSMSCode] = useState('');
+  const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
+  const [showErrorModal, setErrorModal] = useState('');
   const [id, setId] = useState('');
+
+  const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -47,16 +49,25 @@ const Login = (props) => {
       password: password,
     };
 
-    axios.post('http://localhost:5000/login/', body).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        console.log('the modal should popup now');
-        setId(res.message);
-        setShowModal(true);
-      } else {
-        console.log('there was an error in user creation');
-      }
-    });
+    axios
+      .post('http://localhost:5000/login/', body)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          console.log('the modal should popup now');
+          setId(res.message);
+          setShowModal(true);
+        } else {
+          console.log('there was an error in user creation');
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data.message);
+          setErrorModal(true);
+          setErrorText(error.response.data.message);
+        }
+      });
   };
 
   return (
@@ -95,6 +106,12 @@ const Login = (props) => {
                 </div>
               </form>
             </Modal.Body>
+          </Modal>
+          <Modal show={showErrorModal} onHide={handleCloseError}>
+            <Modal.Header closeButton>
+              <Modal.Title>Login Error</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{errorText}</Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>
             <div className='form-group'>

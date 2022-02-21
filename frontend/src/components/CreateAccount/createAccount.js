@@ -12,7 +12,10 @@ const CreateAccount = (props) => {
   const [phone, setPhone] = useState('');
   const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
   const [smsCode, setSMSCode] = useState('');
+  const [errorText, setErrorText] = useState('');
+  const [showErrorModal, setErrorModal] = useState('');
 
+  const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
   const handleClose = (e) => {
     e.preventDefault();
     console.log('verifying sms code');
@@ -38,16 +41,42 @@ const CreateAccount = (props) => {
       password: password,
       phone: phone,
     };
+    console.log('lasdas');
+    if (
+      !email
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+    ) {
+      setErrorText('Email is not valid');
+      setErrorModal(true);
+      return;
+    }
+    if (password.length < 8) {
+      setErrorText('Password has to be longer than 7 characters');
+      setErrorModal(true);
+      return;
+    }
 
-    axios.post('http://localhost:5000/userCreation/', body).then((res) => {
-      if (res.status === 200) {
-        console.log('the modal should popup now');
+    axios
+      .post('http://localhost:5000/userCreation/', body)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log('the modal should popup now');
 
-        setShowModal(true);
-      } else {
-        console.log('there was an error in user creation');
-      }
-    });
+          setShowModal(true);
+        } else {
+          console.log('there was an error in user creation');
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data.message);
+          setErrorModal(true);
+          setErrorText(error.response.data.message);
+        }
+      });
   };
 
   // Formats Phone Number
@@ -100,6 +129,12 @@ const CreateAccount = (props) => {
                 </div>
               </form>
             </Modal.Body>
+          </Modal>
+          <Modal show={showErrorModal} onHide={handleCloseError}>
+            <Modal.Header closeButton>
+              <Modal.Title>SIGNUP ERROR</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{errorText}</Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>
             <div className='form-group'>

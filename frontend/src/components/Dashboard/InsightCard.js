@@ -1,13 +1,14 @@
-// import React, { useState } from 'react';
 import React, { useState } from 'react';
-// import { Button, Container, Row, Col } from "react-bootstrap";
-import axios from 'axios';
-import { Card, Col } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import styles from './Dashboard.module.css';
-import BarChart from '../charts/barChart';
-import LineChart from '../charts/lineChart';
-import PieChart from '../charts/pieChart';
+import axios from "axios";
+import { Card, Col } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "./Dashboard.module.css";
+import { BarChart } from "../Charts/BarChart";
+import { PieChart } from "../Charts/PieChart";
+import LineChart from "../Charts/LineChart";
+import { SocialIcon } from 'react-social-icons';
+
+
 
 const InsightCard = (props) => {
   // const [redditStatus, setRedditStatus] = useState('');
@@ -49,16 +50,30 @@ const InsightCard = (props) => {
   };
 
   let display;
+  let icon;
   if (isLoggedIn) {
-    display = (
-      <LineChart
-        onClick={function () {
-          props.navigate(title.toLowerCase(), {
-            state: { email: email, accessToken: redditAccessToken },
-          });
-        }}
-      />
-    );
+    switch (title) {
+      case 'Reddit':
+        display = <LineChart color={'#FF4500'} onClick={function(){props.navigate(title.toLowerCase(), {state:{email: userEmail, accessToken: redditAccessToken}})}}/>;
+        icon = <SocialIcon url="https://reddit.com/user/me" />; //can pass in username to the url, so if they click the icon they go their profile page
+        break;
+      case 'Twitter':
+        display = <LineChart color={'#55ADEE'}/>;
+        icon = <SocialIcon url="https://twitter.com/usernamehere" />;
+        break;
+      case 'Instagram':
+        display = <LineChart color={'#E94475'}/>;
+        icon = <SocialIcon url="https://instagram.com/kanyewest" />;
+        break;
+      case 'YouTube':
+        display = <LineChart color={'#FF0000'}/>;
+        icon = <SocialIcon url="https://youtube.com/kanyewest" />;
+        break;
+      default:
+        console.log("default case");
+        display = <LineChart />;
+    }
+    
     // convert code to token
     const body = {
       code: code,
@@ -73,20 +88,6 @@ const InsightCard = (props) => {
           console.log('should see token as:');
           console.log(res);
           setAccessToken(res.data.accessToken);
-          console.log('going to attempt to use access token now');
-          const redditQuery = {
-            accessToken: res.data.accessToken,
-          };
-          console.log('body is');
-          console.log(redditQuery);
-          axios
-            .get('http://localhost:5000/redditMe', { params: redditQuery })
-            .then((ans) => {
-              if (ans.data.me) {
-                console.log('subreddit request ans - see data name');
-                console.log(ans);
-              }
-            });
         }
       });
   } else {
@@ -106,9 +107,12 @@ const InsightCard = (props) => {
         className={styles.socialsCard}
       >
         <Card.Body>
-          <Card.Title>{title}</Card.Title>
-          <Card.Text>{text}</Card.Text>
-          <div>{display}</div>
+          <Card.Title>{icon} {title}</Card.Title>
+          <Card.Text>
+          </Card.Text>
+          <div>
+          {display}
+          </div>
         </Card.Body>
       </Card>
     </Col>

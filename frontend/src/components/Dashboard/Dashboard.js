@@ -21,6 +21,7 @@ const Dashboard = (props) => {
     if (state) {
       setEmail(state.email);
     } else {
+      console.log("is state still true?")
       setRedditSuccess(true); // we should add further check of the query params to ensure we have error handling bc it can respond with an error code
       const currentUrl = window.location.href;
       let start = currentUrl.indexOf('state') + 6;
@@ -68,7 +69,7 @@ const Dashboard = (props) => {
         <InsightCard
           title='Instagram'
           text='Instagram'
-          borderColor='#C30096'
+          borderColor='#E94475'
           isLoggedIn={true}
           email={email}
           navigate={props.navigate}
