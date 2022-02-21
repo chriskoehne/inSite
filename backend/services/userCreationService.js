@@ -59,3 +59,73 @@ exports.signup = async function (email, password, phone) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
+
+exports.pureSignup = async function (email, password) {
+  try {
+    // console.log("in pure signup")
+    return "Pure signup worked"
+  //   if ((await User.find({ email: email })).length > 0) {
+  //     console.log(c.EMAIL_TAKEN)
+  //     return c.EMAIL_TAKEN;
+  //   }
+
+  //   const salt = await bcrypt.genSalt();
+  //   const hashedPassword = await bcrypt.hash(password, salt);
+
+  //   let result = await User.create({
+  //     email: email,
+  //     password: hashedPassword,
+  //   });
+
+  //   if (!(result instanceof User)) {
+  //     console.log('failed to create user');
+  //     return c.USER_CREATION_ERR;
+  //   } else {
+  //     return "valid mongo user"
+  //   }
+   
+
+  } catch (err) {
+    console.log(err.message);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.deleteUser = async function (email) {
+  try {
+    console.log("deleting user")
+    let user = await User.findOne({ email: email })
+    let authyId = user.authyId
+    let deleted = await User.remove({_id: user._id})
+    
+    return await new Promise((resolve) => {
+      authy.delete_user(authyId, function (err, res) {
+        if (err) {
+          resolve({deleted, err})
+        }
+        else {
+          console.log(success)
+          resolve(deleted, res)
+        }
+      });
+    });
+
+  } catch (err) {
+    console.log(err.message);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.pureDeleteUser = async function (email) {
+  try {
+    // console.log("deleting pure user")
+    return {status: 200}
+    let user = await User.findOne({ email: email })
+    let deleted = await User.remove({_id: user._id})
+    return deleted;
+
+  } catch (err) {
+    console.log(err.message);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};

@@ -45,6 +45,8 @@ router.post("/userDemo", demoController.userDemo);
 
 router.post("/userCreation", userCreationController.userCreation);
 
+router.post("/userDelete", userCreationController.deleteUser);
+
 router.post("/verifyUser", verifyController.verify);
 
 router.post("/login", userLoginController.login);

@@ -8,6 +8,9 @@ var userCreationService = require(path.resolve(
 
 exports.userCreation = async function (req, res, next) {
   try {
+    console.log("in user creation controller, objects are: res, req")
+    console.log(res)
+    console.log(req)
     let result = await userCreationService.signup(
       req.body.email,
       req.body.password,
@@ -26,6 +29,18 @@ exports.userCreation = async function (req, res, next) {
         //success
         return res.status(200).json({ message: result }); //should be the user's id
     }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.deleteUser = async function (req, res, next) {
+  try {
+    let result = await userCreationService.deleteUser(
+      req.body.email
+    );
+    return res.status(200).json({message: result})
+   
   } catch (e) {
     return res.status(400).json({ message: e.message });
   }

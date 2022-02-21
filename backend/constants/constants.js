@@ -1,20 +1,20 @@
 
 
 module.exports = {
-  USER_NOT_FOUND: 'User not found!',
-  EMAIL_TAKEN: 'Email is already in use!',
-  USER_CREATION_ERR: 'Error creating user in MongoDB!',
-  INCORRECT_PASSWORD: 'Incorrect password!',
+  USER_NOT_FOUND: 'Error: User not found!',
+  EMAIL_TAKEN: 'Error: Email is already in use!',
+  USER_CREATION_ERR: 'Error: Error creating user in MongoDB!',
+  INCORRECT_PASSWORD: 'Error: Incorrect password!',
 
 
-  AUTHY_REGISTER_ERR: 'Authy register error!',
-  AUTHY_REQUEST_SMS_ERR: 'Authy SMS error!',
-  AUTHY_VERIFY_ERROR: 'Authy verify error!',
+  AUTHY_REGISTER_ERR: 'Error: Authy register error!',
+  AUTHY_REQUEST_SMS_ERR: 'Error: Authy SMS error!',
+  AUTHY_VERIFY_ERROR: 'Error: Authy verify error!',
 
 
-  GENERAL_TRY_CATCH_ERR: 'General try-catch error!',
+  GENERAL_TRY_CATCH_ERR: 'Error: General try-catch error!',
 
-  AUTHY_REGISTER_SUCCESS: 'Authy register success!',
+  AUTHY_REGISTER_SUCCESS: 'Error: Authy register success!',
   SUCCESS: 'Success!', //general success message
 
 
