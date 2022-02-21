@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// import { Button, Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
-// import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import styles from './login.module.css';
-import { unauthedOnly } from '../auth/auth';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
@@ -12,17 +9,10 @@ const Login = (props) => {
   const [showModal, setShowModal] = useState('');
   const [smsCode, setSMSCode] = useState('');
   const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
-  const [showErrorModal, setErrorModal] = useState('')
+  const [showErrorModal, setErrorModal] = useState('');
   const [id, setId] = useState('');
 
-  useEffect(() => {
-    async function callUnauthedOnly() {
-      await unauthedOnly(props);
-    }
-    callUnauthedOnly();
-  }, []);
-
-  const handleCloseError = () => setErrorModal(false) // Handles Error Modal Close
+  const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -59,22 +49,25 @@ const Login = (props) => {
       password: password,
     };
 
-    axios.post('http://localhost:5000/login/', body).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        console.log('the modal should popup now');
-        setId(res.message);
-        setShowModal(true);
-      } else {
-        console.log('there was an error in user creation');
-      }
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response.data.message)
-        setErrorModal(true);
-        setErrorText(error.response.data.message)
-      }
-    });
+    axios
+      .post('http://localhost:5000/login/', body)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          console.log('the modal should popup now');
+          setId(res.message);
+          setShowModal(true);
+        } else {
+          console.log('there was an error in user creation');
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data.message);
+          setErrorModal(true);
+          setErrorText(error.response.data.message);
+        }
+      });
   };
 
   return (
@@ -118,9 +111,7 @@ const Login = (props) => {
             <Modal.Header closeButton>
               <Modal.Title>Login Error</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-              {errorText}
-            </Modal.Body>
+            <Modal.Body>{errorText}</Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>
             <div className='form-group'>
@@ -149,7 +140,7 @@ const Login = (props) => {
             </div>
           </form>
           <a href='/createAccount' className={styles.createAcc}>
-            New User?
+            New user?
           </a>
         </div>
       </div>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-// import logo from './logo.svg';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import Login from './components/login';
+import NavRoute from './components/Routing/NavRoute';
+import ProtectedRoute from './components/Routing/ProtectedRoute';
+import UnprotectedRoute from './components/Routing/UnprotectedRoute';
+import Login from './components/Login/login';
 import Home from './components/home';
-import CreateAccount from './components/createAccount';
+import CreateAccount from './components/CreateAccount/createAccount';
 import Dashboard from './components/Dashboard/Dashboard';
 import Welcome from './components/Welcome/Welcome';
 import CookieCheck from './components/testing/CookieCheck';
@@ -20,20 +22,59 @@ const App = () => {
   return (
     <Routes>
       <Route path='/' element={<Navigate replace to='/welcome' />} />
-      <Route exact path='/welcome' element={<Welcome navigate={navigate} />} />
-      <Route path='/login' element={<Login navigate={navigate} />} />
-      <Route path='/cookieCheck' element={<CookieCheck navigate={navigate} />}/>
-      <Route path='/logout' element={<Logout navigate={navigate} />}/>
+
+      <Route exact path='/welcome' element={<UnprotectedRoute />}>
+        <Route index element={<Welcome navigate={navigate} />} />
+      </Route>
+
+      <Route exact path='/login' element={<UnprotectedRoute />}>
+        <Route index element={<Login navigate={navigate} />} />
+      </Route>
+
+      <Route exact path='/cookieCheck' element={<ProtectedRoute />}>
+        <Route index element={<CookieCheck navigate={navigate} />} />
+      </Route>
+
+      <Route exact path='/logout' element={<ProtectedRoute />}>
+        <Route index element={<Logout navigate={navigate} />} />
+      </Route>
+
       <Route path='/home' element={<Home navigate={navigate} />} />
-      <Route
-        path='/createAccount'
-        element={<CreateAccount navigate={navigate} />}
-      />
-      <Route path='/dashboard/*' element={<Dashboard navigate={navigate}/>} />
-      <Route path='/reddit' element={<RedditPage navigate={navigate}/>}/>
-      <Route path='/twitter' element={<TwitterPage navigate={navigate}/>}/>
-      <Route path='/youtube' element={<YoutubePage navigate={navigate}/>}/>
-      <Route path='/instagram' element={<InstagramPage navigate={navigate}/>}/>
+
+      <Route exact path='/createAccount' element={<UnprotectedRoute />}>
+        <Route index element={<CreateAccount navigate={navigate} />} />
+      </Route>
+
+      <Route exact path='/dashboard/*' element={<ProtectedRoute />}>
+        <Route element={<NavRoute />}>
+          <Route index element={<Dashboard navigate={navigate} />} />
+        </Route>
+      </Route>
+
+      <Route exact path='/reddit' element={<ProtectedRoute />}>
+        <Route element={<NavRoute />}>
+          <Route index element={<RedditPage navigate={navigate} />} />
+        </Route>
+      </Route>
+
+      <Route exact path='/twitter' element={<ProtectedRoute />}>
+        <Route element={<NavRoute />}>
+          <Route index element={<TwitterPage navigate={navigate} />} />
+        </Route>
+      </Route>
+
+      <Route exact path='/youtube' element={<ProtectedRoute />}>
+        <Route element={<NavRoute />}>
+          <Route index element={<YoutubePage navigate={navigate} />} />
+        </Route>
+      </Route>
+
+      <Route exact path='/instagram' element={<ProtectedRoute />}>
+        <Route element={<NavRoute />}>
+          <Route index element={<InstagramPage navigate={navigate} />} />
+        </Route>
+      </Route>
+
       <Route path='*' element={<Navigate replace to='/welcome' />} />
     </Routes>
   );
