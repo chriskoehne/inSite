@@ -56,7 +56,7 @@ const InsightCard = (props) => {
   if (isLoggedIn) {
     switch (title) {
       case 'Reddit':
-        display = <LineChart color={'#FF4500'} onClick={function(){props.navigate(title.toLowerCase(), {state:{email: email, accessToken: redditAccessToken}})}}/>;
+        display = <LineChart color={'#FF4500'} onClick={function(){props.navigate(title.toLowerCase(), {state:{email: userEmail, accessToken: redditAccessToken}})}}/>;
         icon = <SocialIcon url="https://reddit.com/user/usernamehere" />; //can pass in username to the url, so if they click the icon they go their profile page
         break;
       case 'Twitter':
@@ -90,21 +90,6 @@ const InsightCard = (props) => {
           console.log("should see token as:");
           console.log(res);
           setAccessToken(res.data.accessToken);
-          console.log("going to attempt to use access token now");
-          const redditQuery = {
-            accessToken: res.data.accessToken,
-          };
-          console.log("body is")
-          console.log(redditQuery)
-          axios
-            .get("http://localhost:5000/redditMe", {params: redditQuery})
-            .then((ans) => {
-              if (ans.data.me) {
-                console.log("subreddit request ans - see data name");
-                console.log(ans);
-              }
-              
-            });
         }
       });
   } else {
