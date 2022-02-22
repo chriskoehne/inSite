@@ -6,7 +6,7 @@ import { saveAs } from "file-saver";
 
 // we need a secure site (https) for react-web-share to work
 
-import { PieChart } from "./Charts/PieChart";
+import { PieChart } from "./charts/PieChart";
 
 export default class Home extends Component {
   constructor(props) {

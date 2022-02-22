@@ -3,9 +3,9 @@ import axios from "axios";
 import { Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
-import { BarChart } from "../Charts/BarChart";
-import { PieChart } from "../Charts/PieChart";
-import LineChart from "../Charts/LineChart";
+//import { BarChart } from "../Charts/BarChart";
+//import { PieChart } from "../Charts/PieChart";
+import LineChart from "../charts/LineChart";
 import { SocialIcon } from 'react-social-icons';
 
 
