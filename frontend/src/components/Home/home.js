@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import PieChart from '../Charts/PieChart';
+import PieChart from '../charts/PieChart';
 import axios from "axios";
 import { RWebShare } from 'react-web-share';
 import { saveAs } from 'file-saver';
