@@ -14,7 +14,7 @@ exports.showDemo0 = async function (req, res, next) {
     res.status(200).json(result);
     // res.status(200).send(result);
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
 
@@ -24,7 +24,7 @@ exports.showDemo1 = async function (req, res, next) {
     // res.status(200).json(result);
     res.status(200).send(result);
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
 
@@ -33,6 +33,16 @@ exports.userDemo = async function (req, res, next) {
     let result = await demoService.signup(req, res);
     res.status(200).json(result);
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.cookieCheck = async function (req, res, next) {
+  try {
+    let result = await demoService.cookieCheck(req, res);
+    res.status(200).json(result);
+  } catch (e) {
+    console.log(e)
+    return res.status(400).json({ message: e.message });
   }
 };
