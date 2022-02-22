@@ -122,6 +122,9 @@ exports.test = async function (req, res) {
       const username = req.query.username;
       // const subReddit = req.body.subReddit;
       
+      console.log("in overview service, username is")
+      console.log(username)
+
       console.log("in service, token is")
       console.log(token)
       // const body = params;
