@@ -1,0 +1,54 @@
+.background {
+    background-color: #F9C449;
+    padding-top: 10vh;
+    padding-right: 63vw;
+    padding-left: 37vw;
+    padding-bottom: 40vh;
+    width: 30vw;
+}
+
+.createAcc_background {
+    background-color: white;
+    width: 25vw;
+    height: 70vh;
+    padding-top: 10vh;
+    padding-left: 5vw;
+    padding-right: 10vw;
+    padding-bottom: 10vh;
+    border-radius: 5px;
+    filter: drop-shadow(5px 5px 1px black);
+}
+
+.createAcc_background input[type=text]{
+    border-radius: 5px;
+    height: 4vh;
+    width: 15vw;
+}
+
+.createAcc_background input[type=password]{
+    border-radius: 5px;
+    height: 4vh;
+    width: 15vw;
+}
+
+.createAcc_background input[type=submit] {
+    height: 5vh;
+    width: 15.5vw;
+    background-color: #F9C449;
+    border-radius: 5px;
+    color: white;
+}
+
+.createAcc_background input[type=submit]:hover {
+    background-color: #f8b720;
+}
+
+.return {
+    color: #C3C2C1;
+    text-decoration: none;
+}
+
+.return:hover {
+    color: #9b9997;
+    text-decoration: none;
+}
