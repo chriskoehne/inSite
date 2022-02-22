@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Container, Navbar, Row, Card, Col, Carousel } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LineChart from '../charts/LineChart';
+import LineChart from '../Charts/LineChart';
 import styles from './Reddit.module.css';
 const c = require('./constants/constants');
 
