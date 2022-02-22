@@ -105,3 +105,6 @@ dist
 
 #any ssl certificate files
 *.pem
+
+# macOS stuff
+.DS_Store
