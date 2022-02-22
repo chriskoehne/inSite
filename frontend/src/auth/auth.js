@@ -19,7 +19,7 @@ export async function unauthedOnly(props) {
   try {
     await axios.post('http://localhost:5000/cookieCheck/');
   } catch (err) {
-    return
+    return;
   }
   props.navigate('/dashboard');
 }

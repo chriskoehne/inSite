@@ -90,16 +90,9 @@ exports.test = async function (req, res) {
   exports.redditMe = async function (req, res) {
     try {
       // console.log(req.body);
-      console.log("in get subreddits service")
-      console.log(req)
       const token = req.query.accessToken;
       // const subReddit = req.body.subReddit;
       
-      // var params = new searchParams();
-      // params.set("exact", false);
-      // params.set("include_over_18", true);
-      // params.set("include_unadvertisable", true);
-      // params.set("query", subReddit);
       console.log("in service, token is")
       console.log(token)
       // const body = params;
@@ -109,6 +102,35 @@ exports.test = async function (req, res) {
         "Authorization": finalAuth,
       }
       const redditRes = await axios.get("https://oauth.reddit.com/api/v1/me", {headers: headers});
+      console.log("service subreddit answer:")
+      // let ans = redditRes.toJSON();
+      // console.log(ans.status)
+      // console.log(ans.name)
+
+      return redditRes.data;
+    } catch (err) {
+      console.log("big error catch")
+      // console.log(err)
+      return err;
+    }
+  };
+
+  exports.userOverview = async function (req, res) {
+    try {
+      // console.log(req.body);
+      const token = req.query.accessToken;
+      const username = req.query.username;
+      // const subReddit = req.body.subReddit;
+      
+      console.log("in service, token is")
+      console.log(token)
+      // const body = params;
+      const finalAuth = "bearer " + token
+      
+      const headers = {
+        "Authorization": finalAuth,
+      }
+      const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/overview", {headers: headers});
       console.log("service subreddit answer:")
       // let ans = redditRes.toJSON();
       // console.log(ans.status)

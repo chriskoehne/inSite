@@ -20,6 +20,8 @@
 
 localhost-key.pem
 localhost.pem
+cert.pem
+key.pem
 
 
 npm-debug.log*

@@ -38,6 +38,6 @@ const data = {
   ],
 };
 
-export function barChart() {
+export function BarChart() {
   return <Bar data={data} />;
 }
