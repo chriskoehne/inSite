@@ -10,10 +10,9 @@ const c = require('./constants/constants');
 const RedditPage = (props) => {
   const { state } = useLocation();
   const [me, setMe] = useState({});
-  const [comments, setComments] = useState(0);
-  const [messages, setMessages] = useState(0);
-  const [links, setLinks] = useState(0);
-  const [awards, setAwards] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [posts, setPosts] = useState([]);
   // use state.email and state.accessToken
 
   const [index, setIndex] = useState(0);
@@ -36,7 +35,7 @@ const RedditPage = (props) => {
             //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
             const redditUserQuery = {
               accessToken: state.accessToken,
-              username: me.name,
+              username: ans.data.name,
             };
             axios
               .get('http://localhost:5000/redditUserOverview', {
@@ -45,22 +44,12 @@ const RedditPage = (props) => {
               .then((ans) => {
                 if (ans) {
                   console.log('overview request ans - see data');
-                  console.log(ans.data.overview.data);
+                  // console.log(ans.data.overview.data);
                   //ans.data.overview.data.children <- a list of objects. Look at 'kind' field
                   console.log(ans)
-                  let array = ans.data.overview.data.children;
-                  array.forEach(function (item, index) {
-                    switch (item.kind) {
-                      case c.COMMENT:
-                        setComments(comments + 1);
-                      case c.MESSAGE:
-                        setMessages(messages + 1);
-                      case c.LINK:
-                        setLinks(links + 1);
-                      case c.AWARD:
-                        setAwards(awards + 1);
-                    }
-                  });
+                  setComments(ans.data.comments)
+                  setPosts(ans.data.posts)
+                  setMessages(ans.data.messages)
                 }
               });
           }
