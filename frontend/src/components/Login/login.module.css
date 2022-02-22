@@ -7,7 +7,7 @@
     width: 30vw;
 }
 
-.createAcc_background {
+.login_background {
     background-color: white;
     width: 25vw;
     height: 70vh;
@@ -19,19 +19,19 @@
     filter: drop-shadow(5px 5px 1px black);
 }
 
-.createAcc_background input[type=text]{
+.login_background input[type=text]{
     border-radius: 5px;
     height: 4vh;
     width: 15vw;
 }
 
-.createAcc_background input[type=password]{
+.login_background input[type=password]{
     border-radius: 5px;
     height: 4vh;
     width: 15vw;
 }
 
-.createAcc_background input[type=submit] {
+.login_background input[type=submit] {
     height: 5vh;
     width: 15.5vw;
     background-color: #F9C449;
@@ -39,11 +39,29 @@
     color: white;
 }
 
-.createAcc_background input[type=submit]:hover {
-    background-color: black;
+.login_background input[type=submit]:hover {
+    background-color: #f8b720;
 }
 
-.return {
-    color: #C3C2C1;
+.in {
+    text-align: center;
+    display: inline-block;
+    color: black !important;
+  }
+  .site {
+    text-align: center;
+    display: inline-block;
+    color: #F9C449;
+  
+  }
+
+  .createAcc {
+      color: #C3C2C1;
+      text-decoration: none;
+  }
+
+  .createAcc:hover {
+    color: #9b9997;
     text-decoration: none;
 }
+  

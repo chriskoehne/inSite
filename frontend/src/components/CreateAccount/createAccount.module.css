@@ -7,7 +7,7 @@
     width: 30vw;
 }
 
-.login_background {
+.createAcc_background {
     background-color: white;
     width: 25vw;
     height: 70vh;
@@ -19,19 +19,19 @@
     filter: drop-shadow(5px 5px 1px black);
 }
 
-.login_background input[type=text]{
+.createAcc_background input[type=text]{
     border-radius: 5px;
     height: 4vh;
     width: 15vw;
 }
 
-.login_background input[type=password]{
+.createAcc_background input[type=password]{
     border-radius: 5px;
     height: 4vh;
     width: 15vw;
 }
 
-.login_background input[type=submit] {
+.createAcc_background input[type=submit] {
     height: 5vh;
     width: 15.5vw;
     background-color: #F9C449;
@@ -39,29 +39,16 @@
     color: white;
 }
 
-.login_background input[type=submit]:hover {
-    background-color: black;
+.createAcc_background input[type=submit]:hover {
+    background-color: #f8b720;
 }
 
-.in {
-    text-align: center;
-    display: inline-block;
-    color: black !important;
-  }
-  .site {
-    text-align: center;
-    display: inline-block;
-    color: #F9C449;
-  
-  }
-
-  .createAcc {
-      color: #C3C2C1;
-      text-decoration: none;
-  }
-
-  .createAcc:hover {
+.return {
     color: #C3C2C1;
     text-decoration: none;
 }
-  
+
+.return:hover {
+    color: #9b9997;
+    text-decoration: none;
+}

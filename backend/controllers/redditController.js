@@ -10,12 +10,12 @@ exports.login = async function (req, res, next) {
     let result = await redditService.login(req, res); //add await?
     //two fields
     if (result.link) {
-      return res.status(200).json({ status: 200, success: true, link: result.link, verificationString: result.verificationString });
+      return res.status(200).json({ success: true, link: result.link, verificationString: result.verificationString });
     } else {
-      return res.status(200).json({ status: 200, success: false });
+      return res.status(200).json({ success: false });
     }
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
 
@@ -24,10 +24,10 @@ exports.convert = async function (req, res, next) {
     let result = await redditService.convert(req, res); //add await?
     //two fields
     if (result) {
-      return res.status(200).json({ status: 200, success: true, accessToken: result.access_token });
+      return res.status(200).json({ success: true, accessToken: result.access_token });
     }
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
 
@@ -36,24 +36,29 @@ exports.redditMe = async function (req, res, next) {
     console.log("controller, getting subreddits")
     let result = await redditService.redditMe(req, res); //add await?
     //two fields
-    console.log("in controller")
-    console.log(result)
+    // console.log("in controller")
+    // console.log(result)
     if (result) {
-      return res.status(200).json({ status: 200, success: true, me: result.name });
+      return res.status(200).json({ success: true, name: result.name });//only returns name for now
     }
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
 
-exports.test = async function (req, res, next) {
+exports.userOverview = async function (req, res, next) {
   try {
-    let result = await redditService.test(req, res); //add await?
-    console.log("controller");
-    console.log(result);
-    return;
+    console.log("controller, getting overview")
+    let result = await redditService.userOverview(req, res); //add await?
+    //two fields
+    // console.log("in controller")
+    // console.log(result)
+    if (result) {
+      return res.status(200).json({ success: true, overview: result });//only returns name for now
+    }
   } catch (e) {
-    return res.status(400).json({ status: 400, message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
+
 
