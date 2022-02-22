@@ -1,69 +1,76 @@
-import React, { useEffect, useState, useRef } from 'react';
-// import { Button, Container, Row, Col } from "react-bootstrap";
-// import axios from "axios";
+/**
+ * @fileoverview A demo of the sharing functionality. We use the Cloudinary api to host the image,
+ * as you cannot directly share image files to external websites
+ * @author Tom Appenzeller <tomapp3@gmail.com>
+ * @author Chris Koehne <cdkoehne@gmail.com>
+ */
+
+import React, { useState, useEffect, useRef } from 'react';
+import PieChart from '../Charts/PieChart';
+import axios from "axios";
 import { RWebShare } from 'react-web-share';
 import { saveAs } from 'file-saver';
 
 // we need a secure site (https) for react-web-share to work
 
-import PieChart from '../Charts/PieChart';
-import { Button } from 'react-bootstrap';
-
 const Home = (props) => {
+  const [base64, setBase64] = useState('');
   const [url, setUrl] = useState('');
-  const [file, setFile] = useState(null);
-  const chartRef = useRef();
+  const chartRef = useRef(null);
 
-  const chartClicked = async (e) => {
-    e.preventDefault();
-    const response = await fetch(chartRef.current.toBase64Image());
-    const blob = await response.blob();
-    const file = new File([blob], 'image.jpg', { type: blob.type });
-    console.log('return is');
-    console.log(file);
-    setFile(file);
-  };
-
-  const myShare = () => {
-    console.log(navigator.share)
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({
-        files: [file],
-        title: 'Pictures',
-        text: 'Our Pictures.',
-      })
-      .then(() => console.log('Share was successful.'))
-      .catch((error) => console.log('Sharing failed', error));
-    } else {
-      console.log(`Your system doesn't support sharing files.`);
+  useEffect(() => {
+    console.log(base64);
+    if (base64) {
+      uploadChart();
     }
-    
-  };
+  }, [base64]);
 
   const saveCanvas = () => {
-    //save to png
     const canvasSave = chartRef.current.ctx.canvas;
-    canvasSave.toBlob(function (blob) {
-      saveAs(blob, 'testing.png');
+    canvasSave.toBlob((blob) => {
+      saveAs(blob, 'chart.png');
     });
+  };
+
+  const uploadChart = async () => {
+    if (url) {
+      return;
+    } else {
+      const body = { image: base64 };
+      try {
+        const cloudinaryRes = await axios.post(
+          'http://localhost:5000/uploadImage/',
+          body
+        );
+        if (cloudinaryRes.status !== 200) {
+          console.log('cloudinary error');
+        }
+        setUrl(cloudinaryRes.data.message);
+        return;
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   return (
     <div>
       <h1>Home</h1>
-      <PieChart onClick={chartClicked} chartRef={chartRef} />
-      <Button onClick={myShare}/>
-
+      <div style={{ height: '100%' }}>
+        <PieChart
+          ref={chartRef}
+          base64={() => {
+            setBase64(chartRef.current.toBase64Image());
+          }}
+        />
+      </div>
       <RWebShare
         data={{
           text: 'Example chart download',
-          // files: [file],
-          url: file,
-          // files: [chartRef.current.ctx.canvas.toBlob()],
+          url: url ? url : 'unable to share chart',
           title: 'Chart',
         }}
         sites={['copy', 'mail', 'reddit', 'twitter']}
-        onClick={() => {navigator['share']({files: [file],})}}
       >
         <button>Share 🔗</button>
       </RWebShare>
@@ -74,61 +81,3 @@ const Home = (props) => {
 };
 
 export default Home;
-
-// export default class Home extends Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.onClick = this.onClick.bind(this);
-//     this.saveCanvas = this.saveCanvas.bind(this);
-//     this.chartRef = React.createRef();
-
-//     this.state = {
-//       url: ""
-//     };
-//   }
-
-//   async onClick(e) {
-//     e.preventDefault();
-//     const response = await fetch(this.chartRef.current.toBase64Image());
-//     const blob = await response.blob();
-//     const file = new File([blob], 'image.jpg', { type: blob.type });
-//     console.log("return is")
-//     console.log(file)
-//     this.setState({
-//       file: file,
-//     });
-//     // console.log(this.chartRef)
-//   }
-
-//   saveCanvas() {
-//     //save to png
-//     const canvasSave = this.chartRef.current.ctx.canvas;
-//     canvasSave.toBlob(function (blob) {
-//       saveAs(blob, "testing.png");
-//     });
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <h1>Home</h1>
-//         <PieChart onClick={this.onClick} chartRef={this.chartRef} />
-
-//         <RWebShare
-//           data={{
-//             text: "Example chart download",
-//             files: [this.state.file],
-//             title: "Chart",
-//           }}
-//           sites={["copy", "mail", "reddit", "twitter"]}
-//           onClick={() => console.log("shared successfully!")}
-//         >
-//           <button>Share 🔗</button>
-//         </RWebShare>
-//         <b></b>
-//         <button onClick={this.saveCanvas}>Download as PNG</button>
-//       </div>
-//     );
-//   }
-// }
