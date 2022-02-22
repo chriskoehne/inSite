@@ -5,7 +5,7 @@ import NavRoute from './components/Routing/NavRoute';
 import ProtectedRoute from './components/Routing/ProtectedRoute';
 import UnprotectedRoute from './components/Routing/UnprotectedRoute';
 import Login from './components/Login/login';
-import Home from './components/home';
+import Home from './components/Home/home';
 import CreateAccount from './components/CreateAccount/createAccount';
 import Dashboard from './components/Dashboard/Dashboard';
 import Welcome from './components/Welcome/Welcome';
