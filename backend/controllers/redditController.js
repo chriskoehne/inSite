@@ -61,4 +61,16 @@ exports.userOverview = async function (req, res, next) {
   }
 };
 
+exports.userComments = async function (req, res, next) {
+  try {
+    console.log("controller, getting comments")
+    let result = await redditService.userComments(req, res); //add await?
+    if (result) {
+      return res.status(200).json({ success: true, overview: result });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message }); 
+  }
+};
+
 

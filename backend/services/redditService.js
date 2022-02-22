@@ -78,7 +78,7 @@ exports.test = async function (req, res) {
       //reddit post call
       const redditRes = await axios.post("https://www.reddit.com/api/v1/access_token", body, {headers: headers});
       // console.log("in service")
-      // console.log(redditRes.data)
+      //console.log(redditRes.data)
       return redditRes.data;
     } catch (err) {
       console.log("big error catch")
@@ -102,7 +102,8 @@ exports.test = async function (req, res) {
         "Authorization": finalAuth,
       }
       const redditRes = await axios.get("https://oauth.reddit.com/api/v1/me", {headers: headers});
-      console.log("service subreddit answer:")
+      console.log("service subreddit answersssss:")
+      //console.log(redditRes)
       // let ans = redditRes.toJSON();
       // console.log(ans.status)
       // console.log(ans.name)
@@ -120,6 +121,8 @@ exports.test = async function (req, res) {
       // console.log(req.body);
       const token = req.query.accessToken;
       const username = req.query.username;
+      console.log(req)
+      console.log("user " + username)
       // const subReddit = req.body.subReddit;
       
       console.log("in service, token is")
@@ -135,11 +138,35 @@ exports.test = async function (req, res) {
       // let ans = redditRes.toJSON();
       // console.log(ans.status)
       // console.log(ans.name)
+      //console.log(redditRes)
 
       return redditRes.data;
     } catch (err) {
       console.log("big error catch")
       // console.log(err)
+      return err;
+    }
+  };
+
+  exports.userComments = async function (req, res) {
+    try {
+      const token = req.query.accessToken;
+      const username = req.query.username;
+      console.log(req)
+      console.log("user " + username)
+      console.log("in service, token is")
+      console.log(token)
+      // const body = params;
+      const finalAuth = "bearer " + token
+      const headers = {
+        "Authorization": finalAuth,
+      }
+      const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/comments.json?limit=100", {headers: headers});
+      console.log("service subreddit answer:")
+      console.log(redditRes)
+      return redditRes.data;
+    } catch (err) {
+      console.log("big error catch")
       return err;
     }
   };

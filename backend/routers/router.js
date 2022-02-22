@@ -57,6 +57,8 @@ router.get("/redditMe", redditController.redditMe)
 
 router.get("/redditUserOverview", redditController.userOverview);
 
+router.get("/redditUserComments", redditController.userComments)
+
 router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
 
 router.post("/logout", auth.removeToken);
