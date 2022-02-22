@@ -4,7 +4,7 @@
   "description": "407 project",
   "main": "server.js",
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "mkcert": "^1.5.0",
+    "mocha": "^9.2.1",
     "mongoose": "^6.2.1",
     "reddit": "^1.2.1",
     "url-search-params": "^1.1.0"
