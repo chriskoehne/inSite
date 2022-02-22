@@ -4,6 +4,7 @@ import { Container, Navbar, Row, Card, Col, Carousel } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LineChart from '../Charts/LineChart';
+import BarChart from '../Charts/BarChart';
 import styles from './Reddit.module.css';
 const c = require('./constants/constants');
 
@@ -57,6 +58,24 @@ const RedditPage = (props) => {
     }
   }, []);
 
+  const getMaxScore = (list) => {
+    var maxScore = 0;
+    list.forEach(function (item, index) {
+      if (item.score > maxScore) {
+        maxScore = item.score
+      }
+    });
+    return maxScore;
+  };
+
+  const getScores = (list) => {
+    let scores = [];
+    list.forEach(function (item, index) {
+      scores.push(item.score)
+    });
+    return scores;
+  };
+
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
@@ -90,13 +109,10 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 <Row className={styles.chartContainer}>
-                  <LineChart />
-                </Row>
-                <Row className={styles.chartContainer}>
-                  <LineChart />
+                  <BarChart data={getScores(posts)} maxVal={getMaxScore(posts)} label="Post Scores" xaxis="post score"/>
                 </Row>
               </Col>
-              <Col>free karma woop</Col>
+              <Col>Here we see a graphical representation of a user's post scores. Each bucket represents the number of posts that fall within the range for the score.</Col>
             </Row>
           </Card>
         </Carousel.Item>
