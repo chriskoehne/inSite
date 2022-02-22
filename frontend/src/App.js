@@ -78,7 +78,7 @@ const App = () => {
 
       <Route path='*' element={<Navigate replace to='/welcome' />} />
       
-      <Route exact path='/ChangePassword' element={<ProtectedRoute />}>
+      <Route exact path='/changePassword' element={<ProtectedRoute />}>
         <Route element={<NavRoute />}>
         <Route index element={<ChangePassword navigate={navigate} />} />
         </Route>

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Navbar, Row } from 'react-bootstrap';
+import { Container, Navbar, Row, Dropdown} from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import InsightCard from './InsightCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
+import ChangePassword from './ChangePassword';
+//import Logos from './Logos'
+//import Dropdown from './Dropdown'
+
 
 const Dashboard = (props) => {
   const { state } = useLocation();
@@ -41,12 +45,45 @@ const Dashboard = (props) => {
       setCode(code);
       //get it from the url
     }
+  }
+
+  const handleChangePassword = () => {
+    props.navigate('/ChangePassword');
   };
 
-  //clunky, but follow the above and add to the following if statements for the other social medias
+  const handleSignOut = () => {
+    props.navigate('/welcome');
+  };
+  
+//clunky, but follow the above and add to the following if statements for the other social medias
 
   return (
     <div className={styles.box}>
+      <Navbar className={styles.dashboardNav}>
+        <Container>
+          <Navbar.Brand>
+            <div className={styles.inlineDiv}>
+              <h2 className={styles.in}>in</h2>
+              <h2 className={styles.site}>Site</h2>
+            </div>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+          <Navbar.Collapse className='justify-content-end'>
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-button-transparent">
+              Settings
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+
+              <Dropdown.Item onClick={handleChangePassword} href="#/action-1">Change password</Dropdown.Item>
+              <Dropdown.Item onClick={handleSignOut} href="#/action-2">Sign Out</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      
       <Row xs={1} md={2} className={styles.cardRow}>
         <InsightCard
           title='Reddit'

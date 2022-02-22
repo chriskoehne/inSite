@@ -31,6 +31,9 @@ const ChangePassword = (props) => {
 
   };
 
+  const handleBackDash = () => {
+    props.navigate('/dashboard/*');
+  };
 
   
   
@@ -39,6 +42,21 @@ const ChangePassword = (props) => {
 
   return (
     <div className={styles.box}>
+      <Navbar className={styles.dashboardNav}>
+        <Container>
+          <Navbar.Brand>
+            <div className={styles.inlineDiv}>
+              <h2 className={styles.in}>in</h2>
+              <h2 className={styles.site}>Site</h2>
+            </div>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+          <Navbar.Collapse className='justify-content-end'>
+          <Button onClick={handleBackDash} variant="secondary">Back to Dashboard</Button>{' '}
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
       <Row xs={1} md={2} className='justify-content-center'>
       <div>
       <div className={styles.background}>
