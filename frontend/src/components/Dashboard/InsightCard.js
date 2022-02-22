@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
 //import { BarChart } from "../Charts/BarChart";
 //import { PieChart } from "../Charts/PieChart";
-import LineChart from "../charts/LineChart";
+import LineChart from "../Charts/LineChart";
 import { SocialIcon } from 'react-social-icons';
 
 
