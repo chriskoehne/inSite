@@ -53,13 +53,13 @@ router.post('/verifyUser', verifyController.verify);
 
 router.post('/login', userLoginController.login);
 
-router.post('/redditLogin', redditController.login);
+router.post('/reddit/login', redditController.login);
 
-router.post('/redditCodeToToken', redditController.convert);
+router.post('/reddit/codeToToken', redditController.convert);
 
-router.get('/redditMe', redditController.redditMe);
+router.get('/reddit/me', redditController.redditMe);
 
-router.get('/redditUserOverview', redditController.userOverview);
+router.get('/reddit/userOverview', redditController.userOverview);
 
 router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
 

@@ -17,7 +17,6 @@ exports.upload = async (image) => {
   try {
     const result = await cloudinary.v2.uploader.upload(image);
     if (!result || !result.secure_url) {
-      console.log(result);
       return c.CLOUDINARY_ERROR;
     }
     return result.secure_url;

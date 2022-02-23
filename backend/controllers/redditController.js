@@ -8,7 +8,7 @@ var redditService = require(path.resolve(
 
 exports.login = async function (req, res, next) {
   try {
-    let result = await redditService.login(req, res); //add await?
+    let result = await redditService.login(req.body.email); //add await?
     //two fields
     if (result.link) {
       return res
