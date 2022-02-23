@@ -51,6 +51,10 @@ router.post('/userCreation', userCreationController.userCreation);
 
 router.post('/verifyUser', verifyController.verify);
 
+router.post("/userDelete", userCreationController.deleteUser);
+
+router.post("/verifyUser", verifyController.verify);
+
 router.post('/login', userLoginController.login);
 
 router.post('/reddit/login', redditController.login);
@@ -64,6 +68,10 @@ router.get('/reddit/userOverview', redditController.userOverview);
 router.get('/reddit/userKarma', redditController.userKarma);
 
 router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
+
+router.get("/reddit/userComments", redditController.userComments)
+
+router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
 
 router.post('/logout', auth.removeToken);
 

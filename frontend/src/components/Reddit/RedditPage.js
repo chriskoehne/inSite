@@ -2,13 +2,58 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Card, Col, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import LineChart from '../Charts/LineChart';
 import BarChart from '../Charts/BarChart';
 import styles from './Reddit.module.css';
-// const c = require('./constants/constants');
+import { TagCloud } from 'react-tagcloud';
+const c = require('./constants/constants');
+
+// Used to create the word clouds
+function getUncommon(sentence) {
+  var wordArr = sentence.match(/\w+/g),
+    commonObj = {},
+    uncommonArr = [],
+    word,
+    i;
+
+  let common = c.WORDLIST;
+  for (i = 0; i < common.length; i++) {
+    commonObj[common[i].trim()] = true;
+  }
+
+  for (i = 0; i < wordArr.length; i++) {
+    word = wordArr[i].trim().toLowerCase();
+    if (!commonObj[word]) {
+      uncommonArr.push(word);
+    }
+  }
+
+  return uncommonArr;
+}
+
+function getWordList(str) {
+  let arr = [];
+  let array = str.split(' ');
+  let map = {};
+  for (let i = 0; i < array.length; i++) {
+    let item = array[i];
+    map[item] = map[item] + 1 || 1;
+  }
+  for (const property in map) {
+    let obj = {};
+    obj.value = property;
+    obj.count = map[property];
+    arr.push(obj);
+  }
+  arr.sort((a, b) => b.count - a.count);
+  return arr.slice(0, 30);
+}
 
 const RedditPage = (props) => {
+  const [loading, setLoading] = useState(false);
   const [me, setMe] = useState({});
+  const [links, setLinks] = useState(0);
+  const [awards, setAwards] = useState(0);
+  const [tagCloud, setTagCloud] = useState([]);
   // const [email, setEmail] = useState(localStorage.getItem('email'));
   const [redditToken, setRedditToken] = useState('');
   const [comments, setComments] = useState([]);
@@ -38,6 +83,7 @@ const RedditPage = (props) => {
 
   useEffect(() => {
     if (!redditToken) {
+      setLoading(true);
       return;
     }
     // Update the document title using the browser API
@@ -83,10 +129,50 @@ const RedditPage = (props) => {
               });
           }
         });
-    }
+
+        if (ansMe.status === 200) {
+          setMe(ansMe.data);
+          //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
+          const redditUserQuery = {
+            accessToken: redditToken,
+            username: ansMe.data.name,
+          };
+          const ansOverview = await axios.get(
+            'http://localhost:5000/reddit/userOverview',
+            { params: redditUserQuery }
+          );
+          if (ansOverview.status === 200) {
+            setComments(ansOverview.data.comments);
+            setMessages(ansOverview.data.messages);
+            setPosts(ansOverview.data.posts);
+          }
+          const ansComments = await axios.get(
+            'http://localhost:5000/reddit/userComments',
+            {
+              params: redditUserQuery,
+            }
+          );
+          if (ansComments.status === 200) {
+            let array = ansComments.data.overview.data.children;
+            let comm_str = '';
+            array.forEach((comm) => {
+              comm_str += comm.data.body;
+            });
+            getUncommon(comm_str);
+            setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
+          }
+          console.log('loading done');
+        }
+      }
+      setLoading(false);
+    };
+    getData();
   }, [redditToken]);
 
   const getMaxScore = (list) => {
+    if (loading) {
+      return {};
+    }
     var maxScore = 0;
     list.forEach(function (item, index) {
       if (item.score > maxScore) {
@@ -97,6 +183,9 @@ const RedditPage = (props) => {
   };
 
   const getMaxItem = (list, maxScore) => {
+    if (loading) {
+      return {};
+    }
     var maxItem = {};
     list.forEach(function (item, index) {
       if (item.score === maxScore) {
@@ -107,6 +196,9 @@ const RedditPage = (props) => {
   };
 
   const getScores = (list) => {
+    if (loading) {
+      return [];
+    }
     let scores = [];
     list.forEach(function (item, index) {
       scores.push(item.score);
@@ -120,7 +212,7 @@ const RedditPage = (props) => {
 
   //clunky, but follow the above and add to the following if statements for the other social medias
 
-  return !me || !me.name ? (
+  return loading ? (
     <div
       style={{
         width: '100vw',
@@ -188,10 +280,7 @@ const RedditPage = (props) => {
           <Card className={styles.socialsCard}>
             <Row>
               Most Upvoted Post
-              <Card
-                style={{ borderColor: '#3d3d3d' }}
-                // className={styles.socialsCard}
-              >
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(posts, getMaxScore(posts)).title}
@@ -204,10 +293,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Upvoted Comment
-              <Card
-                style={{ borderColor: '#3d3d3d' }}
-                // className={styles.socialsCard}
-              >
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(comments, getMaxScore(comments)).link_title}
@@ -220,10 +306,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Upvoted Message
-              <Card
-                style={{ borderColor: '#3d3d3d' }}
-                // className={styles.socialsCard}
-              >
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(messages, getMaxScore(messages)).link_title}
@@ -233,6 +316,22 @@ const RedditPage = (props) => {
                   </Card.Text>
                 </Card.Body>
               </Card>
+            </Row>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row>
+              <Col>
+                <h1>
+                  {' '}
+                  Wow you've said a lot of things in the past. Here's some of
+                  the words you most frequently use:
+                </h1>
+              </Col>
+              <Col>
+                <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
+              </Col>
             </Row>
           </Card>
         </Carousel.Item>

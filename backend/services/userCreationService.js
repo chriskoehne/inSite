@@ -59,3 +59,28 @@ exports.signup = async function (email, password, phone) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
+
+exports.deleteUser = async function (email) {
+  try {
+    console.log("deleting user")
+    let user = await User.findOne({ email: email })
+    let authyId = user.authyId
+    let deleted = await User.remove({_id: user._id})
+    
+    return await new Promise((resolve) => {
+      authy.delete_user(authyId, function (err, res) {
+        if (err) {
+          resolve({deleted, err})
+        }
+        else {
+          console.log(success)
+          resolve(deleted, res)
+        }
+      });
+    });
+
+  } catch (err) {
+    console.log(err.message);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};

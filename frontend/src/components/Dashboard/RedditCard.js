@@ -79,7 +79,7 @@ const RedditCard = (props) => {
 
   const authenticateReddit = async (e) => {
     e.preventDefault();
-    const result = await axios.post('http://localhost:5000/reddit/Login/', {
+    const result = await axios.post('http://localhost:5000/reddit/login/', {
       email: user.email,
     });
     console.log(result);
