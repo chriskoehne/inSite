@@ -51,6 +51,10 @@ router.post('/userCreation', userCreationController.userCreation);
 
 router.post('/verifyUser', verifyController.verify);
 
+router.post("/userDelete", userCreationController.deleteUser);
+
+router.post("/verifyUser", verifyController.verify);
+
 router.post('/login', userLoginController.login);
 
 router.post('/reddit/login', redditController.login);
