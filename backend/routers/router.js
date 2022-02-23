@@ -63,8 +63,7 @@ router.get('/reddit/userOverview', redditController.userOverview);
 
 router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
 
-
-router.get("/redditUserComments", redditController.userComments)
+router.get("/reddit/userComments", redditController.userComments)
 
 router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
 
