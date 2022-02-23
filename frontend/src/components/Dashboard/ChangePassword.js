@@ -2,33 +2,66 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Navbar, Row, Button } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom';
-import InsightCard from './InsightCard';
+import Dashboard from './Dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-import { Alert } from 'react-alert'
+import { Alert } from 'react-alert';
+//const c = require('./constants/constants');
 
 //import Dropdown from './Dropdown'
 
 
 const ChangePassword = (props) => {
-  //const [oldPassword, setPassword] = useState('');
-  //const [newPassword, setEmail] = useState('');
-  const [newPass, setPassword] = useState('');
-  const [newPass2, setPhone] = useState('');
+  const { state } = useLocation();
+  const [oldPassword, setPassword] = useState('');
+  const [newPassword1, setPassword1] = useState('');
+  const [newPassword2, setPassword2] = useState('');
+  //const [newPass, setPassword] = useState('');
+  //const [newPass2, setPhone] = useState('');
+  //const [email, setEmail] = useState('');
+  //const [password, setPassword] = useState('');
 
-  function checkPasswords(value1, value2) {
-    if (value1 != value2) {
-      alert("Your passwords do not match!")
-    }
-  }
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    var dash = require('./Dashboard.js');
+    var email = 'shankrohan@gmail.com';
+    //if (state) {
+      //setEmail(state.email);
+    //}
+    console.log("This is the email %s", email);
+    console.log("This is the old password %s", oldPassword);
+    console.log("This is the new password %s", newPassword1);
+    console.log("This is the new password 2 %s", newPassword2);
 
+    //axios stuff
+    const body = {
+      email: email,
+      oldPassword: oldPassword,
+      newPassword1: newPassword1,
+      newPassword2: newPassword2,
+    };
 
-    
-
-
+    axios
+      .post('http://localhost:5000/changePassword/', body)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          console.log('the modal should popup now');
+          //setId(res.message);
+          //setShowModal(true);
+        } else {
+          console.log('there was an error in user creation');
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data.message);
+          //setErrorModal(true);
+          //setErrorText(error.response.data.message);
+        }
+      });
   };
 
 
@@ -45,13 +78,14 @@ const ChangePassword = (props) => {
         <div className={styles.cp_background}>
           <h1>Change Password</h1>
           
-          <form onSubmit={checkPasswords(newPass, newPass2)}>
+          <form onSubmit={handleSubmit}>
             <div className='form-group' id='oldPass'>
               <label>Old Password: </label> 
-              <input
+              <input 
                 type='password'
                 className='form-control'
                 placeholder='Old Password'
+                onChange={(e) => setPassword(e.target.value)}
                 
               />
             </div>
@@ -61,6 +95,7 @@ const ChangePassword = (props) => {
                 type='password'
                 className='form-control'
                 placeholder='New Password'
+                onChange={(e) => setPassword1(e.target.value)}
                
               />
             </div>
@@ -70,6 +105,7 @@ const ChangePassword = (props) => {
                 type='password'
                 className='form-control'
                 placeholder='Retype New Password'
+                onChange={(e) => setPassword2(e.target.value)}
       
               />
             </div>
