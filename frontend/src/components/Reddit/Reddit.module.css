@@ -1,37 +1,26 @@
-.dashboardNav {
-  background-color: #3d3d3d;
-  margin-bottom: 2%;
-  height: 10%;
-}
+/* html, body {
+  height: 100vh;
+  min-height: 100vh;
+} */
+
+
+
 
 .box {
-  display: flex;
+  display: flexbox;
   flex-flow: column;
   height: 100vh;
-  background-color: #FF4500;
   text-align: center;
-}
-
-.in {
-  text-align: center;
-  display: inline-block;
-  color: white !important;
-}
-.site {
-  text-align: center;
-  display: inline-block;
-  color: #fed915 !important;
 }
 
 .inlineDiv {
   display: inline;
-  
 }
 
 .cardRow {
-  height: 100%;
-  padding-left: 2%;
-  padding-right: 2%;
+  height: 100vh;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .cardCol {
@@ -40,17 +29,26 @@
 }
 
 .socialsCard {
-  height: 76vh;
-  width: 80vw;
-  margin-left: 9vw;
+  padding: 1%;
+  height: 80vh;
+  border-color: #FF4500;
+  margin-left: 10%;
+  margin-right: 10%;
+  /* border-width: 0.5vh; */
+ 
 }
 
 .slideshow {
-  width: 100vw;
-  height: 85vh;
+  width: 100%;
+  height: 100%;
 }
 
+.slideshowCard{
+  height: 100%;
+}
+
+/* for some reason, using a percent breaks it??? (TODO) */
 .chartContainer {
-  height: 10vh;
-  width: 35vw;
+  display: flex;
+  height: 38vh;
 }

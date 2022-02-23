@@ -17,20 +17,6 @@ const TwitterPage = (props) => {
 
   return (
     <div className={styles.box}>
-      <Navbar className={styles.dashboardNav}>
-        <Container>
-          <Navbar.Brand>
-            <div className={styles.inlineDiv}>
-              <h2 className={styles.in}>in</h2>
-              <h2 className={styles.site}>Site</h2>
-            </div>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-          <Navbar.Collapse className='justify-content-end'>
-            <Navbar.Text style={{ color: 'white' }}>settings</Navbar.Text>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
       <h1>Twitter Page</h1>
       <Row xs={1} md={2} className={styles.cardRow}>
       <Card className={styles.socialsCard}>

@@ -1,33 +1,31 @@
-// import React, { useState } from 'react';
-import React, { useState } from "react";
-// import { Button, Container, Row, Col } from "react-bootstrap";
+import React, { useState } from 'react';
 import axios from "axios";
 import { Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
-import { barChart } from "../charts/barChart";
-import { pieChart } from "../charts/pieChart";
-import LineChart from "../charts/lineChart";
+import { BarChart } from "../Charts/BarChart";
+import { PieChart } from "../Charts/PieChart";
+import LineChart from "../Charts/LineChart";
 import { SocialIcon } from 'react-social-icons';
 
 
 
 const InsightCard = (props) => {
   // const [redditStatus, setRedditStatus] = useState('');
-  const [email, setEmail] = useState("");
-  const [redditAccessToken, setAccessToken] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [redditAccessToken, setAccessToken] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(true);
 
-  const title = props.title || "Default Title";
-  const text = props.text || "Default Text";
+  const title = props.title || 'Default Title';
+  const text = props.text || 'Default Text';
   const isLoggedIn = props.isLoggedIn || false;
-  const userEmail = props.email || "Invalid user loggedin";
+  const userEmail = props.email || 'Invalid user loggedin';
   const code = props.code;
 
   console.log(text);
   console.log(isLoggedIn);
-  console.log(props)
+  console.log(props);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,15 +36,15 @@ const InsightCard = (props) => {
     };
 
     axios
-      .post("http://localhost:5000/" + title.toLowerCase() + "Login/", body)
+      .post('http://localhost:5000/' + title.toLowerCase() + 'Login/', body)
       .then((res) => {
         console.log(res);
         // res.link
         if (res.data.success) {
-          console.log("got the link!");
+          console.log('got the link!');
           window.location.href = res.data.link;
         } else {
-          console.log("there was an error in " + text + " user signup");
+          console.log('there was an error in ' + text + ' user signup');
         }
       });
   };
@@ -57,7 +55,7 @@ const InsightCard = (props) => {
     switch (title) {
       case 'Reddit':
         display = <LineChart color={'#FF4500'} onClick={function(){props.navigate(title.toLowerCase(), {state:{email: userEmail, accessToken: redditAccessToken}})}}/>;
-        icon = <SocialIcon url="https://reddit.com/user/usernamehere" />; //can pass in username to the url, so if they click the icon they go their profile page
+        icon = <SocialIcon url="https://reddit.com/user/me" />; //can pass in username to the url, so if they click the icon they go their profile page
         break;
       case 'Twitter':
         display = <LineChart color={'#55ADEE'}/>;
@@ -82,12 +80,12 @@ const InsightCard = (props) => {
     };
     axios
       .post(
-        "http://localhost:5000/" + title.toLowerCase() + "CodeToToken/",
+        'http://localhost:5000/' + title.toLowerCase() + 'CodeToToken/',
         body
       )
       .then((res) => {
         if (res.data.accessToken) {
-          console.log("should see token as:");
+          console.log('should see token as:');
           console.log(res);
           setAccessToken(res.data.accessToken);
         }
@@ -95,8 +93,8 @@ const InsightCard = (props) => {
   } else {
     display = (
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input type="submit" value="Login" className="btn btn-primary" />
+        <div className='form-group'>
+          <input type='submit' value='Login' className='btn btn-primary' />
         </div>
       </form>
     );
@@ -104,13 +102,17 @@ const InsightCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
-      <Card className={styles.socialsCard}>
+      <Card
+        style={{ borderColor: props.borderColor }}
+        className={styles.socialsCard}
+      >
         <Card.Body>
-          <Card.Title>{title} {icon}</Card.Title>
+          <Card.Title>{icon} {title}</Card.Title>
           <Card.Text>
-            {text}
           </Card.Text>
+          <div>
           {display}
+          </div>
         </Card.Body>
       </Card>
     </Col>
