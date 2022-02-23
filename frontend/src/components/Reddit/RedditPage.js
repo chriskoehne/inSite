@@ -60,6 +60,11 @@ const RedditPage = (props) => {
   const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
+  const [commentKarma, setCommentKarma] = useState(0);
+  const [linkKarma, setLinkKarma] = useState(0);
+  const [awardKarma, setAwardKarma] = useState(0);
+  const [totalKarma, setTotalKarma] = useState(0);
+  const [subKarmaList, setSubKarmaList] = useState([]);
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -132,14 +137,39 @@ const RedditPage = (props) => {
             getUncommon(comm_str);
             setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
           }
-          const ansKarma = await axios.get(
-            'http://localhost:5000/reddit/userKarma',
+
+          const ansSubKarma = await axios.get(
+            'http://localhost:5000/reddit/userSubKarma',
             {
               params: redditUserQuery,
             }
           );
-          if (ansKarma.status === 200) {
-            console.log("Karma Info Receieved!")
+          if (ansSubKarma.status === 200) {
+            console.log("Sub Karma Info Receieved!")
+            setSubKarmaList(ansSubKarma.data.subKarma);
+            console.log(subKarmaList);
+          }
+
+          const ansTotalKarma = await axios.get(
+            'http://localhost:5000/reddit/userTotalKarma',
+            {
+              params: redditUserQuery,
+            }
+          );
+          if (ansTotalKarma.status === 200) {
+            console.log("Total Karma Info Receieved!")
+
+            // console.log(ansTotalKarma.data.commentKarma);
+            // console.log(ansTotalKarma.data.linkKarma);
+            // console.log(ansTotalKarma.data.awardKarma);
+            // console.log(ansTotalKarma.data.totalKarma);
+
+            setCommentKarma(ansTotalKarma.data.commentKarma);
+            setLinkKarma(ansTotalKarma.data.linkKarma);
+            setAwardKarma(ansTotalKarma.data.awardKarma);
+            setTotalKarma(ansTotalKarma.data.totalKarma);
+
+    
           }
 
           console.log('loading done');

@@ -103,26 +103,45 @@ exports.userComments = async function (req, res, next) {
   }
 };
 
-  exports.userKarma = async function (req, res, next) {
-    try {
-      console.log("controller, getting Karma");
-      let result = await redditService.userKarma(req, res); //add await?
-      //two fields
-      // console.log("in controller")
-      // console.log(result)
-      // var karma = [];
-      if (result) {
-        // karma.push(result.data);
-        // console.log("Karma Info");
-        // console.log(result.data);
-        return res
-          .status(200)
-          .json({
-            success: true,
-            // karma: karma,
-          }); //only returns name for now
-      }
-    } catch (e) {
-      return res.status(400).json({ message: e.message });
+exports.userSubKarma = async function (req, res, next) {
+  try {
+    console.log("controller, getting Sub Karma");
+    let result = await redditService.userSubKarma(req, res); //add await?
+      
+    if (result) {
+      return res
+        .status(200)
+        .json({
+          success: true,
+          subKarma: result.data
+        }); 
     }
-  };
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.userTotalKarma = async function (req, res, next) {
+  try {
+    console.log("controller, getting Total Karma");
+    let result = await redditService.userTotalKarma(req, res); //add await?
+
+    // console.log("Comment Karma: " + result.data.comment_karma);
+    // console.log("Link Karma: " + result.data.link_karma);
+    // console.log("Award Karma: " + result.data.awardee_karma);
+      
+    if (result) {
+      return res
+        .status(200)
+        .json({
+          success: true,
+          commentKarma: result.data.comment_karma,
+          linkKarma: result.data.link_karma,
+          awardKarma: result.data.awardee_karma,
+          totalKarma: result.data.total_karma
+        }); 
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
