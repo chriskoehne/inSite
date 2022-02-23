@@ -8,9 +8,6 @@ var userCreationService = require(path.resolve(
 
 exports.userCreation = async function (req, res, next) {
   try {
-    console.log("in user creation controller, objects are: res, req")
-    console.log(res)
-    console.log(req)
     let result = await userCreationService.signup(
       req.body.email,
       req.body.password,
