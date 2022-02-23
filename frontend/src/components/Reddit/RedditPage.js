@@ -81,53 +81,24 @@ const RedditPage = (props) => {
     }
   }, []);
 
+ 
   useEffect(() => {
     if (!redditToken) {
       setLoading(true);
       return;
     }
-    // Update the document title using the browser API
-    console.log('going to attempt to use access token now');
-    const redditMeQuery = {
-      accessToken: redditToken,
-    };
-    if (me && !me.name) {
-      axios
-        .get('http://localhost:5000/reddit/me', { params: redditMeQuery })
-        .then((ans) => {
-          if (ans) {
-            console.log('me request ans - see data name');
-            console.log(ans);
-            setMe(ans.data);
-            //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
-            const redditUserQuery = {
-              accessToken: redditToken,
-              username: ans.data.name,
-            };
-            axios
-              .get('http://localhost:5000/reddit/userOverview', {
-                params: redditUserQuery,
-              })
-              .then((ans) => {
-                if (ans) {
-                  console.log('overview request ans - see data');
-                  // console.log(ans.data.overview.data);
-                  //ans.data.overview.data.children <- a list of objects. Look at 'kind' field
-                  console.log(ans);
-                  setComments(ans.data.comments);
-                  setPosts(ans.data.posts);
-                  setMessages(ans.data.messages);
 
-                  axios
-                    .get('http://localhost:5000/reddit/userKarma', {
-                      params: redditMeQuery,
-                    })
-                    .then ((ans) => {
-                      console.log("Karma Info Recieved!")
-                    });
-                }
-              });
-          }
+    const getData = async () => {
+      setLoading(true);
+
+      // Update the document title using the browser API
+      console.log('going to attempt to use access token now');
+      const redditMeQuery = {
+        accessToken: redditToken,
+      };
+      if (me && !me.name) {
+        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+          params: redditMeQuery,
         });
 
         if (ansMe.status === 200) {
@@ -161,6 +132,16 @@ const RedditPage = (props) => {
             getUncommon(comm_str);
             setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
           }
+          const ansKarma = await axios.get(
+            'http://localhost:5000/reddit/userKarma',
+            {
+              params: redditUserQuery,
+            }
+          );
+          if (ansKarma.status === 200) {
+            console.log("Karma Info Receieved!")
+          }
+
           console.log('loading done');
         }
       }
@@ -338,6 +319,6 @@ const RedditPage = (props) => {
       </Carousel>
     </div>
   );
-};
+}
 
 export default RedditPage;
