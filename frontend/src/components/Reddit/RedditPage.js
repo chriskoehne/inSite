@@ -146,7 +146,7 @@ const RedditPage = (props) => {
           );
           if (ansSubKarma.status === 200) {
             console.log("Sub Karma Info Receieved!")
-            setSubKarmaList(ansSubKarma.data.subKarma);
+            setSubKarmaList(ansSubKarma.data.subKarmaList);
             console.log(subKarmaList);
           }
 
@@ -246,6 +246,32 @@ const RedditPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row>
+              <Col>
+                <Row>
+                  Total Karma: {totalKarma}
+                </Row>
+                <Row>
+                  Post Karma: {linkKarma}
+                </Row>
+                <Row>
+                  Comment Karma: {commentKarma}
+                </Row>
+                <Row>
+                  Award Karma: {awardKarma}
+                </Row>
+                <Row>
+                  {
+                    Object.keys(subKarmaList).map((key, index) => ( 
+                      <p key={index}> Subreddit: {subKarmaList[key].sr}, comment karma: {subKarmaList[key].comment_karma}, link karma: {subKarmaList[key].link_karma}</p> 
+                    ))
+                  } 
+                </Row>
+              </Col>
+            </Row>
+          </Card>
+        </Carousel.Item><Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <Row>
               <Col>
