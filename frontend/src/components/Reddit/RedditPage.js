@@ -1,50 +1,70 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Container, Navbar, Row, Card, Col, Carousel } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import LineChart from "../Charts/LineChart";
-import BarChart from "../Charts/BarChart";
-import styles from "./Reddit.module.css";
-const c = require("./constants/constants");
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Row, Card, Col, Carousel } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import LineChart from '../Charts/LineChart';
+import BarChart from '../Charts/BarChart';
+import styles from './Reddit.module.css';
+// const c = require('./constants/constants');
 
 const RedditPage = (props) => {
-  const { state } = useLocation();
   const [me, setMe] = useState({});
+  // const [email, setEmail] = useState(localStorage.getItem('email'));
+  const [redditToken, setRedditToken] = useState('');
   const [comments, setComments] = useState([]);
   const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
-  // use state.email and state.accessToken
-
   const [index, setIndex] = useState(0);
 
+  const hasToken = () => {
+    if (!localStorage.hasOwnProperty('redditToken')) {
+      return false;
+    }
+    const token = JSON.parse(localStorage.getItem('redditToken'));
+    if ((Date.now() - token.date) / 36e5 >= 1) {
+      localStorage.removeItem('redditToken');
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
+    if (!hasToken()) {
+      props.navigate('/dashboard');
+    } else {
+      setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!redditToken) {
+      return;
+    }
     // Update the document title using the browser API
-    console.log("going to attempt to use access token now");
-    console.log(state);
+    console.log('going to attempt to use access token now');
     const redditMeQuery = {
-      accessToken: state.accessToken,
+      accessToken: redditToken,
     };
     if (me && !me.name) {
       axios
-        .get("http://localhost:5000/redditMe", { params: redditMeQuery })
+        .get('http://localhost:5000/reddit/me', { params: redditMeQuery })
         .then((ans) => {
           if (ans) {
-            console.log("me request ans - see data name");
+            console.log('me request ans - see data name');
             console.log(ans);
             setMe(ans.data);
             //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
             const redditUserQuery = {
-              accessToken: state.accessToken,
+              accessToken: redditToken,
               username: ans.data.name,
             };
             axios
-              .get("http://localhost:5000/redditUserOverview", {
+              .get('http://localhost:5000/reddit/userOverview', {
                 params: redditUserQuery,
               })
               .then((ans) => {
                 if (ans) {
-                  console.log("overview request ans - see data");
+                  console.log('overview request ans - see data');
                   // console.log(ans.data.overview.data);
                   //ans.data.overview.data.children <- a list of objects. Look at 'kind' field
                   console.log(ans);
@@ -56,7 +76,7 @@ const RedditPage = (props) => {
           }
         });
     }
-  }, []);
+  }, [redditToken]);
 
   const getMaxScore = (list) => {
     var maxScore = 0;
@@ -95,21 +115,21 @@ const RedditPage = (props) => {
   return !me || !me.name ? (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
-        background: "white",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        textAlign: "center",
+        width: '100vw',
+        height: '100vh',
+        background: 'white',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        textAlign: 'center',
       }}
     >
-      <h1 style={{ color: "#3d3d3d" }}>Loading...</h1>
+      <h1 style={{ color: '#3d3d3d' }}>Loading...</h1>
     </div>
   ) : (
     <div className={styles.box}>
       <Carousel
-        variant="dark"
+        variant='dark'
         className={styles.slideshow}
         activeIndex={index}
         onSelect={handleSelect}
@@ -122,8 +142,8 @@ const RedditPage = (props) => {
                   <BarChart
                     data={getScores(posts)}
                     maxVal={getMaxScore(posts)}
-                    label="Post Scores"
-                    xaxis="post score"
+                    label='Post Scores'
+                    xaxis='post score'
                   />
                 </Row>
               </Col>
@@ -143,8 +163,8 @@ const RedditPage = (props) => {
                   <BarChart
                     data={getScores(comments)}
                     maxVal={getMaxScore(comments)}
-                    label="Comment Scores"
-                    xaxis="Comment score"
+                    label='Comment Scores'
+                    xaxis='Comment score'
                   />
                 </Row>
               </Col>
@@ -161,7 +181,7 @@ const RedditPage = (props) => {
             <Row>
               Most Upvoted Post
               <Card
-                style={{ borderColor: "#3d3d3d" }}
+                style={{ borderColor: '#3d3d3d' }}
                 // className={styles.socialsCard}
               >
                 <Card.Body>
@@ -177,11 +197,11 @@ const RedditPage = (props) => {
             <Row>
               Most Upvoted Comment
               <Card
-                style={{ borderColor: "#3d3d3d" }}
+                style={{ borderColor: '#3d3d3d' }}
                 // className={styles.socialsCard}
               >
                 <Card.Body>
-                <Card.Title>
+                  <Card.Title>
                     {getMaxItem(comments, getMaxScore(comments)).link_title}
                   </Card.Title>
                   <Card.Text>
@@ -193,11 +213,11 @@ const RedditPage = (props) => {
             <Row>
               Most Upvoted Message
               <Card
-                style={{ borderColor: "#3d3d3d" }}
+                style={{ borderColor: '#3d3d3d' }}
                 // className={styles.socialsCard}
               >
                 <Card.Body>
-                <Card.Title>
+                  <Card.Title>
                     {getMaxItem(messages, getMaxScore(messages)).link_title}
                   </Card.Title>
                   <Card.Text>
