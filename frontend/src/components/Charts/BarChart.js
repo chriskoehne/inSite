@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import faker from "@faker-js/faker";
+// import faker from "@faker-js/faker";
 
 ChartJS.register(
   CategoryScale,
@@ -42,11 +42,11 @@ const BarChart = (props) => {
   const toDisplay = props.data;
   const maxLabel = props.maxVal;
   const label = props.label;
-  const xaxis = props.xaxis
+  // const xaxis = props.xaxis
 
-  console.log("in barchart")
-  console.log(toDisplay)
-  console.log(maxLabel)
+  // console.log("in barchart")
+  // console.log(toDisplay)
+  // console.log(maxLabel)
 
   const labels = generateList(0, maxLabel, Math.min(10, maxLabel)); // limit number of categories to 10
 

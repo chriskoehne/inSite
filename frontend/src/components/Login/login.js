@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import styles from './login.module.css';
@@ -29,6 +29,7 @@ const Login = (props) => {
           console.log('status was 200');
           console.log('cookie is');
           console.log(res.cookie);
+          localStorage.setItem('email', email)
           props.navigate('/dashboard', { state: { email: email } });
         } else {
           console.log('incorrect code');
