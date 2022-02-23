@@ -61,6 +61,8 @@ router.get('/reddit/me', redditController.redditMe);
 
 router.get('/reddit/userOverview', redditController.userOverview);
 
+router.get('/reddit/userKarma', redditController.userKarma);
+
 router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
 
 router.post('/logout', auth.removeToken);

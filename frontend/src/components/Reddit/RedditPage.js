@@ -71,6 +71,14 @@ const RedditPage = (props) => {
                   setComments(ans.data.comments);
                   setPosts(ans.data.posts);
                   setMessages(ans.data.messages);
+
+                  axios
+                    .get('http://localhost:5000/reddit/userKarma', {
+                      params: redditMeQuery,
+                    })
+                    .then ((ans) => {
+                      console.log("Karma Info Recieved!")
+                    });
                 }
               });
           }

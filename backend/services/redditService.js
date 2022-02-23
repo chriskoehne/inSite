@@ -143,3 +143,32 @@ exports.test = async function (req, res) {
       return err;
     }
   };
+
+  exports.userKarma = async function (req, res) {
+    try {
+      // console.log(req.body);
+      const token = req.query.accessToken;
+      const username = req.query.username
+      // const subReddit = req.body.subReddit;
+      
+      // console.log("in service, token is")
+      // console.log(token)
+      // const body = params;
+      const finalAuth = "bearer " + token
+      
+      const headers = {
+        "Authorization": finalAuth,
+      }
+      const redditRes = await axios.get("https://oauth.reddit.com/api/v1/me/karma", {headers: headers});
+      console.log("service subreddit answer:")
+      // let ans = redditRes.toJSON();
+      // console.log(ans.status)
+      // console.log(ans.name)
+
+      return redditRes.data;
+    } catch (err) {
+      console.log("big error catch")
+      // console.log(err)
+      return err;
+    }
+  };

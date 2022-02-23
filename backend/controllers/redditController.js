@@ -42,7 +42,7 @@ exports.convert = async function (req, res, next) {
 
 exports.redditMe = async function (req, res, next) {
   try {
-    console.log("controller, getting subreddits");
+    console.log("controller, getting username");
     let result = await redditService.redditMe(req, res); //add await?
     //two fields
     // console.log("in controller")
@@ -61,7 +61,8 @@ exports.userOverview = async function (req, res, next) {
     let result = await redditService.userOverview(req, res); //add await?
     //two fields
     // console.log("in controller")
-    // console.log(result)
+    // console.log("Overview Info")
+    // console.log(result.data)
     //result.data.children - divide by kind
     var posts = [];
     var comments = [];
@@ -72,8 +73,10 @@ exports.userOverview = async function (req, res, next) {
         switch (item.kind) {
           case c.COMMENT:
             comments.push(item.data);
+            break;
           case c.MESSAGE:
             messages.push(item.data);
+            break;
           case c.LINK:
             posts.push(item.data);
         }
@@ -91,3 +94,27 @@ exports.userOverview = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+  exports.userKarma = async function (req, res, next) {
+    try {
+      console.log("controller, getting Karma");
+      let result = await redditService.userKarma(req, res); //add await?
+      //two fields
+      // console.log("in controller")
+      // console.log(result)
+      // var karma = [];
+      if (result) {
+        // karma.push(result.data);
+        // console.log("Karma Info");
+        // console.log(result.data);
+        return res
+          .status(200)
+          .json({
+            success: true,
+            // karma: karma,
+          }); //only returns name for now
+      }
+    } catch (e) {
+      return res.status(400).json({ message: e.message });
+    }
+  };
