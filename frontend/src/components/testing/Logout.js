@@ -3,6 +3,7 @@ import { logout } from '../../auth/auth';
 
 const Logout = (props) => {
   useEffect(() => {
+    props.setAppEmail('');
     logout(props);
   }, []);
 

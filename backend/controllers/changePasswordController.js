@@ -13,15 +13,12 @@ exports.checkPasswd = async function (req, res, next) {
 
     let result = await changePasswordService.check(req.body.email, req.body.oldPassword, req.body.newPassword1, req.body.newPassword2);
 
-    switch (result) {
-      //case c.AUTHY_REQUEST_SMS_ERR:
-      //case c.USER_NOT_FOUND:
-      case c.INCORRECT_PASSWORD:
-      //case c.GENERAL_TRY_CATCH_ERR:
-        //return res.status(400).json({ message: result });
-      case c.PASSWORDS_MISMATCH:
-        return res.status(400).json({ message: result });
-    }
+    // switch (result) {
+    //   case c.INCORRECT_PASSWORD:
+    //   case c.PASSWORDS_MISMATCH:
+    //     return res.status(400).json({ message: result });
+    //     break;
+    // }
     //success
     return res.status(200).json({ message: result }); //should be the user's id
   } catch (e) {

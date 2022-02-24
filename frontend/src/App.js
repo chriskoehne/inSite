@@ -9,7 +9,7 @@ import Home from './components/Home/home';
 import CreateAccount from './components/CreateAccount/createAccount';
 import Dashboard from './components/Dashboard/Dashboard';
 import Welcome from './components/Welcome/Welcome';
-import ChangePassword from './components/Dashboard/ChangePassword';
+import ChangePassword from './components/Settings/ChangePassword';
 import CookieCheck from './components/testing/CookieCheck';
 import RedditPage from './components/Reddit/RedditPage';
 import InstagramPage from './components/Instagram/InstagramPage';
@@ -20,6 +20,7 @@ import Logout from './components/testing/Logout';
 
 const App = () => {
   const navigate = useNavigate();
+  const [appEmail, setAppEmail] = useState('');
   return (
     <Routes>
       <Route path='/' element={<Navigate replace to='/welcome' />} />
@@ -29,7 +30,7 @@ const App = () => {
       </Route>
 
       <Route exact path='/login' element={<UnprotectedRoute />}>
-        <Route index element={<Login navigate={navigate} />} />
+        <Route index element={<Login navigate={navigate} setAppEmail={setAppEmail}/>} />
       </Route>
 
       <Route exact path='/cookieCheck' element={<ProtectedRoute />}>
@@ -37,41 +38,41 @@ const App = () => {
       </Route>
 
       <Route exact path='/logout' element={<ProtectedRoute />}>
-        <Route index element={<Logout navigate={navigate} />} />
+        <Route index element={<Logout navigate={navigate} setAppEmail={setAppEmail}/>} />
       </Route>
 
       <Route path='/home' element={<Home navigate={navigate} />} />
 
       <Route exact path='/createAccount' element={<UnprotectedRoute />}>
-        <Route index element={<CreateAccount navigate={navigate} />} />
+        <Route index element={<CreateAccount navigate={navigate} setAppEmail={setAppEmail}/>} />
       </Route>
 
       <Route exact path='/dashboard/*' element={<ProtectedRoute />}>
-        <Route element={<NavRoute />}>
+        <Route element={<NavRoute email={appEmail} navigate={navigate}/>}>
           <Route index element={<Dashboard navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/reddit' element={<ProtectedRoute />}>
-        <Route element={<NavRoute />}>
+        <Route element={<NavRoute email={appEmail} navigate={navigate}/>}>
           <Route index element={<RedditPage navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/twitter' element={<ProtectedRoute />}>
-        <Route element={<NavRoute />}>
+        <Route element={<NavRoute email={appEmail} navigate={navigate}/>}>
           <Route index element={<TwitterPage navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/youtube' element={<ProtectedRoute />}>
-        <Route element={<NavRoute />}>
+        <Route element={<NavRoute email={appEmail} navigate={navigate}/>}>
           <Route index element={<YoutubePage navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/instagram' element={<ProtectedRoute />}>
-        <Route element={<NavRoute />}>
+        <Route element={<NavRoute email={appEmail} navigate={navigate}/>}>
           <Route index element={<InstagramPage navigate={navigate} />} />
         </Route>
       </Route>
@@ -79,8 +80,8 @@ const App = () => {
       <Route path='*' element={<Navigate replace to='/welcome' />} />
       
       <Route exact path='/changePassword' element={<ProtectedRoute />}>
-        <Route element={<NavRoute />}>
-        <Route index element={<ChangePassword navigate={navigate} />} />
+        <Route element={<NavRoute email={appEmail} navigate={navigate}/>}>
+        <Route index element={<ChangePassword navigate={navigate}/>} />
         </Route>
       </Route>
       

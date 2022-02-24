@@ -29,6 +29,7 @@ const Login = (props) => {
           console.log('status was 200');
           console.log('cookie is');
           console.log(res.cookie);
+          props.setAppEmail(email);
           props.navigate('/dashboard', { state: { email: email } });
         } else {
           console.log('incorrect code');
