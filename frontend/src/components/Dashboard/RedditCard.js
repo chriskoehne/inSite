@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, Col } from 'react-bootstrap';
+import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 import LineChart from '../Charts/LineChart';
@@ -63,7 +63,7 @@ const RedditCard = (props) => {
           JSON.stringify({ token: token, date: Date.now() })
         );
         setRedditToken(token);
-    }
+      }
       setLoading(false);
     };
     if (!hasToken() && user.code) {
@@ -91,8 +91,6 @@ const RedditCard = (props) => {
     }
   };
 
-  
-
   const display = () => {
     if (loading) {
       return <h2>Loading...</h2>;
@@ -111,11 +109,11 @@ const RedditCard = (props) => {
       );
     } else {
       return (
-        <form onSubmit={authenticateReddit}>
-          <div className='form-group'>
-            <input type='submit' value='Login' className='btn btn-primary' />
-          </div>
-        </form>
+        <div className={styles.centered}>
+          <Button className={styles.buttons} onClick={authenticateReddit}>
+            Log in to Reddit
+          </Button>
+        </div>
       );
     }
   };
@@ -123,7 +121,7 @@ const RedditCard = (props) => {
     if (redditToken) {
       return <SocialIcon url='https://reddit.com/user/me' />;
     } else {
-      return null;
+      return <SocialIcon url='https://reddit.com/' />;
     }
   };
 
