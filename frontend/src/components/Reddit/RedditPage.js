@@ -1,10 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Row, Card, Col, Carousel } from 'react-bootstrap';
+import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BarChart from '../Charts/BarChart';
+import LineChart from '../Charts/LineChart';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
+import { getMonths, getDays, getLastThirty } from './RedditComments';
+
 const c = require('./constants/constants');
 
 // Used to create the word clouds
@@ -48,6 +63,16 @@ function getWordList(str) {
   return arr.slice(0, 30);
 }
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 const RedditPage = (props) => {
   const [loading, setLoading] = useState(false);
   const [me, setMe] = useState({});
@@ -65,6 +90,20 @@ const RedditPage = (props) => {
   const [awardKarma, setAwardKarma] = useState(0);
   const [totalKarma, setTotalKarma] = useState(0);
   const [subKarmaList, setSubKarmaList] = useState([]);
+  const [commentGraphDay, setCommentGraphDay] = useState(false)
+  const [commentGraphThirty, setCommentGraphThirty] = useState(false)
+  const [commentGraphMonth, setCommentGraphMonth] = useState(true)
+  //testing chartData stuff
+  const [chartMonthData, setChartMonthData] = useState({
+    datasets: []
+  });
+  const [chartDayData, setChartDayData] = useState({
+    datasets: []
+  });
+  const [chartThirtyData, setChartThirtyData] = useState({
+    datasets: []
+  });
+  const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -105,7 +144,6 @@ const RedditPage = (props) => {
         const ansMe = await axios.get('http://localhost:5000/reddit/me', {
           params: redditMeQuery,
         });
-
         if (ansMe.status === 200) {
           setMe(ansMe.data);
           //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
@@ -130,12 +168,65 @@ const RedditPage = (props) => {
           );
           if (ansComments.status === 200) {
             let array = ansComments.data.overview.data.children;
+            //setCommentByMonths
             let comm_str = '';
             array.forEach((comm) => {
               comm_str += comm.data.body;
             });
             getUncommon(comm_str);
             setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
+            // get comments by Month
+            let monthsData = getMonths(array);
+            let monthsDataset = {
+              labels: monthsData.monthYear.reverse(),
+              datasets: [
+                {
+                  label: 'Number of Comments',
+                  data: monthsData.numComments.reverse(),
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
+                  xaxis: 'Months',
+                },
+              ],
+            };
+            let dayDate = getDays(array);
+            let dayDataset = {
+              labels: dayDate.daysOfWeek.reverse(),
+              datasets: [
+                {
+                  label: 'Number of Comments',
+                  data: dayDate.numComments.reverse(),
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
+                },
+              ],
+            };
+            let thirtyDate = getLastThirty(array)
+            let thirtyDataset = {
+              labels: thirtyDate.lastThirty.reverse(),
+              datasets: [
+                {
+                  label: 'Number of Comments',
+                  data: thirtyDate.numComments.reverse(),
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
+                },
+              ],
+            };
+            setChartThirtyData(thirtyDataset)
+            setChartDayData(dayDataset)
+            setChartMonthData(monthsDataset)
+            setChartOptions({
+              responsive: true,
+              maintainAspectRatio: false,
+              scale: {
+                ticks: {
+                  precision: 0,
+                },
+              },
+            });
+            //setCommentsMonth(monthsData.monthYear)
+            //console.log(commentByMonth)
           }
 
           const ansSubKarma = await axios.get(
@@ -180,6 +271,10 @@ const RedditPage = (props) => {
     getData();
   }, [redditToken]);
 
+  useEffect(() => {
+    
+  }, []);
+
   const getMaxScore = (list) => {
     if (loading) {
       return {};
@@ -220,6 +315,24 @@ const RedditPage = (props) => {
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
+
+  const commentMonthClick = () => {
+    setCommentGraphDay(false)
+    setCommentGraphThirty(false)
+    setCommentGraphMonth(true)
+  }
+
+  const commentWeekClick = () => {
+    setCommentGraphDay(false)
+    setCommentGraphThirty(true)
+    setCommentGraphMonth(false)
+  }
+
+  const commentDayClick = () => {
+    setCommentGraphDay(true)
+    setCommentGraphThirty(false)
+    setCommentGraphMonth(false)
+  }
 
   //clunky, but follow the above and add to the following if statements for the other social medias
 
@@ -369,6 +482,36 @@ const RedditPage = (props) => {
               <Col>
                 <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
               </Col>
+            </Row>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row>
+              <h1>Comments over time</h1>
+
+              <div className={styles.chartContainer}>
+               {commentGraphMonth ? <Line
+                  options={chartOptions}
+                  data={chartMonthData}
+                  color={'#FF4500'}
+                /> : null}
+                {commentGraphDay ? <Line
+                  options={chartOptions}
+                  data={chartDayData}
+                  color={'#FF4500'}
+                /> : null}
+                { commentGraphThirty ? <Line
+                  options={chartOptions}
+                  data={chartThirtyData}
+                  color={'#FF4500'}
+                /> : null}
+              </div>
+              <ButtonGroup aria-label="Basic example">
+                <Button variant="secondary" onClick={commentDayClick}>Last 7 Days</Button>
+                <Button variant="secondary" onClick={commentWeekClick}>Last Thirty Days</Button>
+                <Button variant="secondary" onClick={commentMonthClick}>Last 12 months</Button>
+              </ButtonGroup>
             </Row>
           </Card>
         </Carousel.Item>
