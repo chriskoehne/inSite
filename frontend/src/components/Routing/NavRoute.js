@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
 import { Navigate, Outlet } from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard';
+import axios from 'axios';
+
 
 const OurNavbar = (props) => {
   const email = localStorage.getItem('email')
@@ -18,10 +20,17 @@ const OurNavbar = (props) => {
   const handleClose = (e) => {
     e.preventDefault();
     // make call to my backend functions
-    // axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
-      
-    // });
-    setModal(false)
+    const body = {
+      email: email
+    }
+    axios.post('http://localhost:5000/userDelete/', body).then((res) => {
+      if (res.status == 200) {
+        setModal(false)
+        props.props.navigate('/logout')
+      } else {
+        console.log("a failure")
+      }
+    });
   };
 
   const changePassword = () => {
