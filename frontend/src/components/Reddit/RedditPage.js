@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Row, Card, Col, Carousel } from 'react-bootstrap';
+import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BarChart from '../Charts/BarChart';
 import LineChart from '../Charts/LineChart';
@@ -18,7 +18,7 @@ import { Line } from 'react-chartjs-2';
 import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
-import { getMonths } from './RedditComments';
+import { getMonths, getDays } from './RedditComments';
 
 const c = require('./constants/constants');
 
@@ -85,9 +85,12 @@ const RedditPage = (props) => {
   const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
+  const [commentGraphDay, setCommentGraphDay] = useState(false)
+  const [commentGraphWeek, setCommentGraphWeek] = useState(false)
+  const [commentGraphMonth, setCommentGraphMonth] = useState(true)
   //testing chartData stuff
   const [chartData, setChartData] = useState({
-    datasets: [],
+    datasets: []
   });
   const [chartOptions, setChartOptions] = useState({});
 
@@ -129,7 +132,7 @@ const RedditPage = (props) => {
         const ansMe = await axios.get('http://localhost:5000/reddit/me', {
           params: redditMeQuery,
         });
-
+        console.log("sdasda ")
         if (ansMe.status === 200) {
           setMe(ansMe.data);
           //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
@@ -177,7 +180,29 @@ const RedditPage = (props) => {
                 },
               ],
             };
-            setChartData(monthsDataset);
+            if (commentGraphDay) {
+              let dayDate = getDays(array);
+              let dayDataset = {
+                labels: dayDate.daysOfWeek.reverse(),
+                datasets: [
+                  {
+                    label: 'Number of Comments',
+                    data: dayDate.numComments.reverse(),
+                    borderColor: '#FF4500',
+                    backgroundColor: '#FF4500',
+                  },
+                ],
+              };
+              console.log(dayDate)
+              setChartData(dayDataset)
+              console.log("sda")
+            }
+            else if (commentGraphWeek) {
+              console.log("sas")
+            }
+            else if (commentGraphMonth) {
+              setChartData(monthsDataset);
+            }
             setChartOptions({
               responsive: true,
               maintainAspectRatio: false,
@@ -193,10 +218,13 @@ const RedditPage = (props) => {
           console.log('loading done');
         }
       }
+      else {
+        console.log("deez nuts")
+      }
       setLoading(false);
     };
     getData();
-  }, [redditToken]);
+  }, [redditToken, commentGraphDay, commentGraphWeek, commentGraphMonth]);
 
   const getMaxScore = (list) => {
     if (loading) {
@@ -238,6 +266,27 @@ const RedditPage = (props) => {
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
+
+  const commentMonthClick = () => {
+    console.log("month")
+    setCommentGraphDay(false)
+    setCommentGraphWeek(false)
+    setCommentGraphMonth(true)
+  }
+
+  const commentWeekClick = () => {
+    console.log("week")
+    setCommentGraphDay(false)
+    setCommentGraphWeek(true)
+    setCommentGraphMonth(false)
+  }
+
+  const commentDayClick = () => {
+    console.log("day")
+    setCommentGraphDay(true)
+    setCommentGraphWeek(false)
+    setCommentGraphMonth(false)
+  }
 
   //clunky, but follow the above and add to the following if statements for the other social medias
 
@@ -376,6 +425,11 @@ const RedditPage = (props) => {
                   color={'#FF4500'}
                 />
               </div>
+              <ButtonGroup aria-label="Basic example">
+                <Button variant="secondary" onClick={commentDayClick}>Last 7 Days</Button>
+                <Button variant="secondary" onClick={commentWeekClick}>Last 4 Weeks</Button>
+                <Button variant="secondary" onClick={commentMonthClick}>Last 12 months</Button>
+              </ButtonGroup>
             </Row>
           </Card>
         </Carousel.Item>
