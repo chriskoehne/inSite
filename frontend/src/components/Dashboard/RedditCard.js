@@ -69,7 +69,7 @@ const RedditCard = (props) => {
         );
         setRedditToken(token);
         
-        console.log("Access token: " + redditToken);
+        console.log("Access token: " + token);
         // Update the document title using the browser API
         console.log('going to attempt to use access token now');
         const redditMeQuery = {
