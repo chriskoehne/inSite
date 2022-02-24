@@ -1,35 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Navbar, Row, Button } from 'react-bootstrap';
+import { Row, Modal } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom';
-import Dashboard from './Dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-import { Alert } from 'react-alert';
-//const c = require('./constants/constants');
-
-//import Dropdown from './Dropdown'
 
 
 const ChangePassword = (props) => {
   const { state } = useLocation();
+  const [email, setEmail] = useState('');
   const [oldPassword, setPassword] = useState('');
   const [newPassword1, setPassword1] = useState('');
   const [newPassword2, setPassword2] = useState('');
-  //const [newPass, setPassword] = useState('');
-  //const [newPass2, setPhone] = useState('');
-  //const [email, setEmail] = useState('');
-  //const [password, setPassword] = useState('');
+  const [showModal, setShowModal] = useState('');
+  const [id, setId] = useState('');
+  const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
+  const [showErrorModal, setErrorModal] = useState('');
 
 
-  
+
+  const handleCloseError = () => setErrorModal(false);
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    props.navigate('/dashboard');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    var dash = require('./Dashboard.js');
-    var email = 'shankrohan@gmail.com';
-    //if (state) {
-      //setEmail(state.email);
-    //}
+ 
     console.log("This is the email %s", email);
     console.log("This is the old password %s", oldPassword);
     console.log("This is the new password %s", newPassword1);
@@ -42,6 +41,7 @@ const ChangePassword = (props) => {
       newPassword1: newPassword1,
       newPassword2: newPassword2,
     };
+    
 
     axios
       .post('http://localhost:5000/changePassword/', body)
@@ -49,24 +49,20 @@ const ChangePassword = (props) => {
         console.log(res);
         if (res.status === 200) {
           console.log('the modal should popup now');
-          //setId(res.message);
-          //setShowModal(true);
+          setId(res.message);
+          setShowModal(true);
         } else {
-          console.log('there was an error in user creation');
+          console.log('there was an error in changing password');
         }
       })
       .catch((error) => {
         if (error.response) {
-          console.log(error.response.data.message);
-          //setErrorModal(true);
-          //setErrorText(error.response.data.message);
+          console.log("Error message is %s", error.response.data.message);
+          setErrorModal(true);
+          setErrorText(error.response.data.message);
         }
       });
   };
-
-
-  
-  
   
 //clunky, but follow the above and add to the following if statements for the other social medias
 
@@ -77,8 +73,43 @@ const ChangePassword = (props) => {
       <div className={styles.background}>
         <div className={styles.cp_background}>
           <h1>Change Password</h1>
-          
+            <Modal show={showModal}>
+              <Modal.Header>
+                <Modal.Title>Success!</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Password changed successfully!
+                <form onSubmit={handleClose}>
+                  <div className='form-group'>
+                  </div>
+                  <br></br>
+                  <div className='form-group'>
+                    <input
+                      type='submit'
+                      value='OK'
+                      className='btn btn-primary'
+                    />
+                  </div>
+                </form>
+              </Modal.Body>
+            </Modal>
+            <Modal show={showErrorModal} onHide={handleCloseError}>
+              <Modal.Header closeButton>
+                <Modal.Title>Error</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>{errorText}</Modal.Body>
+            </Modal>
           <form onSubmit={handleSubmit}>
+            <div className='form-group' id='email'>
+              <label>Email: </label> 
+              <input 
+                type='text'
+                className='form-control'
+                placeholder='Email'
+                onChange={(e) => setEmail(e.target.value)}
+                
+              />
+            </div>
             <div className='form-group' id='oldPass'>
               <label>Old Password: </label> 
               <input 
