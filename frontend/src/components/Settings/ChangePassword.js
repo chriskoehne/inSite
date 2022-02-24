@@ -59,7 +59,6 @@ const ChangePassword = (props) => {
         </Modal.Header>
         <Modal.Body>{modalMessage}</Modal.Body>
       </Modal>
-      <Row xs={1} md={2} className="justify-content-center">
         <div>
           <div className={styles.background}>
             <div className={styles.cp_background}>
@@ -105,7 +104,6 @@ const ChangePassword = (props) => {
             </div>
           </div>
         </div>
-      </Row>
     </div>
   );
 };
