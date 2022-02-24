@@ -5,11 +5,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
+import BarChart from '../Charts/BarChart';
 
 const RedditCard = (props) => {
   const [redditToken, setRedditToken] = useState('');
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [me, setMe] = useState({});
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -63,7 +68,41 @@ const RedditCard = (props) => {
           JSON.stringify({ token: token, date: Date.now() })
         );
         setRedditToken(token);
-    }
+        
+        console.log("Access token: " + redditToken);
+        // Update the document title using the browser API
+        console.log('going to attempt to use access token now');
+        const redditMeQuery = {
+          accessToken: token,
+        };
+        console.log("reddit queer")
+        console.log(redditMeQuery);
+        if (me && !me.name) { 
+          const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+            params: redditMeQuery,
+          });
+
+          if (ansMe.status === 200) {
+            setMe(ansMe.data);
+            //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
+            const redditUserQuery = {
+              accessToken: token,
+              username: ansMe.data.name,
+            };
+            const ansOverview = await axios.get(
+              'http://localhost:5000/reddit/userOverview',
+              { params: redditUserQuery }
+            );
+            if (ansOverview.status === 200) {
+              setComments(ansOverview.data.comments);
+              setMessages(ansOverview.data.messages);
+              setPosts(ansOverview.data.posts);
+            }
+
+            console.log('loading done');
+          }
+        }
+      }
       setLoading(false);
     };
     if (!hasToken() && user.code) {
@@ -91,7 +130,29 @@ const RedditCard = (props) => {
     }
   };
 
-  
+  const getScores = (list) => {
+    if (loading) {
+      return [];
+    }
+    let scores = [];
+    list.forEach(function (item, index) {
+      scores.push(item.score);
+    });
+    return scores;
+  };
+
+  const getMaxScore = (list) => {
+    if (loading) {
+      return {};
+    }
+    var maxScore = 0;
+    list.forEach(function (item, index) {
+      if (item.score > maxScore) {
+        maxScore = item.score;
+      }
+    });
+    return maxScore;
+  };
 
   const display = () => {
     if (loading) {
@@ -108,6 +169,12 @@ const RedditCard = (props) => {
             });
           }}
         />
+        // <BarChart
+        //   data={getScores(comments)}
+        //   maxVal={getMaxScore(comments)}
+        //   label='Comment Scores'
+        //   xaxis='Comment score'
+        // />
       );
     } else {
       return (

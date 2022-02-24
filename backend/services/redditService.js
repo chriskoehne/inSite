@@ -138,7 +138,7 @@ exports.userOverview = async function (req, res) {
     
 
     // console.log(ans.name)
-    //console.log(redditRes)
+    console.log(redditRes.data)
 
     return redditRes.data;
   } catch (err) {

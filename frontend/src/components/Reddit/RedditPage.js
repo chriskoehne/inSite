@@ -145,9 +145,9 @@ const RedditPage = (props) => {
             }
           );
           if (ansSubKarma.status === 200) {
-            console.log("Sub Karma Info Receieved!")
+            // console.log("Sub Karma Info Receieved!")
             setSubKarmaList(ansSubKarma.data.subKarmaList);
-            console.log(subKarmaList);
+            // console.log(subKarmaList);
           }
 
           const ansTotalKarma = await axios.get(
@@ -157,7 +157,7 @@ const RedditPage = (props) => {
             }
           );
           if (ansTotalKarma.status === 200) {
-            console.log("Total Karma Info Receieved!")
+            // console.log("Total Karma Info Receieved!")
 
             // console.log(ansTotalKarma.data.commentKarma);
             // console.log(ansTotalKarma.data.linkKarma);
@@ -260,6 +260,12 @@ const RedditPage = (props) => {
                 </Row>
                 <Row>
                   Award Karma: {awardKarma}
+                </Row>
+                <Row>
+                  Number of Posts: {posts.length}
+                </Row>
+                <Row>
+                  Number of Comments: {comments.length}
                 </Row>
                 <Row>
                   {
