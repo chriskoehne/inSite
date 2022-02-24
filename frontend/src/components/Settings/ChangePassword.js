@@ -27,16 +27,6 @@ const ChangePassword = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // var dash = require('../Dashboard/Dashboard.js');
-    // var email = 'shankrohan@gmail.com';
-    //if (state) {
-    //setEmail(state.email);
-    //}
-    console.log("This is the email %s", email);
-    console.log("This is the old password %s", oldPassword);
-    console.log("This is the new password %s", newPassword1);
-    console.log("This is the new password 2 %s", newPassword2);
-
     //axios stuff
     const body = {
       email: email,

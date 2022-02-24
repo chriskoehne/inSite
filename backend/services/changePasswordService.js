@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const config = require(path.resolve(__dirname, '../config.json'));
 const c = require('../constants/constants');
 
-
 const User = require(path.resolve(__dirname, '../database/models/user'));
 exports.check = async function (email, oldPassword, newPassword1, newPassword2) {
   try {
@@ -24,6 +23,11 @@ exports.check = async function (email, oldPassword, newPassword1, newPassword2) 
     if (! await bcrypt.compare(oldPassword, result.password)) {
       console.log("invalid original password")
       return c.INCORRECT_PASSWORD;
+    }
+
+    if (!(newPassword1===newPassword2)) {
+      console.log("Passwords mismatch!");
+      return c.PASSWORDS_MISMATCH;
     }
 
     const salt = await bcrypt.genSalt();
