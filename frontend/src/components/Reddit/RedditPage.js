@@ -18,7 +18,7 @@ import { Line } from 'react-chartjs-2';
 import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
-import { getMonths, getDays } from './RedditComments';
+import { getMonths, getDays, getLastThirty } from './RedditComments';
 
 const c = require('./constants/constants');
 
@@ -86,10 +86,16 @@ const RedditPage = (props) => {
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
   const [commentGraphDay, setCommentGraphDay] = useState(false)
-  const [commentGraphWeek, setCommentGraphWeek] = useState(false)
+  const [commentGraphThirty, setCommentGraphThirty] = useState(false)
   const [commentGraphMonth, setCommentGraphMonth] = useState(true)
   //testing chartData stuff
-  const [chartData, setChartData] = useState({
+  const [chartMonthData, setChartMonthData] = useState({
+    datasets: []
+  });
+  const [chartDayData, setChartDayData] = useState({
+    datasets: []
+  });
+  const [chartThirtyData, setChartThirtyData] = useState({
     datasets: []
   });
   const [chartOptions, setChartOptions] = useState({});
@@ -132,7 +138,6 @@ const RedditPage = (props) => {
         const ansMe = await axios.get('http://localhost:5000/reddit/me', {
           params: redditMeQuery,
         });
-        console.log("sdasda ")
         if (ansMe.status === 200) {
           setMe(ansMe.data);
           //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
@@ -164,10 +169,8 @@ const RedditPage = (props) => {
             });
             getUncommon(comm_str);
             setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
-            console.log(array);
             // get comments by Month
             let monthsData = getMonths(array);
-            console.log(monthsData.monthYear);
             let monthsDataset = {
               labels: monthsData.monthYear.reverse(),
               datasets: [
@@ -180,29 +183,33 @@ const RedditPage = (props) => {
                 },
               ],
             };
-            if (commentGraphDay) {
-              let dayDate = getDays(array);
-              let dayDataset = {
-                labels: dayDate.daysOfWeek.reverse(),
-                datasets: [
-                  {
-                    label: 'Number of Comments',
-                    data: dayDate.numComments.reverse(),
-                    borderColor: '#FF4500',
-                    backgroundColor: '#FF4500',
-                  },
-                ],
-              };
-              console.log(dayDate)
-              setChartData(dayDataset)
-              console.log("sda")
-            }
-            else if (commentGraphWeek) {
-              console.log("sas")
-            }
-            else if (commentGraphMonth) {
-              setChartData(monthsDataset);
-            }
+            let dayDate = getDays(array);
+            let dayDataset = {
+              labels: dayDate.daysOfWeek.reverse(),
+              datasets: [
+                {
+                  label: 'Number of Comments',
+                  data: dayDate.numComments.reverse(),
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
+                },
+              ],
+            };
+            let thirtyDate = getLastThirty(array)
+            let thirtyDataset = {
+              labels: thirtyDate.lastThirty.reverse(),
+              datasets: [
+                {
+                  label: 'Number of Comments',
+                  data: thirtyDate.numComments.reverse(),
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
+                },
+              ],
+            };
+            setChartThirtyData(thirtyDataset)
+            setChartDayData(dayDataset)
+            setChartMonthData(monthsDataset)
             setChartOptions({
               responsive: true,
               maintainAspectRatio: false,
@@ -218,13 +225,14 @@ const RedditPage = (props) => {
           console.log('loading done');
         }
       }
-      else {
-        console.log("deez nuts")
-      }
       setLoading(false);
     };
     getData();
-  }, [redditToken, commentGraphDay, commentGraphWeek, commentGraphMonth]);
+  }, [redditToken]);
+
+  useEffect(() => {
+    
+  }, []);
 
   const getMaxScore = (list) => {
     if (loading) {
@@ -268,23 +276,20 @@ const RedditPage = (props) => {
   };
 
   const commentMonthClick = () => {
-    console.log("month")
     setCommentGraphDay(false)
-    setCommentGraphWeek(false)
+    setCommentGraphThirty(false)
     setCommentGraphMonth(true)
   }
 
   const commentWeekClick = () => {
-    console.log("week")
     setCommentGraphDay(false)
-    setCommentGraphWeek(true)
+    setCommentGraphThirty(true)
     setCommentGraphMonth(false)
   }
 
   const commentDayClick = () => {
-    console.log("day")
     setCommentGraphDay(true)
-    setCommentGraphWeek(false)
+    setCommentGraphThirty(false)
     setCommentGraphMonth(false)
   }
 
@@ -419,15 +424,25 @@ const RedditPage = (props) => {
               <h1>Comments over time</h1>
 
               <div className={styles.chartContainer}>
-                <Line
+               {commentGraphMonth ? <Line
                   options={chartOptions}
-                  data={chartData}
+                  data={chartMonthData}
                   color={'#FF4500'}
-                />
+                /> : null}
+                {commentGraphDay ? <Line
+                  options={chartOptions}
+                  data={chartDayData}
+                  color={'#FF4500'}
+                /> : null}
+                { commentGraphThirty ? <Line
+                  options={chartOptions}
+                  data={chartThirtyData}
+                  color={'#FF4500'}
+                /> : null}
               </div>
               <ButtonGroup aria-label="Basic example">
                 <Button variant="secondary" onClick={commentDayClick}>Last 7 Days</Button>
-                <Button variant="secondary" onClick={commentWeekClick}>Last 4 Weeks</Button>
+                <Button variant="secondary" onClick={commentWeekClick}>Last Thirty Days</Button>
                 <Button variant="secondary" onClick={commentMonthClick}>Last 12 months</Button>
               </ButtonGroup>
             </Row>

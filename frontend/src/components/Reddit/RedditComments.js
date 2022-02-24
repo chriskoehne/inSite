@@ -22,14 +22,12 @@ let getMonths = function (comments) {
                 arr[d.getMonth()] += 1;
             } 
         });
-        console.log(arr)
         for (let i = 0; i < 12; i++) {
             let x = new Date();
             x.setMonth(x.getMonth() - i)
             monthArrYear[i] = c.MONTHS[x.getMonth()] + " " + x.getFullYear();
             monthArr[i] = c.MONTHS[x.getMonth()]
         }
-        console.log(monthArrYear)
         let numComm = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < 12; i++) {
             numComm[i] = arr[c.MONTHSKEY[monthArr[i]]]
@@ -43,7 +41,6 @@ let getDays = function(comments) {
     let currentYear = new Date()
     comments.forEach(e => {
         //e.data.created
-        //console.log(e.data.created)
         if (e.data.created >= currentYear.getTime() / 1000 - 604800) {
             let d = new Date(e.data.created * 1000); //get current Date
             arr[d.getDay()] += 1;
@@ -52,16 +49,31 @@ let getDays = function(comments) {
     for (let i = 0; i < 7; i++) {
         let x = new Date();
         x.setDate(x.getDate() - i)
-        console.log(x)
         dayArr[i] = c.WEEK[x.getDay()]
     }
-    console.log(dayArr)
     let numComm = [0, 0, 0, 0, 0, 0, 0];
     for (let i = 0; i < 7; i++) {
         numComm[i] = arr[c.WEEKKEY[dayArr[i]]]
     } 
-    console.log(numComm)
     return { daysOfWeek: dayArr, numComments: numComm }
 }
 
-export { getMonths, getDays }
+let getLastThirty = function (comments) {
+    let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let dayArr = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+    let currentYear = new Date()
+    comments.forEach(e => {
+        if (e.data.created >= currentYear.getTime() / 1000 - 86400 * 30) {
+            let day = Math.ceil((currentYear.getTime() / 1000 - e.data.created)/ 86400);
+            arr[day] += 1;
+        }
+    });
+    for (let i = 0; i < 30; i++) {
+        let x = new Date();
+        x.setDate(x.getDate() - i)
+        dayArr[i] = (x.getMonth() + 1) +  "/" + x.getDate()
+    }
+    return { lastThirty: dayArr, numComments: arr }
+}
+
+export { getMonths, getDays, getLastThirty }
