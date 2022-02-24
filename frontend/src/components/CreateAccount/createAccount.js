@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 // import Popup from 'reactjs-popup';
 import axios from 'axios';
@@ -25,7 +25,7 @@ const CreateAccount = (props) => {
     };
     axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
       if (res.status === 200) {
-        props.setAppEmail(email);
+        localStorage.setItem('email', email)
         props.navigate('/dashboard', { state: { email: email } });
       } else {
         console.log('incorrect code');

@@ -17,7 +17,7 @@ const ChangePassword = (props) => {
   const [newPassword2, setPassword2] = useState("");
   const [modal, setModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const email = state.email;
+  const email = localStorage.getItem('email')
   //const [newPass, setPassword] = useState('');
   //const [newPass2, setPhone] = useState('');
   //const [email, setEmail] = useState('');

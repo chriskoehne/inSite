@@ -15,4 +15,12 @@ module.exports = {
 
   AUTHY_REGISTER_SUCCESS: 'Authy register success!',
   SUCCESS: 'Success!', //general success message
+
+  COMMENT: 't1',
+  ACCOUNT: 't2',
+  LINK: 't3', //links are posts
+  MESSAGE: 't4',
+  SUBREDDIT: 't5',
+  AWARD: 't6',
+  PROMOCAMPAIGN: 't8',
 };

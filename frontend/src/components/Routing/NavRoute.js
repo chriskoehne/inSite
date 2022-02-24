@@ -6,7 +6,8 @@ import { Navigate, Outlet } from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard';
 
 const OurNavbar = (props) => {
-  const email = props.props.email;
+  const email = localStorage.getItem('email')
+
   const [modal, setModal] = useState(false);
   console.log("navbar props are:")
   console.log(props.props)
@@ -25,7 +26,7 @@ const OurNavbar = (props) => {
 
   const changePassword = () => {
     //additional things
-    props.props.navigate('/changePassword', { state: { email: email } })
+    props.props.navigate('/changePassword')
   }
 
   const logout = () => {

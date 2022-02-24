@@ -31,3 +31,15 @@ exports.userCreation = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.deleteUser = async function (req, res, next) {
+  try {
+    let result = await userCreationService.deleteUser(
+      req.body.email
+    );
+    return res.status(200).json({message: result})
+   
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
