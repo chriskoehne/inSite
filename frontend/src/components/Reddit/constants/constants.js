@@ -21,6 +21,8 @@ module.exports = {
           "September": 8, 
           "October": 9, 
           "November": 10, 
-          "December": 11}
+          "December": 11},
+  WEEK: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  WEEKKEY: {"Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6}
 
 }
