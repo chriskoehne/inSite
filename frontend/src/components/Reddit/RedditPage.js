@@ -18,7 +18,7 @@ import { Line } from 'react-chartjs-2';
 import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
-import { getMonths } from './RedditComments'
+import { getMonths } from './RedditComments';
 
 const c = require('./constants/constants');
 
@@ -89,7 +89,7 @@ const RedditPage = (props) => {
   const [chartData, setChartData] = useState({
     datasets: [],
   });
-  const [chartOptions, setChartOptions] = useState({})
+  const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -161,23 +161,32 @@ const RedditPage = (props) => {
             });
             getUncommon(comm_str);
             setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
-            console.log(array)
+            console.log(array);
             // get comments by Month
-            let monthsData = getMonths(array)
-            console.log(monthsData.monthYear)
+            let monthsData = getMonths(array);
+            console.log(monthsData.monthYear);
             let monthsDataset = {
               labels: monthsData.monthYear.reverse(),
               datasets: [
-                { label: "Number of Comments",
+                {
+                  label: 'Number of Comments',
                   data: monthsData.numComments.reverse(),
                   borderColor: '#FF4500',
                   backgroundColor: '#FF4500',
-                  xaxis: 'Months'
-                }
-              ]
+                  xaxis: 'Months',
+                },
+              ],
             };
-            setChartData(monthsDataset)
-            setChartOptions({ responsive: true, maintainAspectRatio: false })
+            setChartData(monthsDataset);
+            setChartOptions({
+              responsive: true,
+              maintainAspectRatio: false,
+              scale: {
+                ticks: {
+                  precision: 0,
+                },
+              },
+            });
             //setCommentsMonth(monthsData.monthYear)
             //console.log(commentByMonth)
           }
@@ -358,17 +367,15 @@ const RedditPage = (props) => {
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <Row>
-              <Col>
-                <h1>
-                  {' '}
-                  Lets look at your trends
-                </h1>
-              </Col>
-              <Col>
-                <Row className={styles.chartContainer}>
-                  <Line options={chartOptions} data={chartData} color={'#FF4500'} />
-                </Row>
-              </Col>
+              <h1>Comments over time</h1>
+
+              <div className={styles.chartContainer}>
+                <Line
+                  options={chartOptions}
+                  data={chartData}
+                  color={'#FF4500'}
+                />
+              </div>
             </Row>
           </Card>
         </Carousel.Item>
