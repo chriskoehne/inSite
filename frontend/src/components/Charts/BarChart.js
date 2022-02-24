@@ -75,7 +75,8 @@ const BarChart = (props) => {
     ],
   };
 
-  return <Bar data={data} />;
+  return <Bar data={data} onClick={props.onClick} ref={props.chartRef} 
+  options={{ responsive: true, maintainAspectRatio: false }}/>;
 };
 
 export default BarChart;
