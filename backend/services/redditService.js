@@ -33,23 +33,21 @@ exports.test = async function (req, res) {
   }
 };
 
-  exports.login = async function (req, res) {
+  exports.login = async function (email) {
     try {
       console.log("In Login");
-      console.log(req.body)
-
-      const randomString = req.body.email
 
       //TODO change the client_id to grab from config file
-      const link = "https://www.reddit.com/api/v1/authorize?client_id=" + config.redditAppId + "&response_type=code&state=" + randomString + 
+      const link = "https://www.reddit.com/api/v1/authorize?client_id=" + config.redditAppId + "&response_type=code&state=" + email + 
       "&redirect_uri=https://127.0.0.1:3000/dashboard/&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history";
 
       console.log("link");
       console.log(link);
 
-      return {link: link, verificationString: randomString};      
+      return {link: link, verificationString: email};      
   
     } catch (err) {
+      console.log(err)
       console.log("big error catch")
       return err;
     }
@@ -57,8 +55,7 @@ exports.test = async function (req, res) {
 
   exports.convert = async function (req, res) {
     try {
-      // console.log(req.body);
-      console.log("in convert")
+      console.log(req.body);
       const code = req.body.code;
       
       var params = new searchParams();
@@ -78,7 +75,7 @@ exports.test = async function (req, res) {
       //reddit post call
       const redditRes = await axios.post("https://www.reddit.com/api/v1/access_token", body, {headers: headers});
       // console.log("in service")
-      // console.log(redditRes.data)
+      //console.log(redditRes.data)
       return redditRes.data;
     } catch (err) {
       console.log("big error catch")
@@ -93,8 +90,8 @@ exports.test = async function (req, res) {
       const token = req.query.accessToken;
       // const subReddit = req.body.subReddit;
       
-      console.log("in service, token is")
-      console.log(token)
+      // console.log("in service, token is")
+      // console.log(token)
       // const body = params;
       const finalAuth = "bearer " + token
       
@@ -102,7 +99,8 @@ exports.test = async function (req, res) {
         "Authorization": finalAuth,
       }
       const redditRes = await axios.get("https://oauth.reddit.com/api/v1/me", {headers: headers});
-      console.log("service subreddit answer:")
+      // console.log("service subreddit answersssss:")
+      //console.log(redditRes)
       // let ans = redditRes.toJSON();
       // console.log(ans.status)
       // console.log(ans.name)
@@ -120,8 +118,13 @@ exports.test = async function (req, res) {
       // console.log(req.body);
       const token = req.query.accessToken;
       const username = req.query.username;
+      // console.log(req)
+      console.log("user " + username)
       // const subReddit = req.body.subReddit;
       
+      console.log("in overview service, username is")
+      console.log(username)
+
       console.log("in service, token is")
       console.log(token)
       // const body = params;
@@ -131,15 +134,39 @@ exports.test = async function (req, res) {
         "Authorization": finalAuth,
       }
       const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/overview", {headers: headers});
-      console.log("service subreddit answer:")
-      // let ans = redditRes.toJSON();
-      // console.log(ans.status)
+      // console.log("service subreddit answer:")
+      
+
       // console.log(ans.name)
+      //console.log(redditRes)
 
       return redditRes.data;
     } catch (err) {
       console.log("big error catch")
       // console.log(err)
+      return err;
+    }
+  };
+
+  exports.userComments = async function (req, res) {
+    try {
+      const token = req.query.accessToken;
+      const username = req.query.username;
+      // console.log(req)
+      // console.log("user " + username)
+      // console.log("in service, token is")
+      // console.log(token)
+      // const body = params;
+      const finalAuth = "bearer " + token
+      const headers = {
+        "Authorization": finalAuth,
+      }
+      const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/comments.json?limit=100", {headers: headers});
+      // console.log("service subreddit answer:")
+      // console.log(redditRes)
+      return redditRes.data;
+    } catch (err) {
+      console.log("big error catch")
       return err;
     }
   };
