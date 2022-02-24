@@ -52,7 +52,7 @@ const OurNavbar = (props) => {
 
   return (
     <Navbar className={styles.navbar}>
-      <Modal show={modal}>
+      <Modal show={modal} onHide={handleCloseError}>
             <Modal.Header>
               <Modal.Title>Confirm Account Deletion</Modal.Title>
             </Modal.Header>
