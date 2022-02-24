@@ -165,6 +165,39 @@ const RedditPage = (props) => {
     return maxItem;
   };
 
+  const getMinScore = (list) => {
+    if (loading) {
+      return {};
+    }
+    var minScore = 0;
+    list.forEach(function (item, index) {
+      if (item.score < minScore) {
+        if (list===posts && !item.title) { // skip non-post items
+          return;
+        }
+        minScore = item.score;
+      }
+      
+    });
+    return minScore;
+  };
+
+  const getMinItem = (list, minScore) => {
+    if (loading) {
+      return {};
+    }
+    var minItem = {};
+    list.forEach(function (item, index) {
+      if (item.score === minScore) {
+        if (list===posts && !item.title) { // skip non-post items
+          return;
+        }
+        minItem = item;
+      }
+    });
+    return minItem;
+  };
+
   const getScores = (list) => {
     if (loading) {
       return [];
@@ -249,7 +282,7 @@ const RedditPage = (props) => {
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <Row>
-              Most Upvoted Post
+              Most Upvoted Post - {getMaxScore(posts)} Upvotes
               <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
@@ -262,7 +295,7 @@ const RedditPage = (props) => {
               </Card>
             </Row>
             <Row>
-              Most Upvoted Comment
+              Most Upvoted Comment - {getMaxScore(comments)} Upvotes
               <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
@@ -275,7 +308,7 @@ const RedditPage = (props) => {
               </Card>
             </Row>
             <Row>
-              Most Upvoted Message
+              Most Upvoted Message - {getMaxScore(comments)} Upvotes
               <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
@@ -283,6 +316,50 @@ const RedditPage = (props) => {
                   </Card.Title>
                   <Card.Text>
                     {getMaxItem(messages, getMaxScore(messages)).body}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Row>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row>
+              Most Downvoted Post - {getMinScore(posts)} Upvotes
+              <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card.Body>
+                  <Card.Title>
+                    {console.log("de min",getMinScore(posts))}
+                    {getMinItem(posts, getMinScore(posts)).title}
+                  </Card.Title>
+                  <Card.Text>
+                    {getMinItem(posts, getMinScore(posts)).selftext}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Row>
+            <Row>
+              Most Downvoted Comment - {getMinScore(comments)} Upvotes
+              <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card.Body>
+                  <Card.Title>
+                    {getMinItem(comments, getMinScore(comments)).link_title}
+                  </Card.Title>
+                  <Card.Text>
+                    {getMinItem(comments, getMinScore(comments)).body}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Row>
+            <Row>
+              Most Downvoted Message - {getMinScore(comments)} Upvotes
+              <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card.Body>
+                  <Card.Title>
+                    {getMinItem(messages, getMinScore(messages)).link_title}
+                  </Card.Title>
+                  <Card.Text>
+                    {getMinItem(messages, getMinScore(messages)).body}
                   </Card.Text>
                 </Card.Body>
               </Card>
