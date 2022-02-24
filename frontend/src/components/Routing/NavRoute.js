@@ -1,13 +1,67 @@
-import React from 'react';
-import { Container, Navbar } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Button, Navbar, Dropdown, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
-import { Navigate, Outlet } from 'react-router-dom';
-import Dashboard from '../Dashboard/Dashboard';
+import { Outlet } from 'react-router-dom';
+import axios from 'axios';
 
 const OurNavbar = (props) => {
+  const email = localStorage.getItem('email');
+
+  const [modal, setModal] = useState(false);
+  console.log('navbar props are:');
+  console.log(props.props);
+  //what the fuck is going on here?
+
+  const handleCloseError = () => setModal(false); // Handles Error Modal Close
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    // make call to my backend functions
+    const body = {
+      email: email,
+    };
+    axios.post('http://localhost:5000/userDelete/', body).then((res) => {
+      if (res.status == 200) {
+        setModal(false);
+        props.props.navigate('/logout');
+      } else {
+        console.log('a failure');
+      }
+    });
+  };
+
+  const changePassword = () => {
+    //additional things
+    props.props.navigate('/changePassword');
+  };
+
+  const logout = () => {
+    //additional things
+    props.props.navigate('/logout');
+  };
+
+  const deleteAccount = () => {
+    //additional things
+    //call to backend
+    setModal(true);
+    // props.props.navigate('/welcome')
+  };
+
   return (
     <Navbar className={styles.navbar}>
+      <Modal show={modal} onHide={handleCloseError}>
+        <Modal.Header>
+          <Modal.Title>Are you sure you want to delete your account?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className={styles.centered}>
+            <Button className={styles.buttons} onClick={handleClose}>
+              Confirm Account Deletion
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
       <Container>
         <Navbar.Brand href='/dashboard'>
           <div className={styles.inlineDiv}>
@@ -17,19 +71,37 @@ const OurNavbar = (props) => {
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className='justify-content-end'>
-          <Navbar.Text style={{ color: 'white' }}>settings</Navbar.Text>
+          <Dropdown>
+            <Dropdown.Toggle
+              variant='secondary'
+              id='dropdown-button-transparent'
+            >
+              Settings
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={changePassword}>
+                Change Password
+              </Dropdown.Item>
+              <Dropdown.Item onClick={logout}>Sign Out</Dropdown.Item>
+              <Dropdown.Item onClick={deleteAccount}>
+                Delete Account
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 };
 
-const NavRoute = () => {
+const NavRoute = (props) => {
   // If authorized, return an outlet that will render child elements
   // If not, return element that will navigate to login page
+
   return (
     <div className={styles.box}>
-      <OurNavbar />
+      <OurNavbar props={props} />
       <Outlet />
     </div>
   );

@@ -39,6 +39,11 @@ const uploadController = require(path.resolve(
   '../controllers/uploadController'
 ));
 
+const changePasswordController = require(path.resolve(
+  __dirname,
+  '../controllers/changePasswordController'
+));
+
 const auth = require('../auth/authentication');
 
 router.get('/demo0', demoController.showDemo0);
@@ -78,5 +83,7 @@ router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
 router.post('/logout', auth.removeToken);
 
 router.post('/uploadImage', uploadController.upload);
+
+router.post('/changePassword', changePasswordController.checkPasswd);
 
 module.exports = router;
