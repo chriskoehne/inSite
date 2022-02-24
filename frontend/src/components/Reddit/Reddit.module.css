@@ -50,5 +50,5 @@
 /* for some reason, using a percent breaks it??? (TODO) */
 .chartContainer {
   display: flex;
-  height: 38vh;
+  height: 60vh;
 }

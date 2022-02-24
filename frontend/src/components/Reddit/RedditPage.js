@@ -1,10 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Row, Card, Col, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BarChart from '../Charts/BarChart';
+import LineChart from '../Charts/LineChart';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
+import { getMonths } from './RedditComments';
+
 const c = require('./constants/constants');
 
 // Used to create the word clouds
@@ -48,6 +63,16 @@ function getWordList(str) {
   return arr.slice(0, 30);
 }
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 const RedditPage = (props) => {
   const [loading, setLoading] = useState(false);
   const [me, setMe] = useState({});
@@ -60,6 +85,11 @@ const RedditPage = (props) => {
   const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
+  //testing chartData stuff
+  const [chartData, setChartData] = useState({
+    datasets: [],
+  });
+  const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -124,12 +154,41 @@ const RedditPage = (props) => {
           );
           if (ansComments.status === 200) {
             let array = ansComments.data.overview.data.children;
+            //setCommentByMonths
             let comm_str = '';
             array.forEach((comm) => {
               comm_str += comm.data.body;
             });
             getUncommon(comm_str);
             setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
+            console.log(array);
+            // get comments by Month
+            let monthsData = getMonths(array);
+            console.log(monthsData.monthYear);
+            let monthsDataset = {
+              labels: monthsData.monthYear.reverse(),
+              datasets: [
+                {
+                  label: 'Number of Comments',
+                  data: monthsData.numComments.reverse(),
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
+                  xaxis: 'Months',
+                },
+              ],
+            };
+            setChartData(monthsDataset);
+            setChartOptions({
+              responsive: true,
+              maintainAspectRatio: false,
+              scale: {
+                ticks: {
+                  precision: 0,
+                },
+              },
+            });
+            //setCommentsMonth(monthsData.monthYear)
+            //console.log(commentByMonth)
           }
           console.log('loading done');
         }
@@ -302,6 +361,21 @@ const RedditPage = (props) => {
               <Col>
                 <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
               </Col>
+            </Row>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row>
+              <h1>Comments over time</h1>
+
+              <div className={styles.chartContainer}>
+                <Line
+                  options={chartOptions}
+                  data={chartData}
+                  color={'#FF4500'}
+                />
+              </div>
             </Row>
           </Card>
         </Carousel.Item>
