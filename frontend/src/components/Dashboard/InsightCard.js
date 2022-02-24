@@ -8,6 +8,7 @@ import { SocialIcon } from 'react-social-icons';
 
 
 
+
 const InsightCard = (props) => {
 
 

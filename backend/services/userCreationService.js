@@ -73,7 +73,7 @@ exports.deleteUser = async function (email) {
           resolve({deleted, err})
         }
         else {
-          console.log(success)
+          console.log('success')
           resolve(deleted, res)
         }
       });
