@@ -22,6 +22,7 @@ exports.userCreation = async function (req, res, next) {
       case c.EMAIL_TAKEN:
       case c.GENERAL_TRY_CATCH_ERR:
         return res.status(400).json({ message: result });
+        break;
       default:
         //success
         return res.status(200).json({ message: result }); //should be the user's id

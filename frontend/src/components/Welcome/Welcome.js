@@ -53,7 +53,7 @@ const Welcome = (props) => {
               <div className='col-6'>
                 <Button className={styles.buttons} onClick={handleLogInButton}>
                   Log In
-                </Button>{' '}
+                </Button>
               </div>
               <div className='col-6'>
                 <Button
