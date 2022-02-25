@@ -9,10 +9,10 @@ var loginService = require(path.resolve(
 exports.login = async function (req, res, next) {
   try {
     /* FOR DEVELOPMENT ONLY */
-    let result = '620f3de16decd5056284765d';
+    // let result = '620f3de16decd5056284765d';
 
     /* UNCOMMENT THIS */
-    // let result = await loginService.check(req.body.email, req.body.password);
+    let result = await loginService.check(req.body.email, req.body.password);
 
     switch (result) {
       case c.AUTHY_REQUEST_SMS_ERR:
