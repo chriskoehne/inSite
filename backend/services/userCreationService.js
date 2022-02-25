@@ -39,17 +39,16 @@ exports.signup = async function (email, password, phone) {
             { email: email },
             { authyId: regres.user.id }
           );
-          return await new Promise((resolve) => {
-            authy.request_sms(regres.user.id, function (err, smsres) {
+          await authy.request_sms(regres.user.id, function (err, smsres) {
               if (err) {
                 console.log(err);
                 resolve(c.AUTHY_REQUEST_SMS_ERR);
               }
               console.log('sent user code');
-              console.log(smsres.message);
+              console.log(smsres);
+              console.log(result)
               resolve(result.id); //should use a constant for this?
             });
-          });
         }
       });
     });
