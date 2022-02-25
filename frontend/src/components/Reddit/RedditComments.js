@@ -65,7 +65,7 @@ let getLastThirty = function (comments) {
     comments.forEach(e => {
         if (e.data.created >= currentYear.getTime() / 1000 - 86400 * 30) {
             let day = Math.ceil((currentYear.getTime() / 1000 - e.data.created)/ 86400);
-            arr[day] += 1;
+            arr[day - 1] += 1;
         }
     });
     for (let i = 0; i < 30; i++) {

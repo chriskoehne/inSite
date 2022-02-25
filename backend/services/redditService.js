@@ -133,7 +133,7 @@ exports.test = async function (req, res) {
       const headers = {
         "Authorization": finalAuth,
       }
-      const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/overview", {headers: headers});
+      const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/overview?limit=100&sort=controversial", {headers: headers});
       // console.log("service subreddit answer:")
       
 
@@ -161,7 +161,7 @@ exports.test = async function (req, res) {
       const headers = {
         "Authorization": finalAuth,
       }
-      const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/comments.json?limit=100", {headers: headers});
+      const redditRes = await axios.get("https://oauth.reddit.com/user/" + username + "/comments.json?limit=100&sort=controversial", {headers: headers});
       // console.log("service subreddit answer:")
       // console.log(redditRes)
       return redditRes.data;
