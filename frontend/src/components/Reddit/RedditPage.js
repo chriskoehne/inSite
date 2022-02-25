@@ -464,32 +464,36 @@ const RedditPage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <Row>
-              Most Upvoted Post - {getMaxScore(posts)} Karma{' '}
-              {/* TODO karma or upvotes */}
-              <Card style={{ borderColor: '#3d3d3d' }}>
-                <Card.Body>
-                  <Card.Title>
-                    {getMaxItem(posts, getMaxScore(posts)).title}
-                  </Card.Title>
-                  <Card.Text>
-                    {getMaxItem(posts, getMaxScore(posts)).selftext}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+          <Row>
+              <Col>
+                Most Upvoted Post - {getMaxScore(posts)} Karma{' '}
+                {/* TODO karma or upvotes */}
+                <Card style={{ borderColor: '#3d3d3d' }}>
+                  <Card.Body>
+                    <Card.Title>
+                      {getMaxItem(posts, getMaxScore(posts)).title}
+                    </Card.Title>
+                    <Card.Text>
+                      {getMaxItem(posts, getMaxScore(posts)).selftext}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
             <Row>
-              Most Upvoted Comment - {getMaxScore(comments)} Karma
-              <Card style={{ borderColor: '#3d3d3d' }}>
-                <Card.Body>
-                  <Card.Title>
-                    {getMaxItem(comments, getMaxScore(comments)).link_title}
-                  </Card.Title>
-                  <Card.Text>
-                    {getMaxItem(comments, getMaxScore(comments)).body}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+              <Col>
+                Most Upvoted Comment - {getMaxScore(comments)} Karma
+                <Card style={{ borderColor: '#3d3d3d' }}>
+                  <Card.Body>
+                    <Card.Title>
+                      {getMaxItem(comments, getMaxScore(comments)).link_title}
+                    </Card.Title>
+                    <Card.Text>
+                      {getMaxItem(comments, getMaxScore(comments)).body}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
             {/* <Row>
               Most Upvoted Message - {getMaxScore(comments)} Karma
@@ -504,35 +508,35 @@ const RedditPage = (props) => {
                 </Card.Body>
               </Card>
             </Row> */}
-          </Card>
-        </Carousel.Item>
-        <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
             <Row>
-              Most Downvoted Post - {getMinScore(posts)} Karma
-              <Card style={{ borderColor: '#3d3d3d' }}>
-                <Card.Body>
-                  <Card.Title>
-                    {getMinItem(posts, getMinScore(posts)).title}
-                  </Card.Title>
-                  <Card.Text>
-                    {getMinItem(posts, getMinScore(posts)).selftext}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+              <Col>
+                Most Downvoted Post - {getMinScore(posts)} Karma
+                <Card style={{ borderColor: '#3d3d3d' }}>
+                  <Card.Body>
+                    <Card.Title>
+                      {getMinItem(posts, getMinScore(posts)).title}
+                    </Card.Title>
+                    <Card.Text>
+                      {getMinItem(posts, getMinScore(posts)).selftext}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
             <Row>
-              Most Downvoted Comment - {getMinScore(comments)} Karma
-              <Card style={{ borderColor: '#3d3d3d' }}>
-                <Card.Body>
-                  <Card.Title>
-                    {getMinItem(comments, getMinScore(comments)).link_title}
-                  </Card.Title>
-                  <Card.Text>
-                    {getMinItem(comments, getMinScore(comments)).body}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+              <Col>
+                Most Downvoted Comment - {getMinScore(comments)} Karma
+                <Card style={{ borderColor: '#3d3d3d' }}>
+                  <Card.Body>
+                    <Card.Title>
+                      {getMinItem(comments, getMinScore(comments)).link_title}
+                    </Card.Title>
+                    <Card.Text>
+                      {getMinItem(comments, getMinScore(comments)).body}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
             {/* <Row>
               Most Downvoted Message - {getMinScore(comments)} Karma
@@ -548,37 +552,43 @@ const RedditPage = (props) => {
               </Card>
             </Row> */}
             <Row>
-              Most Controversial Post
-              <Card style={{ borderColor: '#3d3d3d' }}>
-                <Card.Body>
-                  <Card.Title>{mostControversialPost.title}</Card.Title>
-                  <Card.Text>{mostControversialPost.selftext}</Card.Text>
-                </Card.Body>
-              </Card>
+              <Col>
+                Most Controversial Post
+                <Card style={{ borderColor: '#3d3d3d' }}>
+                  <Card.Body>
+                    <Card.Title>{mostControversialPost.title}</Card.Title>
+                    <Card.Text>{mostControversialPost.selftext}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
             <Row>
-              Most Controversial Comment
-              <Card style={{ borderColor: '#3d3d3d' }}>
-                <Card.Body>
-                  <Card.Title>{mostControversialComment.link_title}</Card.Title>
-                  <Card.Text>{mostControversialComment.body}</Card.Text>
-                </Card.Body>
-              </Card>
+              <Col>
+                Most Controversial Comment
+                <Card style={{ borderColor: '#3d3d3d' }}>
+                  <Card.Body>
+                    <Card.Title>
+                      {mostControversialComment.link_title}
+                    </Card.Title>
+                    <Card.Text>{mostControversialComment.body}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <Row>
+            <Row >
               <Col>
-                <h1>
-                  {' '}
-                  Wow you've said a lot of things in the past. Here's some of
-                  the words you most frequently use:
-                </h1>
-              </Col>
-              <Col>
+                <h3>
+                  Wow, you've said a lot of things in the past. <br></br> 
+                  Here's some of the words you most frequently use:
+                </h3>
+                <div className={styles.cloudCentered}>
+
                 <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
+                </div>
               </Col>
             </Row>
           </Card>
