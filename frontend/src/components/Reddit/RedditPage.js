@@ -90,18 +90,18 @@ const RedditPage = (props) => {
   const [awardKarma, setAwardKarma] = useState(0);
   const [totalKarma, setTotalKarma] = useState(0);
   const [subKarmaList, setSubKarmaList] = useState([]);
-  const [commentGraphDay, setCommentGraphDay] = useState(false)
-  const [commentGraphThirty, setCommentGraphThirty] = useState(false)
-  const [commentGraphMonth, setCommentGraphMonth] = useState(true)
+  const [commentGraphDay, setCommentGraphDay] = useState(false);
+  const [commentGraphThirty, setCommentGraphThirty] = useState(false);
+  const [commentGraphMonth, setCommentGraphMonth] = useState(true);
   //testing chartData stuff
   const [chartMonthData, setChartMonthData] = useState({
-    datasets: []
+    datasets: [],
   });
   const [chartDayData, setChartDayData] = useState({
-    datasets: []
+    datasets: [],
   });
   const [chartThirtyData, setChartThirtyData] = useState({
-    datasets: []
+    datasets: [],
   });
   const [chartOptions, setChartOptions] = useState({});
 
@@ -125,7 +125,6 @@ const RedditPage = (props) => {
     }
   }, []);
 
- 
   useEffect(() => {
     if (!redditToken) {
       setLoading(true);
@@ -135,9 +134,6 @@ const RedditPage = (props) => {
     const getData = async () => {
       setLoading(true);
 
-      // Update the document title using the browser API
-      console.log('going to attempt to use access token now');
-      // console.log("Token: " + redditToken);
       const redditMeQuery = {
         accessToken: redditToken,
       };
@@ -202,7 +198,7 @@ const RedditPage = (props) => {
                 },
               ],
             };
-            let thirtyDate = getLastThirty(array)
+            let thirtyDate = getLastThirty(array);
             let thirtyDataset = {
               labels: thirtyDate.lastThirty.reverse(),
               datasets: [
@@ -214,9 +210,9 @@ const RedditPage = (props) => {
                 },
               ],
             };
-            setChartThirtyData(thirtyDataset)
-            setChartDayData(dayDataset)
-            setChartMonthData(monthsDataset)
+            setChartThirtyData(thirtyDataset);
+            setChartDayData(dayDataset);
+            setChartMonthData(monthsDataset);
             setChartOptions({
               responsive: true,
               maintainAspectRatio: false,
@@ -260,8 +256,6 @@ const RedditPage = (props) => {
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
             setTotalKarma(ansTotalKarma.data.totalKarma);
-
-    
           }
 
           console.log('loading done');
@@ -272,9 +266,7 @@ const RedditPage = (props) => {
     getData();
   }, [redditToken]);
 
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
   const getMaxScore = (list) => {
     if (loading) {
@@ -318,22 +310,22 @@ const RedditPage = (props) => {
   };
 
   const commentMonthClick = () => {
-    setCommentGraphDay(false)
-    setCommentGraphThirty(false)
-    setCommentGraphMonth(true)
-  }
+    setCommentGraphDay(false);
+    setCommentGraphThirty(false);
+    setCommentGraphMonth(true);
+  };
 
   const commentWeekClick = () => {
-    setCommentGraphDay(false)
-    setCommentGraphThirty(true)
-    setCommentGraphMonth(false)
-  }
+    setCommentGraphDay(false);
+    setCommentGraphThirty(true);
+    setCommentGraphMonth(false);
+  };
 
   const commentDayClick = () => {
-    setCommentGraphDay(true)
-    setCommentGraphThirty(false)
-    setCommentGraphMonth(false)
-  }
+    setCommentGraphDay(true);
+    setCommentGraphThirty(false);
+    setCommentGraphMonth(false);
+  };
 
   //clunky, but follow the above and add to the following if statements for the other social medias
 
@@ -363,35 +355,27 @@ const RedditPage = (props) => {
           <Card className={styles.socialsCard}>
             <Row>
               <Col>
+                <Row>Total Karma: {totalKarma}</Row>
+                <Row>Post Karma: {linkKarma}</Row>
+                <Row>Comment Karma: {commentKarma}</Row>
+                <Row>Award Karma: {awardKarma}</Row>
+                <Row>Number of Posts: {posts.length}</Row>
+                <Row>Number of Comments: {comments.length}</Row>
                 <Row>
-                  Total Karma: {totalKarma}
-                </Row>
-                <Row>
-                  Post Karma: {linkKarma}
-                </Row>
-                <Row>
-                  Comment Karma: {commentKarma}
-                </Row>
-                <Row>
-                  Award Karma: {awardKarma}
-                </Row>
-                <Row>
-                  Number of Posts: {posts.length}
-                </Row>
-                <Row>
-                  Number of Comments: {comments.length}
-                </Row>
-                <Row>
-                  {
-                    Object.keys(subKarmaList).map((key, index) => ( 
-                      <p key={index}> Subreddit: {subKarmaList[key].sr}, comment karma: {subKarmaList[key].comment_karma}, link karma: {subKarmaList[key].link_karma}</p> 
-                    ))
-                  } 
+                  {Object.keys(subKarmaList).map((key, index) => (
+                    <p key={index}>
+                      {' '}
+                      Subreddit: {subKarmaList[key].sr}, comment karma:{' '}
+                      {subKarmaList[key].comment_karma}, link karma:{' '}
+                      {subKarmaList[key].link_karma}
+                    </p>
+                  ))}
                 </Row>
               </Col>
             </Row>
           </Card>
-        </Carousel.Item><Carousel.Item className={styles.slideshowCard}>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <Row>
               <Col>
@@ -498,26 +482,38 @@ const RedditPage = (props) => {
               <h1>Comments over time</h1>
 
               <div className={styles.chartContainer}>
-               {commentGraphMonth ? <Line
-                  options={chartOptions}
-                  data={chartMonthData}
-                  color={'#FF4500'}
-                /> : null}
-                {commentGraphDay ? <Line
-                  options={chartOptions}
-                  data={chartDayData}
-                  color={'#FF4500'}
-                /> : null}
-                { commentGraphThirty ? <Line
-                  options={chartOptions}
-                  data={chartThirtyData}
-                  color={'#FF4500'}
-                /> : null}
+                {commentGraphMonth ? (
+                  <Line
+                    options={chartOptions}
+                    data={chartMonthData}
+                    color={'#FF4500'}
+                  />
+                ) : null}
+                {commentGraphDay ? (
+                  <Line
+                    options={chartOptions}
+                    data={chartDayData}
+                    color={'#FF4500'}
+                  />
+                ) : null}
+                {commentGraphThirty ? (
+                  <Line
+                    options={chartOptions}
+                    data={chartThirtyData}
+                    color={'#FF4500'}
+                  />
+                ) : null}
               </div>
-              <ButtonGroup aria-label="Basic example">
-                <Button variant="secondary" onClick={commentDayClick}>Last 7 Days</Button>
-                <Button variant="secondary" onClick={commentWeekClick}>Last Thirty Days</Button>
-                <Button variant="secondary" onClick={commentMonthClick}>Last 12 months</Button>
+              <ButtonGroup aria-label='Basic example'>
+                <Button variant='secondary' onClick={commentDayClick}>
+                  Last 7 Days
+                </Button>
+                <Button variant='secondary' onClick={commentWeekClick}>
+                  Last Thirty Days
+                </Button>
+                <Button variant='secondary' onClick={commentMonthClick}>
+                  Last 12 months
+                </Button>
               </ButtonGroup>
             </Row>
           </Card>
@@ -525,6 +521,6 @@ const RedditPage = (props) => {
       </Carousel>
     </div>
   );
-}
+};
 
 export default RedditPage;

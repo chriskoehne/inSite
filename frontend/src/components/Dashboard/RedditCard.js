@@ -16,14 +16,13 @@ const RedditCard = (props) => {
   const [posts, setPosts] = useState([]);
   const [me, setMe] = useState({});
   const [updatedToken, setUpdatedToken] = useState('');
-  
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
       return false;
     }
-    const token = JSON.parse(localStorage.getItem('redditToken'));
-    if ((Date.now() - token.date) / 36e5 >= 1) {
+    const date = JSON.parse(localStorage.getItem('redditToken')).date;
+    if ((Date.now() - date) / 36e5 >= 1) {
       localStorage.removeItem('redditToken');
       return false;
     }
@@ -31,10 +30,8 @@ const RedditCard = (props) => {
   };
 
   useEffect(() => {
-    let t = localStorage.getItem('redditToken');
     let c = null;
     const e = localStorage.getItem('email');
-
     const currentUrl = window.location.href;
     if (currentUrl.includes('&')) {
       let start = currentUrl.indexOf('state') + 6;
@@ -46,57 +43,53 @@ const RedditCard = (props) => {
       email: e,
       code: c,
     });
-    setRedditToken(t);
-    if (t) {
-      setUpdatedToken(JSON.parse(t).token);
-    }
   }, []);
 
   useEffect(() => {
     const convert = async () => {
       setLoading(true);
-      console.log(user);
       if (!user.code) {
         setLoading(false);
         return;
       }
-      console.log('In Convert');
       const result = await axios.post(
         'http://localhost:5000/reddit/codeToToken/',
         { code: user.code }
       );
       if (result.data.accessToken) {
         const token = result.data.accessToken;
-        console.log("Token from Convert: " + token);
-        setUpdatedToken(token);
-        console.log(Date.now());
         localStorage.setItem(
           'redditToken',
           JSON.stringify({ token: token, date: Date.now() })
         );
         setRedditToken(token);
       } else {
-        console.log("could not convert token");
+        console.log('could not convert token');
       }
-      console.log('Done converting');
       setLoading(false);
     };
 
+    if (!hasToken() && user.code) {
+      convert();
+    } else if (hasToken()) {
+      setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!hasToken() && redditToken) {
+      localStorage.setItem(
+        'redditToken',
+        JSON.stringify({ token: redditToken, date: Date.now() })
+      );
+    }
+
     const callReddit = async () => {
       setLoading(true);
-      // if (updatedToken === '') {
-      //   console.log("fuck");
-      //   setUpdatedToken(JSON.parse(redditToken).token);
-      // }
-      console.log("Access token: " + updatedToken);
-      console.log("Access token: " + redditToken);
-      console.log('going to attempt to use access token now');
       const redditMeQuery = {
-        accessToken: updatedToken,
+        accessToken: redditToken,
       };
-      console.log("reddit queer")
-      console.log(redditMeQuery);
-      if (me && !me.name) { 
+      if (me && !me.name) {
         const ansMe = await axios.get('http://localhost:5000/reddit/me', {
           params: redditMeQuery,
         });
@@ -104,7 +97,7 @@ const RedditCard = (props) => {
         if (ansMe.status === 200) {
           setMe(ansMe.data);
           const redditUserQuery = {
-            accessToken: updatedToken,
+            accessToken: redditToken,
             username: ansMe.data.name,
           };
           const ansOverview = await axios.get(
@@ -112,7 +105,6 @@ const RedditCard = (props) => {
             { params: redditUserQuery }
           );
           if (ansOverview.status === 200) {
-            // console.log(ansOverview.data.comments);
             setComments(ansOverview.data.comments);
             setMessages(ansOverview.data.messages);
             setPosts(ansOverview.data.posts);
@@ -123,25 +115,8 @@ const RedditCard = (props) => {
       }
       setLoading(false);
     };
-
-    const getData = async () => {
-      await convert();
-      await callReddit();
-    }
-
-    if (!hasToken() && user.code) {
-      getData();
-    } else {
-      console.log("No Auth Code Received From Reddit");
-    }
-    if (redditToken || hasToken()) {
+    if (redditToken) {
       callReddit();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (!hasToken() && redditToken) {
-      localStorage.setItem('redditToken', redditToken);
     }
   }, [redditToken]);
 
@@ -150,7 +125,6 @@ const RedditCard = (props) => {
     const result = await axios.post('http://localhost:5000/reddit/login/', {
       email: user.email,
     });
-    console.log(result);
     if (result.data.success) {
       console.log('got the link!');
       window.location.href = result.data.link;
