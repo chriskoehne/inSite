@@ -137,6 +137,7 @@ const RedditPage = (props) => {
 
       // Update the document title using the browser API
       console.log('going to attempt to use access token now');
+      // console.log("Token: " + redditToken);
       const redditMeQuery = {
         accessToken: redditToken,
       };

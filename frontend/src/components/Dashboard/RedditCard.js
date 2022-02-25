@@ -15,6 +15,8 @@ const RedditCard = (props) => {
   const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [me, setMe] = useState({});
+  const [updatedToken, setUpdatedToken] = useState('');
+  
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -45,6 +47,9 @@ const RedditCard = (props) => {
       code: c,
     });
     setRedditToken(t);
+    if (t) {
+      setUpdatedToken(JSON.parse(t).token);
+    }
   }, []);
 
   useEffect(() => {
@@ -55,59 +60,70 @@ const RedditCard = (props) => {
         setLoading(false);
         return;
       }
-      console.log('fuck');
+      // console.log('fuck');
       const result = await axios.post(
         'http://localhost:5000/reddit/codeToToken/',
         { code: user.code }
       );
       if (result.data.accessToken) {
         const token = result.data.accessToken;
+        setUpdatedToken(token);
         console.log(Date.now());
         localStorage.setItem(
           'redditToken',
           JSON.stringify({ token: token, date: Date.now() })
         );
         setRedditToken(token);
-        
-        console.log("Access token: " + token);
-        // Update the document title using the browser API
-        console.log('going to attempt to use access token now');
-        const redditMeQuery = {
-          accessToken: token,
-        };
-        console.log("reddit queer")
-        console.log(redditMeQuery);
-        if (me && !me.name) { 
-          const ansMe = await axios.get('http://localhost:5000/reddit/me', {
-            params: redditMeQuery,
-          });
+      }
+      setLoading(false);
+    };
 
-          if (ansMe.status === 200) {
-            setMe(ansMe.data);
-            //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
-            const redditUserQuery = {
-              accessToken: token,
-              username: ansMe.data.name,
-            };
-            const ansOverview = await axios.get(
-              'http://localhost:5000/reddit/userOverview',
-              { params: redditUserQuery }
-            );
-            if (ansOverview.status === 200) {
-              console.log(ansOverview.data.comments);
-              setComments(ansOverview.data.comments);
-              setMessages(ansOverview.data.messages);
-              setPosts(ansOverview.data.posts);
-            }
+    const callReddit = async () => {
+      setLoading(true);
+      // if (updatedToken === '') {
+      //   console.log("fuck");
+      //   setUpdatedToken(JSON.parse(redditToken).token);
+      // }
+      console.log("Access token: " + updatedToken);
+      console.log("Access token: " + redditToken);
+      console.log('going to attempt to use access token now');
+      const redditMeQuery = {
+        accessToken: updatedToken,
+      };
+      console.log("reddit queer")
+      console.log(redditMeQuery);
+      if (me && !me.name) { 
+        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+          params: redditMeQuery,
+        });
 
-            console.log('loading done');
+        if (ansMe.status === 200) {
+          setMe(ansMe.data);
+          const redditUserQuery = {
+            accessToken: updatedToken,
+            username: ansMe.data.name,
+          };
+          const ansOverview = await axios.get(
+            'http://localhost:5000/reddit/userOverview',
+            { params: redditUserQuery }
+          );
+          if (ansOverview.status === 200) {
+            console.log(ansOverview.data.comments);
+            setComments(ansOverview.data.comments);
+            setMessages(ansOverview.data.messages);
+            setPosts(ansOverview.data.posts);
           }
+
+          console.log('loading done');
         }
       }
       setLoading(false);
     };
+
     if (!hasToken() && user.code) {
       convert();
+    } else if (redditToken || hasToken()) {
+      callReddit();
     }
   }, [user]);
 
