@@ -131,7 +131,7 @@ const LineChart = (props) => {
       </div>
       <RWebShare
         data={{
-          text: 'Example chart download',
+          text: 'My inSite Chart',
           url: url ? url : 'unable to share chart',
           title: 'Chart',
         }}

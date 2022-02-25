@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
 import { Outlet } from 'react-router-dom';
 import axios from 'axios';
+import { logout } from '../../auth/auth';
 
 const OurNavbar = (props) => {
   const email = localStorage.getItem('email');
@@ -36,9 +37,9 @@ const OurNavbar = (props) => {
     props.props.navigate('/changePassword');
   };
 
-  const logout = () => {
-    //additional things
-    props.props.navigate('/logout');
+  const navLogout = () => {
+    logout(props.props);
+    
   };
 
   const deleteAccount = () => {
@@ -83,7 +84,7 @@ const OurNavbar = (props) => {
               <Dropdown.Item onClick={changePassword}>
                 Change Password
               </Dropdown.Item>
-              <Dropdown.Item onClick={logout}>Sign Out</Dropdown.Item>
+              <Dropdown.Item onClick={navLogout}>Sign Out</Dropdown.Item>
               <Dropdown.Item onClick={deleteAccount}>
                 Delete Account
               </Dropdown.Item>

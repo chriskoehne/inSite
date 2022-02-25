@@ -11,7 +11,7 @@ export async function authenticate(props) {
     await axios.post('http://localhost:5000/cookieCheck/');
     return 'authenticated';
   } catch (err) {
-    props.navigate('/welcome'); //why?
+    props.navigate('/welcome');
   }
 }
 
@@ -21,7 +21,7 @@ export async function unauthedOnly(props) {
   } catch (err) {
     return;
   }
-  props.navigate('/dashboard'); //why?
+  props.navigate('/dashboard');
 }
 
 export async function logout(props) {
@@ -29,6 +29,6 @@ export async function logout(props) {
     let result = await axios.post('http://localhost:5000/logout/');
     console.log(result);
   } catch (err) {
-    props.navigate('/welcome'); //why do we do this?
+    props.navigate('/welcome');
   }
 }
