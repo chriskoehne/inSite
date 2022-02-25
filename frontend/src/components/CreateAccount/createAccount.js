@@ -1,39 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 // import Popup from 'reactjs-popup';
-import axios from "axios";
-import { Modal } from "react-bootstrap";
-import styles from "./createAccount.module.css";
+import axios from 'axios';
+import { Modal } from 'react-bootstrap';
+import styles from './createAccount.module.css';
 
 const CreateAccount = (props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showModal, setShowModal] = useState("");
-  const [phone, setPhone] = useState("");
-  const [formatPhone, setFormatPhone] = useState(""); //Different from phone (Visual Purposes Only)
-  const [smsCode, setSMSCode] = useState("");
-  const [errorText, setErrorText] = useState("");
-  const [showErrorModal, setErrorModal] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
+  const [smsCode, setSMSCode] = useState('');
+  const [errorText, setErrorText] = useState('');
+  const [showErrorModal, setErrorModal] = useState('');
+  const [verifyText, setVerifyText] = useState('');
+
+  useEffect(() => {
+    if (!showModal) {
+      setVerifyText('');
+    }
+  }, [showModal]);
 
   const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
-  const handleClose = (e) => {
+  const handleClose = async (e) => {
     e.preventDefault();
-    console.log("verifying sms code");
+    console.log('verifying sms code');
     const body = {
       email: email,
       code: smsCode,
     };
-    axios.post("http://localhost:5000/verifyUser/", body).then((res) => {
+    try {
+      const res = await axios.post('http://localhost:5000/verifyUser/', body);
       if (res.status === 200) {
-        localStorage.setItem("email", email);
-        props.navigate("/dashboard", { state: { email: email } });
+        localStorage.setItem('email', email);
+        props.navigate('/dashboard', { state: { email: email } });
       } else {
-        console.log("caught an error")
-        setShowModal(false);
-        setErrorText("Incorrect verification code");
-        setErrorModal(true);
+        setVerifyText('Incorrect code!');
       }
-    });
+    } catch (err) {
+      setVerifyText('Incorrect code!');
+      console.log(err);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -45,7 +54,7 @@ const CreateAccount = (props) => {
       password: password,
       phone: phone,
     };
-    console.log("lasdas");
+    console.log('lasdas');
     if (
       !email
         .toLowerCase()
@@ -53,31 +62,39 @@ const CreateAccount = (props) => {
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         )
     ) {
-      setErrorText("Email is not valid");
+      setErrorText('Email is not valid');
       setErrorModal(true);
       return;
-    } else if (password.length < 8) {
-      setErrorText("Password has to be longer than 7 characters");
+    }
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
+      setErrorText(
+        'Passwords must be at least 8 characters and contain at least one letter and one number'
+      );
+      setErrorModal(true);
+      return;
+    }
+    if (confirmPassword !== password) {
+      setErrorText('Passwords do not match');
       setErrorModal(true);
       return;
     } else {
       axios
-        .post("http://localhost:5000/userCreation/", body)
+        .post('http://localhost:5000/userCreation/', body)
         .then((res) => {
-          console.log("now res is");
+          console.log('now res is');
           console.log(res);
           if (res.status === 200) {
-            console.log("the modal should popup now");
+            console.log('the modal should popup now');
             setShowModal(true);
           } else {
             // console.log('there was an error in user creation');
-            setErrorText("there was an error in user creation");
+            setErrorText('there was an error in user creation');
             setErrorModal(true);
           }
         })
         .catch((error) => {
           if (error.response) {
-            console.log("error catch");
+            console.log('error catch');
             console.log(error.response.data.message);
             setErrorModal(true);
             setErrorText(error.response.data.message);
@@ -89,7 +106,7 @@ const CreateAccount = (props) => {
   // Formats Phone Number
   function formatPhoneNumber(value) {
     if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, "");
+    const phoneNumber = value.replace(/[^\d]/g, '');
     const phoneNumberLength = phoneNumber.length;
     if (phoneNumberLength < 4) return phoneNumber;
     if (phoneNumberLength < 7) {
@@ -114,24 +131,25 @@ const CreateAccount = (props) => {
               The phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.
+              <div style={{color: 'red'}}> {verifyText} </div>
               <form onSubmit={handleClose}>
-                <div className="form-group">
+                <div className='form-group'>
                   <label>Code: </label>
                   <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Code"
+                    type='text'
+                    className='form-control'
+                    placeholder='Code'
                     onChange={(e) => {
                       setSMSCode(e.target.value);
                     }}
                   />
                 </div>
                 <br></br>
-                <div className="form-group">
+                <div className='form-group'>
                   <input
-                    type="submit"
-                    value="Submit Code"
-                    className="btn btn-primary"
+                    type='submit'
+                    value='Submit Code'
+                    className='btn btn-primary'
                   />
                 </div>
               </form>
@@ -144,34 +162,45 @@ const CreateAccount = (props) => {
             <Modal.Body>{errorText}</Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Email: </label>
               <input
-                type="text"
-                className="form-control"
-                placeholder="email"
+                type='text'
+                className='form-control'
+                placeholder='email'
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
               />
             </div>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Password: </label>
               <input
-                type="password"
-                className="form-control"
-                placeholder="password"
+                type='password'
+                className='form-control'
+                placeholder='password'
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
               />
             </div>
-            <div className="form-group">
+            <div className='form-group'>
+              <label>Confirm Password: </label>
+              <input
+                type='password'
+                className='form-control'
+                placeholder='password'
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                }}
+              />
+            </div>
+            <div className='form-group'>
               <label>Phone: </label>
               <input
-                type="text"
-                className="form-control"
-                placeholder="phone"
+                type='text'
+                className='form-control'
+                placeholder='phone'
                 onChange={(e) => {
                   const phoneNum = formatPhoneNumber(e.target.value);
                   setFormatPhone(phoneNum);
@@ -181,14 +210,14 @@ const CreateAccount = (props) => {
               />
             </div>
             <br></br>
-            <div className="form-group">
+            <div className='form-group'>
               <input
-                type="submit"
-                value="Create Account"
-                className="btn btn-primary"
+                type='submit'
+                value='Create Account'
+                className='btn btn-primary'
               />
             </div>
-            <a href="/login" className={styles.return}>
+            <a href='/login' className={styles.return}>
               Returning user?
             </a>
           </form>

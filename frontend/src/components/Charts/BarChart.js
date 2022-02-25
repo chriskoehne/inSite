@@ -85,7 +85,6 @@ const BarChart = (props) => {
       // console.log(base64data);
       setBase64(base64data);
     };
-
   };
 
   useEffect(() => {
@@ -140,12 +139,18 @@ const BarChart = (props) => {
           data={data}
           onClick={props.onClick}
           ref={chartRef}
-          options={{ responsive: true, maintainAspectRatio: false }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            // animation: {
+            //   duration: 0,
+            // },
+          }}
         />
       </div>
       <RWebShare
         data={{
-          text: 'Example chart download',
+          text: 'My inSite Chart',
           url: url ? url : 'unable to share chart',
           title: 'Chart',
         }}
