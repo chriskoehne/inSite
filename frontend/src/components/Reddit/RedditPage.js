@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
-import { Row, Card, Col, Carousel, Button, ButtonGroup } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-import BarChart from "../Charts/BarChart";
-import LineChart from "../Charts/LineChart";
+import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
+import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import BarChart from '../Charts/BarChart';
+import LineChart from '../Charts/LineChart';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,14 +13,14 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import faker from "@faker-js/faker";
-import styles from "./Reddit.module.css";
-import { TagCloud } from "react-tagcloud";
-import { getMonths, getDays, getLastThirty } from "./RedditComments";
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import faker from '@faker-js/faker';
+import styles from './Reddit.module.css';
+import { TagCloud } from 'react-tagcloud';
+import { getMonths, getDays, getLastThirty } from './RedditComments';
 
-const c = require("./constants/constants");
+const c = require('./constants/constants');
 
 // Used to create the word clouds
 function getUncommon(sentence) {
@@ -47,7 +47,7 @@ function getUncommon(sentence) {
 
 function getWordList(str) {
   let arr = [];
-  let array = str.split(" ");
+  let array = str.split(' ');
   let map = {};
   for (let i = 0; i < array.length; i++) {
     let item = array[i];
@@ -80,7 +80,7 @@ const RedditPage = (props) => {
   const [awards, setAwards] = useState(0);
   const [tagCloud, setTagCloud] = useState([]);
   // const [email, setEmail] = useState(localStorage.getItem('email'));
-  const [redditToken, setRedditToken] = useState("");
+  const [redditToken, setRedditToken] = useState('');
   const [comments, setComments] = useState([]);
   const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -90,9 +90,9 @@ const RedditPage = (props) => {
   const [awardKarma, setAwardKarma] = useState(0);
   const [totalKarma, setTotalKarma] = useState(0);
   const [subKarmaList, setSubKarmaList] = useState([]);
-  const [commentGraphDay, setCommentGraphDay] = useState(false);
+  const [commentGraphDay, setCommentGraphDay] = useState(true);
   const [commentGraphThirty, setCommentGraphThirty] = useState(false);
-  const [commentGraphMonth, setCommentGraphMonth] = useState(true);
+  const [commentGraphMonth, setCommentGraphMonth] = useState(false);
   const [mostControversialPost, setmostControlversialPost] = useState({});
   const [mostControversialComment, setMostControversialComment] = useState({});
   //testing chartData stuff
@@ -108,12 +108,12 @@ const RedditPage = (props) => {
   const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
-    if (!localStorage.hasOwnProperty("redditToken")) {
+    if (!localStorage.hasOwnProperty('redditToken')) {
       return false;
     }
-    const token = JSON.parse(localStorage.getItem("redditToken"));
+    const token = JSON.parse(localStorage.getItem('redditToken'));
     if ((Date.now() - token.date) / 36e5 >= 1) {
-      localStorage.removeItem("redditToken");
+      localStorage.removeItem('redditToken');
       return false;
     }
     return true;
@@ -121,9 +121,9 @@ const RedditPage = (props) => {
 
   useEffect(() => {
     if (!hasToken()) {
-      props.navigate("/dashboard");
+      props.navigate('/dashboard');
     } else {
-      setRedditToken(JSON.parse(localStorage.getItem("redditToken")).token);
+      setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
     }
   }, []);
 
@@ -140,7 +140,7 @@ const RedditPage = (props) => {
         accessToken: redditToken,
       };
       if (me && !me.name) {
-        const ansMe = await axios.get("http://localhost:5000/reddit/me", {
+        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
           params: redditMeQuery,
         });
         if (ansMe.status === 200) {
@@ -151,7 +151,7 @@ const RedditPage = (props) => {
             username: ansMe.data.name,
           };
           const ansOverview = await axios.get(
-            "http://localhost:5000/reddit/userOverview",
+            'http://localhost:5000/reddit/userOverview',
             { params: redditUserQuery }
           );
           if (ansOverview.status === 200) {
@@ -174,7 +174,7 @@ const RedditPage = (props) => {
             setmostControlversialPost(mostControversial);
           }
           const ansComments = await axios.get(
-            "http://localhost:5000/reddit/userComments",
+            'http://localhost:5000/reddit/userComments',
             {
               params: redditUserQuery,
             }
@@ -182,12 +182,12 @@ const RedditPage = (props) => {
           if (ansComments.status === 200) {
             let array = ansComments.data.overview.data.children;
             //setCommentByMonths
-            let comm_str = "";
+            let comm_str = '';
             array.forEach((comm) => {
               comm_str += comm.data.body;
             });
             getUncommon(comm_str);
-            setTagCloud(getWordList(getUncommon(comm_str).join(" ")));
+            setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
             // get comments by Month
             let mostControversial = array[0];
             //console.log(mostControversial.data);
@@ -196,11 +196,11 @@ const RedditPage = (props) => {
               labels: monthsData.monthYear.reverse(),
               datasets: [
                 {
-                  label: "Number of Comments",
+                  label: 'Number of Comments',
                   data: monthsData.numComments.reverse(),
-                  borderColor: "#FF4500",
-                  backgroundColor: "#FF4500",
-                  xaxis: "Months",
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
+                  xaxis: 'Months',
                 },
               ],
             };
@@ -209,10 +209,10 @@ const RedditPage = (props) => {
               labels: dayDate.daysOfWeek.reverse(),
               datasets: [
                 {
-                  label: "Number of Comments",
+                  label: 'Number of Comments',
                   data: dayDate.numComments.reverse(),
-                  borderColor: "#FF4500",
-                  backgroundColor: "#FF4500",
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
                 },
               ],
             };
@@ -221,10 +221,10 @@ const RedditPage = (props) => {
               labels: thirtyDate.lastThirty.reverse(),
               datasets: [
                 {
-                  label: "Number of Comments",
+                  label: 'Number of Comments',
                   data: thirtyDate.numComments.reverse(),
-                  borderColor: "#FF4500",
-                  backgroundColor: "#FF4500",
+                  borderColor: '#FF4500',
+                  backgroundColor: '#FF4500',
                 },
               ],
             };
@@ -284,8 +284,6 @@ const RedditPage = (props) => {
     };
     getData();
   }, [redditToken]);
-
-  useEffect(() => {}, []);
 
   const getMaxScore = (list) => {
     if (loading) {
@@ -385,21 +383,21 @@ const RedditPage = (props) => {
   return loading ? (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
-        background: "white",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        textAlign: "center",
+        width: '100vw',
+        height: '100vh',
+        background: 'white',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        textAlign: 'center',
       }}
     >
-      <h1 style={{ color: "#3d3d3d" }}>Loading...</h1>
+      <h1 style={{ color: '#3d3d3d' }}>Loading...</h1>
     </div>
   ) : (
     <div className={styles.box}>
       <Carousel
-        variant="dark"
+        variant='dark'
         className={styles.slideshow}
         activeIndex={index}
         onSelect={handleSelect}
@@ -430,51 +428,46 @@ const RedditPage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <Row>
-              <Col>
-                <Row className={styles.chartContainer}>
-                  <BarChart
-                    data={getScores(posts)}
-                    maxVal={getMaxScore(posts)}
-                    label="Post Scores"
-                    xaxis="post score"
-                  />
-                </Row>
-              </Col>
-              <Col>
+            <Row className={styles.chartContainer}>
+              <BarChart
+                height={'60vh'}
+                data={getScores(posts)}
+                maxVal={getMaxScore(posts)}
+                label='Post Scores'
+                xaxis='post score'
+              />
+              <div style={{ paddingTop: '2%' }}>
                 Here we see a graphical representation of a user's post scores.
                 Each bucket represents the number of posts that fall within the
                 range for the score.
-              </Col>
+              </div>
             </Row>
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <Row>
-              <Col>
-                <Row className={styles.chartContainer}>
-                  <BarChart
-                    data={getScores(comments)}
-                    maxVal={getMaxScore(comments)}
-                    label="Comment Scores"
-                    xaxis="Comment score"
-                  />
-                </Row>
-              </Col>
-              <Col>
+            <Row className={styles.chartContainer}>
+              <BarChart
+                height={'60vh'}
+                data={getScores(comments)}
+                maxVal={getMaxScore(comments)}
+                label='Comment Scores'
+                xaxis='Comment score'
+              />
+              <div style={{ paddingTop: '2%' }}>
                 Here we see a graphical representation of a user's comment
                 scores. Each bucket represents the number of comments that fall
                 within the range for the score.
-              </Col>
+              </div>
             </Row>
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <Row>
-              Most Upvoted Post - {getMaxScore(posts)} Karma {/* TODO karma or upvotes */}
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              Most Upvoted Post - {getMaxScore(posts)} Karma{' '}
+              {/* TODO karma or upvotes */}
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(posts, getMaxScore(posts)).title}
@@ -487,7 +480,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Upvoted Comment - {getMaxScore(comments)} Karma
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(comments, getMaxScore(comments)).link_title}
@@ -500,7 +493,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Upvoted Message - {getMaxScore(comments)} Karma
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(messages, getMaxScore(messages)).link_title}
@@ -517,7 +510,7 @@ const RedditPage = (props) => {
           <Card className={styles.socialsCard}>
             <Row>
               Most Downvoted Post - {getMinScore(posts)} Karma
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMinItem(posts, getMinScore(posts)).title}
@@ -530,7 +523,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Downvoted Comment - {getMinScore(comments)} Karma
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMinItem(comments, getMinScore(comments)).link_title}
@@ -543,7 +536,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Downvoted Message - {getMinScore(comments)} Karma
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMinItem(messages, getMinScore(messages)).link_title}
@@ -556,7 +549,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Controversial Post
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>{mostControversialPost.title}</Card.Title>
                   <Card.Text>{mostControversialPost.selftext}</Card.Text>
@@ -565,7 +558,7 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               Most Controversial Comment
-              <Card style={{ borderColor: "#3d3d3d" }}>
+              <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>{mostControversialComment.link_title}</Card.Title>
                   <Card.Text>{mostControversialComment.body}</Card.Text>
@@ -579,7 +572,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 <h1>
-                  {" "}
+                  {' '}
                   Wow you've said a lot of things in the past. Here's some of
                   the words you most frequently use:
                 </h1>
@@ -597,24 +590,27 @@ const RedditPage = (props) => {
 
               <div className={styles.chartContainer}>
                 {commentGraphMonth ? (
-                  <Line
-                    options={chartOptions}
-                    data={chartMonthData}
+                  <LineChart
+                    height={'50vh'}
+                    width={'75vw'}
                     color={'#FF4500'}
+                    data={chartMonthData}
                   />
                 ) : null}
                 {commentGraphDay ? (
-                  <Line
-                    options={chartOptions}
-                    data={chartDayData}
+                  <LineChart
+                    height={'50vh'}
+                    width={'75vw'}
                     color={'#FF4500'}
+                    data={chartDayData}
                   />
                 ) : null}
                 {commentGraphThirty ? (
-                  <Line
-                    options={chartOptions}
-                    data={chartThirtyData}
+                  <LineChart
+                    height={'50vh'}
+                    width={'75vw'}
                     color={'#FF4500'}
+                    data={chartThirtyData}
                   />
                 ) : null}
               </div>

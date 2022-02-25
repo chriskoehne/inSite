@@ -3,7 +3,7 @@ import axios from "axios";
 import { Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
-import LineChart from "../Charts/LineChart";
+import LineChartDemo from "../Charts/LineChartDemo";
 import { SocialIcon } from 'react-social-icons';
 
 
@@ -45,20 +45,20 @@ const InsightCard = (props) => {
   if (isLoggedIn) {
     switch (title) {
       case 'Twitter':
-        display = <LineChart color={'#55ADEE'}/>;
+        display = <LineChartDemo color={'#55ADEE'}/>;
         icon = <SocialIcon url="https://twitter.com/usernamehere" />;
         break;
       case 'Instagram':
-        display = <LineChart color={'#E94475'}/>;
+        display = <LineChartDemo color={'#E94475'}/>;
         icon = <SocialIcon url="https://instagram.com/kanyewest" />;
         break;
       case 'YouTube':
-        display = <LineChart color={'#FF0000'}/>;
+        display = <LineChartDemo color={'#FF0000'}/>;
         icon = <SocialIcon url="https://youtube.com/kanyewest" />;
         break;
       default:
         console.log("default case");
-        display = <LineChart />;
+        display = <LineChartDemo />;
     }
   } else {
     display = (
