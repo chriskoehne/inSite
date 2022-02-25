@@ -428,7 +428,7 @@ const RedditPage = (props) => {
               <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
-                    {mostControversialPost.subreddit}
+                    {mostControversialPost.title}
                   </Card.Title>
                   <Card.Text>
                     {mostControversialPost.selftext}
@@ -441,7 +441,7 @@ const RedditPage = (props) => {
               <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
                   <Card.Title>
-                    {mostControversialComment.subreddit}
+                    {mostControversialComment.link_title}
                   </Card.Title>
                   <Card.Text>
                     {mostControversialComment.body}
