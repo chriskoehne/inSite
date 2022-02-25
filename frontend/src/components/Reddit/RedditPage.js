@@ -88,6 +88,8 @@ const RedditPage = (props) => {
   const [commentGraphDay, setCommentGraphDay] = useState(false)
   const [commentGraphThirty, setCommentGraphThirty] = useState(false)
   const [commentGraphMonth, setCommentGraphMonth] = useState(true)
+  const [mostControversialPost, setmostControlversialPost] = useState({})
+  const [mostControversialComment, setMostControversialComment] = useState({})
   //testing chartData stuff
   const [chartMonthData, setChartMonthData] = useState({
     datasets: []
@@ -153,6 +155,20 @@ const RedditPage = (props) => {
             setComments(ansOverview.data.comments);
             setMessages(ansOverview.data.messages);
             setPosts(ansOverview.data.posts);
+            let pst = ansOverview.data.posts
+            let arrPost = []
+            pst.forEach((e) => {
+              if (e.is_self) {
+                arrPost.push(e)
+              }
+            })
+            let mostControversial = arrPost[0]
+            arrPost.forEach((e)=> {
+              if (mostControversial.upvote_ratio > e.upvote_ratio) {
+                mostControversial = e;
+              }
+            })
+            setmostControlversialPost(mostControversial)
           }
           const ansComments = await axios.get(
             'http://localhost:5000/reddit/userComments',
@@ -170,6 +186,8 @@ const RedditPage = (props) => {
             getUncommon(comm_str);
             setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
             // get comments by Month
+            let mostControversial = array[0]
+            //console.log(mostControversial.data);
             let monthsData = getMonths(array);
             let monthsDataset = {
               labels: monthsData.monthYear.reverse(),
@@ -210,6 +228,7 @@ const RedditPage = (props) => {
             setChartThirtyData(thirtyDataset)
             setChartDayData(dayDataset)
             setChartMonthData(monthsDataset)
+            setMostControversialComment(mostControversial.data);
             setChartOptions({
               responsive: true,
               maintainAspectRatio: false,
@@ -396,6 +415,36 @@ const RedditPage = (props) => {
                   </Card.Title>
                   <Card.Text>
                     {getMaxItem(messages, getMaxScore(messages)).body}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Row>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row>
+              Most Controversial Post
+              <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card.Body>
+                  <Card.Title>
+                    {mostControversialPost.title}
+                  </Card.Title>
+                  <Card.Text>
+                    {mostControversialPost.selftext}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Row>
+            <Row>
+              Most Controversial Comment
+              <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card.Body>
+                  <Card.Title>
+                    {mostControversialComment.link_title}
+                  </Card.Title>
+                  <Card.Text>
+                    {mostControversialComment.body}
                   </Card.Text>
                 </Card.Body>
               </Card>
