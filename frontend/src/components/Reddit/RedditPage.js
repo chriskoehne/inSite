@@ -491,7 +491,7 @@ const RedditPage = (props) => {
                 </Card.Body>
               </Card>
             </Row>
-            <Row>
+            {/* <Row>
               Most Upvoted Message - {getMaxScore(comments)} Karma
               <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
@@ -503,7 +503,7 @@ const RedditPage = (props) => {
                   </Card.Text>
                 </Card.Body>
               </Card>
-            </Row>
+            </Row> */}
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
@@ -534,7 +534,7 @@ const RedditPage = (props) => {
                 </Card.Body>
               </Card>
             </Row>
-            <Row>
+            {/* <Row>
               Most Downvoted Message - {getMinScore(comments)} Karma
               <Card style={{ borderColor: '#3d3d3d' }}>
                 <Card.Body>
@@ -546,7 +546,7 @@ const RedditPage = (props) => {
                   </Card.Text>
                 </Card.Body>
               </Card>
-            </Row>
+            </Row> */}
             <Row>
               Most Controversial Post
               <Card style={{ borderColor: '#3d3d3d' }}>
