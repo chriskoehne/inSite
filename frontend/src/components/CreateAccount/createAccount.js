@@ -8,28 +8,41 @@ import styles from './createAccount.module.css';
 const CreateAccount = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showModal, setShowModal] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const [phone, setPhone] = useState('');
   const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
   const [smsCode, setSMSCode] = useState('');
   const [errorText, setErrorText] = useState('');
   const [showErrorModal, setErrorModal] = useState('');
+  const [verifyText, setVerifyText] = useState('');
+
+  useEffect(() => {
+    if (!showModal) {
+      setVerifyText('');
+    }
+  }, [showModal]);
 
   const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
-  const handleClose = (e) => {
+  const handleClose = async (e) => {
     e.preventDefault();
     console.log('verifying sms code');
     const body = {
       email: email,
       code: smsCode,
     };
-    axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
+    try {
+      const res = await axios.post('http://localhost:5000/verifyUser/', body);
       if (res.status === 200) {
+        localStorage.setItem('email', email);
         props.navigate('/dashboard', { state: { email: email } });
       } else {
-        console.log('incorrect code');
+        setVerifyText('Incorrect code!');
       }
-    });
+    } catch (err) {
+      setVerifyText('Incorrect code!');
+      console.log(err);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -53,30 +66,41 @@ const CreateAccount = (props) => {
       setErrorModal(true);
       return;
     }
-    if (password.length < 8) {
-      setErrorText('Password has to be longer than 7 characters');
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
+      setErrorText(
+        'Passwords must be at least 8 characters and contain at least one letter and one number'
+      );
       setErrorModal(true);
       return;
     }
-
-    axios
-      .post('http://localhost:5000/userCreation/', body)
-      .then((res) => {
-        if (res.status === 200) {
-          console.log('the modal should popup now');
-
-          setShowModal(true);
-        } else {
-          console.log('there was an error in user creation');
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.data.message);
-          setErrorModal(true);
-          setErrorText(error.response.data.message);
-        }
-      });
+    if (confirmPassword !== password) {
+      setErrorText('Passwords do not match');
+      setErrorModal(true);
+      return;
+    } else {
+      axios
+        .post('http://localhost:5000/userCreation/', body)
+        .then((res) => {
+          console.log('now res is');
+          console.log(res);
+          if (res.status === 200) {
+            console.log('the modal should popup now');
+            setShowModal(true);
+          } else {
+            // console.log('there was an error in user creation');
+            setErrorText('there was an error in user creation');
+            setErrorModal(true);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log('error catch');
+            console.log(error.response.data.message);
+            setErrorModal(true);
+            setErrorText(error.response.data.message);
+          }
+        });
+    }
   };
 
   // Formats Phone Number
@@ -107,6 +131,7 @@ const CreateAccount = (props) => {
               The phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.
+              <div style={{color: 'red'}}> {verifyText} </div>
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>
@@ -156,6 +181,17 @@ const CreateAccount = (props) => {
                 placeholder='password'
                 onChange={(e) => {
                   setPassword(e.target.value);
+                }}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Confirm Password: </label>
+              <input
+                type='password'
+                className='form-control'
+                placeholder='password'
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
                 }}
               />
             </div>

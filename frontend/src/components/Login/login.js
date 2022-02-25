@@ -6,15 +6,23 @@ import styles from './login.module.css';
 const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showModal, setShowModal] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const [smsCode, setSMSCode] = useState('');
   const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
   const [showErrorModal, setErrorModal] = useState('');
   const [id, setId] = useState('');
 
+  const [verifyText, setVerifyText] = useState('');
+
+  useEffect(() => {
+    if (!showModal) {
+      setVerifyText('');
+    }
+  }, [showModal]);
+
   const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
 
-  const handleClose = (e) => {
+  const handleClose = async (e) => {
     e.preventDefault();
     console.log('verifying sms code');
     console.log(smsCode);
@@ -23,21 +31,18 @@ const Login = (props) => {
       id: id,
       code: smsCode,
     };
-    axios.post('http://localhost:5000/verifyUser/', body).then((res) => {
-      try {
-        if (res.status === 200) {
-          console.log('status was 200');
-          console.log('cookie is');
-          console.log(res.cookie);
-          props.navigate('/dashboard', { state: { email: email } });
-        } else {
-          console.log('incorrect code');
-        }
-      } catch (err) {
-        console.log('hereasdfasd');
-        console.log(err);
+    try {
+      const res = await axios.post('http://localhost:5000/verifyUser/', body);
+      if (res.status === 200) {
+        localStorage.setItem('email', email);
+        props.navigate('/dashboard', { state: { email: email } });
+      } else {
+        setVerifyText('Incorrect code!');
       }
-    });
+    } catch (err) {
+      setVerifyText('Incorrect code!');
+      console.log(err);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -86,6 +91,7 @@ const Login = (props) => {
               Your phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.
+              <div style={{color: 'red'}}> {verifyText} </div>
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>

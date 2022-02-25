@@ -39,6 +39,11 @@ const uploadController = require(path.resolve(
   '../controllers/uploadController'
 ));
 
+const changePasswordController = require(path.resolve(
+  __dirname,
+  '../controllers/changePasswordController'
+));
+
 const auth = require('../auth/authentication');
 
 router.get('/demo0', demoController.showDemo0);
@@ -51,20 +56,34 @@ router.post('/userCreation', userCreationController.userCreation);
 
 router.post('/verifyUser', verifyController.verify);
 
+router.post("/userDelete", userCreationController.deleteUser);
+
+router.post("/verifyUser", verifyController.verify);
+
 router.post('/login', userLoginController.login);
 
-router.post('/redditLogin', redditController.login);
+router.post('/reddit/login', redditController.login);
 
-router.post('/redditCodeToToken', redditController.convert);
+router.post('/reddit/codeToToken', redditController.convert);
 
-router.get('/redditMe', redditController.redditMe);
+router.get('/reddit/me', redditController.redditMe);
 
-router.get('/redditUserOverview', redditController.userOverview);
+router.get('/reddit/userOverview', redditController.userOverview);
+
+router.get('/reddit/userSubKarma', redditController.userSubKarma);
+
+router.get('/reddit/userTotalKarma', redditController.userTotalKarma)
 
 router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
+
+router.get("/reddit/userComments", redditController.userComments)
+
+router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
 
 router.post('/logout', auth.removeToken);
 
 router.post('/uploadImage', uploadController.upload);
+
+router.post('/changePassword', changePasswordController.checkPasswd);
 
 module.exports = router;

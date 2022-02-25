@@ -20,9 +20,6 @@ const Welcome = (props) => {
     return () => window.removeEventListener('resize', checkSize);
   }, []);
 
-  let width = window.innerWidth;
-  let height = window.innerHeight;
-
   const handleLogInButton = () => {
     props.navigate('/login');
   };
@@ -31,11 +28,11 @@ const Welcome = (props) => {
   };
 
   return (
-    <Stage width={width} height={height}>
+    <Stage width={size.width} height={size.height}>
       <Layer>
         <Html>
           <div>
-            <div style={{ 'user-select': 'none' }}>
+            <div style={{ userSelect: 'none' }}>
               <div className={styles.inlineDiv}>
                 <h1 className={styles.in}>in</h1>
                 <h1 className={styles.site}>Site</h1>
@@ -44,7 +41,7 @@ const Welcome = (props) => {
               <div className={styles.taglineDiv}>
                 <h2 className={styles.taglinePt1}>
                   Social media metrics <br /> at the {''}
-                  <h2 className={styles.taglinePt2}>click of a button.</h2>
+                  <div className={styles.taglinePt2}>click of a button.</div>
                 </h2>
               </div>
             </div>
@@ -56,7 +53,7 @@ const Welcome = (props) => {
               <div className='col-6'>
                 <Button className={styles.buttons} onClick={handleLogInButton}>
                   Log In
-                </Button>{' '}
+                </Button>
               </div>
               <div className='col-6'>
                 <Button
@@ -71,15 +68,15 @@ const Welcome = (props) => {
         </Html>
 
         {/* for the background color */}
-        <Rect width={width} height={height} fill='#3d3d3d' />
+        <Rect width={size.width} height={size.height} fill='#3d3d3d' />
 
         <Shape
           sceneFunc={(context, shape) => {
             context.beginPath();
-            context.moveTo(width * 0.1, height);
-            context.lineTo(width * 0.3, height);
-            context.lineTo(width, 0);
-            context.lineTo(width * 0.8, 0);
+            context.moveTo(size.width * 0.1, size.height);
+            context.lineTo(size.width * 0.3, size.height);
+            context.lineTo(size.width, 0);
+            context.lineTo(size.width * 0.8, 0);
             context.closePath();
             // (!) Konva specific method, it is very important
             context.fillStrokeShape(shape);

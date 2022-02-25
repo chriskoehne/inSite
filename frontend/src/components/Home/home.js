@@ -19,7 +19,26 @@ const Home = (props) => {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    console.log(base64);
+    const uploadChart = async () => {
+      if (url) {
+        return;
+      } else {
+        const body = { image: base64 };
+        try {
+          const cloudinaryRes = await axios.post(
+            'http://localhost:5000/uploadImage/',
+            body
+          );
+          if (cloudinaryRes.status !== 200) {
+            console.log('cloudinary error');
+          }
+          setUrl(cloudinaryRes.data.message);
+          return;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    };
     if (base64) {
       uploadChart();
     }
@@ -30,27 +49,6 @@ const Home = (props) => {
     canvasSave.toBlob((blob) => {
       saveAs(blob, 'chart.png');
     });
-  };
-
-  const uploadChart = async () => {
-    if (url) {
-      return;
-    } else {
-      const body = { image: base64 };
-      try {
-        const cloudinaryRes = await axios.post(
-          'http://localhost:5000/uploadImage/',
-          body
-        );
-        if (cloudinaryRes.status !== 200) {
-          console.log('cloudinary error');
-        }
-        setUrl(cloudinaryRes.data.message);
-        return;
-      } catch (err) {
-        console.log(err);
-      }
-    }
   };
 
   return (
@@ -66,7 +64,7 @@ const Home = (props) => {
       </div>
       <RWebShare
         data={{
-          text: 'Example chart download',
+          text: 'My inSite Chart',
           url: url ? url : 'unable to share chart',
           title: 'Chart',
         }}

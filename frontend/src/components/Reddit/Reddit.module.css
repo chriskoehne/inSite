@@ -34,6 +34,7 @@
   border-color: #FF4500;
   margin-left: 10%;
   margin-right: 10%;
+  overflow-y: scroll;
   /* border-width: 0.5vh; */
  
 }
@@ -50,5 +51,14 @@
 /* for some reason, using a percent breaks it??? (TODO) */
 .chartContainer {
   display: flex;
-  height: 38vh;
+  height: 60vh;
+}
+
+.cloudCentered {
+  display: flex;
+  padding-left: 20%;
+  padding-right: 20%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
