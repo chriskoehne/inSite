@@ -85,6 +85,11 @@ const RedditPage = (props) => {
   const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
+  const [commentKarma, setCommentKarma] = useState(0);
+  const [linkKarma, setLinkKarma] = useState(0);
+  const [awardKarma, setAwardKarma] = useState(0);
+  const [totalKarma, setTotalKarma] = useState(0);
+  const [subKarmaList, setSubKarmaList] = useState([]);
   const [commentGraphDay, setCommentGraphDay] = useState(false);
   const [commentGraphThirty, setCommentGraphThirty] = useState(false);
   const [commentGraphMonth, setCommentGraphMonth] = useState(true);
@@ -131,8 +136,6 @@ const RedditPage = (props) => {
     const getData = async () => {
       setLoading(true);
 
-      // Update the document title using the browser API
-      console.log("going to attempt to use access token now");
       const redditMeQuery = {
         accessToken: redditToken,
       };
@@ -241,7 +244,40 @@ const RedditPage = (props) => {
             //setCommentsMonth(monthsData.monthYear)
             //console.log(commentByMonth)
           }
-          console.log("loading done");
+
+          const ansSubKarma = await axios.get(
+            'http://localhost:5000/reddit/userSubKarma',
+            {
+              params: redditUserQuery,
+            }
+          );
+          if (ansSubKarma.status === 200) {
+            // console.log("Sub Karma Info Receieved!")
+            setSubKarmaList(ansSubKarma.data.subKarmaList);
+            // console.log(subKarmaList);
+          }
+
+          const ansTotalKarma = await axios.get(
+            'http://localhost:5000/reddit/userTotalKarma',
+            {
+              params: redditUserQuery,
+            }
+          );
+          if (ansTotalKarma.status === 200) {
+            // console.log("Total Karma Info Receieved!")
+
+            // console.log(ansTotalKarma.data.commentKarma);
+            // console.log(ansTotalKarma.data.linkKarma);
+            // console.log(ansTotalKarma.data.awardKarma);
+            // console.log(ansTotalKarma.data.totalKarma);
+
+            setCommentKarma(ansTotalKarma.data.commentKarma);
+            setLinkKarma(ansTotalKarma.data.linkKarma);
+            setAwardKarma(ansTotalKarma.data.awardKarma);
+            setTotalKarma(ansTotalKarma.data.totalKarma);
+          }
+
+          console.log('loading done');
         }
       }
       setLoading(false);
@@ -372,6 +408,30 @@ const RedditPage = (props) => {
           <Card className={styles.socialsCard}>
             <Row>
               <Col>
+                <Row>Total Karma: {totalKarma}</Row>
+                <Row>Post Karma: {linkKarma}</Row>
+                <Row>Comment Karma: {commentKarma}</Row>
+                <Row>Award Karma: {awardKarma}</Row>
+                <Row>Number of Posts: {posts.length}</Row>
+                <Row>Number of Comments: {comments.length}</Row>
+                <Row>
+                  {Object.keys(subKarmaList).map((key, index) => (
+                    <p key={index}>
+                      {' '}
+                      Subreddit: {subKarmaList[key].sr}, comment karma:{' '}
+                      {subKarmaList[key].comment_karma}, link karma:{' '}
+                      {subKarmaList[key].link_karma}
+                    </p>
+                  ))}
+                </Row>
+              </Col>
+            </Row>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row>
+              <Col>
                 <Row className={styles.chartContainer}>
                   <BarChart
                     data={getScores(posts)}
@@ -413,7 +473,7 @@ const RedditPage = (props) => {
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <Row>
-              Most Upvoted Post - {getMaxScore(posts)} Upvotes
+              Most Upvoted Post - {getMaxScore(posts)} Karma {/* TODO karma or upvotes */}
               <Card style={{ borderColor: "#3d3d3d" }}>
                 <Card.Body>
                   <Card.Title>
@@ -426,7 +486,7 @@ const RedditPage = (props) => {
               </Card>
             </Row>
             <Row>
-              Most Upvoted Comment - {getMaxScore(comments)} Upvotes
+              Most Upvoted Comment - {getMaxScore(comments)} Karma
               <Card style={{ borderColor: "#3d3d3d" }}>
                 <Card.Body>
                   <Card.Title>
@@ -439,7 +499,7 @@ const RedditPage = (props) => {
               </Card>
             </Row>
             <Row>
-              Most Upvoted Message - {getMaxScore(comments)} Upvotes
+              Most Upvoted Message - {getMaxScore(comments)} Karma
               <Card style={{ borderColor: "#3d3d3d" }}>
                 <Card.Body>
                   <Card.Title>
@@ -456,11 +516,10 @@ const RedditPage = (props) => {
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <Row>
-              Most Downvoted Post - {getMinScore(posts)} Upvotes
+              Most Downvoted Post - {getMinScore(posts)} Karma
               <Card style={{ borderColor: "#3d3d3d" }}>
                 <Card.Body>
                   <Card.Title>
-                    {console.log("de min", getMinScore(posts))}
                     {getMinItem(posts, getMinScore(posts)).title}
                   </Card.Title>
                   <Card.Text>
@@ -470,7 +529,7 @@ const RedditPage = (props) => {
               </Card>
             </Row>
             <Row>
-              Most Downvoted Comment - {getMinScore(comments)} Upvotes
+              Most Downvoted Comment - {getMinScore(comments)} Karma
               <Card style={{ borderColor: "#3d3d3d" }}>
                 <Card.Body>
                   <Card.Title>
@@ -483,7 +542,7 @@ const RedditPage = (props) => {
               </Card>
             </Row>
             <Row>
-              Most Downvoted Message - {getMinScore(comments)} Upvotes
+              Most Downvoted Message - {getMinScore(comments)} Karma
               <Card style={{ borderColor: "#3d3d3d" }}>
                 <Card.Body>
                   <Card.Title>
@@ -541,33 +600,33 @@ const RedditPage = (props) => {
                   <Line
                     options={chartOptions}
                     data={chartMonthData}
-                    color={"#FF4500"}
+                    color={'#FF4500'}
                   />
                 ) : null}
                 {commentGraphDay ? (
                   <Line
                     options={chartOptions}
                     data={chartDayData}
-                    color={"#FF4500"}
+                    color={'#FF4500'}
                   />
                 ) : null}
                 {commentGraphThirty ? (
                   <Line
                     options={chartOptions}
                     data={chartThirtyData}
-                    color={"#FF4500"}
+                    color={'#FF4500'}
                   />
                 ) : null}
               </div>
-              <ButtonGroup aria-label="Basic example">
-                <Button variant="secondary" onClick={commentDayClick}>
-                  Last 7 Days
+              <ButtonGroup aria-label='Basic example'>
+                <Button variant='secondary' onClick={commentDayClick}>
+                  Past Week
                 </Button>
-                <Button variant="secondary" onClick={commentWeekClick}>
-                  Last Thirty Days
+                <Button variant='secondary' onClick={commentWeekClick}>
+                  Past Month
                 </Button>
-                <Button variant="secondary" onClick={commentMonthClick}>
-                  Last 12 months
+                <Button variant='secondary' onClick={commentMonthClick}>
+                  Past Year
                 </Button>
               </ButtonGroup>
             </Row>
