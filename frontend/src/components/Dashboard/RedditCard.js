@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-import LineChart from '../Charts/LineChart';
+// import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
 
@@ -180,7 +180,7 @@ const RedditCard = (props) => {
       return (
         <div className={styles.centered}>
           <Button className={styles.buttons} onClick={authenticateReddit}>
-            Log in to Reddit
+            Authorize Reddit
           </Button>
         </div>
       );
@@ -196,7 +196,7 @@ const RedditCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: '#FF4500' }} className={styles.socialsCard}>
+      <Card style={{ borderColor: 'var(--reddit)' }} className={styles.socialsCard}>
         <Card.Body>
           <Card.Title>{icon()} Reddit</Card.Title>
           <Card.Text></Card.Text>

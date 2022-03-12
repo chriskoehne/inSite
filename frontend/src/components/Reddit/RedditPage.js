@@ -198,8 +198,8 @@ const RedditPage = (props) => {
                 {
                   label: 'Number of Comments',
                   data: monthsData.numComments.reverse(),
-                  borderColor: '#FF4500',
-                  backgroundColor: '#FF4500',
+                  borderColor: 'var(--reddit)',
+                  backgroundColor: 'var(--reddit)',
                   xaxis: 'Months',
                 },
               ],
@@ -211,8 +211,8 @@ const RedditPage = (props) => {
                 {
                   label: 'Number of Comments',
                   data: dayDate.numComments.reverse(),
-                  borderColor: '#FF4500',
-                  backgroundColor: '#FF4500',
+                  borderColor: 'var(--reddit)',
+                  backgroundColor: 'var(--reddit)',
                 },
               ],
             };
@@ -223,8 +223,8 @@ const RedditPage = (props) => {
                 {
                   label: 'Number of Comments',
                   data: thirtyDate.numComments.reverse(),
-                  borderColor: '#FF4500',
-                  backgroundColor: '#FF4500',
+                  borderColor: 'var(--reddit)',
+                  backgroundColor: 'var(--reddit)',
                 },
               ],
             };
@@ -392,7 +392,7 @@ const RedditPage = (props) => {
         textAlign: 'center',
       }}
     >
-      <h1 style={{ color: '#3d3d3d' }}>Loading...</h1>
+      <h1 style={{ color: 'var(--slate)' }}>Loading...</h1>
     </div>
   ) : (
     <div className={styles.box}>
@@ -417,7 +417,7 @@ const RedditPage = (props) => {
                     <p key={index}>
                       {' '}
                       Subreddit: {subKarmaList[key].sr}, comment karma:{' '}
-                      {subKarmaList[key].comment_karma}, link karma:{' '}
+                      {subKarmaList[key].comment_karma}, post karma:{' '}
                       {subKarmaList[key].link_karma}
                     </p>
                   ))}
@@ -468,7 +468,7 @@ const RedditPage = (props) => {
               <Col>
                 Most Upvoted Post - {getMaxScore(posts)} Karma{' '}
                 {/* TODO karma or upvotes */}
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card style={{ borderColor: 'var(--slate)' }}>
                   <Card.Body>
                     <Card.Title>
                       {getMaxItem(posts, getMaxScore(posts)).title}
@@ -483,7 +483,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Upvoted Comment - {getMaxScore(comments)} Karma
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card style={{ borderColor: 'var(--slate)' }}>
                   <Card.Body>
                     <Card.Title>
                       {getMaxItem(comments, getMaxScore(comments)).link_title}
@@ -497,7 +497,7 @@ const RedditPage = (props) => {
             </Row>
             {/* <Row>
               Most Upvoted Message - {getMaxScore(comments)} Karma
-              <Card style={{ borderColor: '#3d3d3d' }}>
+              <Card style={{ borderColor: 'var(--slate)' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(messages, getMaxScore(messages)).link_title}
@@ -511,7 +511,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Downvoted Post - {getMinScore(posts)} Karma
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card style={{ borderColor: 'var(--slate)' }}>
                   <Card.Body>
                     <Card.Title>
                       {getMinItem(posts, getMinScore(posts)).title}
@@ -526,7 +526,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Downvoted Comment - {getMinScore(comments)} Karma
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card style={{ borderColor: 'var(--slate)' }}>
                   <Card.Body>
                     <Card.Title>
                       {getMinItem(comments, getMinScore(comments)).link_title}
@@ -540,7 +540,7 @@ const RedditPage = (props) => {
             </Row>
             {/* <Row>
               Most Downvoted Message - {getMinScore(comments)} Karma
-              <Card style={{ borderColor: '#3d3d3d' }}>
+              <Card style={{ borderColor: 'var(--slate)' }}>
                 <Card.Body>
                   <Card.Title>
                     {getMinItem(messages, getMinScore(messages)).link_title}
@@ -554,7 +554,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Controversial Post
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card style={{ borderColor: 'var(--slate)' }}>
                   <Card.Body>
                     <Card.Title>{mostControversialPost.title}</Card.Title>
                     <Card.Text>{mostControversialPost.selftext}</Card.Text>
@@ -565,7 +565,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Controversial Comment
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card style={{ borderColor: 'var(--slate)' }}>
                   <Card.Body>
                     <Card.Title>
                       {mostControversialComment.link_title}
@@ -603,7 +603,7 @@ const RedditPage = (props) => {
                   <LineChart
                     height={'50vh'}
                     width={'75vw'}
-                    color={'#FF4500'}
+                    color={'var(--reddit)'}
                     data={chartMonthData}
                   />
                 ) : null}
@@ -611,7 +611,7 @@ const RedditPage = (props) => {
                   <LineChart
                     height={'50vh'}
                     width={'75vw'}
-                    color={'#FF4500'}
+                    color={'var(--reddit)'}
                     data={chartDayData}
                   />
                 ) : null}
@@ -619,7 +619,7 @@ const RedditPage = (props) => {
                   <LineChart
                     height={'50vh'}
                     width={'75vw'}
-                    color={'#FF4500'}
+                    color={'var(--reddit)'}
                     data={chartThirtyData}
                   />
                 ) : null}

@@ -17,8 +17,10 @@ import TwitterPage from './components/Twitter/TwitterPage';
 import YoutubePage from './components/Youtube/YoutubePage';
 import './App.css';
 import Logout from './components/testing/Logout';
+import Settings from './components/Settings/Settings';
 
 const App = () => {
+
   const navigate = useNavigate();
   return (
     <Routes>
@@ -39,8 +41,6 @@ const App = () => {
       <Route exact path='/logout' element={<ProtectedRoute />}>
         <Route index element={<Logout navigate={navigate}/>} />
       </Route>
-
-      {/* <Route path='/home' element={<Home navigate={navigate} />} /> */}
 
       <Route exact path='/createAccount' element={<UnprotectedRoute />}>
         <Route index element={<CreateAccount navigate={navigate}/>} />
@@ -81,6 +81,12 @@ const App = () => {
       <Route exact path='/changePassword' element={<ProtectedRoute />}>
         <Route element={<NavRoute navigate={navigate}/>}>
         <Route index element={<ChangePassword navigate={navigate}/>} />
+        </Route>
+      </Route>
+
+      <Route exact path='/settings' element={<ProtectedRoute />}>
+        <Route element={<NavRoute navigate={navigate}/>}>
+        <Route index element={<Settings navigate={navigate}/>} />
         </Route>
       </Route>
       

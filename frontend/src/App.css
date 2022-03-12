@@ -2,6 +2,25 @@ html {
   box-sizing: border-box;
 }
 
+:root {
+  --macaroni: #F9C449;
+  --slate: #3D3D3D;
+  --reddit: #FF4500;
+  --twitter: #55ADEE;
+  --instagram: #E94475;
+  --youtube: #FF0000;
+
+  --primary: var(--slate);
+  --secondary: white;
+  
+}
+
+:root .dark {
+  --primary: white;
+  --secondary: var(--slate);
+
+}
+
 *,
 *::before,
 *::after {
@@ -10,6 +29,7 @@ html {
   margin: 0;
 }
 .App {
+  
   font-family: 'Jost', sans-serif;
   position: relative;
   height: 100vh;
