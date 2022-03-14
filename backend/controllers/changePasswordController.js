@@ -11,7 +11,7 @@ exports.checkPasswd = async function (req, res, next) {
     /* FOR DEVELOPMENT ONLY */
     //let result = '620f3de16decd5056284765d';
 
-    let result = await changePasswordService.check(req.body.email, req.body.oldPassword, req.body.newPassword1, req.body.newPassword2);
+    let result = await changePasswordService.check(req.body.email, req.body.oldPassword, req.body.newPassword);
 
     return res.status(200).json({ message: result }); //should be the user's id
   } catch (e) {

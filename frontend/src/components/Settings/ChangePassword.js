@@ -11,7 +11,6 @@ import { Alert } from "react-alert";
 //import Dropdown from './Dropdown'
 
 const ChangePassword = (props) => {
-  const { state } = useLocation();
   const [oldPassword, setPassword] = useState("");
   const [newPassword1, setPassword1] = useState("");
   const [newPassword2, setPassword2] = useState("");

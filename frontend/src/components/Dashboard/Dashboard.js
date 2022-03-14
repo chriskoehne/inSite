@@ -7,7 +7,6 @@ import styles from './Dashboard.module.css';
 
 const Dashboard = (props) => {
 
-  //clunky, but follow the above and add to the following if statements for the other social medias
 
   return (
     <div className={styles.box}>
@@ -19,21 +18,21 @@ const Dashboard = (props) => {
         <InsightCard
           title='Twitter'
           text='Twitter'
-          borderColor='#55ADEE'
+          borderColor='var(--twitter)'
           isLoggedIn={true}
           navigate={props.navigate}
         />
         <InsightCard
           title='Instagram'
           text='Instagram'
-          borderColor='#E94475'
+          borderColor='var(--instagram)'
           isLoggedIn={true}
           navigate={props.navigate}
         />
         <InsightCard
           title='YouTube'
           text='YouTube'
-          borderColor='#FF0000'
+          borderColor='var(--youtube)'
           isLoggedIn={true}
           navigate={props.navigate}
         />

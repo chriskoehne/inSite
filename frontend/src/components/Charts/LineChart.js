@@ -55,7 +55,6 @@ const LineChart = (props) => {
 
   const labels = generateList(0, maxLabel, Math.min(10, maxLabel)); // limit number of categories to 10
 
-  
   const createBlob = async () => {
     const canvasSave = chartRef.current.ctx.canvas;
     let offScreenCanvas = document.createElement('canvas');
@@ -108,11 +107,9 @@ const LineChart = (props) => {
     });
   };
 
- 
-
   return (
     <div>
-      <div style={{ height: props.height, width: props.width}}>
+      <div style={{ height: props.height, width: props.width }}>
         <Line
           data={props.data}
           color={props.color}

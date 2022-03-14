@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Container, Button, Navbar, Dropdown, Modal } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Container, Button, Nav, Navbar, Dropdown, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
 import { Outlet } from 'react-router-dom';
@@ -7,53 +7,52 @@ import axios from 'axios';
 import { logout } from '../../auth/auth';
 
 const OurNavbar = (props) => {
-  const email = localStorage.getItem('email');
+  // const email = localStorage.getItem('email');
 
-  const [modal, setModal] = useState(false);
-  console.log('navbar props are:');
-  console.log(props.props);
-  //what the fuck is going on here?
+  // const [modal, setModal] = useState(false);
 
-  const handleCloseError = () => setModal(false); // Handles Error Modal Close
 
-  const handleClose = (e) => {
-    e.preventDefault();
-    // make call to my backend functions
-    const body = {
-      email: email,
-    };
-    axios.post('http://localhost:5000/userDelete/', body).then((res) => {
-      if (res.status == 200) {
-        setModal(false);
-        props.props.navigate('/logout');
-      } else {
-        console.log('a failure');
-      }
-    });
-  };
+  // const handleCloseError = () => setModal(false); // Handles Error Modal Close
 
-  const changePassword = () => {
-    //additional things
-    props.props.navigate('/changePassword');
-  };
+  // const handleClose = (e) => {
+  //   e.preventDefault();
+  //   // make call to my backend functions
+  //   const body = {
+  //     email: email,
+  //   };
+  //   axios.post('http://localhost:5000/userDelete/', body).then((res) => {
+  //     if (res.status == 200) {
+  //       setModal(false);
+  //       props.props.navigate('/logout');
+  //     } else {
+  //       console.log('I am a failure');
+  //     }
+  //   });
+  // };
 
-  const navLogout = () => {
-    logout(props.props);
-    
-  };
+  // const changePassword = () => {
+  //   //additional things
+  //   props.props.navigate('/changePassword');
+  // };
 
-  const deleteAccount = () => {
-    //additional things
-    //call to backend
-    setModal(true);
-    // props.props.navigate('/welcome')
-  };
+  // const navLogout = () => {
+  //   logout(props.props);
+  // };
+
+  // const deleteAccount = () => {
+  //   //additional things
+  //   //call to backend
+  //   setModal(true);
+  //   // props.props.navigate('/welcome')
+  // };
 
   return (
     <Navbar className={styles.navbar}>
-      <Modal show={modal} onHide={handleCloseError}>
+      {/* <Modal show={modal} onHide={handleCloseError}>
         <Modal.Header>
-          <Modal.Title>Are you sure you want to delete your account?</Modal.Title>
+          <Modal.Title>
+            Are you sure you want to delete your account?
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className={styles.centered}>
@@ -62,7 +61,7 @@ const OurNavbar = (props) => {
             </Button>
           </div>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
       <Container>
         <Navbar.Brand href='/dashboard'>
           <div className={styles.inlineDiv}>
@@ -70,7 +69,8 @@ const OurNavbar = (props) => {
             <h2 className={styles.site}>Site</h2>
           </div>
         </Navbar.Brand>
-        <Navbar.Toggle />
+        <Nav.Link style={{color: 'white'}} href="/settings">settings</Nav.Link>
+        {/* <Navbar.Toggle />
         <Navbar.Collapse className='justify-content-end'>
           <Dropdown>
             <Dropdown.Toggle
@@ -90,7 +90,7 @@ const OurNavbar = (props) => {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-        </Navbar.Collapse>
+        </Navbar.Collapse> */}
       </Container>
     </Navbar>
   );

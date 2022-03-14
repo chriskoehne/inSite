@@ -1,24 +1,10 @@
-.dashboardNav {
-  background-color: #3d3d3d;
-  margin-bottom: 2%;
-  height: 10%;
-}
+
 
 .box {
+  margin-top: 2%;
   display: flex;
   flex-flow: column;
   height: 100vh;
-}
-
-.in {
-  text-align: center;
-  display: inline-block;
-  color: white !important;
-}
-.site {
-  text-align: center;
-  display: inline-block;
-  color: #f9c449 !important;
 }
 
 .inlineDiv {
@@ -38,6 +24,10 @@
 
 .socialsCard {
   height: 100%;
+  background-color: rgba(255, 255, 255, 0);
+}
+.socialsCard .dark{
+  height: 100%;
 }
 
 .buttons {
@@ -46,10 +36,10 @@
   overflow: hidden;
   white-space: nowrap;
   height: 7vh;
-  background-color: #ff4500;
+  background-color: var(--reddit);
   color: white;
   font-weight: bold;
-  border-color: #ff4500;
+  border-color: var(--reddit);
 }
 .buttons:hover {
   background-color: #e63e00;
@@ -57,12 +47,12 @@
 }
 
 .buttons:active {
-  background-color: #ff4500;
-  border-color: #ff4500;
+  background-color: var(--reddit);
+  border-color: var(--reddit);
 }
 .buttons:focus {
-  background-color: #ff4500;
-  border-color: #ff4500;
+  background-color: var(--reddit);
+  border-color: var(--reddit);
 }
 
 .centered {
