@@ -3,9 +3,17 @@
   flex-direction: column;
 }
 
+.settingsLinks {
+  color: var(--link-main);
+}
+
+.settingsLinks:hover {
+  color: var(--link-hightlight);
+}
+
 .sidebar {
   height: 100vh;
-  background-color: #F7F7F7;
+  background-color: var(--sidebar);
   width: 24vw;
   padding: 2%;
 }
@@ -47,6 +55,3 @@
   padding-top: 80vh;
   padding-bottom: 10vh;
 }
-
-
-

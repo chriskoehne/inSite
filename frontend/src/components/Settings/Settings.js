@@ -1,52 +1,93 @@
-import 'react-bootstrap-drawer/lib/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Col, Container, Row, Modal } from 'react-bootstrap';
-import { Drawer } from 'react-bootstrap-drawer';
+import { Button, Col, Container, Row, Modal, Nav } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import Switch from 'react-switch';
 import axios from 'axios';
-
 import styles from './Settings.module.css';
 import { logout } from '../../auth/auth';
 
 const SettingsDrawer = (props) => {
   return (
-    <Drawer style={{ zIndex: 1 }} {...props}>
-      <div>
-        <Drawer.ToC>
-          <h3 style={{ color: 'var(--slate)' }}>Settings</h3>
-          <Drawer.Nav>
-            <Drawer.Item href='/settings#customization'>
-              Customization
-            </Drawer.Item>
-            <Drawer.Item href='/settings#changePassword'>
-              Change Password
-            </Drawer.Item>
-            <Drawer.Item href='/settings#deauthorize'>
-              Deauthorize Social Media
-            </Drawer.Item>
-            <Drawer.Item href='/settings#logout'>Logout</Drawer.Item>
-            <Drawer.Item href='/settings#deleteAccount'>
-              Delete Account
-            </Drawer.Item>
-          </Drawer.Nav>
-        </Drawer.ToC>
-      </div>
-    </Drawer>
+    <div className={styles.sidebar}>
+      <h3 style={{ color: 'var(--link-highlight)' }}>Settings</h3>
+      <Nav.Item>
+        <Nav.Link
+          className={styles.settingsLinks}
+          href='/settings#customization'
+        >
+          Customization
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          className={styles.settingsLinks}
+          href='/settings#changePassword'
+        >
+          Change Password
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link className={styles.settingsLinks} href='/settings#deauthorize'>
+          Deauthorize Social Media
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link className={styles.settingsLinks} href='/settings#logout'>
+          Logout
+        </Nav.Link>
+      </Nav.Item>
+      <br />
+      <br />
+      <br />
+      <Nav.Item>
+        <Nav.Link
+          className={styles.settingsLinks}
+          href='/settings#deleteAccount'
+        >
+          Delete Account
+        </Nav.Link>
+      </Nav.Item>
+    </div>
   );
 };
 
 const Customization = () => {
-  const [darkmode, setDarkmode] = useState(false);
+  const [darkmode, setDarkmode] = useState(
+    localStorage.hasOwnProperty('darkmode') &&
+      localStorage.getItem('darkmode') === 'true'
+  );
+
+  useEffect(() => {
+    const updateDarkmode = async () => {
+      try {
+        const body = {
+          email: localStorage.getItem('email'),
+          darkmode: darkmode,
+        };
+        const res = await axios.post(
+          'http://localhost:5000/user/settings/darkmode',
+          body
+        );
+        if (res.status === 200) {
+          // console.log(res)
+        } else {
+          console.log('Could not update darkmode!');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    updateDarkmode();
+  }, [darkmode]);
 
   const toggle = (checked) => {
     setDarkmode(checked);
     if (checked) {
-      localStorage.setItem('darkmode', true)
+      localStorage.setItem('darkmode', true);
 
-    document.body.classList.add('dark');
+      document.body.classList.add('dark');
     } else {
-      localStorage.setItem('darkmode', false)
+      localStorage.setItem('darkmode', false);
       document.body.classList.remove('dark');
     }
   };
@@ -60,23 +101,31 @@ const Customization = () => {
         <label>
           <Switch
             onChange={toggle}
-            offColor={'#DDDDD'}
-            onColor={'#3D3D3D'}
+            offColor={'#DEDEDE'}
+            onColor={'#2c2c2c'}
             checked={darkmode}
             /*TODO: Fix spacing */
-            checkedIcon={'🌙'}
-            uncheckedIcon={'🔆'}
+            checkedIcon={
+              <svg viewBox='-8 -20 30 30'>
+                <text>🌙</text>
+              </svg>
+            }
+            uncheckedIcon={
+              <svg viewBox='-8 -20 30 30'>
+                <text>🔆</text>
+              </svg>
+            }
           />
         </label>
       </span>
       <br />
       <br />
       <h5>Reddit Default shit</h5>
-      <text>setting</text>
+      setting
       <br />
-      <text>setting</text>
+      setting
       <br />
-      <text>setting</text>
+      setting
       <br />
     </div>
   );
@@ -112,28 +161,26 @@ const Logout = () => {
 const DeleteAccount = () => {
   const email = localStorage.getItem('email');
   const [modal, setModal] = useState(false);
-  const handleCloseError = () => setModal(false); // Handles Error Modal Close
+  const handleCloseError = () => setModal(false);
   const handleSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     setModal(true);
-  }
+  };
   const handleClose = async (e) => {
     e.preventDefault();
-    // make call to my backend functions
     const body = {
       email: email,
     };
     try {
       const res = await axios.post('http://localhost:5000/userDelete/', body);
-      if (res.status == 200) {
+      if (res.status === 200) {
         setModal(false);
         logout();
       } else {
         console.log('I am a failure');
       }
-    
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   };
 
@@ -156,7 +203,11 @@ const DeleteAccount = () => {
       <h4>Delete Account</h4>
       <div className='form-group'>
         <form onSubmit={handleSubmit}>
-          <input type='submit' value='Delete Account' className='btn btn-secondary' />
+          <input
+            type='submit'
+            value='Delete Account'
+            className='btn btn-secondary'
+          />
         </form>
       </div>
     </div>
@@ -189,7 +240,6 @@ const ChangePassword = () => {
       return;
     }
 
-    //axios stuff
     const body = {
       email: email,
       oldPassword: oldPassword,

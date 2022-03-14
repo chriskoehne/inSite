@@ -28,8 +28,13 @@
   margin-left: 10%;
   margin-right: 10%;
   overflow-y: scroll;
+  background-color: rgba(255, 255, 255, 0);
   /* border-width: 0.5vh; */
- 
+}
+
+.textCard {
+  border-color: var(--primary);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .slideshow {
@@ -37,7 +42,7 @@
   height: 100%;
 }
 
-.slideshowCard{
+.slideshowCard {
   height: 100%;
 }
 

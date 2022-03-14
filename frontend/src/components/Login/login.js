@@ -34,7 +34,12 @@ const Login = (props) => {
     try {
       const res = await axios.post('http://localhost:5000/verifyUser/', body);
       if (res.status === 200) {
-        localStorage.setItem('email', email);
+        console.log(res.data.user);
+        if (res.data.user.darkmode) {
+          document.body.classList.add('dark');
+        }
+        localStorage.setItem('darkmode', res.data.user.darkmode);
+        localStorage.setItem('email', res.data.user.email);
         props.navigate('/dashboard', { state: { email: email } });
       } else {
         setVerifyText('Incorrect code!');
@@ -87,11 +92,11 @@ const Login = (props) => {
             <Modal.Header>
               <Modal.Title>Verify phone number</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body color='black'>
               Your phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.
-              <div style={{color: 'red'}}> {verifyText} </div>
+              <div style={{ color: 'red' }}> {verifyText} </div>
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>
@@ -117,7 +122,7 @@ const Login = (props) => {
             <Modal.Header closeButton>
               <Modal.Title>Login Error</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{errorText}</Modal.Body>
+            <Modal.Body color='black'>{errorText}</Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>
             <div className='form-group'>

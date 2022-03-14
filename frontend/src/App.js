@@ -5,7 +5,6 @@ import NavRoute from './components/Routing/NavRoute';
 import ProtectedRoute from './components/Routing/ProtectedRoute';
 import UnprotectedRoute from './components/Routing/UnprotectedRoute';
 import Login from './components/Login/login';
-// import Home from './components/Home/home';
 import CreateAccount from './components/CreateAccount/createAccount';
 import Dashboard from './components/Dashboard/Dashboard';
 import Welcome from './components/Welcome/Welcome';
@@ -20,6 +19,15 @@ import Logout from './components/testing/Logout';
 import Settings from './components/Settings/Settings';
 
 const App = () => {
+  // handle darkmode. Not always working on first load for some reason. Also added to login.js
+  useEffect(() => {
+    if (
+      localStorage.hasOwnProperty('darkmode') &&
+      localStorage.getItem('darkmode') === 'true'
+    ) {
+      document.body.classList.add('dark');
+    }
+  }, []);
 
   const navigate = useNavigate();
   return (
@@ -27,70 +35,68 @@ const App = () => {
       <Route path='/' element={<Navigate replace to='/welcome' />} />
 
       <Route exact path='/welcome' element={<UnprotectedRoute />}>
-        <Route index element={<Welcome navigate={navigate}/>} />
+        <Route index element={<Welcome navigate={navigate} />} />
       </Route>
 
       <Route exact path='/login' element={<UnprotectedRoute />}>
-        <Route index element={<Login navigate={navigate}/>} />
+        <Route index element={<Login navigate={navigate} />} />
       </Route>
 
       <Route exact path='/cookieCheck' element={<ProtectedRoute />}>
-        <Route index element={<CookieCheck navigate={navigate}/>} />
+        <Route index element={<CookieCheck navigate={navigate} />} />
       </Route>
 
       <Route exact path='/logout' element={<ProtectedRoute />}>
-        <Route index element={<Logout navigate={navigate}/>} />
+        <Route index element={<Logout navigate={navigate} />} />
       </Route>
 
       <Route exact path='/createAccount' element={<UnprotectedRoute />}>
-        <Route index element={<CreateAccount navigate={navigate}/>} />
+        <Route index element={<CreateAccount navigate={navigate} />} />
       </Route>
 
       <Route exact path='/dashboard/*' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate}/>}>
+        <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<Dashboard navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/reddit' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate}/>}>
+        <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<RedditPage navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/twitter' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate}/>}>
+        <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<TwitterPage navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/youtube' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate}/>}>
+        <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<YoutubePage navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/instagram' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate}/>}>
+        <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<InstagramPage navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route path='*' element={<Navigate replace to='/welcome' />} />
-      
+
       <Route exact path='/changePassword' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate}/>}>
-        <Route index element={<ChangePassword navigate={navigate}/>} />
+        <Route element={<NavRoute navigate={navigate} />}>
+          <Route index element={<ChangePassword navigate={navigate} />} />
         </Route>
       </Route>
 
       <Route exact path='/settings' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate}/>}>
-        <Route index element={<Settings navigate={navigate}/>} />
+        <Route element={<NavRoute navigate={navigate} />}>
+          <Route index element={<Settings navigate={navigate} />} />
         </Route>
       </Route>
-      
-      
     </Routes>
   );
 };

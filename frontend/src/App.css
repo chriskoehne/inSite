@@ -3,22 +3,46 @@ html {
 }
 
 :root {
-  --macaroni: #F9C449;
-  --slate: #3D3D3D;
-  --reddit: #FF4500;
-  --twitter: #55ADEE;
-  --instagram: #E94475;
-  --youtube: #FF0000;
+  --macaroni: #f9c449;
+  --slate: #3d3d3d;
+  --reddit: #ff4500;
+  --twitter: #55adee;
+  --instagram: #e94475;
+  --youtube: #ff0000;
 
   --primary: var(--slate);
   --secondary: white;
-  
+
+  --text-main: black;
+
+  --link-main: #5e5e5e;
+  --link-highlight: #3d3d3d;
+
+  --sidebar: #f7f7f7;
 }
 
 :root .dark {
   --primary: white;
   --secondary: var(--slate);
 
+  --text-main: white;
+
+  --link-main: #dedede;
+  --link-highlight: #f1f1f1;
+
+  --sidebar: #2c2c2c;
+}
+
+text {
+  color: var(--text-main);
+}
+
+body {
+  color: var(--text-main);
+}
+
+header {
+  color: var(--text-main);
 }
 
 *,
@@ -29,7 +53,6 @@ html {
   margin: 0;
 }
 .App {
-  
   font-family: 'Jost', sans-serif;
   position: relative;
   height: 100vh;

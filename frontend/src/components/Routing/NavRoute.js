@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, Button, Nav, Navbar, Dropdown, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
@@ -7,45 +7,44 @@ import axios from 'axios';
 import { logout } from '../../auth/auth';
 
 const OurNavbar = (props) => {
-  document.body.classList.remove('dark');
-  const email = localStorage.getItem('email');
+  // const email = localStorage.getItem('email');
 
-  const [modal, setModal] = useState(false);
+  // const [modal, setModal] = useState(false);
 
 
-  const handleCloseError = () => setModal(false); // Handles Error Modal Close
+  // const handleCloseError = () => setModal(false); // Handles Error Modal Close
 
-  const handleClose = (e) => {
-    e.preventDefault();
-    // make call to my backend functions
-    const body = {
-      email: email,
-    };
-    axios.post('http://localhost:5000/userDelete/', body).then((res) => {
-      if (res.status == 200) {
-        setModal(false);
-        props.props.navigate('/logout');
-      } else {
-        console.log('I am a failure');
-      }
-    });
-  };
+  // const handleClose = (e) => {
+  //   e.preventDefault();
+  //   // make call to my backend functions
+  //   const body = {
+  //     email: email,
+  //   };
+  //   axios.post('http://localhost:5000/userDelete/', body).then((res) => {
+  //     if (res.status == 200) {
+  //       setModal(false);
+  //       props.props.navigate('/logout');
+  //     } else {
+  //       console.log('I am a failure');
+  //     }
+  //   });
+  // };
 
-  const changePassword = () => {
-    //additional things
-    props.props.navigate('/changePassword');
-  };
+  // const changePassword = () => {
+  //   //additional things
+  //   props.props.navigate('/changePassword');
+  // };
 
-  const navLogout = () => {
-    logout(props.props);
-  };
+  // const navLogout = () => {
+  //   logout(props.props);
+  // };
 
-  const deleteAccount = () => {
-    //additional things
-    //call to backend
-    setModal(true);
-    // props.props.navigate('/welcome')
-  };
+  // const deleteAccount = () => {
+  //   //additional things
+  //   //call to backend
+  //   setModal(true);
+  //   // props.props.navigate('/welcome')
+  // };
 
   return (
     <Navbar className={styles.navbar}>
@@ -70,7 +69,7 @@ const OurNavbar = (props) => {
             <h2 className={styles.site}>Site</h2>
           </div>
         </Navbar.Brand>
-        <Nav.Link style={{color: 'var(--secondary)'}} href="/settings">settings</Nav.Link>
+        <Nav.Link style={{color: 'white'}} href="/settings">settings</Nav.Link>
         {/* <Navbar.Toggle />
         <Navbar.Collapse className='justify-content-end'>
           <Dropdown>

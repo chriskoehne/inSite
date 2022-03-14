@@ -1,6 +1,7 @@
 .navbar {
-  background-color: var(--primary);
+  background-color: var(--slate);
   height: 10%;
+  border-bottom: 2px solid var(--macaroni);
 
 }
 
@@ -15,7 +16,7 @@
 .in {
   text-align: center;
   display: inline-block;
-  color: var(--secondary) !important;
+  color: white !important;
 }
 .site {
   text-align: center;
