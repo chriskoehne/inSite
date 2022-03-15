@@ -12,10 +12,10 @@ const RedditCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
-  const [messages, setMessages] = useState([]);
-  const [posts, setPosts] = useState([]);
+  // const [messages, setMessages] = useState([]);
+  // const [posts, setPosts] = useState([]);
   const [me, setMe] = useState({});
-  const [updatedToken, setUpdatedToken] = useState('');
+  // const [updatedToken, setUpdatedToken] = useState('');
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -106,8 +106,8 @@ const RedditCard = (props) => {
           );
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            setMessages(ansOverview.data.messages);
-            setPosts(ansOverview.data.posts);
+            // setMessages(ansOverview.data.messages);
+            // setPosts(ansOverview.data.posts);
           }
 
           console.log('loading done');
@@ -118,6 +118,7 @@ const RedditCard = (props) => {
     if (redditToken) {
       callReddit();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redditToken]);
 
   const authenticateReddit = async (e) => {

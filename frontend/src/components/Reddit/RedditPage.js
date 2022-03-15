@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BarChart from '../Charts/BarChart';
 import LineChart from '../Charts/LineChart';
+import { useNavigate } from 'react-router';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,8 +15,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import faker from '@faker-js/faker';
+// import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
 import { getMonths, getDays, getLastThirty } from './RedditComments';
@@ -75,15 +75,17 @@ ChartJS.register(
 );
 
 const RedditPage = (props) => {
+
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [me, setMe] = useState({});
-  const [links, setLinks] = useState(0);
-  const [awards, setAwards] = useState(0);
+  // const [links, setLinks] = useState(0);
+  // const [awards, setAwards] = useState(0);
   const [tagCloud, setTagCloud] = useState([]);
   // const [email, setEmail] = useState(localStorage.getItem('email'));
   const [redditToken, setRedditToken] = useState('');
   const [comments, setComments] = useState([]);
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
   const [commentKarma, setCommentKarma] = useState(0);
@@ -106,7 +108,7 @@ const RedditPage = (props) => {
   const [chartThirtyData, setChartThirtyData] = useState({
     datasets: [],
   });
-  const [chartOptions, setChartOptions] = useState({});
+  // const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -122,10 +124,12 @@ const RedditPage = (props) => {
 
   useEffect(() => {
     if (!hasToken()) {
-      props.navigate('/dashboard');
+      navigate('/dashboard');
     } else {
       setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
     }
+    //TODO: replace below following process in https://betterprogramming.pub/stop-lying-to-react-about-missing-dependencies-10612e9aeeda
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -157,7 +161,7 @@ const RedditPage = (props) => {
           );
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            setMessages(ansOverview.data.messages);
+            // setMessages(ansOverview.data.messages);
             setPosts(ansOverview.data.posts);
             let pst = ansOverview.data.posts;
             let arrPost = [];
@@ -233,15 +237,15 @@ const RedditPage = (props) => {
             setChartDayData(dayDataset);
             setChartMonthData(monthsDataset);
             setMostControversialComment(mostControversial.data);
-            setChartOptions({
-              responsive: true,
-              maintainAspectRatio: false,
-              scale: {
-                ticks: {
-                  precision: 0,
-                },
-              },
-            });
+            // setChartOptions({
+            //   responsive: true,
+            //   maintainAspectRatio: false,
+            //   scale: {
+            //     ticks: {
+            //       precision: 0,
+            //     },
+            //   },
+            // });
             //setCommentsMonth(monthsData.monthYear)
             //console.log(commentByMonth)
           }
@@ -284,6 +288,7 @@ const RedditPage = (props) => {
       setLoading(false);
     };
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redditToken]);
 
   const getMaxScore = (list) => {

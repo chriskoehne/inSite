@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
@@ -8,7 +7,6 @@ import { SocialIcon } from 'react-social-icons';
 
 const InsightCard = (props) => {
   const title = props.title || 'Default Title';
-  const isLoggedIn = props.isLoggedIn || false;
 
   let display;
   let icon;

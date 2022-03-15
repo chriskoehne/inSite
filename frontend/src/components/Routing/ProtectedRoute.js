@@ -27,8 +27,8 @@ const ProtectedRoute = (props) => {
     async function callAuthenticate() {
       await getAuthenticated(props);
     }
-
     callAuthenticate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const show = () => {
