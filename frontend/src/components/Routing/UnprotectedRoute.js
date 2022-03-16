@@ -29,12 +29,13 @@ const UnprotectedRoute = (props) => {
     }
 
     callAuthenticate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const show = () => {
     if (loading) {
       return (
-        <div style={{ backgroundColor: '#3d3d3d', height: '100vh' }}></div>
+        <div style={{ backgroundColor: 'var(--slate)', height: '100vh' }}></div>
       );
     } else {
       return !authed ? <Outlet /> : <Navigate to='/dashboard' />;

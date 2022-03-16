@@ -27,8 +27,8 @@ const ProtectedRoute = (props) => {
     async function callAuthenticate() {
       await getAuthenticated(props);
     }
-
     callAuthenticate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const show = () => {
@@ -43,7 +43,7 @@ const ProtectedRoute = (props) => {
           justifyContent: 'center',
           textAlign: 'center',
         }}>
-          <h1 style={{color: '#3d3d3d'}}>Loading...</h1>
+          <h1 style={{color: 'var(--slate)'}}>Loading...</h1>
         </div>
       );
     } else {

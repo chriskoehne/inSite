@@ -111,6 +111,7 @@ const BarChart = (props) => {
     if (chartRef && base64) {
       uploadChart();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [base64]);
 
   const saveCanvas = async () => {

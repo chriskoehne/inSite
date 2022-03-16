@@ -68,7 +68,7 @@ const Welcome = (props) => {
         </Html>
 
         {/* for the background color */}
-        <Rect width={size.width} height={size.height} fill='#3d3d3d' />
+        <Rect width={size.width} height={size.height} fill='#3D3D3D' />
 
         <Shape
           sceneFunc={(context, shape) => {

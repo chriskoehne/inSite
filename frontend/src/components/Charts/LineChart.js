@@ -24,7 +24,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
+/*
 const generateList = (min, max, steps) => {
   // minimum step size
   let stepsize = (max - min) / steps;
@@ -42,20 +42,20 @@ const generateList = (min, max, steps) => {
   result.push(max);
   return result;
 };
+*/
 
 const LineChart = (props) => {
   let reader = new FileReader();
 
-  const maxLabel = props.maxVal;
-  const label = props.label;
+  // const maxLabel = props.maxVal;
+  // const label = props.label;
 
   const [base64, setBase64] = useState('');
   const [url, setUrl] = useState('');
   const chartRef = useRef(null);
 
-  const labels = generateList(0, maxLabel, Math.min(10, maxLabel)); // limit number of categories to 10
+  // const labels = generateList(0, maxLabel, Math.min(10, maxLabel)); // limit number of categories to 10
 
-  
   const createBlob = async () => {
     const canvasSave = chartRef.current.ctx.canvas;
     let offScreenCanvas = document.createElement('canvas');
@@ -98,6 +98,7 @@ const LineChart = (props) => {
     if (chartRef && base64) {
       uploadChart();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [base64]);
 
   const saveCanvas = async () => {
@@ -108,11 +109,9 @@ const LineChart = (props) => {
     });
   };
 
- 
-
   return (
     <div>
-      <div style={{ height: props.height, width: props.width}}>
+      <div style={{ height: props.height, width: props.width }}>
         <Line
           data={props.data}
           color={props.color}
