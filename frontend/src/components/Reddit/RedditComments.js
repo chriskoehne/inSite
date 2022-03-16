@@ -1,10 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Row, Card, Col, Carousel } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import BarChart from '../Charts/BarChart';
-import styles from './Reddit.module.css';
-import { TagCloud } from 'react-tagcloud';
 const c = require('./constants/constants');
 
 let getMonths = function (comments) {
@@ -12,7 +5,7 @@ let getMonths = function (comments) {
         let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         let monthArr = ['', '', '', '', '', '', '', '', '', '', '', ''];
         let monthArrYear = ['', '', '', '', '', '', '', '', '', '', '', ''];
-        let currentTime = new Date().getTime();
+        // let currentTime = new Date().getTime();
         let currentYear = new Date()
         comments.forEach(e => {
             //e.data.created

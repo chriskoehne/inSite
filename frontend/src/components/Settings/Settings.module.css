@@ -1,0 +1,57 @@
+.box {
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsLinks {
+  color: var(--link-main);
+}
+
+.settingsLinks:hover {
+  color: var(--link-hightlight);
+}
+
+.sidebar {
+  height: 100vh;
+  background-color: var(--sidebar);
+  width: 24vw;
+  padding: 2%;
+}
+
+.content {
+  height: 100%;
+  padding: 2vh;
+  overflow-y: scroll;
+  position: fixed;
+  margin-left: 25vw;
+}
+
+.customization {
+  padding-top: 2%;
+  width: 30em;
+  padding-bottom: 2%;
+}
+
+.changePassword {
+  padding-top: 2%;
+  width: 30em;
+  padding-bottom: 2%vh;
+}
+
+.deauthorize {
+  padding-top: 2%;
+  width: 30em;
+  padding-bottom: 2%;
+}
+
+.logout {
+  padding-top: 2%;
+  width: 30em;
+  padding-bottom: 2%;
+}
+
+.deleteAccount {
+  width: 30em;
+  padding-top: 80vh;
+  padding-bottom: 10vh;
+}

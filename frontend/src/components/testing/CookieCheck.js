@@ -5,7 +5,7 @@ const CookieCheck = (props) => {
   <div style={{
     width: '100vw',
     height: '100vh',
-    background: '#3d3d3d',
+    background: 'var(--slate)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

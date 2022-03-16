@@ -5,7 +5,7 @@ const Logout = (props) => {
   useEffect(() => {
     localStorage.clear();
     logout(props);
-  }, []);
+  }, [props]);
 
   return <h1>logout weeeeee</h1>;
 };

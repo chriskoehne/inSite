@@ -5,6 +5,7 @@ module.exports = {
   INCORRECT_PASSWORD: 'Incorrect password!',
   PASSWORDS_MISMATCH: 'New Passwords do not match!',
   PASSWORD_CHANGE_SUCCESS: 'Successfully changed password!',
+  USER_FIND_AND_UPDATE_ERR: 'Error updating user!',
 
   AUTHY_REGISTER_ERR: 'Authy register error!',
   AUTHY_REQUEST_SMS_ERR: 'Authy SMS error!',

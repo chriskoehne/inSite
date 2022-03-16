@@ -26,8 +26,9 @@ export async function unauthedOnly(props) {
 
 export async function logout(props) {
   try {
-    let result = await axios.post('http://localhost:5000/logout/');
-    console.log(result);
+    localStorage.clear();
+    document.body.classList.remove('dark');
+    await axios.post('http://localhost:5000/logout/');
   } catch (err) {
     props.navigate('/welcome');
   }

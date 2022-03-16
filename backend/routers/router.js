@@ -6,38 +6,17 @@
 
 var express = require('express');
 var router = express.Router();
-const cors = require('cors');
 const path = require('path');
 
-const demoController = require(path.resolve(
-  __dirname,
-  '../controllers/demoController'
-));
+const demoController = require('../controllers/demoController');
 
-const userCreationController = require(path.resolve(
-  __dirname,
-  '../controllers/userCreationController'
-));
+const verifyController = require('../controllers/verifyController');
 
-const verifyController = require(path.resolve(
-  __dirname,
-  '../controllers/verifyController'
-));
+const userController = require('../controllers/userController');
 
-const userLoginController = require(path.resolve(
-  __dirname,
-  '../controllers/userLoginController'
-));
+const redditController = require('../controllers/redditController');
 
-const redditController = require(path.resolve(
-  __dirname,
-  '../controllers/redditController'
-));
-
-const uploadController = require(path.resolve(
-  __dirname,
-  '../controllers/uploadController'
-));
+const uploadController = require('../controllers/uploadController');
 
 const changePasswordController = require(path.resolve(
   __dirname,
@@ -52,38 +31,38 @@ router.get('/demo1', demoController.showDemo1);
 
 router.post('/userDemo', demoController.userDemo);
 
-router.post('/userCreation', userCreationController.userCreation);
+router.post('/userCreation', userController.userCreation);
 
 router.post('/verifyUser', verifyController.verify);
 
-router.post("/userDelete", userCreationController.deleteUser);
+router.post('/login', userController.login);
 
-router.post("/verifyUser", verifyController.verify);
+router.post("/userDelete", auth.verifyToken, userController.deleteUser);
 
-router.post('/login', userLoginController.login);
+router.post("/user/settings/darkmode", auth.verifyToken, userController.updateDarkmode);
 
-router.post('/reddit/login', redditController.login);
+router.post('/reddit/login', auth.verifyToken, redditController.login);
 
-router.post('/reddit/codeToToken', redditController.convert);
+router.post('/reddit/codeToToken', auth.verifyToken, redditController.convert);
 
-router.get('/reddit/me', redditController.redditMe);
+router.get('/reddit/me', auth.verifyToken, redditController.redditMe);
 
-router.get('/reddit/userOverview', redditController.userOverview);
+router.get('/reddit/userOverview', auth.verifyToken, redditController.userOverview);
 
-router.get('/reddit/userSubKarma', redditController.userSubKarma);
+router.get('/reddit/userSubKarma', auth.verifyToken, redditController.userSubKarma);
 
-router.get('/reddit/userTotalKarma', redditController.userTotalKarma)
+router.get('/reddit/userTotalKarma', auth.verifyToken, redditController.userTotalKarma)
 
 router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
 
-router.get("/reddit/userComments", redditController.userComments)
+router.get("/reddit/userComments", auth.verifyToken, redditController.userComments)
 
 router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
 
 router.post('/logout', auth.removeToken);
 
-router.post('/uploadImage', uploadController.upload);
+router.post('/uploadImage', auth.verifyToken, uploadController.upload);
 
-router.post('/changePassword', changePasswordController.checkPasswd);
+router.post('/changePassword', auth.verifyToken, changePasswordController.checkPasswd);
 
 module.exports = router;

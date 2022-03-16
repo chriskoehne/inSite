@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   authyId: { type: String, required: true, default: 'unset' },
   redditUsername: { type: String, required: false },
   redditPassword: { type: String, required: false },
+  darkmode: { type: Boolean, required: false },
 
 }, { timestamps: true });
 
