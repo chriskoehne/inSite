@@ -6,34 +6,37 @@
 console.log('\x1b[36m%s\x1b[0m', 'Starting BACKEND...');
 
 const express = require('express');
-const path = require('path');
 var cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 5000; //config port in env or jwt (dotenv required)
 
-const app = express();
+const server = express();
 
-app.use(express.json());
-app.use(cookieParser());
+server.use(express.json());
+server.use(cookieParser());
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://localhost:3000', 'https://127.0.0.1:3000'],
+  origin: [
+    'http://localhost:3000',
+    'https://localhost:3000',
+    'https://127.0.0.1:3000',
+  ],
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions)); // Use this after the variable declaration
+server.use(cors(corsOptions)); // Use this after the variable declaration
 
-app.use(require(path.resolve(__dirname, './routers/router')));
+server.use('/api', require('./routers/router'));
 
-const dbConnection = require(path.resolve(__dirname, './database/database'));
+const dbConnection = require('./database/database');
 
-app.get('/', (req, res) => {
+server.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log('\x1b[36m%s\x1b[0m', 'Startup Successful, BACKEND is ONLINE');
   console.log(`BACKEND listening on port ${PORT} uwu...`);
 });

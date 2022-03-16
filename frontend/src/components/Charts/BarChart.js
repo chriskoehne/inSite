@@ -94,10 +94,7 @@ const BarChart = (props) => {
       } else {
         const body = { image: base64 };
         try {
-          const cloudinaryRes = await axios.post(
-            'http://localhost:5000/uploadImage/',
-            body
-          );
+          const cloudinaryRes = await axios.post('/uploadImage/', body);
           if (cloudinaryRes.status !== 200) {
             console.log('cloudinary error');
           }

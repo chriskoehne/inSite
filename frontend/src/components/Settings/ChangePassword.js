@@ -33,7 +33,7 @@ const ChangePassword = (props) => {
     };
 
     axios
-      .post("http://localhost:5000/changePassword", body)
+      .post("/changePassword", body)
       .then((res) => {
         console.log("res is");
         console.log(res);

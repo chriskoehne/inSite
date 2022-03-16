@@ -32,7 +32,7 @@ const Login = (props) => {
       code: smsCode,
     };
     try {
-      const res = await axios.post('http://localhost:5000/verifyUser/', body);
+      const res = await axios.post('/verifyUser/', body);
       if (res.status === 200) {
         console.log(res.data.user);
         if (res.data.user.darkmode) {
@@ -60,7 +60,7 @@ const Login = (props) => {
     };
 
     axios
-      .post('http://localhost:5000/login/', body)
+      .post('/login/', body)
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
