@@ -2,6 +2,7 @@ import React from 'react';
 import { Row } from 'react-bootstrap';
 import InsightCard from './InsightCard';
 import RedditCard from './RedditCard';
+import TwitterCard from './TwitterCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 
@@ -15,12 +16,9 @@ const Dashboard = (props) => {
         navigate={props.navigate}
         setExternalUrl={props.setExternalUrl}
         />
-        <InsightCard
-          title='Twitter'
-          text='Twitter'
-          borderColor='var(--twitter)'
-          isLoggedIn={true}
-          navigate={props.navigate}
+        <TwitterCard
+        navigate={props.navigate}
+        setExternalUrl={props.setExternalUrl}
         />
         <InsightCard
           title='Instagram'

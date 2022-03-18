@@ -16,6 +16,8 @@ const userController = require('../controllers/userController');
 
 const redditController = require('../controllers/redditController');
 
+const twitterController = require('../controllers/twitterController');
+
 const uploadController = require('../controllers/uploadController');
 
 const changePasswordController = require(path.resolve(
@@ -64,5 +66,7 @@ router.post('/logout', auth.removeToken);
 router.post('/uploadImage', auth.verifyToken, uploadController.upload);
 
 router.post('/changePassword', auth.verifyToken, changePasswordController.checkPasswd);
+
+router.post('/twitter/login', auth.verifyToken, twitterController.login);
 
 module.exports = router;
