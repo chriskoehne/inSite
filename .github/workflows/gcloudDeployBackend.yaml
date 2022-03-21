@@ -1,0 +1,22 @@
+name: Deploy to Google App Engine
+on:
+  push:
+    branches:
+      - chris/deploymentTest
+jobs:
+   deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        workload_identity_provider: 'projects/537012168829/locations/global/workloadIdentityPools/insite-pool/providers/github-github'
+        service_account: 'insite-backend-344821@appspot.gserviceaccount.com'
+
+    # - name: 'Set up Cloud SDK'
+    #   uses: 'google-github-actions/setup-gcloud@v0'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
