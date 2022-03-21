@@ -14,8 +14,6 @@ import { RWebShare } from 'react-web-share';
 import { saveAs } from 'file-saver';
 const pica = require('pica')();
 
-// import faker from "@faker-js/faker";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
