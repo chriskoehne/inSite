@@ -18,10 +18,7 @@ const redditController = require('../controllers/redditController');
 
 const uploadController = require('../controllers/uploadController');
 
-const changePasswordController = require(path.resolve(
-  __dirname,
-  '../controllers/changePasswordController'
-));
+const changePasswordController = require('../controllers/changePasswordController');
 
 const auth = require('../auth/authentication');
 
@@ -37,9 +34,13 @@ router.post('/verifyUser', verifyController.verify);
 
 router.post('/login', userController.login);
 
-router.post("/userDelete", auth.verifyToken, userController.deleteUser);
+router.post('/userDelete', auth.verifyToken, userController.deleteUser);
 
-router.post("/user/settings/darkmode", auth.verifyToken, userController.updateDarkmode);
+router.post(
+  '/user/settings/darkmode',
+  auth.verifyToken,
+  userController.updateDarkmode
+);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 
@@ -47,22 +48,42 @@ router.post('/reddit/codeToToken', auth.verifyToken, redditController.convert);
 
 router.get('/reddit/me', auth.verifyToken, redditController.redditMe);
 
-router.get('/reddit/userOverview', auth.verifyToken, redditController.userOverview);
+router.get(
+  '/reddit/userOverview',
+  auth.verifyToken,
+  redditController.userOverview
+);
 
-router.get('/reddit/userSubKarma', auth.verifyToken, redditController.userSubKarma);
+router.get(
+  '/reddit/userSubKarma',
+  auth.verifyToken,
+  redditController.userSubKarma
+);
 
-router.get('/reddit/userTotalKarma', auth.verifyToken, redditController.userTotalKarma)
+router.get(
+  '/reddit/userTotalKarma',
+  auth.verifyToken,
+  redditController.userTotalKarma
+);
 
 router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
 
-router.get("/reddit/userComments", auth.verifyToken, redditController.userComments)
+router.get(
+  '/reddit/userComments',
+  auth.verifyToken,
+  redditController.userComments
+);
 
-router.post("/cookieCheck", auth.verifyToken, demoController.cookieCheck);
+router.post('/cookieCheck', auth.verifyToken, demoController.cookieCheck);
 
 router.post('/logout', auth.removeToken);
 
 router.post('/uploadImage', auth.verifyToken, uploadController.upload);
 
-router.post('/changePassword', auth.verifyToken, changePasswordController.checkPasswd);
+router.post(
+  '/changePassword',
+  auth.verifyToken,
+  changePasswordController.checkPasswd
+);
 
 module.exports = router;

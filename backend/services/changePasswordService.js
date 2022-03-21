@@ -1,9 +1,9 @@
 const path = require('path');
 const bcrypt = require('bcrypt');
-const config = require(path.resolve(__dirname, '../config.json'));
+const config = require('../config.json');
 const c = require('../constants/constants');
 
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 exports.check = async function (email, oldPassword, newPassword) {
   try {
 

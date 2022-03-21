@@ -1,10 +1,7 @@
 const path = require('path');
 const c = require('../constants/constants');
 
-var verifyService = require(path.resolve(
-  __dirname,
-  '../services/verifyService'
-));
+var verifyService = require('../services/verifyService');
 
 const generateToken = require('../auth/authentication').generateToken;
 

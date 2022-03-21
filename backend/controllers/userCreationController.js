@@ -1,10 +1,7 @@
 const path = require('path');
 const c = require('../constants/constants');
 
-var userCreationService = require(path.resolve(
-  __dirname,
-  '../services/userCreationService'
-));
+var userCreationService = require('../services/userCreationService');
 
 exports.userCreation = async function (req, res, next) {
   try {
@@ -13,8 +10,8 @@ exports.userCreation = async function (req, res, next) {
       req.body.password,
       req.body.phone
     );
-    console.log("in controller, result is")
-    console.log(result)
+    console.log('in controller, result is');
+    console.log(result);
 
     switch (result) {
       case c.AUTHY_REGISTER_ERR:
@@ -27,7 +24,7 @@ exports.userCreation = async function (req, res, next) {
         break;
       default:
         //success
-        console.log("should be success controller")
+        console.log('should be success controller');
         return res.status(200).json({ message: result }); //should be the user's id
     }
   } catch (e) {
@@ -37,11 +34,8 @@ exports.userCreation = async function (req, res, next) {
 
 exports.deleteUser = async function (req, res, next) {
   try {
-    let result = await userCreationService.deleteUser(
-      req.body.email
-    );
-    return res.status(200).json({message: result})
-   
+    let result = await userCreationService.deleteUser(req.body.email);
+    return res.status(200).json({ message: result });
   } catch (e) {
     return res.status(400).json({ message: e.message });
   }

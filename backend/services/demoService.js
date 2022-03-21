@@ -19,7 +19,7 @@ exports.cookieCheck = async function (parameters) {
 
 /* an example of creating a user */
 
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 exports.signup = async function (req, res) {
   try {
     const email = req.body.email;

@@ -1,10 +1,7 @@
 const path = require('path');
 const c = require('../constants/constants');
 
-var changePasswordService = require(path.resolve(
-  __dirname,
-  '../services/changePasswordService'
-));
+var changePasswordService = require('../services/changePasswordService');
 
 exports.checkPasswd = async function (req, res, next) {
   try {

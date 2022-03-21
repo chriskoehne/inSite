@@ -6,7 +6,7 @@
 
 const path = require('path');
 
-var demoService = require(path.resolve(__dirname, '../services/demoService'));
+var demoService = require('../services/demoService');
 
 exports.showDemo0 = async function (req, res, next) {
   try {
