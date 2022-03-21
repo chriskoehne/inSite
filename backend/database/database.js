@@ -3,7 +3,7 @@ const path = require("path");
 const config = require(path.resolve(__dirname, "../config.json"));
 
 
-const uri = config.databaseURI;
+const uri = process.env.DATABASE_URI || config.DATABASE_URI;
 
 mongoose.connect(uri, {
     useNewUrlParser: true}).then(

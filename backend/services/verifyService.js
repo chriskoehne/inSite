@@ -4,7 +4,7 @@ const c = require('../constants/constants');
 
 const config = require(path.resolve(__dirname, '../config.json'));
 
-const authToken = config.TwilioAuthToken;
+const authToken = process.env.TWILIO_AUTH_TOKEN || config.TWILIO_AUTH_TOKEN;
 var authy = require('authy')(authToken);
 
 const User = require(path.resolve(__dirname, '../database/models/user'));

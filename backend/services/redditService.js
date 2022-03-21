@@ -19,8 +19,8 @@ exports.test = async function (req, res) {
     const reddit = new Reddit({
       username: result.redditUsername,
       password: result.redditPassword,
-      appId: config.redditAppId,
-      appSecret: config.redditSecret,
+      appId: process.env.REDDIT_APP_ID || config.REDDIT_APP_ID,
+      appSecret: process.env.REDDIT_SECRET || config.REDDIT_SECRET,
       userAgent: 'MyApp/1.0.0 (http://example.com)',
     });
 
@@ -38,7 +38,7 @@ exports.login = async function (email) {
     //TODO change the client_id to grab from config file
     const link =
       'https://www.reddit.com/api/v1/authorize?client_id=' +
-      config.redditAppId +
+      process.env.REDDIT_APP_ID || config.REDDIT_APP_ID +
       '&response_type=code&state=' +
       email +
       '&redirect_uri=https://127.0.0.1:3000/dashboard/&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
@@ -65,7 +65,7 @@ exports.convert = async function (req, res) {
     params.set('redirect_uri', 'https://127.0.0.1:3000/dashboard/');
 
     const body = params;
-    const auth = btoa(config.redditAppId + ':' + config.redditSecret);
+    const auth = btoa(process.env.REDDIT_APP_ID || config.REDDIT_APP_ID + ':' + process.env.REDDIT_SECRET || config.REDDIT_SECRET);
     const finalAuth = 'Basic ' + auth;
 
     const headers = {

@@ -8,9 +8,9 @@ const config = require('../config.json');
 const cloudinary = require('cloudinary');
 
 cloudinary.config({
-  cloud_name: config.cloudinaryCloudName,
-  api_key: config.cloudinaryAPIKey,
-  api_secret: config.cloudinaryAPISecret,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || config.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY || config.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET || config.CLOUDINARY_API_SECRET,
 });
 
 exports.upload = async (image) => {
