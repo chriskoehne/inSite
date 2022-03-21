@@ -3,7 +3,8 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - chris/deploymentTest
+      - none
+      # - chris/deploymentTest
     paths:
       - "backend/**"
 
