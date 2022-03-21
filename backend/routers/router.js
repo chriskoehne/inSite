@@ -69,4 +69,6 @@ router.post('/changePassword', auth.verifyToken, changePasswordController.checkP
 
 router.post('/twitter/login', auth.verifyToken, twitterController.login);
 
+router.post('/twitter/codeToToken', auth.verifyToken, twitterController.convert);
+
 module.exports = router;

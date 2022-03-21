@@ -37,6 +37,7 @@ const TwitterCard = (props) => {
         'http://localhost:5000/twitter/codeToToken/',
         { code: user.code }
       );
+      console.log(result.data);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitterToken(token);
@@ -67,6 +68,9 @@ const TwitterCard = (props) => {
   };
 
   const display = () => {
+    if (loading) {
+      return <h2>Loading...</h2>;
+    }
     return (
       <div className={styles.centered}>
         <Button className={styles.buttons} onClick={authenticateTwitter}>

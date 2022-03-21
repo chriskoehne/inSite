@@ -4,6 +4,9 @@ var btoa = require('btoa');
 const randomstring = require("randomstring");
 const crypto = require("crypto");
 const base64url = require("base64url");
+var searchParams = require('url-search-params');
+var axios = require('axios');
+
 
 exports.login = async function (email) {
   try {
@@ -41,6 +44,44 @@ exports.login = async function (email) {
   } catch (err) {
     console.log(err);
     console.log('big error catch');
+    return err;
+  }
+};
+
+exports.convert = async function (req, res) {
+  try {
+    console.log('in twitter convert service');
+    // console.log(req.body);
+    const code = req.body.code;
+
+    var params = new searchParams();
+    params.set('code', code);
+    params.set('grant_type', 'authorization_code');
+    params.set('redirect_uri', 'https://127.0.0.1:3000/dashboard');
+    params.set('code_verifier', 'challenge')
+
+    const body = params;
+    const auth = btoa(config.twitterClientID + ':' + config.twitterClientSecret);
+    const finalAuth = 'Basic ' + auth;
+
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: finalAuth,
+    };
+    //twitter post call
+    console.log("twitter post call");
+    const twitterRes = await axios.post(
+      'https://api.twitter.com/2/oauth2/token',
+      body,
+      { headers: headers }
+    );
+
+    console.log("Result from Twitter:")
+    // console.log(twitterRes);
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
     return err;
   }
 };

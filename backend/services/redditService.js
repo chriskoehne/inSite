@@ -56,7 +56,8 @@ exports.login = async function (email) {
 
 exports.convert = async function (req, res) {
   try {
-    console.log(req.body);
+    // console.log("in reddit convert service");
+    // console.log(req.body);
     const code = req.body.code;
 
     var params = new searchParams();
@@ -83,7 +84,7 @@ exports.convert = async function (req, res) {
     //console.log(redditRes.data)
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('reddit big error catch');
     // console.log(err)
     return err;
   }
