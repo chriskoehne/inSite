@@ -4,7 +4,11 @@
  */
 
 const c = require('../constants/constants');
-const config = require('../config.json');
+try {
+  var config = require('../config.json');
+} catch {
+  var config = {};
+}
 const cloudinary = require('cloudinary');
 
 cloudinary.config({

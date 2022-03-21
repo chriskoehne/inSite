@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 const path = require("path");
-const config = require('../config.json');
-
+try {
+  var config = require('../config.json');
+} catch {
+  var config = {};
+}
 const uri = process.env.DATABASE_URI || config.DATABASE_URI;
 
 mongoose.connect(uri, {

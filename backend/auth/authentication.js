@@ -5,7 +5,11 @@
  */
 
 const jwt = require('jsonwebtoken');
-const config = require('../config.json');
+try {
+  var config = require('../config.json');
+} catch {
+  var config = {};
+}
 const JWT_SECRET = process.env.JWT_SECRET || config.JWT_SECRET;
 const jwt_decode = require('jwt-decode');
 

@@ -2,7 +2,11 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const c = require('../constants/constants');
 
-const config = require('../config.json');
+try {
+  var config = require('../config.json');
+} catch {
+  var config = {};
+}
 const authToken = process.env.TWILIO_AUTH_TOKEN || config.TWILIO_AUTH_TOKEN;
 
 var authy = require('authy')(authToken);

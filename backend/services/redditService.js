@@ -2,7 +2,11 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const Reddit = require('reddit');
 const { link } = require('fs');
-const config = require('../config.json');
+try {
+  var config = require('../config.json');
+} catch {
+  var config = {};
+}
 const User = require('../database/models/User');
 var btoa = require('btoa');
 var axios = require('axios');
