@@ -31,7 +31,7 @@ server.use(cors(corsOptions)); // Use this after the variable declaration
 
 server.use('/api', require('./routers/router'));
 
-const dbConnection = require('./database/database');
+require('./database/database');
 
 server.get('/', (req, res) => {
   res.send('Hello World!');
