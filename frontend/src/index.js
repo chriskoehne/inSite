@@ -7,7 +7,10 @@ import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.BACKEND_URL || "http://localhost:5000/api";
+axios.defaults.baseURL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000/api'
+    : 'http://ec2-3-80-49-126.compute-1.amazonaws.com/api';
 
 ReactDOM.render(
   <React.StrictMode>
