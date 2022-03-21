@@ -5,12 +5,53 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 // import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
-import BarChart from '../Charts/BarChart';
 
 const TwitterCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
-  const [me, setMe] = useState({});
+  const [twitterToken, setTwitterToken] = useState('');
+
+
+  useEffect(() => {
+    let c = null;
+    const e = localStorage.getItem('email');
+    const currentUrl = window.location.href;
+    if (currentUrl.includes('&')) {
+      let start = currentUrl.indexOf('code') + 5;
+      c = currentUrl.substring(start);
+    }
+    setUser({
+      email: e,
+      code: c,
+    });
+  }, []);
+
+  useEffect(() => {
+    const convert = async () => {
+      setLoading(true);
+      if (!user.code) {
+        setLoading(false);
+        return;
+      }
+      const result = await axios.post(
+        'http://localhost:5000/twitter/codeToToken/',
+        { code: user.code }
+      );
+      if (result.data.accessToken) {
+        const token = result.data.accessToken;
+        setTwitterToken(token);
+      } else {
+        console.log('could not convert token');
+      }
+      setLoading(false);
+    };
+
+    if (user.code) {
+      convert();
+    } else {
+      console.log('no code received from twitter');
+    }
+  }, [user]);
 
   const authenticateTwitter = async (e) => {
     e.preventDefault();

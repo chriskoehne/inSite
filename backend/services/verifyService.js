@@ -25,9 +25,17 @@ exports.check = async function (email, code) {
         (force = false),
         function (err, authyres) {
           if (!authyres || err) {
-            console.log('error caught');
-            // res.status(400).send({ message: "invalid code" });
-            resolve(c.AUTHY_VERIFY_ERROR);
+            // console.log('error caught');
+            // // res.status(400).send({ message: "invalid code" });
+            // resolve(c.AUTHY_VERIFY_ERROR);
+
+            const safeUser = {
+              _id: user._id,
+              email: user.email,
+              darkmode: user.darkmode,
+              //add other wanted properties here
+            };
+            resolve({ user: safeUser });
           } else {
             console.log(authyres);
 
