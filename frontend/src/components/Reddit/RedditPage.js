@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BarChart from '../Charts/BarChart';
 import LineChart from '../Charts/LineChart';
+import { useNavigate } from 'react-router';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,13 +15,13 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import faker from '@faker-js/faker';
+// import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
 import { getMonths, getDays, getLastThirty } from './RedditComments';
 
 const c = require('./constants/constants');
+// const redditColor = getComputedStyle(document.documentElement).getPropertyValue('--reddit');
 
 // Used to create the word clouds
 function getUncommon(sentence) {
@@ -74,15 +75,16 @@ ChartJS.register(
 );
 
 const RedditPage = (props) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [me, setMe] = useState({});
-  const [links, setLinks] = useState(0);
-  const [awards, setAwards] = useState(0);
+  // const [links, setLinks] = useState(0);
+  // const [awards, setAwards] = useState(0);
   const [tagCloud, setTagCloud] = useState([]);
   // const [email, setEmail] = useState(localStorage.getItem('email'));
   const [redditToken, setRedditToken] = useState('');
   const [comments, setComments] = useState([]);
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
   const [commentKarma, setCommentKarma] = useState(0);
@@ -105,7 +107,7 @@ const RedditPage = (props) => {
   const [chartThirtyData, setChartThirtyData] = useState({
     datasets: [],
   });
-  const [chartOptions, setChartOptions] = useState({});
+  // const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -121,10 +123,12 @@ const RedditPage = (props) => {
 
   useEffect(() => {
     if (!hasToken()) {
-      props.navigate('/dashboard');
+      navigate('/dashboard');
     } else {
       setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
     }
+    //TODO: replace below following process in https://betterprogramming.pub/stop-lying-to-react-about-missing-dependencies-10612e9aeeda
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -140,7 +144,7 @@ const RedditPage = (props) => {
         accessToken: redditToken,
       };
       if (me && !me.name) {
-        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+        const ansMe = await axios.get('/reddit/me', {
           params: redditMeQuery,
         });
         if (ansMe.status === 200) {
@@ -150,13 +154,12 @@ const RedditPage = (props) => {
             accessToken: redditToken,
             username: ansMe.data.name,
           };
-          const ansOverview = await axios.get(
-            'http://localhost:5000/reddit/userOverview',
-            { params: redditUserQuery }
-          );
+          const ansOverview = await axios.get('/reddit/userOverview', {
+            params: redditUserQuery,
+          });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            setMessages(ansOverview.data.messages);
+            // setMessages(ansOverview.data.messages);
             setPosts(ansOverview.data.posts);
             let pst = ansOverview.data.posts;
             let arrPost = [];
@@ -173,12 +176,9 @@ const RedditPage = (props) => {
             });
             setmostControlversialPost(mostControversial);
           }
-          const ansComments = await axios.get(
-            'http://localhost:5000/reddit/userComments',
-            {
-              params: redditUserQuery,
-            }
-          );
+          const ansComments = await axios.get('/reddit/userComments', {
+            params: redditUserQuery,
+          });
           if (ansComments.status === 200) {
             let array = ansComments.data.overview.data.children;
             //setCommentByMonths
@@ -198,8 +198,8 @@ const RedditPage = (props) => {
                 {
                   label: 'Number of Comments',
                   data: monthsData.numComments.reverse(),
-                  borderColor: '#FF4500',
-                  backgroundColor: '#FF4500',
+                  borderColor: '#ff4500',
+                  backgroundColor: '#ff4500',
                   xaxis: 'Months',
                 },
               ],
@@ -211,8 +211,8 @@ const RedditPage = (props) => {
                 {
                   label: 'Number of Comments',
                   data: dayDate.numComments.reverse(),
-                  borderColor: '#FF4500',
-                  backgroundColor: '#FF4500',
+                  borderColor: '#ff4500',
+                  backgroundColor: '#ff4500',
                 },
               ],
             };
@@ -223,8 +223,8 @@ const RedditPage = (props) => {
                 {
                   label: 'Number of Comments',
                   data: thirtyDate.numComments.reverse(),
-                  borderColor: '#FF4500',
-                  backgroundColor: '#FF4500',
+                  borderColor: '#ff4500',
+                  backgroundColor: '#ff4500',
                 },
               ],
             };
@@ -232,37 +232,31 @@ const RedditPage = (props) => {
             setChartDayData(dayDataset);
             setChartMonthData(monthsDataset);
             setMostControversialComment(mostControversial.data);
-            setChartOptions({
-              responsive: true,
-              maintainAspectRatio: false,
-              scale: {
-                ticks: {
-                  precision: 0,
-                },
-              },
-            });
+            // setChartOptions({
+            //   responsive: true,
+            //   maintainAspectRatio: false,
+            //   scale: {
+            //     ticks: {
+            //       precision: 0,
+            //     },
+            //   },
+            // });
             //setCommentsMonth(monthsData.monthYear)
             //console.log(commentByMonth)
           }
 
-          const ansSubKarma = await axios.get(
-            'http://localhost:5000/reddit/userSubKarma',
-            {
-              params: redditUserQuery,
-            }
-          );
+          const ansSubKarma = await axios.get('/reddit/userSubKarma', {
+            params: redditUserQuery,
+          });
           if (ansSubKarma.status === 200) {
             // console.log("Sub Karma Info Receieved!")
             setSubKarmaList(ansSubKarma.data.subKarmaList);
             // console.log(subKarmaList);
           }
 
-          const ansTotalKarma = await axios.get(
-            'http://localhost:5000/reddit/userTotalKarma',
-            {
-              params: redditUserQuery,
-            }
-          );
+          const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
+            params: redditUserQuery,
+          });
           if (ansTotalKarma.status === 200) {
             // console.log("Total Karma Info Receieved!")
 
@@ -283,6 +277,7 @@ const RedditPage = (props) => {
       setLoading(false);
     };
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redditToken]);
 
   const getMaxScore = (list) => {
@@ -378,6 +373,10 @@ const RedditPage = (props) => {
     setCommentGraphMonth(false);
   };
 
+  const isDarkmode = () => {
+    return document.body.classList.contains('dark') ? 'light' : 'dark';
+  };
+
   //clunky, but follow the above and add to the following if statements for the other social medias
 
   return loading ? (
@@ -385,19 +384,18 @@ const RedditPage = (props) => {
       style={{
         width: '100vw',
         height: '100vh',
-        background: 'white',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         textAlign: 'center',
       }}
     >
-      <h1 style={{ color: '#3d3d3d' }}>Loading...</h1>
+      <h1 style={{ color: 'var(--primary)' }}>Loading...</h1>
     </div>
   ) : (
     <div className={styles.box}>
       <Carousel
-        variant='dark'
+        variant={isDarkmode()}
         className={styles.slideshow}
         activeIndex={index}
         onSelect={handleSelect}
@@ -417,7 +415,7 @@ const RedditPage = (props) => {
                     <p key={index}>
                       {' '}
                       Subreddit: {subKarmaList[key].sr}, comment karma:{' '}
-                      {subKarmaList[key].comment_karma}, link karma:{' '}
+                      {subKarmaList[key].comment_karma}, post karma:{' '}
                       {subKarmaList[key].link_karma}
                     </p>
                   ))}
@@ -464,11 +462,11 @@ const RedditPage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-          <Row>
+            <Row>
               <Col>
                 Most Upvoted Post - {getMaxScore(posts)} Karma{' '}
                 {/* TODO karma or upvotes */}
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card className={styles.textCard}>
                   <Card.Body>
                     <Card.Title>
                       {getMaxItem(posts, getMaxScore(posts)).title}
@@ -483,7 +481,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Upvoted Comment - {getMaxScore(comments)} Karma
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card className={styles.textCard}>
                   <Card.Body>
                     <Card.Title>
                       {getMaxItem(comments, getMaxScore(comments)).link_title}
@@ -497,7 +495,7 @@ const RedditPage = (props) => {
             </Row>
             {/* <Row>
               Most Upvoted Message - {getMaxScore(comments)} Karma
-              <Card style={{ borderColor: '#3d3d3d' }}>
+              <Card className={styles.textCard}>
                 <Card.Body>
                   <Card.Title>
                     {getMaxItem(messages, getMaxScore(messages)).link_title}
@@ -511,7 +509,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Downvoted Post - {getMinScore(posts)} Karma
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card className={styles.textCard}>
                   <Card.Body>
                     <Card.Title>
                       {getMinItem(posts, getMinScore(posts)).title}
@@ -526,7 +524,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Downvoted Comment - {getMinScore(comments)} Karma
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card className={styles.textCard}>
                   <Card.Body>
                     <Card.Title>
                       {getMinItem(comments, getMinScore(comments)).link_title}
@@ -540,7 +538,7 @@ const RedditPage = (props) => {
             </Row>
             {/* <Row>
               Most Downvoted Message - {getMinScore(comments)} Karma
-              <Card style={{ borderColor: '#3d3d3d' }}>
+              <Card className={styles.textCard}>
                 <Card.Body>
                   <Card.Title>
                     {getMinItem(messages, getMinScore(messages)).link_title}
@@ -554,7 +552,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Controversial Post
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card className={styles.textCard}>
                   <Card.Body>
                     <Card.Title>{mostControversialPost.title}</Card.Title>
                     <Card.Text>{mostControversialPost.selftext}</Card.Text>
@@ -565,7 +563,7 @@ const RedditPage = (props) => {
             <Row>
               <Col>
                 Most Controversial Comment
-                <Card style={{ borderColor: '#3d3d3d' }}>
+                <Card className={styles.textCard}>
                   <Card.Body>
                     <Card.Title>
                       {mostControversialComment.link_title}
@@ -579,15 +577,14 @@ const RedditPage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <Row >
+            <Row>
               <Col>
                 <h3>
-                  Wow, you've said a lot of things in the past. <br></br> 
+                  Wow, you've said a lot of things in the past. <br></br>
                   Here's some of the words you most frequently use:
                 </h3>
                 <div className={styles.cloudCentered}>
-
-                <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
+                  <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
                 </div>
               </Col>
             </Row>
@@ -603,7 +600,7 @@ const RedditPage = (props) => {
                   <LineChart
                     height={'50vh'}
                     width={'75vw'}
-                    color={'#FF4500'}
+                    color={'#ff4500'}
                     data={chartMonthData}
                   />
                 ) : null}
@@ -611,7 +608,7 @@ const RedditPage = (props) => {
                   <LineChart
                     height={'50vh'}
                     width={'75vw'}
-                    color={'#FF4500'}
+                    color={'#ff4500'}
                     data={chartDayData}
                   />
                 ) : null}
@@ -619,7 +616,7 @@ const RedditPage = (props) => {
                   <LineChart
                     height={'50vh'}
                     width={'75vw'}
-                    color={'#FF4500'}
+                    color={'#ff4500'}
                     data={chartThirtyData}
                   />
                 ) : null}

@@ -1,16 +1,9 @@
-/* html, body {
-  height: 100vh;
-  min-height: 100vh;
-} */
-
-
-
-
 .box {
   display: flexbox;
   flex-flow: column;
   height: 100vh;
   text-align: center;
+  margin-top: 2%;
 }
 
 .inlineDiv {
@@ -31,12 +24,17 @@
 .socialsCard {
   padding: 1%;
   height: 80vh;
-  border-color: #FF4500;
+  border-color: var(--reddit);
   margin-left: 10%;
   margin-right: 10%;
   overflow-y: scroll;
+  background-color: rgba(255, 255, 255, 0);
   /* border-width: 0.5vh; */
- 
+}
+
+.textCard {
+  border-color: var(--primary);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .slideshow {
@@ -44,7 +42,7 @@
   height: 100%;
 }
 
-.slideshowCard{
+.slideshowCard {
   height: 100%;
 }
 

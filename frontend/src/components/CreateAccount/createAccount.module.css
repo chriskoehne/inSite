@@ -1,5 +1,5 @@
 .background {
-    background-color: #F9C449;
+    background-color: var(--macaroni);
     padding-top: 10vh;
     padding-right: 63vw;
     padding-left: 37vw;
@@ -34,7 +34,7 @@
 .createAcc_background input[type=submit] {
     height: 5vh;
     width: 15.5vw;
-    background-color: #F9C449;
+    background-color: var(--macaroni);
     border-radius: 5px;
     color: white;
 }

@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const path = require("path");
-const config = require(path.resolve(__dirname, "../config.json"));
-
-
-const uri = config.databaseURI;
+const uri = process.env.DATABASE_URI;
 
 mongoose.connect(uri, {
     useNewUrlParser: true}).then(

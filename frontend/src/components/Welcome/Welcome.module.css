@@ -10,7 +10,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   font-size: 96px;
   text-align: center;
   display: inline-block;
-  color: #F9C449 !important;
+  color: var(--macaroni) !important;
 
 }
 
@@ -27,7 +27,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   display: inline-block;
   width: 40vw;
   padding-left: 10vw;
-  text-shadow: #3d3d3d 0px 0px 1px;
+  text-shadow: var(--slate) 0px 0px 1px;
   -webkit-font-smoothing: antialiased;
 
 }
@@ -40,7 +40,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 }
 .taglinePt2 {
   font-size: 32px;
-  color: #F9C449;
+  color: var(--macaroni);
   display: inline-block;
 }
 
@@ -56,10 +56,10 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   white-space: nowrap;
   width: 14vw;
   height: 7vh;
-  background-color: #F9C449;
+  background-color: var(--macaroni);
   color:black;
   font-weight: bold;
-  border-color: #F9C449;
+  border-color: var(--macaroni);
 }
 .buttons:hover {
   background-color: #f8b720;
@@ -69,14 +69,14 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 }
 
 .buttons:active {
-  background-color: #F9C449;
+  background-color: var(--macaroni);
   color:black;
   font-weight: bold;
-  border-color: #F9C449;
+  border-color: var(--macaroni);
 }
 .buttons:focus {
-  background-color: #F9C449;
+  background-color: var(--macaroni);
   color:black;
   font-weight: bold;
-  border-color: #F9C449;
+  border-color: var(--macaroni);
 }

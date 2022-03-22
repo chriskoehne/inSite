@@ -14,10 +14,10 @@ const ProtectedRoute = (props) => {
 
   const getAuthenticated = async () => {
     try {
-      await axios.post('http://localhost:5000/cookieCheck/');
+      await axios.post('/cookieCheck/');
       setAuthed(true);
     } catch (err) {
-      localStorage.clear()
+      localStorage.clear();
       setAuthed(false);
     }
     setLoading(false);
@@ -27,23 +27,25 @@ const ProtectedRoute = (props) => {
     async function callAuthenticate() {
       await getAuthenticated(props);
     }
-
     callAuthenticate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const show = () => {
     if (loading) {
       return (
-        <div style={{
-          width: '100vw',
-          height: '100vh',
-          background: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          textAlign: 'center',
-        }}>
-          <h1 style={{color: '#3d3d3d'}}>Loading...</h1>
+        <div
+          style={{
+            width: '100vw',
+            height: '100vh',
+            background: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            textAlign: 'center',
+          }}
+        >
+          <h1 style={{ color: 'var(--slate)' }}>Loading...</h1>
         </div>
       );
     } else {

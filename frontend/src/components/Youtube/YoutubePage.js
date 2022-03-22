@@ -1,19 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Container, Navbar, Row, Card, Col } from 'react-bootstrap';
-import {useLocation} from 'react-router-dom';
+import React from 'react';
+import { Row, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Youtube.module.css';
 
 const YoutubePage = (props) => {
-
-  
-  useEffect(() => {
-    // Update the document title using the browser API
-  });
-
-  
-//clunky, but follow the above and add to the following if statements for the other social medias
 
   return (
     <div className={styles.box}>

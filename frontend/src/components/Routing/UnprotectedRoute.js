@@ -14,10 +14,10 @@ const UnprotectedRoute = (props) => {
 
   const getUnauthenticated = async () => {
     try {
-      await axios.post('http://localhost:5000/cookieCheck/');
+      await axios.post('/cookieCheck/');
       setAuthed(true);
     } catch (err) {
-      localStorage.clear()
+      localStorage.clear();
       setAuthed(false);
     }
     setLoading(false);
@@ -29,12 +29,13 @@ const UnprotectedRoute = (props) => {
     }
 
     callAuthenticate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const show = () => {
     if (loading) {
       return (
-        <div style={{ backgroundColor: '#3d3d3d', height: '100vh' }}></div>
+        <div style={{ backgroundColor: 'var(--slate)', height: '100vh' }}></div>
       );
     } else {
       return !authed ? <Outlet /> : <Navigate to='/dashboard' />;

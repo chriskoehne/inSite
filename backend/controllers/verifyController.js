@@ -1,10 +1,6 @@
-const path = require('path');
 const c = require('../constants/constants');
 
-var verifyService = require(path.resolve(
-  __dirname,
-  '../services/verifyService'
-));
+var verifyService = require('../services/verifyService');
 
 const generateToken = require('../auth/authentication').generateToken;
 
@@ -24,8 +20,8 @@ exports.verify = async function (req, res, next) {
         break;
     }
 
-    generateToken(req.body.id, req.body.email, res);
-    return res.status(200).json({ message: result.message });
+    generateToken(result.user.id, result.user.email, res);
+    return res.status(200).json({ user: result.user });
   } catch (e) {
     console.log(e);
     return res.status(400).json({ message: e.message });

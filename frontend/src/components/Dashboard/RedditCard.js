@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-import LineChart from '../Charts/LineChart';
+// import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
 
@@ -12,10 +12,10 @@ const RedditCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
-  const [messages, setMessages] = useState([]);
-  const [posts, setPosts] = useState([]);
+  // const [messages, setMessages] = useState([]);
+  // const [posts, setPosts] = useState([]);
   const [me, setMe] = useState({});
-  const [updatedToken, setUpdatedToken] = useState('');
+  // const [updatedToken, setUpdatedToken] = useState('');
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -52,10 +52,9 @@ const RedditCard = (props) => {
         setLoading(false);
         return;
       }
-      const result = await axios.post(
-        'http://localhost:5000/reddit/codeToToken/',
-        { code: user.code }
-      );
+      const result = await axios.post('/reddit/codeToToken/', {
+        code: user.code,
+      });
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -90,7 +89,7 @@ const RedditCard = (props) => {
         accessToken: redditToken,
       };
       if (me && !me.name) {
-        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+        const ansMe = await axios.get('/reddit/me', {
           params: redditMeQuery,
         });
 
@@ -100,14 +99,13 @@ const RedditCard = (props) => {
             accessToken: redditToken,
             username: ansMe.data.name,
           };
-          const ansOverview = await axios.get(
-            'http://localhost:5000/reddit/userOverview',
-            { params: redditUserQuery }
-          );
+          const ansOverview = await axios.get('/reddit/userOverview', {
+            params: redditUserQuery,
+          });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            setMessages(ansOverview.data.messages);
-            setPosts(ansOverview.data.posts);
+            // setMessages(ansOverview.data.messages);
+            // setPosts(ansOverview.data.posts);
           }
 
           console.log('loading done');
@@ -118,11 +116,12 @@ const RedditCard = (props) => {
     if (redditToken) {
       callReddit();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redditToken]);
 
   const authenticateReddit = async (e) => {
     e.preventDefault();
-    const result = await axios.post('http://localhost:5000/reddit/login/', {
+    const result = await axios.post('/reddit/login/', {
       email: user.email,
     });
     if (result.data.success) {
@@ -180,7 +179,7 @@ const RedditCard = (props) => {
       return (
         <div className={styles.centered}>
           <Button className={styles.buttons} onClick={authenticateReddit}>
-            Log in to Reddit
+            Authorize Reddit
           </Button>
         </div>
       );
@@ -188,15 +187,18 @@ const RedditCard = (props) => {
   };
   const icon = () => {
     if (redditToken) {
-      return <SocialIcon url='https://reddit.com/user/me' />;
+      return <SocialIcon fgColor='white' url='https://reddit.com/user/me' />;
     } else {
-      return <SocialIcon url='https://reddit.com/' />;
+      return <SocialIcon fgColor='white' url='https://reddit.com/' />;
     }
   };
 
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: '#FF4500' }} className={styles.socialsCard}>
+      <Card
+        style={{ borderColor: 'var(--reddit)' }}
+        className={styles.socialsCard}
+      >
         <Card.Body>
           <Card.Title>{icon()} Reddit</Card.Title>
           <Card.Text></Card.Text>

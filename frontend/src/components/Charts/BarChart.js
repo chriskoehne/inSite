@@ -14,8 +14,6 @@ import { RWebShare } from 'react-web-share';
 import { saveAs } from 'file-saver';
 const pica = require('pica')();
 
-// import faker from "@faker-js/faker";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -94,10 +92,7 @@ const BarChart = (props) => {
       } else {
         const body = { image: base64 };
         try {
-          const cloudinaryRes = await axios.post(
-            'http://localhost:5000/uploadImage/',
-            body
-          );
+          const cloudinaryRes = await axios.post('/uploadImage/', body);
           if (cloudinaryRes.status !== 200) {
             console.log('cloudinary error');
           }
@@ -111,6 +106,7 @@ const BarChart = (props) => {
     if (chartRef && base64) {
       uploadChart();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [base64]);
 
   const saveCanvas = async () => {

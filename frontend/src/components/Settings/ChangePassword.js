@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { Container, Navbar, Row, Button, Modal } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
-import Dashboard from "../Dashboard/Dashboard";
+import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./ChangePassword.module.css";
-import { Alert } from "react-alert";
+// import { Alert } from "react-alert";
 //const c = require('./constants/constants');
 
 //import Dropdown from './Dropdown'
 
 const ChangePassword = (props) => {
-  const { state } = useLocation();
   const [oldPassword, setPassword] = useState("");
   const [newPassword1, setPassword1] = useState("");
   const [newPassword2, setPassword2] = useState("");
@@ -36,7 +33,7 @@ const ChangePassword = (props) => {
     };
 
     axios
-      .post("http://localhost:5000/changePassword", body)
+      .post("/changePassword", body)
       .then((res) => {
         console.log("res is");
         console.log(res);
