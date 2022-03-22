@@ -56,7 +56,7 @@ const YoutubeCard = (props) => {
       }
       console.log("before convert call")
       const result = await axios.post(
-        'http://localhost:5000/youtube/codeToToken/',
+        '/youtube/codeToToken/',
         { code: user.code }
       );
       console.log("after convert call")
@@ -93,12 +93,12 @@ const YoutubeCard = (props) => {
     const callYoutube = async () => {
       setLoading(true);
       if (activity.length == 0) {
-        const act = await axios.get('http://localhost:5000/youtube/activity');
+        const act = await axios.get('/youtube/activity');
         console.log("got activity:")
         console.log(act)
         if (act.status === 200) {
           setActivity(act.data.list);
-          const subs = await axios.get('http://localhost:5000/youtube/subscriptions');
+          const subs = await axios.get('/youtube/subscriptions');
           console.log("got subs")
           console.log(subs)
           if (subs.status === 200) {
@@ -120,7 +120,7 @@ const YoutubeCard = (props) => {
   const authenticateYoutube = async (e) => {
     e.preventDefault();
     //create link to go to
-    const result = await axios.post('http://localhost:5000/youtube/login/', {
+    const result = await axios.post('/youtube/login/', {
       email: user.email,
     });
     if (result.data.success) {

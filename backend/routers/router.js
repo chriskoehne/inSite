@@ -44,13 +44,13 @@ router.post(
 );
 
 
-router.post('/youtube/login', youtubeController.login);
+router.post('/youtube/login', auth.verifyToken, youtubeController.login);
 
-router.post('/youtube/codeToToken', youtubeController.convert);
+router.post('/youtube/codeToToken', auth.verifyToken, youtubeController.convert);
 
-router.get('/youtube/activity', youtubeController.activity);
+router.get('/youtube/activity', auth.verifyToken, youtubeController.activity);
 
-router.get('/youtube/subscriptions', youtubeController.subscriptions);
+router.get('/youtube/subscriptions', auth.verifyToken, youtubeController.subscriptions);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 
