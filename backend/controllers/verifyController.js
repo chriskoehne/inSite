@@ -11,10 +11,10 @@ const generateToken = require('../auth/authentication').generateToken;
 exports.verify = async function (req, res, next) {
   try {
     /* FOR DEVELOPMENT ONLY */
-    // let result = c.SUCCESS;
+    let result = c.SUCCESS;
 
     /* UNCOMMENT THIS */
-    let result = await verifyService.check(req.body.email, req.body.code);
+    // let result = await verifyService.check(req.body.email, req.body.code);
 
     switch (result) {
       case c.USER_NOT_FOUND:

@@ -34,6 +34,11 @@ const redditController = require(path.resolve(
   '../controllers/redditController'
 ));
 
+const youtubeController = require(path.resolve(
+  __dirname,
+  '../controllers/youtubeController'
+));
+
 const uploadController = require(path.resolve(
   __dirname,
   '../controllers/uploadController'
@@ -61,6 +66,10 @@ router.post("/userDelete", userCreationController.deleteUser);
 router.post("/verifyUser", verifyController.verify);
 
 router.post('/login', userLoginController.login);
+
+
+router.post('/youtube/login', youtubeController.login);
+
 
 router.post('/reddit/login', redditController.login);
 
