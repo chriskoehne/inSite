@@ -1,12 +1,5 @@
 const c = require('../constants/constants');
-
-try {
-  var config = require('../config.json');
-} catch {
-  var config = {};
-}
-
-const authToken = process.env.TWILIO_AUTH_TOKEN || config.TWILIO_AUTH_TOKEN;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 var authy = require('authy')(authToken);
 
 const User = require('../database/models/User');

@@ -1,4 +1,4 @@
-const path = require('path');
+
 const c = require('../constants/constants');
 
 var changePasswordService = require('../services/changePasswordService');

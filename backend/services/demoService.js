@@ -4,7 +4,6 @@
  * @author Chris Koehne <cdkoehne@gmail.com>
  */
 
-const path = require('path');
 const bcrypt = require('bcrypt');
 
 exports.copyPasta = async function (parameters) {

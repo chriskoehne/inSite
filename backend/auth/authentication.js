@@ -5,12 +5,7 @@
  */
 
 const jwt = require('jsonwebtoken');
-try {
-  var config = require('../config.json');
-} catch {
-  var config = {};
-}
-const JWT_SECRET = process.env.JWT_SECRET || config.JWT_SECRET;
+
 const jwt_decode = require('jwt-decode');
 
 exports.verifyToken = (req, res, next) => {
@@ -18,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
     const token = req.cookies['inSite-token'] || '';
 
     if (token) {
-      let verified = jwt.verify(token, JWT_SECRET);
+      let verified = jwt.verify(token, process.env.JWT_SECRET);
       if (!verified) {
         return this.removeToken(req, res, true);
       } else {
@@ -36,7 +31,7 @@ exports.verifyToken = (req, res, next) => {
 };
 
 exports.generateToken = (id, email, res, overwrite) => {
-  const token = jwt.sign({ id, email }, JWT_SECRET, {
+  const token = jwt.sign({ id, email }, process.env.JWT_SECRET, {
     expiresIn: '1hr', // will change this to a variable later
   });
   return res.cookie('inSite-token', token, {

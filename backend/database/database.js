@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 const path = require("path");
-try {
-  var config = require('../config.json');
-} catch {
-  var config = {};
-}
-const uri = process.env.DATABASE_URI || config.DATABASE_URI;
+const uri = process.env.DATABASE_URI;
 
 mongoose.connect(uri, {
     useNewUrlParser: true}).then(

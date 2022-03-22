@@ -6,7 +6,6 @@
 
 var express = require('express');
 var router = express.Router();
-const path = require('path');
 
 const demoController = require('../controllers/demoController');
 

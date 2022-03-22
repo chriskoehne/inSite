@@ -1,4 +1,3 @@
-const path = require('path');
 const c = require('../constants/constants');
 
 var verifyService = require('../services/verifyService');

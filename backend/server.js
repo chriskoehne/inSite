@@ -9,6 +9,7 @@ console.log('\x1b[36m%s\x1b[0m', 'Starting BACKEND...');
 const express = require('express');
 var cors = require('cors');
 const cookieParser = require('cookie-parser');
+require('dotenv').config()
 
 const PORT = process.env.PORT || 5000; //config port in env or jwt (dotenv required)
 

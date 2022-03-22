@@ -1,10 +1,5 @@
-const path = require('path');
 const bcrypt = require('bcrypt');
-try {
-  var config = require('../config.json');
-} catch {
-  var config = {};
-}
+
 const c = require('../constants/constants');
 
 const User = require('../database/models/User');
