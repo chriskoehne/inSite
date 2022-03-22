@@ -36,3 +36,31 @@ exports.convert = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.activity = async function (req, res, next) {
+  try {
+    let result = await youtubeService.activity(req, res); //add await?
+    //two fields
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.subscriptions = async function (req, res, next) {
+  try {
+    let result = await youtubeService.subscriptions(req, res); //add await?
+    //two fields
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};

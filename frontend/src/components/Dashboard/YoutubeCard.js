@@ -12,6 +12,8 @@ const YoutubeCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [updatedToken, setUpdatedToken] = useState('');
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [activity, setActivity] = useState([]);
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
@@ -80,49 +82,38 @@ const YoutubeCard = (props) => {
   }, [user]);
 
 // a separate use effect to store the token in local storage and make a call for the initial graph
-//   useEffect(() => {
-//     if (!hasToken() && redditToken) {
-//       localStorage.setItem(
-//         'redditToken',
-//         JSON.stringify({ token: redditToken, date: Date.now() })
-//       );
-//     }
+  useEffect(() => {
+    if (!hasToken() && youtubeToken) {
+      localStorage.setItem(
+        'youtubeToken',
+        JSON.stringify({ token: youtubeToken, date: Date.now() })
+      );
+    }
 
-//     const callReddit = async () => {
-//       setLoading(true);
-//       const redditMeQuery = {
-//         accessToken: redditToken,
-//       };
-//       if (me && !me.name) {
-//         const ansMe = await axios.get('http://localhost:5000/reddit/me', {
-//           params: redditMeQuery,
-//         });
+    const callYoutube = async () => {
+      setLoading(true);
+      if (activity.length == 0) {
+        const act = await axios.get('http://localhost:5000/youtube/activity');
+        console.log("got activity:")
+        console.log(act)
+        if (act.status === 200) {
+          setActivity(act.data.list);
+          const subs = await axios.get('http://localhost:5000/youtube/subscriptions');
+          console.log("got subs")
+          console.log(subs)
+          if (subs.status === 200) {
+            setSubscriptions(subs.data.list);
+          }
 
-//         if (ansMe.status === 200) {
-//           setMe(ansMe.data);
-//           const redditUserQuery = {
-//             accessToken: redditToken,
-//             username: ansMe.data.name,
-//           };
-//           const ansOverview = await axios.get(
-//             'http://localhost:5000/reddit/userOverview',
-//             { params: redditUserQuery }
-//           );
-//           if (ansOverview.status === 200) {
-//             setComments(ansOverview.data.comments);
-//             setMessages(ansOverview.data.messages);
-//             setPosts(ansOverview.data.posts);
-//           }
-
-//           console.log('loading done');
-//         }
-//       }
-//       setLoading(false);
-//     };
-//     if (redditToken) {
-//       callReddit();
-//     }
-//   }, [redditToken]);
+          console.log('loading done');
+        }
+      }
+      setLoading(false);
+    };
+    if (youtubeToken) {
+      callYoutube();
+    }
+  }, [youtubeToken]);
 
 
 

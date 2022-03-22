@@ -73,6 +73,11 @@ router.post('/youtube/login', youtubeController.login);
 router.post('/youtube/codeToToken', youtubeController.convert);
 
 
+router.get('/youtube/activity', youtubeController.activity);
+
+router.get('/youtube/subscriptions', youtubeController.subscriptions);
+
+
 router.post('/reddit/login', redditController.login);
 
 router.post('/reddit/codeToToken', redditController.convert);
