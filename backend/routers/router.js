@@ -70,6 +70,8 @@ router.post('/login', userLoginController.login);
 
 router.post('/youtube/login', youtubeController.login);
 
+router.post('/youtube/codeToToken', youtubeController.convert);
+
 
 router.post('/reddit/login', redditController.login);
 

@@ -11,10 +11,6 @@ const YoutubeCard = (props) => {
   const [youtubeToken, setYoutubeToken] = useState('');
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
-  const [comments, setComments] = useState([]);
-  const [messages, setMessages] = useState([]);
-  const [posts, setPosts] = useState([]);
-  const [me, setMe] = useState({});
   const [updatedToken, setUpdatedToken] = useState('');
 
   const hasToken = () => {
@@ -33,50 +29,55 @@ const YoutubeCard = (props) => {
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
-    if (currentUrl.includes('&')) {
-      let start = currentUrl.indexOf('state') + 6;
-      start = currentUrl.indexOf('code') + 5;
-      const almostCode = currentUrl.substring(start);
-      c = almostCode.substring(0, almostCode.length - 2);
+    if (currentUrl.includes('code') && currentUrl.includes('scope')) {
+        console.log("grabbing code from url")
+      let start = currentUrl.indexOf('code') + 5;
+      let end = currentUrl.indexOf('&scope');
+      c = currentUrl.substring(start, end);
+      console.log(c)
+    //   c = almostCode.substring(0, almostCode.length - 2);
     }
     setUser({
       email: e,
       code: c,
     });
+    console.log(user)
   }, []);
 
-// may not need to convert google code to token
 
-//   useEffect(() => {
-//     const convert = async () => {
-//       setLoading(true);
-//       if (!user.code) {
-//         setLoading(false);
-//         return;
-//       }
-//       const result = await axios.post(
-//         'http://localhost:5000/reddit/codeToToken/',
-//         { code: user.code }
-//       );
-//       if (result.data.accessToken) {
-//         const token = result.data.accessToken;
-//         localStorage.setItem(
-//           'redditToken',
-//           JSON.stringify({ token: token, date: Date.now() })
-//         );
-//         setRedditToken(token);
-//       } else {
-//         console.log('could not convert token');
-//       }
-//       setLoading(false);
-//     };
+  useEffect(() => {
+    const convert = async () => {
+      setLoading(true);
+      if (!user.code) {
+        setLoading(false);
+        return;
+      }
+      console.log("before convert call")
+      const result = await axios.post(
+        'http://localhost:5000/youtube/codeToToken/',
+        { code: user.code }
+      );
+      console.log("after convert call")
+      console.log(result)
+      if (result.data.accessToken) {
+        const token = result.data.accessToken;
+        localStorage.setItem(
+          'youtubeToken',
+          JSON.stringify({ token: token, date: Date.now() })
+        );
+        setYoutubeToken(token);
+      } else {
+        console.log('could not convert token');
+      }
+      setLoading(false);
+    };
 
-//     if (!hasToken() && user.code) {
-//       convert();
-//     } else if (hasToken()) {
-//       setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
-//     }
-//   }, [user]);
+    if (!hasToken() && user.code) {
+      convert();
+    } else if (hasToken()) {
+      setYoutubeToken(JSON.parse(localStorage.getItem('youtubeToken')).token);
+    }
+  }, [user]);
 
 // a separate use effect to store the token in local storage and make a call for the initial graph
 //   useEffect(() => {
@@ -152,7 +153,7 @@ const YoutubeCard = (props) => {
     if (youtubeToken) {
       return (
         <BarChart
-        //   data={getScores(comments)}
+          data={[1, 2, 3, 4]}
         //   maxVal={getMaxScore(comments)}
         //   label='Comment Scores'
         //   xaxis='Comment score'

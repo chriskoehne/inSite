@@ -5,17 +5,17 @@ const path = require('path');
 const config = require(path.resolve(__dirname, '../config.json'));
 const User = require(path.resolve(__dirname, '../database/models/user'));
 
+const oauth2Client = new google.auth.OAuth2(
+  config.youtubeClientId,
+  config.youtubeClientSecret,
+  'https://localhost:3000/dashboard' //maybe dont need?
+);
+
 exports.login = async function (email) {
   try {
     console.log('In Login');
     // const result = await gapi.auth2.getAuthInstance()
     // .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
-
-    const oauth2Client = new google.auth.OAuth2(
-        config.youtubeClientId,
-        config.youtubeClientSecret,
-        'https://localhost:3000/dashboard' //maybe dont need?
-      );
       
       const scopes = [
         'https://www.googleapis.com/auth/youtube.readonly',
@@ -35,6 +35,25 @@ exports.login = async function (email) {
   } catch (err) {
     console.log(err);
     console.log('big error catch');
+    return err;
+  }
+};
+
+exports.convert = async function (req, res) {
+  try {
+    console.log(req.body);
+    const code = req.body.code;
+
+    const {tokens} = await oauth2Client.getToken(code)
+    oauth2Client.setCredentials(tokens);
+
+    console.log("in convert service")
+    console.log(tokens)
+    
+    return tokens; //perhaps unnecessary given it is stored in the backend client?
+  } catch (err) {
+    console.log('big error catch');
+    // console.log(err)
     return err;
   }
 };
