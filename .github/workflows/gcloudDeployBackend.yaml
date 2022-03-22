@@ -17,5 +17,5 @@ jobs:
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v0'
       with:
-        working_directory: './backend'
+        working_directory: './backend/'
 
