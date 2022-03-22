@@ -75,7 +75,6 @@ ChartJS.register(
 );
 
 const RedditPage = (props) => {
-
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [me, setMe] = useState({});
@@ -145,7 +144,7 @@ const RedditPage = (props) => {
         accessToken: redditToken,
       };
       if (me && !me.name) {
-        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+        const ansMe = await axios.get('/reddit/me', {
           params: redditMeQuery,
         });
         if (ansMe.status === 200) {
@@ -155,10 +154,9 @@ const RedditPage = (props) => {
             accessToken: redditToken,
             username: ansMe.data.name,
           };
-          const ansOverview = await axios.get(
-            'http://localhost:5000/reddit/userOverview',
-            { params: redditUserQuery }
-          );
+          const ansOverview = await axios.get('/reddit/userOverview', {
+            params: redditUserQuery,
+          });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
             // setMessages(ansOverview.data.messages);
@@ -178,12 +176,9 @@ const RedditPage = (props) => {
             });
             setmostControlversialPost(mostControversial);
           }
-          const ansComments = await axios.get(
-            'http://localhost:5000/reddit/userComments',
-            {
-              params: redditUserQuery,
-            }
-          );
+          const ansComments = await axios.get('/reddit/userComments', {
+            params: redditUserQuery,
+          });
           if (ansComments.status === 200) {
             let array = ansComments.data.overview.data.children;
             //setCommentByMonths
@@ -250,24 +245,18 @@ const RedditPage = (props) => {
             //console.log(commentByMonth)
           }
 
-          const ansSubKarma = await axios.get(
-            'http://localhost:5000/reddit/userSubKarma',
-            {
-              params: redditUserQuery,
-            }
-          );
+          const ansSubKarma = await axios.get('/reddit/userSubKarma', {
+            params: redditUserQuery,
+          });
           if (ansSubKarma.status === 200) {
             // console.log("Sub Karma Info Receieved!")
             setSubKarmaList(ansSubKarma.data.subKarmaList);
             // console.log(subKarmaList);
           }
 
-          const ansTotalKarma = await axios.get(
-            'http://localhost:5000/reddit/userTotalKarma',
-            {
-              params: redditUserQuery,
-            }
-          );
+          const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
+            params: redditUserQuery,
+          });
           if (ansTotalKarma.status === 200) {
             // console.log("Total Karma Info Receieved!")
 
@@ -385,8 +374,8 @@ const RedditPage = (props) => {
   };
 
   const isDarkmode = () => {
-    return document.body.classList.contains('dark') ? 'light' :'dark'
-  }
+    return document.body.classList.contains('dark') ? 'light' : 'dark';
+  };
 
   //clunky, but follow the above and add to the following if statements for the other social medias
 
@@ -406,7 +395,7 @@ const RedditPage = (props) => {
   ) : (
     <div className={styles.box}>
       <Carousel
-        variant={(isDarkmode())}
+        variant={isDarkmode()}
         className={styles.slideshow}
         activeIndex={index}
         onSelect={handleSelect}

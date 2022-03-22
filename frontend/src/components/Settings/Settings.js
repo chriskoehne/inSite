@@ -64,10 +64,7 @@ const Customization = () => {
           email: localStorage.getItem('email'),
           darkmode: darkmode,
         };
-        const res = await axios.post(
-          'http://localhost:5000/user/settings/darkmode',
-          body
-        );
+        const res = await axios.post('/user/settings/darkmode', body);
         if (res.status === 200) {
           // console.log(res)
         } else {
@@ -172,7 +169,7 @@ const DeleteAccount = () => {
       email: email,
     };
     try {
-      const res = await axios.post('http://localhost:5000/userDelete/', body);
+      const res = await axios.post('/userDelete/', body);
       if (res.status === 200) {
         setModal(false);
         logout();
@@ -246,7 +243,7 @@ const ChangePassword = () => {
       newPassword: newPassword,
     };
     try {
-      let res = await axios.post('http://localhost:5000/changePassword', body);
+      let res = await axios.post('/changePassword', body);
       console.log('res is');
       console.log(res);
       console.log('password update successful');

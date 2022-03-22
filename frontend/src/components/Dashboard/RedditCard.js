@@ -52,10 +52,9 @@ const RedditCard = (props) => {
         setLoading(false);
         return;
       }
-      const result = await axios.post(
-        'http://localhost:5000/reddit/codeToToken/',
-        { code: user.code }
-      );
+      const result = await axios.post('/reddit/codeToToken/', {
+        code: user.code,
+      });
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -90,7 +89,7 @@ const RedditCard = (props) => {
         accessToken: redditToken,
       };
       if (me && !me.name) {
-        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+        const ansMe = await axios.get('/reddit/me', {
           params: redditMeQuery,
         });
 
@@ -100,10 +99,9 @@ const RedditCard = (props) => {
             accessToken: redditToken,
             username: ansMe.data.name,
           };
-          const ansOverview = await axios.get(
-            'http://localhost:5000/reddit/userOverview',
-            { params: redditUserQuery }
-          );
+          const ansOverview = await axios.get('/reddit/userOverview', {
+            params: redditUserQuery,
+          });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
             // setMessages(ansOverview.data.messages);
@@ -123,7 +121,7 @@ const RedditCard = (props) => {
 
   const authenticateReddit = async (e) => {
     e.preventDefault();
-    const result = await axios.post('http://localhost:5000/reddit/login/', {
+    const result = await axios.post('/reddit/login/', {
       email: user.email,
     });
     if (result.data.success) {
@@ -197,7 +195,10 @@ const RedditCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: 'var(--reddit)' }} className={styles.socialsCard}>
+      <Card
+        style={{ borderColor: 'var(--reddit)' }}
+        className={styles.socialsCard}
+      >
         <Card.Body>
           <Card.Title>{icon()} Reddit</Card.Title>
           <Card.Text></Card.Text>

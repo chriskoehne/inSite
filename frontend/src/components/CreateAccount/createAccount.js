@@ -32,7 +32,7 @@ const CreateAccount = (props) => {
       code: smsCode,
     };
     try {
-      const res = await axios.post('http://localhost:5000/verifyUser/', body);
+      const res = await axios.post('/verifyUser/', body);
       if (res.status === 200) {
         localStorage.setItem('email', email);
         props.navigate('/dashboard', { state: { email: email } });
@@ -79,7 +79,7 @@ const CreateAccount = (props) => {
       return;
     } else {
       axios
-        .post('http://localhost:5000/userCreation/', body)
+        .post('/userCreation/', body)
         .then((res) => {
           console.log('now res is');
           console.log(res);

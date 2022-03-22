@@ -1,9 +1,5 @@
-const path = require('path');
-const bcrypt = require('bcrypt');
 const Reddit = require('reddit');
-const { link } = require('fs');
-const config = require(path.resolve(__dirname, '../config.json'));
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 var btoa = require('btoa');
 var axios = require('axios');
 const { Agent } = require('http');
@@ -19,8 +15,8 @@ exports.test = async function (req, res) {
     const reddit = new Reddit({
       username: result.redditUsername,
       password: result.redditPassword,
-      appId: config.redditAppId,
-      appSecret: config.redditSecret,
+      appId: process.env.REDDIT_APP_ID,
+      appSecret: process.env.REDDIT_SECRET,
       userAgent: 'MyApp/1.0.0 (http://example.com)',
     });
 
@@ -34,11 +30,11 @@ exports.test = async function (req, res) {
 exports.login = async function (email) {
   try {
     console.log('In Login');
-
+    const clientID = process.env.REDDIT_APP_ID;
     //TODO change the client_id to grab from config file
     const link =
       'https://www.reddit.com/api/v1/authorize?client_id=' +
-      config.redditAppId +
+      clientID +
       '&response_type=code&state=' +
       email +
       '&redirect_uri=https://127.0.0.1:3000/dashboard/&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
@@ -65,7 +61,12 @@ exports.convert = async function (req, res) {
     params.set('redirect_uri', 'https://127.0.0.1:3000/dashboard/');
 
     const body = params;
-    const auth = btoa(config.redditAppId + ':' + config.redditSecret);
+    const redditAppId = process.env.REDDIT_APP_ID;
+    const redditSecret = process.env.REDDIT_SECRET;
+
+    const auth = btoa(
+      redditAppId + ':' + redditSecret
+    );
     const finalAuth = 'Basic ' + auth;
 
     const headers = {

@@ -1,10 +1,6 @@
-const path = require('path');
 const c = require('../constants/constants');
 
-var loginService = require(path.resolve(
-  __dirname,
-  '../services/userLoginService'
-));
+var loginService = require('../services/userLoginService');
 
 exports.login = async function (req, res, next) {
   try {
