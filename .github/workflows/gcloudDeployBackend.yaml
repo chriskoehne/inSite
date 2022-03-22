@@ -13,9 +13,7 @@ jobs:
       uses: 'google-github-actions/auth@v0'
       with:
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-
-    - id: 'deploy'
-      uses: 'google-github-actions/deploy-appengine@v0'
-      with:
-        working_directory: '/home/runner/work/inSite/inSite/backend/'
+        
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
 
