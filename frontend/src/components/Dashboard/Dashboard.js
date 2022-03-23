@@ -2,6 +2,7 @@ import React from 'react';
 import { Row } from 'react-bootstrap';
 import InsightCard from './InsightCard';
 import RedditCard from './RedditCard';
+import YoutubeCard from './YoutubeCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 
@@ -29,13 +30,17 @@ const Dashboard = (props) => {
           isLoggedIn={true}
           navigate={props.navigate}
         />
-        <InsightCard
+        <YoutubeCard
+        navigate={props.navigate}
+        setExternalUrl={props.setExternalUrl}
+        />
+        {/* <InsightCard
           title='YouTube'
           text='YouTube'
           borderColor='var(--youtube)'
           isLoggedIn={true}
           navigate={props.navigate}
-        />
+        /> */}
       </Row>
     </div>
   );

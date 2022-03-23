@@ -19,6 +19,8 @@ const uploadController = require('../controllers/uploadController');
 
 const changePasswordController = require('../controllers/changePasswordController');
 
+const youtubeController = require('../controllers/youtubeController');
+
 const auth = require('../auth/authentication');
 
 router.get('/demo0', demoController.showDemo0);
@@ -40,6 +42,15 @@ router.post(
   auth.verifyToken,
   userController.updateDarkmode
 );
+
+
+router.post('/youtube/login', auth.verifyToken, youtubeController.login);
+
+router.post('/youtube/codeToToken', auth.verifyToken, youtubeController.convert);
+
+router.get('/youtube/activity', auth.verifyToken, youtubeController.activity);
+
+router.get('/youtube/subscriptions', auth.verifyToken, youtubeController.subscriptions);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 
