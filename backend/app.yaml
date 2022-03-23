@@ -1,12 +1,2 @@
 runtime: nodejs16
 
-env_variables:
-  CLOUDINARY_API_KEY: '${{ secrets.CLOUDINARY_API_KEY }}'
-  CLOUDINARY_API_SECRET: '${{ secrets.CLOUDINARY_API_SECRET }}'
-  CLOUDINARY_CLOUD_NAME: '${{ secrets.CLOUDINARY_CLOUD_NAME }}'
-  DATABASE_URI: '${{ secrets.DATABASE_URI }}'
-  JWT_SECRET: '${{ secrets.JWT_SECRET }}'
-  REDDIT_APP_ID: '${{ secrets.REDDIT_APP_ID }}'
-  REDDIT_SECRET: '${{ secrets.REDDIT_SECRET }}'
-  TWILIO_AUTH_TOKEN: '${{ secrets.TWILIO_AUTH_TOKEN }}'
-
