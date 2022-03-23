@@ -11,8 +11,8 @@ exports.check = async function (email, code) {
     if (!user) {
       return c.USER_NOT_FOUND;
     }
-    console.log('user is');
-    console.log(user);
+    // console.log('user is');
+    // console.log(user);
     return new Promise((resolve) => {
       authy.verify(
         user.authyId,
@@ -23,6 +23,7 @@ exports.check = async function (email, code) {
             console.log('error caught');
             // res.status(400).send({ message: "invalid code" });
             resolve(c.AUTHY_VERIFY_ERROR);
+
           } else {
             console.log(authyres);
 

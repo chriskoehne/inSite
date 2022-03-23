@@ -104,26 +104,6 @@ exports.userSubKarma = async function (req, res, next) {
     console.log("controller, getting Sub Karma");
     let result = await redditService.userSubKarma(req, res); //add await?
 
-    // console.log("Subreddit Karma");
-    // console.log(result.data);
-
-    // var scores = {};
-    // for (item in result.data) {
-    //   // console.log(result.data[item].sr);
-    //   scores[result.data[item].sr] = result.data[item].comment_karma + result.data[item].link_karma;
-    // }
-    
-    // console.log(scores);
-
-    // var sort_items = Object.keys(scores).map(function(key) {
-    //   return [key, scores[key]];
-    // });
-
-    // sort_items.sort(function(first, second) {
-    //   return second[1] - first[1];
-    // });
-
-    // console.log(items.slice(0, 5));
 
     if (result) {
       return res
@@ -142,10 +122,6 @@ exports.userTotalKarma = async function (req, res, next) {
   try {
     console.log("controller, getting Total Karma");
     let result = await redditService.userTotalKarma(req, res); //add await?
-
-    // console.log("Comment Karma: " + result.data.comment_karma);
-    // console.log("Link Karma: " + result.data.link_karma);
-    // console.log("Award Karma: " + result.data.awardee_karma);
       
     if (result) {
       return res

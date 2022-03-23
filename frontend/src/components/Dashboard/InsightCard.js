@@ -11,10 +11,6 @@ const InsightCard = (props) => {
   let display;
   let icon;
   switch (title) {
-    case 'Twitter':
-      display = <LineChartDemo color={'#55ADEE'} />;
-      icon = <SocialIcon fgColor='white' url='https://twitter.com/usernamehere' />;
-      break;
     case 'Instagram':
       display = <LineChartDemo color={'#E94475'} />;
       icon = <SocialIcon fgColor='white' url='https://instagram.com/kanyewest' />;
