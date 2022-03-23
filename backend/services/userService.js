@@ -103,6 +103,7 @@ exports.check = async function (email, password) {
       });
     });
   } catch (err) {
+    console.log(err)
     return err;
   }
 };

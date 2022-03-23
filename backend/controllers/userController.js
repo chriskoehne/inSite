@@ -1,4 +1,5 @@
 const c = require('../constants/constants');
+const mongoose = require('mongoose')
 
 var userService = require('../services/userService');
 
@@ -54,6 +55,9 @@ exports.login = async function (req, res, next) {
       case c.INCORRECT_PASSWORD:
       case c.GENERAL_TRY_CATCH_ERR:
         return res.status(400).json({ message: result });
+    }
+    if (!mongoose.isValidObjectId(result)) {
+      return res.status(400).json({ message: result.message });
     }
     //success
     return res.status(200).json({ message: result }); //should be the user's id
