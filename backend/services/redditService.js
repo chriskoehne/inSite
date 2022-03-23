@@ -3,8 +3,13 @@ const User = require('../database/models/User');
 var btoa = require('btoa');
 var axios = require('axios');
 const { Agent } = require('http');
-var formData = require('form-data');
 var searchParams = require('url-search-params');
+
+if (process.env.DEV) {
+  var redirectURI = 'https://127.0.0.1:3000/dashboard/'
+} else {
+  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net'
+}
 
 exports.test = async function (req, res) {
   try {
@@ -37,7 +42,7 @@ exports.login = async function (email) {
       clientID +
       '&response_type=code&state=' +
       email +
-      '&redirect_uri=https://127.0.0.1:3000/dashboard/&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
+      '&redirect_uri=' + redirectURI + '&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
 
     console.log('link');
     console.log(link);
@@ -58,7 +63,7 @@ exports.convert = async function (req, res) {
     var params = new searchParams();
     params.set('grant_type', 'authorization_code');
     params.set('code', code);
-    params.set('redirect_uri', 'https://127.0.0.1:3000/dashboard/');
+    params.set('redirect_uri', redirectURI);
 
     const body = params;
     const redditAppId = process.env.REDDIT_APP_ID;
