@@ -3,8 +3,8 @@ name: Deploy Frontend to S3
 on:
   push:
     branches:
-      # - chris/deploymentTest
-      - none
+      - chris/deploymentTest
+      - prod
 
 jobs:
   build:
