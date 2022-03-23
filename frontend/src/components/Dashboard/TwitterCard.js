@@ -54,6 +54,29 @@ const TwitterCard = (props) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const callTwitter = async () => {
+      const twitterQuery = {
+        accessToken: twitterToken,
+      };
+      const twitterRes = await axios.get(
+        'http://localhost:5000/twitter/test/',
+        { params: twitterQuery }
+      );
+      if (twitterRes) {
+        console.log('Received Tweets from Twitter!');
+        console.log(twitterRes.data);
+      } else {
+        console.log('Could not get Tweets from Twitter!');
+      }
+    };
+
+    if (twitterToken) {
+      console.log('Calling Twitter');
+      callTwitter();
+    }
+  }, [twitterToken]);
+
   const authenticateTwitter = async (e) => {
     e.preventDefault();
     const result = await axios.post('http://localhost:5000/twitter/login/', {

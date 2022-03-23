@@ -16,8 +16,8 @@ exports.check = async function (email, code) {
     if (!user) {
       return c.USER_NOT_FOUND;
     }
-    console.log('user is');
-    console.log(user);
+    // console.log('user is');
+    // console.log(user);
     return new Promise((resolve) => {
       authy.verify(
         user.authyId,
