@@ -97,6 +97,7 @@ exports.check = async function (email, password) {
           resolve(c.AUTHY_REQUEST_SMS_ERR); //reject?
         } else {
           console.log(authyres.message);
+          console.log(result.id)
           resolve(result.id);
         }
       });
