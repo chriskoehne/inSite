@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set Environment Variables
-        uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
         working-directory: ./backend/
+        uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
         env:
           CLOUDINARY_API_KEY: '${{ secrets.CLOUDINARY_API_KEY }}'
           CLOUDINARY_API_SECRET: '${{ secrets.CLOUDINARY_API_SECRET }}'
