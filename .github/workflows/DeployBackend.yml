@@ -16,6 +16,8 @@ jobs:
 
       - name: Set Environment Variables
         uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
+        with:
+          path: "./backend/app.yaml"
         env:
           CLOUDINARY_API_KEY: '${{ secrets.CLOUDINARY_API_KEY }}'
           CLOUDINARY_API_SECRET: '${{ secrets.CLOUDINARY_API_SECRET }}'
