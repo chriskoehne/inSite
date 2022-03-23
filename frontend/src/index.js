@@ -10,7 +10,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:5000/api'
-    : 'http://ec2-3-80-49-126.compute-1.amazonaws.com/api';
+    : 'https://insite-backend-344821.ue.r.appspot.com/api';
 
 ReactDOM.render(
   <React.StrictMode>

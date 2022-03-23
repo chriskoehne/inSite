@@ -23,6 +23,7 @@ const corsOptions = {
     'http://localhost:3000',
     'https://localhost:3000',
     'https://127.0.0.1:3000',
+    'https://d33jcvm0fuhn35.cloudfront.net'
   ],
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
