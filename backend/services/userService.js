@@ -102,7 +102,7 @@ exports.check = async function (email, password) {
       });
     });
   } catch (err) {
-    return c.GENERAL_TRY_CATCH_ERR;
+    return err;
   }
 };
 

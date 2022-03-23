@@ -9,7 +9,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'development'
-    ? 'http://localhost:5000/api'
+    ? 'https://insite-backend-344821.ue.r.appspot.com/api'
     : 'https://insite-backend-344821.ue.r.appspot.com/api';
 
 ReactDOM.render(

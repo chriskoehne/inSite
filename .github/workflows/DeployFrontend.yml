@@ -23,7 +23,7 @@ jobs:
 
       - name: Build React App
         working-directory: ./frontend
-        run: npm install && npm run build
+        run: npm ci && npm run build
 
       - name: Deploy app build to S3 bucket
         working-directory: ./frontend
