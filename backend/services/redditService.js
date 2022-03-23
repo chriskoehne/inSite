@@ -8,7 +8,7 @@ var searchParams = require('url-search-params');
 if (process.env.DEV) {
   var redirectURI = 'https://127.0.0.1:3000/dashboard/'
 } else {
-  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard/'
+  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard'
 }
 
 exports.test = async function (req, res) {
