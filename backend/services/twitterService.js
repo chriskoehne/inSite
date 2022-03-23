@@ -19,7 +19,7 @@ exports.login = async function (email) {
 
     const link =
     'https://twitter.com/i/oauth2/authorize?response_type=code&client_id=' +
-    config.twitterClientID +
+    process.env.TWITTER_CLIENT_ID +
     '&redirect_uri=https%3A%2F%2F127.0.0.1%3A3000%2Fdashboard&scope=tweet.read%20tweet.write%20users.read%20follows.read%20follows.write%20like.read&state=' +
     email +
     '&code_challenge=' + 
@@ -47,7 +47,7 @@ exports.convert = async function (req, res) {
     params.set('code_verifier', 'challenge')
 
     const body = params;
-    const auth = btoa(config.twitterClientID + ':' + config.twitterClientSecret);
+    const auth = btoa(process.env.TWITTER_CLIENT_ID + ':' + process.env.TWITTER_CLIENT_SECRET);
     const finalAuth = 'Basic ' + auth;
 
     const headers = {
