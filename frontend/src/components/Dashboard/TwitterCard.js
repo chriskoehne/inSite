@@ -34,7 +34,7 @@ const TwitterCard = (props) => {
         return;
       }
       const result = await axios.post(
-        'http://localhost:5000/twitter/codeToToken/',
+        '/twitter/codeToToken/',
         { code: user.code }
       );
       console.log(result.data);
@@ -60,7 +60,7 @@ const TwitterCard = (props) => {
         accessToken: twitterToken,
       };
       const twitterRes = await axios.get(
-        'http://localhost:5000/twitter/test/',
+        '/twitter/test/',
         { params: twitterQuery }
       );
       if (twitterRes) {
@@ -79,7 +79,7 @@ const TwitterCard = (props) => {
 
   const authenticateTwitter = async (e) => {
     e.preventDefault();
-    const result = await axios.post('http://localhost:5000/twitter/login/', {
+    const result = await axios.post('/twitter/login/', {
       email: user.email,
     });
     if (result.data.success) {

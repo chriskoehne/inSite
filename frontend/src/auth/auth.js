@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export async function authenticate(props) {
   try {
-    await axios.post('http://localhost:5000/cookieCheck/');
+    await axios.post('/cookieCheck/');
     return 'authenticated';
   } catch (err) {
     props.navigate('/welcome');
@@ -17,7 +17,7 @@ export async function authenticate(props) {
 
 export async function unauthedOnly(props) {
   try {
-    await axios.post('http://localhost:5000/cookieCheck/');
+    await axios.post('/cookieCheck/');
   } catch (err) {
     return;
   }
@@ -28,7 +28,7 @@ export async function logout(props) {
   try {
     localStorage.clear();
     document.body.classList.remove('dark');
-    await axios.post('http://localhost:5000/logout/');
+    await axios.post('/logout/');
   } catch (err) {
     props.navigate('/welcome');
   }
