@@ -71,6 +71,10 @@ router.post('/twitter/login', auth.verifyToken, twitterController.login);
 
 router.post('/twitter/codeToToken', auth.verifyToken, twitterController.convert);
 
-router.get('/twitter/test', auth.verifyToken, twitterController.test);
+router.get(
+  '/twitter/test', 
+  auth.verifyToken, 
+  twitterController.tes
+);
 
 module.exports = router;
