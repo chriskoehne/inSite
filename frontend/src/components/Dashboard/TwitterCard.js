@@ -94,19 +94,34 @@ const TwitterCard = (props) => {
     if (loading) {
       return <h2>Loading...</h2>;
     }
-    return (
-      <div className={styles.centered}>
-        <Button className={styles.buttons} onClick={authenticateTwitter}>
-          Authorize Twitter
-        </Button>
-      </div>
-    );
+    if (twitterToken) {
+      return (
+        <div className={styles.centered}>
+          <Button className={styles.buttons} onClick={function () {
+            props.navigate('twitter', {
+              state: { email: user.email, accessToken: twitterToken },
+            });
+            }}>
+            Navigate to Twitter
+          </Button>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className={styles.centered}>
+          <Button className={styles.buttons} onClick={authenticateTwitter}>
+            Authorize Twitter
+          </Button>
+        </div>
+      );
+    }
   };
 
   const icon = () => {
     return <SocialIcon fgColor='white' url='https://twitter.com/' />;
   };
-
+  
   return (
     <Col className={styles.cardCol}>
       <Card style={{ borderColor: 'var(--reddit)' }} className={styles.socialsCard}>
