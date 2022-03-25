@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
 
