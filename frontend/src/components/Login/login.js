@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import styles from './login.module.css';
@@ -11,6 +11,8 @@ const Login = (props) => {
   const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
   const [showErrorModal, setErrorModal] = useState('');
   const [id, setId] = useState('');
+
+  const verifyRef = useRef();
 
   const [verifyText, setVerifyText] = useState('');
 
@@ -52,7 +54,6 @@ const Login = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     //axios stuff
     const body = {
       email: email,
@@ -88,7 +89,12 @@ const Login = (props) => {
             <h1 className={styles.in}>in</h1>
             <h1 className={styles.site}>Site</h1>
           </div>
-          <Modal show={showModal}>
+          <Modal
+            show={showModal}
+            onShow={() => {
+              verifyRef.current.focus();
+            }}
+          >
             <Modal.Header>
               <Modal.Title>Verify phone number</Modal.Title>
             </Modal.Header>
@@ -104,6 +110,7 @@ const Login = (props) => {
                     type='text'
                     className='form-control'
                     placeholder='Code'
+                    ref={verifyRef}
                     onChange={(e) => setSMSCode(e.target.value)}
                   />
                 </div>

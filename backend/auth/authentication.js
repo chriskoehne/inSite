@@ -32,10 +32,10 @@ exports.verifyToken = (req, res, next) => {
 
 exports.generateToken = (id, email, res, overwrite) => {
   const token = jwt.sign({ id, email }, process.env.JWT_SECRET, {
-    expiresIn: '1hr', // will change this to a variable later
+    expiresIn: '2hr', // will change this to a variable later
   });
   return res.cookie('inSite-token', token, {
-    expires: new Date(Date.now() + 3600000),
+    expires: new Date(Date.now() + 7200000),
     secure: true, // set to true if you're using https
     httpOnly: true,
     overwrite: false || overwrite,
