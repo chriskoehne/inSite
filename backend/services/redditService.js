@@ -40,9 +40,8 @@ exports.login = async function (email) {
     const link =
       'https://www.reddit.com/api/v1/authorize?client_id=' +
       clientID +
-      '&response_type=code&state=' +
-      email +
-      '&redirect_uri=' + redirectURI + '&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
+      '&response_type=code&state=reddit&redirect_uri=' + redirectURI + 
+      '&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
 
     console.log('link');
     console.log(link);

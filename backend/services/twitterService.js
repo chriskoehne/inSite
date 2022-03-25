@@ -20,9 +20,7 @@ exports.login = async function (email) {
     const link =
     'https://twitter.com/i/oauth2/authorize?response_type=code&client_id=' +
     process.env.TWITTER_CLIENT_ID +
-    '&redirect_uri=https%3A%2F%2F127.0.0.1%3A3000%2Fdashboard&scope=tweet.read%20tweet.write%20users.read%20follows.read%20follows.write%20like.read&state=' +
-    email +
-    '&code_challenge=' + 
+    '&redirect_uri=https%3A%2F%2F127.0.0.1%3A3000%2Fdashboard&scope=tweet.read%20tweet.write%20users.read%20follows.read%20follows.write%20like.read&state=twitter&code_challenge=' + 
     code_challenge + 
     '&code_challenge_method=plain'
 

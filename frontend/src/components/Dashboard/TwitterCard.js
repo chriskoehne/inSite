@@ -16,7 +16,7 @@ const TwitterCard = (props) => {
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
-    if (currentUrl.includes('&')) {
+    if (currentUrl.includes('state=twitter')) {
       let start = currentUrl.indexOf('code') + 5;
       c = currentUrl.substring(start);
     }

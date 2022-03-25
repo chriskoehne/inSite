@@ -17,13 +17,16 @@ const YoutubeCard = (props) => {
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
+      console.log("no youtube token in localstorage")
       return false;
     }
     const date = JSON.parse(localStorage.getItem('youtubeToken')).date;
     if ((Date.now() - date) / 36e5 >= 1) {
+      console.log("youtube token too old")
       localStorage.removeItem('youtubeToken');
       return false;
     }
+    console.log("youtube token in localstorage")
     return true;
   };
 
@@ -32,7 +35,7 @@ const YoutubeCard = (props) => {
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
     if (currentUrl.includes('code') && currentUrl.includes('scope')) {
-        console.log("grabbing code from url")
+      console.log("grabbing code from url")
       let start = currentUrl.indexOf('code') + 5;
       let end = currentUrl.indexOf('&scope');
       c = currentUrl.substring(start, end);
@@ -127,7 +130,7 @@ const YoutubeCard = (props) => {
         console.log('got the link!');
         window.location.href = result.data.link;
       } else {
-        console.log('there was an error in Reddit user signup');
+        console.log('there was an error in youtube user signup');
       }
     return;
   };
@@ -141,7 +144,7 @@ const YoutubeCard = (props) => {
       return <h2>Loading...</h2>;
     }
 
-    if (youtubeToken) {
+    if (hasToken()) {
       return (
         <BarChart
           data={[1, 2, 3, 4]}
@@ -160,7 +163,7 @@ const YoutubeCard = (props) => {
       return (
         <div className={styles.centered}>
           <Button className={styles.buttons} onClick={authenticateYoutube}>
-            Log in to Youtube
+            Authenticate Youtube
           </Button>
         </div>
       );
