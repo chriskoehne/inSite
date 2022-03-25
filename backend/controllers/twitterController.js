@@ -1,9 +1,4 @@
-const path = require('path');
-
-var twitterService = require(path.resolve(
-  __dirname,
-  '../services/twitterService'
-));
+var twitterService = require('../services/twitterService');
 
 exports.login = async function(req, res, next) {
   try {

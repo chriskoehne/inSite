@@ -19,16 +19,16 @@ const RedditCard = (props) => {
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
-      console.log("no reddit token in localstorage")
+      // console.log("no reddit token in localstorage")
       return false;
     }
     const date = JSON.parse(localStorage.getItem('redditToken')).date;
     if ((Date.now() - date) / 36e5 >= 1) {
-      console.log("too old reddit token")
+      // console.log("too old reddit token")
       localStorage.removeItem('redditToken');
       return false;
     }
-    console.log("yea localstorage has the reddit token")
+    // console.log("yea localstorage has the reddit token")
     return true;
   };
 
@@ -48,7 +48,6 @@ const RedditCard = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(localStorage)
     const convert = async () => {
       setLoading(true);
       if (!user.code) {
@@ -181,7 +180,7 @@ const RedditCard = (props) => {
     } else {
       return (
         <div className={styles.centered}>
-          <Button className={styles.buttons} onClick={authenticateReddit}>
+          <Button className={`${styles.buttons} ${styles.redditB}`} onClick={authenticateReddit}>
             Authorize Reddit
           </Button>
         </div>

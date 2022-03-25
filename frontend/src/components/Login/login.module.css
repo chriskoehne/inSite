@@ -43,6 +43,10 @@
     background-color: #f8b720;
 }
 
+.modalText {
+    color: black;
+}
+
 .in {
     text-align: center;
     display: inline-block;

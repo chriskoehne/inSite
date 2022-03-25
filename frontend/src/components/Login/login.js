@@ -92,7 +92,7 @@ const Login = (props) => {
             <Modal.Header>
               <Modal.Title>Verify phone number</Modal.Title>
             </Modal.Header>
-            <Modal.Body color='black'>
+            <Modal.Body className={styles.modalText}>
               Your phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.

@@ -162,8 +162,8 @@ const YoutubeCard = (props) => {
     } else {
       return (
         <div className={styles.centered}>
-          <Button className={styles.buttons} onClick={authenticateYoutube}>
-            Authenticate Youtube
+          <Button className={`${styles.buttons} ${styles.youtubeB}`} onClick={authenticateYoutube}>
+            Authorize YouTube
           </Button>
         </div>
       );
@@ -171,12 +171,12 @@ const YoutubeCard = (props) => {
   };
 
   const icon = () => {
-    return <SocialIcon url='https://youtube.com/kanyewest' />;
+    return <SocialIcon fgColor='white' url='https://youtube.com/kanyewest' />;
   };
 
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: '#FF0000' }} className={styles.socialsCard}>
+      <Card style={{ borderColor: 'var(--youtube)' }} className={styles.socialsCard}>
         <Card.Body>
           <Card.Title>{icon()} Youtube</Card.Title>
           <Card.Text></Card.Text>
