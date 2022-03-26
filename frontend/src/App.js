@@ -8,7 +8,6 @@ import Login from './components/Login/login';
 import CreateAccount from './components/CreateAccount/createAccount';
 import Dashboard from './components/Dashboard/Dashboard';
 import Welcome from './components/Welcome/Welcome';
-import ChangePassword from './components/Settings/ChangePassword';
 import CookieCheck from './components/testing/CookieCheck';
 import RedditPage from './components/Reddit/RedditPage';
 import InstagramPage from './components/Instagram/InstagramPage';
@@ -19,11 +18,11 @@ import Logout from './components/testing/Logout';
 import Settings from './components/Settings/Settings';
 
 const App = () => {
-  // handle darkmode. Not always working on first load for some reason. Also added to login.js
+  // handle darkMode. Not always working on first load for some reason. Also added to login.js
   useEffect(() => {
     if (
-      localStorage.hasOwnProperty('darkmode') &&
-      localStorage.getItem('darkmode') === 'true'
+      localStorage.hasOwnProperty('settings') &&
+      JSON.parse(localStorage.getItem('settings')).darkMode === true
     ) {
       document.body.classList.add('dark');
     }
@@ -85,12 +84,6 @@ const App = () => {
       </Route>
 
       <Route path='*' element={<Navigate replace to='/welcome' />} />
-
-      <Route exact path='/changePassword' element={<ProtectedRoute />}>
-        <Route element={<NavRoute navigate={navigate} />}>
-          <Route index element={<ChangePassword navigate={navigate} />} />
-        </Route>
-      </Route>
 
       <Route exact path='/settings' element={<ProtectedRoute />}>
         <Route element={<NavRoute navigate={navigate} />}>

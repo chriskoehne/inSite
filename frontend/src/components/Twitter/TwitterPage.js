@@ -6,7 +6,7 @@ import styles from './Twitter.module.css';
 const TwitterPage = (props) => {
   const [index, setIndex] = useState(0);
 
-  const isDarkmode = () => {
+  const isDarkMode = () => {
     return document.body.classList.contains('dark') ? 'light' : 'dark';
   };
 
@@ -17,7 +17,7 @@ const TwitterPage = (props) => {
   return (
     <div className={styles.box}>
       <Carousel
-        variant={isDarkmode()}
+        variant={isDarkMode()}
         className={styles.slideshow}
         activeIndex={index}
         onSelect={handleSelect}

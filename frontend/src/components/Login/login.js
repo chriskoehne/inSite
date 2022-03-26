@@ -37,10 +37,10 @@ const Login = (props) => {
       const res = await axios.post('/verifyUser/', body);
       if (res.status === 200) {
         console.log(res.data.user);
-        if (res.data.user.darkmode) {
+        if (res.data.user.settings.darkMode) {
           document.body.classList.add('dark');
         }
-        localStorage.setItem('darkmode', res.data.user.darkmode);
+        localStorage.setItem('settings', JSON.stringify(res.data.user.settings));
         localStorage.setItem('email', res.data.user.email);
         props.navigate('/dashboard', { state: { email: email } });
       } else {
