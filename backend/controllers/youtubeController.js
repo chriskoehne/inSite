@@ -4,7 +4,8 @@ var youtubeService = require('../services/youtubeService');
 
 exports.login = async function (req, res, next) {
   try {
-    let result = await youtubeService.login(req.body.email); //add await?
+    // console.log('In YouTube Login Controller');
+    let result = await youtubeService.login(req.body.email); 
     
     if (result.link) {
         return res.status(200).json({
@@ -21,8 +22,9 @@ exports.login = async function (req, res, next) {
 
 exports.convert = async function (req, res, next) {
   try {
-    let result = await youtubeService.convert(req, res); //add await?
-    //two fields
+    // console.log('In YouTube Convert Controller');
+    let result = await youtubeService.convert(req, res); 
+    
     if (result) {
       return res
         .status(200)
@@ -35,8 +37,9 @@ exports.convert = async function (req, res, next) {
 
 exports.activity = async function (req, res, next) {
   try {
-    let result = await youtubeService.activity(req, res); //add await?
-    //two fields
+    // console.log('In YouTube Activity Controller');
+    let result = await youtubeService.activity(req, res);
+    
     if (result) {
       return res
         .status(200)
@@ -49,8 +52,9 @@ exports.activity = async function (req, res, next) {
 
 exports.subscriptions = async function (req, res, next) {
   try {
-    let result = await youtubeService.subscriptions(req, res); //add await?
-    //two fields
+    // console.log('In YouTube Subscriptions Controller');
+    let result = await youtubeService.subscriptions(req, res); 
+
     if (result) {
       return res
         .status(200)

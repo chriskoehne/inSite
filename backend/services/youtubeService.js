@@ -22,6 +22,7 @@ const service = google.youtube('v3');
 
 exports.login = async function (email) {
   try {
+    // console.log('In YouTube Login Service');
       
       const scopes = [
         'https://www.googleapis.com/auth/youtube.readonly',
@@ -33,7 +34,6 @@ exports.login = async function (email) {
       });
 
     return {link: url}
-    // return { link: link, verificationString: email };
   } catch (err) {
     console.log(err);
     console.log('big error catch');
@@ -43,6 +43,7 @@ exports.login = async function (email) {
 
 exports.convert = async function (req, res) {
   try {
+    // console.log('In YouTube Convert Service');
     console.log(req.body);
     const code = req.body.code;
 
@@ -61,6 +62,7 @@ exports.convert = async function (req, res) {
 
 exports.activity = async function (req, res) {
   try {
+    // console.log('In YouTube Activity Service');
     const result = await service.activities.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
@@ -70,13 +72,14 @@ exports.activity = async function (req, res) {
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    // console.log(err)
+    console.log(err)
     return err;
   }
 };
 
 exports.subscriptions = async function (req, res) {
   try {
+    // console.log('In YouTube Subscriptions Service');
     const result = await service.subscriptions.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
@@ -85,7 +88,7 @@ exports.subscriptions = async function (req, res) {
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    // console.log(err)
+    console.log(err)
     return err;
   }
 };
