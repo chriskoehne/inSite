@@ -60,3 +60,10 @@
   align-items: center;
   justify-content: center;
 }
+
+.embeddedComment {
+  overflow: hidden;
+  width: 100%;
+  height: 139px;
+  border: none;
+}
