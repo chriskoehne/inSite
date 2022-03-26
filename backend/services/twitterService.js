@@ -1,12 +1,6 @@
 var btoa = require('btoa');
-const randomstring = require("randomstring");
-const crypto = require("crypto");
-const base64url = require("base64url");
 var searchParams = require('url-search-params');
 var axios = require('axios');
-const encodeUrl = require('encodeurl');
-const OAuth = require('oauth')
-const { promisify } = require('util')
 
 if (process.env.DEV) {
   var redirectURI = 'https://127.0.0.1:3000/dashboard'
@@ -16,7 +10,7 @@ if (process.env.DEV) {
 
 exports.login = async function (email) {
   try {
-
+    // console.log('In Twitter Login Service');
     const code_challenge = "challenge";
 
     const link =
@@ -36,8 +30,7 @@ exports.login = async function (email) {
 
 exports.convert = async function (req, res) {
   try {
-    // console.log('in twitter convert service');
-    // console.log(req.body);
+    // console.log('In Twitter Convert Service');
     const code = req.body.code;
 
     var params = new searchParams();
@@ -54,16 +47,13 @@ exports.convert = async function (req, res) {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: finalAuth,
     };
-    //twitter post call
-    // console.log("twitter post call");
+
     const twitterRes = await axios.post(
       'https://api.twitter.com/2/oauth2/token',
       body,
       { headers: headers }
     );
 
-    // console.log("Result from Twitter:")
-    // console.log(twitterRes);
     return twitterRes.data;
   } catch (err) {
     console.log('twitter big error catch');
@@ -74,8 +64,8 @@ exports.convert = async function (req, res) {
 
 exports.test = async function (req, res) {
   try {
+    // console.log('In Twitter Test Service');
     const token = req.query.accessToken;
-    // console.log('In Twitter Test. Token: ' + token);
 
     const headers = {
       Authorization: 'Bearer ' + token,
@@ -85,14 +75,11 @@ exports.test = async function (req, res) {
     params.set('query', 'entity:"food"');
     params.set('max_results', 10);
 
-    // console.log("twitter post call");
     const twitterRes = await axios.get(
       'https://api.twitter.com/2/tweets/search/recent?query=entity:"food"&max_results=10',
       { headers: headers }
     );
 
-    // console.log("Result from Twitter:")
-    // console.log(twitterRes);
     return twitterRes.data;
   } catch (err) {
     console.log('twitter big error catch');
