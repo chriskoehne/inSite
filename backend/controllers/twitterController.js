@@ -2,6 +2,7 @@ var twitterService = require('../services/twitterService');
 
 exports.login = async function(req, res, next) {
   try {
+    // console.log('In Twitter Login Controller');
     let result = await twitterService.login(req.body.email);
     if (result.link) {
       return res.status(200).json({
@@ -19,6 +20,7 @@ exports.login = async function(req, res, next) {
 
 exports.convert = async function (req, res, next) {
   try {
+    // console.log('In Twitter Convert Controller');
     let result = await twitterService.convert(req, res);
 
     if (result) {
@@ -33,6 +35,7 @@ exports.convert = async function (req, res, next) {
 
 exports.test = async function (req, res, next) {
   try {
+    // console.log('In Twitter Test Controller');
     let result = await twitterService.test(req, res);
 
     if (result) {

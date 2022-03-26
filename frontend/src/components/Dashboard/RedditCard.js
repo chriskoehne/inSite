@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-// import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
 
@@ -12,10 +11,7 @@ const RedditCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
-  // const [messages, setMessages] = useState([]);
-  // const [posts, setPosts] = useState([]);
   const [me, setMe] = useState({});
-  // const [updatedToken, setUpdatedToken] = useState('');
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -40,11 +36,15 @@ const RedditCard = (props) => {
       let start = currentUrl.indexOf('code') + 5;
       const almostCode = currentUrl.substring(start);
       c = almostCode.substring(0, almostCode.length - 2);
+      setUser({
+        email: e,
+        code: c,
+      });
+    } else {
+      setUser({
+        email: e
+      });
     }
-    setUser({
-      email: e,
-      code: c,
-    });
   }, []);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const RedditCard = (props) => {
         );
         setRedditToken(token);
       } else {
-        console.log('could not convert token');
+        // console.log('could not convert token');
       }
       setLoading(false);
     };
@@ -106,11 +106,10 @@ const RedditCard = (props) => {
           });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            // setMessages(ansOverview.data.messages);
-            // setPosts(ansOverview.data.posts);
+
           }
 
-          console.log('loading done');
+          // console.log('loading done');
         }
       }
       setLoading(false);
@@ -127,10 +126,10 @@ const RedditCard = (props) => {
       email: user.email,
     });
     if (result.data.success) {
-      console.log('got the link!');
+      // console.log('got the link!');
       window.location.href = result.data.link;
     } else {
-      console.log('there was an error in Reddit user signup');
+      // console.log('there was an error in Reddit user signup');
     }
   };
 
