@@ -104,6 +104,7 @@ const Order = () => {
       }
     };
     updateCardOrder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardOrder]);
 
   function handleOnDragEnd(result) {
