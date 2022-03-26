@@ -11,6 +11,20 @@ const TwitterCard = (props) => {
   const [loading, setLoading] = useState(false);
   const [twitterToken, setTwitterToken] = useState('');
 
+  const hasToken = () => {
+    if (!localStorage.hasOwnProperty('twitterToken')) {
+      // console.log("no reddit token in localstorage")
+      return false;
+    }
+    const date = JSON.parse(localStorage.getItem('twitterToken')).date;
+    if ((Date.now() - date) / 36e5 >= 1) {
+      // console.log("too old reddit token")
+      localStorage.removeItem('twitterToken');
+      return false;
+    }
+    // console.log("yea localstorage has the reddit token")
+    return true;
+  };
 
   useEffect(() => {
     let c = null;
@@ -41,20 +55,31 @@ const TwitterCard = (props) => {
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitterToken(token);
+        localStorage.setItem(
+          'twitterToken',
+          JSON.stringify({ token: token, date: Date.now() })
+        );
       } else {
         console.log('could not convert token');
       }
       setLoading(false);
     };
 
-    if (user.code) {
+    if (!hasToken() && user.code) {
       convert();
-    } else {
-      console.log('no code received from twitter');
+    } else if (hasToken()) {
+      setTwitterToken(JSON.parse(localStorage.getItem('twitterToken')).token);
     }
   }, [user]);
 
   useEffect(() => {
+    if (!hasToken() && twitterToken) {
+      localStorage.setItem(
+        'twitterToken',
+        JSON.stringify({ token: twitterToken, date: Date.now() })
+      );
+    }
+    
     const callTwitter = async () => {
       const twitterQuery = {
         accessToken: twitterToken,
