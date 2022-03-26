@@ -15,7 +15,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-// import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
 import { getMonths, getDays, getLastThirty } from './RedditComments';
@@ -78,13 +77,9 @@ const RedditPage = (props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [me, setMe] = useState({});
-  // const [links, setLinks] = useState(0);
-  // const [awards, setAwards] = useState(0);
   const [tagCloud, setTagCloud] = useState([]);
-  // const [email, setEmail] = useState(localStorage.getItem('email'));
   const [redditToken, setRedditToken] = useState('');
   const [comments, setComments] = useState([]);
-  // const [messages, setMessages] = useState([]);
   const [posts, setPosts] = useState([]);
   const [index, setIndex] = useState(0);
   const [commentKarma, setCommentKarma] = useState(0);
@@ -159,7 +154,6 @@ const RedditPage = (props) => {
           });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            // setMessages(ansOverview.data.messages);
             setPosts(ansOverview.data.posts);
             let pst = ansOverview.data.posts;
             let arrPost = [];
@@ -232,39 +226,19 @@ const RedditPage = (props) => {
             setChartDayData(dayDataset);
             setChartMonthData(monthsDataset);
             setMostControversialComment(mostControversial.data);
-            // setChartOptions({
-            //   responsive: true,
-            //   maintainAspectRatio: false,
-            //   scale: {
-            //     ticks: {
-            //       precision: 0,
-            //     },
-            //   },
-            // });
-            //setCommentsMonth(monthsData.monthYear)
-            //console.log(commentByMonth)
           }
 
           const ansSubKarma = await axios.get('/reddit/userSubKarma', {
             params: redditUserQuery,
           });
           if (ansSubKarma.status === 200) {
-            // console.log("Sub Karma Info Receieved!")
             setSubKarmaList(ansSubKarma.data.subKarmaList);
-            // console.log(subKarmaList);
           }
 
           const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
-            // console.log("Total Karma Info Receieved!")
-
-            // console.log(ansTotalKarma.data.commentKarma);
-            // console.log(ansTotalKarma.data.linkKarma);
-            // console.log(ansTotalKarma.data.awardKarma);
-            // console.log(ansTotalKarma.data.totalKarma);
-
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
@@ -493,19 +467,6 @@ const RedditPage = (props) => {
                 </Card>
               </Col>
             </Row>
-            {/* <Row>
-              Most Upvoted Message - {getMaxScore(comments)} Karma
-              <Card className={styles.textCard}>
-                <Card.Body>
-                  <Card.Title>
-                    {getMaxItem(messages, getMaxScore(messages)).link_title}
-                  </Card.Title>
-                  <Card.Text>
-                    {getMaxItem(messages, getMaxScore(messages)).body}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Row> */}
             <Row>
               <Col>
                 Most Downvoted Post - {getMinScore(posts)} Karma
@@ -536,19 +497,6 @@ const RedditPage = (props) => {
                 </Card>
               </Col>
             </Row>
-            {/* <Row>
-              Most Downvoted Message - {getMinScore(comments)} Karma
-              <Card className={styles.textCard}>
-                <Card.Body>
-                  <Card.Title>
-                    {getMinItem(messages, getMinScore(messages)).link_title}
-                  </Card.Title>
-                  <Card.Text>
-                    {getMinItem(messages, getMinScore(messages)).body}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Row> */}
             <Row>
               <Col>
                 Most Controversial Post

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-// import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
 
@@ -12,10 +11,7 @@ const RedditCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
-  // const [messages, setMessages] = useState([]);
-  // const [posts, setPosts] = useState([]);
   const [me, setMe] = useState({});
-  // const [updatedToken, setUpdatedToken] = useState('');
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
@@ -110,8 +106,7 @@ const RedditCard = (props) => {
           });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            // setMessages(ansOverview.data.messages);
-            // setPosts(ansOverview.data.posts);
+
           }
 
           // console.log('loading done');
