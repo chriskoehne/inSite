@@ -127,7 +127,7 @@ const CreateAccount = (props) => {
             <Modal.Header>
               <Modal.Title>Verify phone number</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={styles.modalText}>
               The phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.

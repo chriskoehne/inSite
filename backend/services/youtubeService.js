@@ -1,23 +1,21 @@
 const {google} = require('googleapis');
-const path = require('path');
 const youtubeClientId = process.env.YOUTUBE_CLIENT_ID;
 const youtubeClientSecret = process.env.YOUTUBE_CLIENT_SECRET;
 
-const User = require('../database/models/User');
+if (process.env.DEV) {
+  var redirectURI = 'https://127.0.0.1:3000/dashboard'
 
-let oauth2Client = new google.auth.OAuth2(
+} else {
+  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard' //may need an extra slash at the end
+}
+
+const oauth2Client = new google.auth.OAuth2(
   youtubeClientId,
   youtubeClientSecret,
-  'https://127.0.0.1:3000/dashboard' //maybe dont need?
+  redirectURI //maybe dont need?
 );
 
-if (process.env.dev === false) {
-  oauth2Client = new google.auth.OAuth2(
-    youtubeClientId,
-    youtubeClientSecret,
-    'https://d33jcvm0fuhn35.cloudfront.net/dashboard' //maybe dont need?
-  );
-}
+
 
 
 const service = google.youtube('v3');

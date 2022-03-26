@@ -43,6 +43,10 @@
     background-color: #f8b720;
 }
 
+.modalText {
+    color: black;
+}
+
 .return {
     color: #C3C2C1;
     text-decoration: none;

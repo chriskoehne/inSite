@@ -1,10 +1,6 @@
-const path = require('path');
 const c = require('../constants/constants');
 
-var youtubeService = require(path.resolve(
-  __dirname,
-  '../services/youtubeService'
-));
+var youtubeService = require('../services/youtubeService');
 
 exports.login = async function (req, res, next) {
   try {
