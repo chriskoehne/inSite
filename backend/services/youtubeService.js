@@ -5,11 +5,20 @@ const youtubeClientSecret = process.env.YOUTUBE_CLIENT_SECRET;
 
 const User = require('../database/models/User');
 
-const oauth2Client = new google.auth.OAuth2(
+let oauth2Client = new google.auth.OAuth2(
   youtubeClientId,
   youtubeClientSecret,
-  'https://localhost:3000/dashboard' //maybe dont need?
+  'https://127.0.0.1:3000/dashboard' //maybe dont need?
 );
+
+if (process.env.dev === false) {
+  oauth2Client = new google.auth.OAuth2(
+    youtubeClientId,
+    youtubeClientSecret,
+    'https://d33jcvm0fuhn35.cloudfront.net/dashboard' //maybe dont need?
+  );
+}
+
 
 const service = google.youtube('v3');
 
