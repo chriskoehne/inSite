@@ -40,11 +40,15 @@ const RedditCard = (props) => {
       let start = currentUrl.indexOf('code') + 5;
       const almostCode = currentUrl.substring(start);
       c = almostCode.substring(0, almostCode.length - 2);
+      setUser({
+        email: e,
+        code: c,
+      });
+    } else {
+      setUser({
+        email: e
+      });
     }
-    setUser({
-      email: e,
-      code: c,
-    });
   }, []);
 
   useEffect(() => {
@@ -65,7 +69,7 @@ const RedditCard = (props) => {
         );
         setRedditToken(token);
       } else {
-        console.log('could not convert token');
+        // console.log('could not convert token');
       }
       setLoading(false);
     };
@@ -110,7 +114,7 @@ const RedditCard = (props) => {
             // setPosts(ansOverview.data.posts);
           }
 
-          console.log('loading done');
+          // console.log('loading done');
         }
       }
       setLoading(false);
@@ -127,10 +131,10 @@ const RedditCard = (props) => {
       email: user.email,
     });
     if (result.data.success) {
-      console.log('got the link!');
+      // console.log('got the link!');
       window.location.href = result.data.link;
     } else {
-      console.log('there was an error in Reddit user signup');
+      // console.log('there was an error in Reddit user signup');
     }
   };
 

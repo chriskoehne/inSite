@@ -13,7 +13,7 @@ const TwitterCard = (props) => {
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {
-      // console.log("no reddit token in localstorage")
+      // console.log("no twitter token in localstorage")
       return false;
     }
     const date = JSON.parse(localStorage.getItem('twitterToken')).date;
@@ -22,7 +22,7 @@ const TwitterCard = (props) => {
       localStorage.removeItem('twitterToken');
       return false;
     }
-    // console.log("yea localstorage has the reddit token")
+    // console.log("yea localstorage has the twitter token")
     return true;
   };
 
@@ -33,11 +33,15 @@ const TwitterCard = (props) => {
     if (currentUrl.includes('state=twitter')) {
       let start = currentUrl.indexOf('code') + 5;
       c = currentUrl.substring(start);
+      setUser({
+        email: e,
+        code: c,
+      });
+    } else {
+      setUser({
+        email: e
+      });
     }
-    setUser({
-      email: e,
-      code: c,
-    });
   }, []);
 
   useEffect(() => {
@@ -51,7 +55,7 @@ const TwitterCard = (props) => {
         '/twitter/codeToToken/',
         { code: user.code }
       );
-      console.log(result.data);
+      // console.log(result.data);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitterToken(token);
@@ -60,7 +64,7 @@ const TwitterCard = (props) => {
           JSON.stringify({ token: token, date: Date.now() })
         );
       } else {
-        console.log('could not convert token');
+        // console.log('could not convert token');
       }
       setLoading(false);
     };
@@ -79,8 +83,10 @@ const TwitterCard = (props) => {
         JSON.stringify({ token: twitterToken, date: Date.now() })
       );
     }
-    
+
     const callTwitter = async () => {
+      // console.log('Calling Twitter API. Here is localStorage:');
+      // console.log(localStorage);
       const twitterQuery = {
         accessToken: twitterToken,
       };
@@ -89,15 +95,16 @@ const TwitterCard = (props) => {
         { params: twitterQuery }
       );
       if (twitterRes) {
-        console.log('Received Tweets from Twitter!');
+        // console.log('Received Tweets from Twitter!');
         console.log(twitterRes.data);
-      } else {
-        console.log('Could not get Tweets from Twitter!');
-      }
+      } 
+      // else {
+      //   console.log('Could not get Tweets from Twitter!');
+      // }
     };
 
     if (twitterToken) {
-      console.log('Calling Twitter');
+      // console.log('Calling Twitter');
       callTwitter();
     }
   }, [twitterToken]);
@@ -108,10 +115,10 @@ const TwitterCard = (props) => {
       email: user.email,
     });
     if (result.data.success) {
-      console.log('got the link!');
+      // console.log('got the link!');
       window.location.href = result.data.link;
     } else {
-      console.log('there was an error in Twitter user signup');
+      // console.log('there was an error in Twitter user signup');
     }
   };
 
