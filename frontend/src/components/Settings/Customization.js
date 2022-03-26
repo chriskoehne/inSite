@@ -8,8 +8,8 @@ import Order from './Order';
 
 const Customization = () => {
   const [darkMode, setDarkMode] = useState(
-    localStorage.hasOwnProperty('darkMode') &&
-      localStorage.getItem('darkMode') === 'true'
+    localStorage.hasOwnProperty('settings') &&
+      JSON.parse(localStorage.getItem('settings')).darkMode === true
   );
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const Customization = () => {
     <div id='customization' className={styles.customization}>
       <h4>Customization</h4>
       <br />
-      <h5 style={{marginBottom: '0'}}>Dark Mode</h5>
+      <h5 style={{ marginBottom: '0' }}>Dark Mode</h5>
       <br />
       <label>
         <Switch
