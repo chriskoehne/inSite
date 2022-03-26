@@ -31,7 +31,7 @@ exports.check = async function (email, code) {
             const safeUser = {
               _id: user._id,
               email: user.email,
-              darkmode: user.darkmode,
+              settings: user.settings,
               //add other wanted properties here
             };
             resolve({ user: safeUser });

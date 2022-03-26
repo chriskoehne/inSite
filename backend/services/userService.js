@@ -97,27 +97,42 @@ exports.check = async function (email, password) {
           resolve(c.AUTHY_REQUEST_SMS_ERR); //reject?
         } else {
           console.log(authyres.message);
-          console.log(result.id)
+          console.log(result.id);
           resolve(result.id);
         }
       });
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
 
-exports.updateDarkmode = async function (email, darkmode) {
+exports.updateDarkMode = async function (email, darkMode) {
   try {
     const filter = { email: email };
-    const update = { darkmode: darkmode };
+    const update = { settings: { darkMode: darkMode } };
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
     return c.SUCCESS;
   } catch (err) {
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.updateCardOrder = async function (email, cardOrder) {
+  try {
+    const filter = { email: email };
+    const update = { settings: { cardOrder: cardOrder } };
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err)
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };

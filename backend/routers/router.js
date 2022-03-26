@@ -40,9 +40,15 @@ router.post('/login', userController.login);
 router.post('/userDelete', auth.verifyToken, userController.deleteUser);
 
 router.post(
-  '/user/settings/darkmode',
+  '/user/settings/darkMode',
   auth.verifyToken,
-  userController.updateDarkmode
+  userController.updateDarkMode
+);
+
+router.post(
+  '/user/settings/cardOrder',
+  auth.verifyToken,
+  userController.updateCardOrder
 );
 
 

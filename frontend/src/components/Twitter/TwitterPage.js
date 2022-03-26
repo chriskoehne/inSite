@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
 
 const TwitterPage = (props) => {
   const [index, setIndex] = useState(0);
 
-  const isDarkmode = () => {
+  const isDarkMode = () => {
     return document.body.classList.contains('dark') ? 'light' : 'dark';
   };
 
@@ -17,7 +17,7 @@ const TwitterPage = (props) => {
   return (
     <div className={styles.box}>
       <Carousel
-        variant={isDarkmode()}
+        variant={isDarkMode()}
         className={styles.slideshow}
         activeIndex={index}
         onSelect={handleSelect}

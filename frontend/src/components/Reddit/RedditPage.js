@@ -380,7 +380,7 @@ const RedditPage = (props) => {
     setCommentGraphMonth(false);
   };
 
-  const isDarkmode = () => {
+  const isDarkMode = () => {
     return document.body.classList.contains('dark') ? 'light' : 'dark';
   };
 
@@ -416,7 +416,7 @@ const RedditPage = (props) => {
   ) : (
     <div className={styles.box}>
       <Carousel
-        variant={isDarkmode()}
+        variant={isDarkMode()}
         className={styles.slideshow}
         activeIndex={index}
         onSelect={handleSelect}

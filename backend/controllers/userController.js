@@ -67,13 +67,32 @@ exports.login = async function (req, res, next) {
   }
 };
 
-exports.updateDarkmode = async function (req, res, next) {
+exports.updateDarkMode = async function (req, res, next) {
   try {
-    let result = await userService.updateDarkmode(
+    let result = await userService.updateDarkMode(
       req.body.email,
-      req.body.darkmode
+      req.body.darkMode
     );
-    return res.status(200).json({ message: result });
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.updateCardOrder = async function (req, res, next) {
+  try {
+    let result = await userService.updateCardOrder(
+      req.body.email,
+      req.body.cardOrder
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
   } catch (e) {
     return res.status(400).json({ message: e.message });
   }

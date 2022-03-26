@@ -2,6 +2,9 @@ const {google} = require('googleapis');
 const youtubeClientId = process.env.YOUTUBE_CLIENT_ID;
 const youtubeClientSecret = process.env.YOUTUBE_CLIENT_SECRET;
 
+console.log(youtubeClientId)
+console.log(youtubeClientSecret)
+
 if (process.env.DEV) {
   var redirectURI = 'https://127.0.0.1:3000/dashboard'
 

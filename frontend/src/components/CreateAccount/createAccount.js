@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 // import Popup from 'reactjs-popup';
 import axios from 'axios';
@@ -16,6 +16,8 @@ const CreateAccount = (props) => {
   const [errorText, setErrorText] = useState('');
   const [showErrorModal, setErrorModal] = useState('');
   const [verifyText, setVerifyText] = useState('');
+
+  const verifyRef = useRef();
 
   useEffect(() => {
     if (!showModal) {
@@ -123,7 +125,12 @@ const CreateAccount = (props) => {
       <div className={styles.background}>
         <div className={styles.createAcc_background}>
           <h1>Create Account</h1>
-          <Modal show={showModal}>
+          <Modal
+            show={showModal}
+            onShow={() => {
+              verifyRef.current.focus();
+            }}
+          >
             <Modal.Header>
               <Modal.Title>Verify phone number</Modal.Title>
             </Modal.Header>
@@ -131,7 +138,7 @@ const CreateAccount = (props) => {
               The phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.
-              <div style={{color: 'red'}}> {verifyText} </div>
+              <div style={{ color: 'red' }}> {verifyText} </div>
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>
@@ -139,6 +146,7 @@ const CreateAccount = (props) => {
                     type='text'
                     className='form-control'
                     placeholder='Code'
+                    ref={verifyRef}
                     onChange={(e) => {
                       setSMSCode(e.target.value);
                     }}

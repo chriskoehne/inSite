@@ -53,7 +53,6 @@ const YoutubeCard = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   useEffect(() => {
     const convert = async () => {
       setLoading(true);
@@ -89,7 +88,7 @@ const YoutubeCard = (props) => {
     }
   }, [user]);
 
-// a separate use effect to store the token in local storage and make a call for the initial graph
+  // a separate use effect to store the token in local storage and make a call for the initial graph
   useEffect(() => {
     if (!hasToken() && youtubeToken) {
       localStorage.setItem(
@@ -111,6 +110,7 @@ const YoutubeCard = (props) => {
           console.log(subs);
           if (subs.status === 200) {
             setSubscriptions(subs.data.list);
+            console.log(subscriptions);
           }
 
           // console.log('loading done');
@@ -124,8 +124,6 @@ const YoutubeCard = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [youtubeToken]);
-
-
 
   const authenticateYoutube = async (e) => {
     e.preventDefault();
@@ -142,10 +140,6 @@ const YoutubeCard = (props) => {
     return;
   };
 
-
-
-
-  
   const display = () => {
     if (loading) {
       return <h2>Loading...</h2>;
@@ -155,10 +149,10 @@ const YoutubeCard = (props) => {
       return (
         <BarChart
           data={[1, 2, 3, 4]}
-        //   maxVal={getMaxScore(comments)}
-        //   label='Comment Scores'
-        //   xaxis='Comment score'
-        color={'#FF0000'}
+          //   maxVal={getMaxScore(comments)}
+          //   label='Comment Scores'
+          //   xaxis='Comment score'
+          color={'#FF0000'}
           onClick={function () {
             props.navigate('youtube', {
               state: { email: user.email, accessToken: youtubeToken },
@@ -169,7 +163,10 @@ const YoutubeCard = (props) => {
     } else {
       return (
         <div className={styles.centered}>
-          <Button className={`${styles.buttons} ${styles.youtubeB}`} onClick={authenticateYoutube}>
+          <Button
+            className={`${styles.buttons} ${styles.youtubeB}`}
+            onClick={authenticateYoutube}
+          >
             Authorize YouTube
           </Button>
         </div>
@@ -183,7 +180,10 @@ const YoutubeCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: 'var(--youtube)' }} className={styles.socialsCard}>
+      <Card
+        style={{ borderColor: 'var(--youtube)' }}
+        className={styles.socialsCard}
+      >
         <Card.Body>
           <Card.Title>{icon()} Youtube</Card.Title>
           <Card.Text></Card.Text>

@@ -38,14 +38,14 @@ const ProtectedRoute = (props) => {
           style={{
             width: '100vw',
             height: '100vh',
-            background: 'white',
+            background: 'var(--secondary)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             textAlign: 'center',
           }}
         >
-          <h1 style={{ color: 'var(--slate)' }}>Loading...</h1>
+          <h1 style={{ color: 'var(--primary)' }}>Loading...</h1>
         </div>
       );
     } else {
