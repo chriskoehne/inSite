@@ -16,7 +16,7 @@ const TwitterCard = (props) => {
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
-    if (currentUrl.includes('&')) {
+    if (currentUrl.includes('state=twitter')) {
       let start = currentUrl.indexOf('code') + 5;
       c = currentUrl.substring(start);
     }
@@ -110,7 +110,7 @@ const TwitterCard = (props) => {
     else {
       return (
         <div className={styles.centered}>
-          <Button className={styles.buttons} onClick={authenticateTwitter}>
+          <Button className={`${styles.buttons} ${styles.twitterB}`} onClick={authenticateTwitter}>
             Authorize Twitter
           </Button>
         </div>
@@ -124,7 +124,7 @@ const TwitterCard = (props) => {
   
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: 'var(--reddit)' }} className={styles.socialsCard}>
+      <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
         <Card.Body>
           <Card.Title>{icon()} Twitter</Card.Title>
           <Card.Text></Card.Text>
