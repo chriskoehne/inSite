@@ -68,7 +68,7 @@ const Deauthorize = () => {
   );
 };
 
-const Logout = () => {
+const Logout = (props) => {
   return (
     <div id='logout' className={styles.logout}>
       <h4>Logout</h4>
@@ -83,6 +83,7 @@ const Logout = () => {
 
 
 const Settings = (props) => {
+  console.log(props)
   return (
     <Container fluid>
       <Row>
@@ -102,7 +103,7 @@ const Settings = (props) => {
           <hr />
           <Logout />
           <hr />
-          <DeleteAccount />
+          <DeleteAccount navigate={props.navigate}/>
           <hr />
         </Col>
       </Row>

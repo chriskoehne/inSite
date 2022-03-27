@@ -110,9 +110,12 @@ exports.check = async function (email, password) {
 
 exports.updateDarkMode = async function (email, darkMode) {
   try {
+    console.log('here')
     const filter = { email: email };
     const update = { settings: { darkMode: darkMode } };
+    console.log(update)
     let result = await User.findOneAndUpdate(filter, update);
+    console.log(result)
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
