@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import styles from './createAccount.module.css';
+import ReactTooltip from 'react-tooltip';
 
 const CreateAccount = (props) => {
   const [email, setEmail] = useState('');
@@ -173,6 +174,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Email: </label>
               <input
+                data-tip='Emails must contain an @ to be valid'
                 type='text'
                 className='form-control'
                 placeholder='email'
@@ -184,6 +186,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Password: </label>
               <input
+                data-tip='Passwords must be at least 8 characters and contain at least one letter and one number'
                 type='password'
                 className='form-control'
                 placeholder='password'
@@ -195,6 +198,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Confirm Password: </label>
               <input
+                data-tip='Passwords must be at least 8 characters and contain at least one letter and one number'
                 type='password'
                 className='form-control'
                 placeholder='password'
@@ -206,6 +210,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Phone: </label>
               <input
+                data-tip='This phone # will be used for two-factor authentication on log-in'
                 type='text'
                 className='form-control'
                 placeholder='phone'
@@ -231,6 +236,7 @@ const CreateAccount = (props) => {
           </form>
         </div>
       </div>
+    <ReactTooltip />
     </div>
   );
 };
