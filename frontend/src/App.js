@@ -20,6 +20,15 @@ import Settings from './components/Settings/Settings';
 const App = () => {
   // handle darkMode. Not always working on first load for some reason. Also added to login.js
   useEffect(() => {
+    const currentUrl = window.location.href;
+    if (currentUrl.includes('localhost')) {
+      let index = currentUrl.indexOf('localhost')
+      let newref = currentUrl.substring(0, index)
+      newref = newref + '127.0.0.1' + currentUrl.substring(index+9)
+      console.log("detected! newref:")
+      console.log(newref)
+      window.location.href= newref;
+    }
     if (
       localStorage.hasOwnProperty('settings') &&
       JSON.parse(localStorage.getItem('settings')).darkMode === true

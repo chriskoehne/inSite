@@ -80,6 +80,23 @@ exports.activity = async function (req, res) {
   }
 };
 
+exports.likedVideos = async function (req, res) {
+  try {
+    console.log('In YouTube video list Service');
+    const result = await service.videos.list({
+      auth: oauth2Client,
+      part: 'snippet,contentDetails,statistics',
+      myRating: 'like'
+      // maxResults: 50
+    });
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
 exports.subscriptions = async function (req, res) {
   try {
     // console.log('In YouTube Subscriptions Service');
@@ -87,6 +104,7 @@ exports.subscriptions = async function (req, res) {
       auth: oauth2Client,
       part: 'snippet,contentDetails',
       mine: true,
+      maxResults: 50
     });
     return result.data;
   } catch (err) {
