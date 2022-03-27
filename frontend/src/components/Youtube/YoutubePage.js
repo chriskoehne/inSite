@@ -12,6 +12,7 @@ const YoutubePage = (props) => {
   const [youtubeToken, setYoutubeToken] = useState('');
   const [subscriptions, setSubscriptions] = useState([]);
   const [activity, setActivity] = useState([]);
+  const [likedVids, setLikedVids] = useState([]);
 
 
   const hasToken = () => {
@@ -58,6 +59,10 @@ const YoutubePage = (props) => {
 
         }
       }
+      const likedVids = await axios.get('/youtube/likedVideos');
+      console.log("vids:")
+      console.log(likedVids)
+      setLikedVids(likedVids.data.list)
       setLoading(false);
     };
     getData();
@@ -105,11 +110,26 @@ const YoutubePage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
+          <h3>Subscribed Channels</h3>
             <div>
             {subscriptions && subscriptions.map(sub =>
                         <tr key={sub.id}>
                             <td>{sub.snippet.title}</td>
                             <img src={sub.snippet.thumbnails.medium.url}/>
+                        </tr>
+                    )}
+            </div>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+          <h3>Liked Videos</h3>
+            <div>
+            {likedVids && likedVids.map(vid =>
+                        <tr key={vid.id}>
+                            <td>{vid.snippet.title}</td>
+                            <td>view count: {vid.statistics.viewCount} like count: {vid.statistics.likeCount}</td>
+                            <img src={vid.snippet.thumbnails.medium.url}/>
                         </tr>
                     )}
             </div>
