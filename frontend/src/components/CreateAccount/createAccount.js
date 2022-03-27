@@ -36,8 +36,12 @@ const CreateAccount = (props) => {
     try {
       const res = await axios.post('/verifyUser/', body);
       if (res.status === 200) {
-        localStorage.setItem('email', email);        
-        localStorage.setItem('settings', JSON.stringify({darkMode: false, cardOrder: ['reddit', 'twitter', 'instagram', 'youtube']})); // where are the settings
+        console.log(res.data.user);
+        if (res.data.user.settings.darkMode) {
+          document.body.classList.add('dark');
+        }
+        localStorage.setItem('settings', JSON.stringify(res.data.user.settings));
+        localStorage.setItem('email', res.data.user.email);
         props.navigate('/dashboard', { state: { email: email } });
       } else {
         setVerifyText('Incorrect code!');

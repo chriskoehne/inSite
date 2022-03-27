@@ -11,16 +11,19 @@ const Dashboard = (props) => {
   let cards = [
     <RedditCard
       id='reddit'
+      key='reddit'
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
     />,
     <TwitterCard
       id='twitter'
+      key='twitter'
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
     />,
     <InsightCard
       id='instagram'
+      key='instagram'
       title='Instagram'
       text='Instagram'
       borderColor='var(--instagram)'
@@ -29,6 +32,7 @@ const Dashboard = (props) => {
     />,
     <YoutubeCard
       id='youtube'
+      key='youtube'
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
     />,
@@ -43,7 +47,6 @@ const Dashboard = (props) => {
     }
     let order = Array(4);
     for (const card of cards) {
-      console.log(card);
       order[positions[card.props.id]] = card;
     }
     return order;
