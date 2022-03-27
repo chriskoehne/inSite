@@ -69,7 +69,6 @@ const Deauthorize = () => {
 };
 
 const Logout = (props) => {
-  console.log(logout)
   return (
     <div id='logout' className={styles.logout}>
       <h4>Logout</h4>
