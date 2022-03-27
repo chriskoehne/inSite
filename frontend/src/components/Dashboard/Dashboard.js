@@ -35,6 +35,7 @@ const Dashboard = (props) => {
   ];
 
   const orderCards = () => {
+    console.log(JSON.parse(localStorage.getItem('settings')).cardOrder);
     let positions = {};
     for (let [index, val] of JSON.parse(
       localStorage.getItem('settings')
