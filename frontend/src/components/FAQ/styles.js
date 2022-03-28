@@ -2,6 +2,7 @@ import styled from "styled-components/macro";
 
 export const Container = styled.div`
   display: flex;
+  overflow: auto;
 `;
 export const Entity = styled.div`
   color: #FFFFFF;
