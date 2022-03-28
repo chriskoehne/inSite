@@ -15,6 +15,7 @@ const OurNavbar = (props) => {
             <h2 className={styles.site}>Site</h2>
           </div>
         </Navbar.Brand>
+        <Nav.Link style={{color: 'white'}} href="/faq">FAQ</Nav.Link>
         <Nav.Link style={{color: 'white'}} href="/settings">settings</Nav.Link>
       </Container>
     </Navbar>
