@@ -16,6 +16,7 @@ import YoutubePage from './components/Youtube/YoutubePage';
 import './App.css';
 import Logout from './components/testing/Logout';
 import Settings from './components/Settings/Settings';
+import FAQ from './components/FAQ/FAQ';
 
 const App = () => {
   // handle darkMode. Not always working on first load for some reason. Also added to login.js
@@ -97,6 +98,12 @@ const App = () => {
       <Route exact path='/settings' element={<ProtectedRoute />}>
         <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<Settings navigate={navigate} />} />
+        </Route>
+      </Route>
+
+      <Route exact path='/faq' element={<ProtectedRoute />}>
+        <Route element={<NavRoute navigate={navigate} />}>
+          <Route index element={<FAQ navigate={navigate} />} />
         </Route>
       </Route>
     </Routes>
