@@ -6,7 +6,7 @@ export const Container = styled.div`
 `;
 export const Entity = styled.div`
   color: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  border: 1px solid #070707;
   max-width: 690px;
   width: 99%;
   margin-bottom: 10px;
@@ -23,21 +23,22 @@ export const Inner = styled.div`
   display: flex;
 `;
 export const Question = styled.div`
-  font: 25px;
+  color: var(--text-main);
+  font-size: 24px;
   justify-content: space-between;
   cursor: pointer;
   margin-bottom: 2px;
   display: flex;
-  font-weight: normal;
-  background: #1a1919;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0);
   padding: 0.75em 1.12em;
   align-items: center;
 `;
 export const Text = styled.p`
-  color: #000000;
+  color: var(--text-main);
   max-height: 1190px;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: normal;
   line-height: normal;
   transition: max-height 0.23s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0.9em 2.1em 0.7em 1.4em;
@@ -50,7 +51,7 @@ export const Text = styled.p`
   }
 `;
 export const Header = styled.h1`
-  color: #000000;
+  color: var(--text-main);
   line-height: 7;
   margin-top: 0 !important;
   font-size: 45px;
@@ -60,6 +61,4 @@ export const Header = styled.h1`
   @media (max-width: 600px) {
     font-size: 33px;
   }
-
-  color: #000000;
 `;

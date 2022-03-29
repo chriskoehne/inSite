@@ -1,8 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Banner from "./Banner";
-
-
+import Banner from "../Banner/Banner";
 
 const FAQ = (props) => {
   return (
@@ -19,9 +17,9 @@ const FAQ = (props) => {
               inSite does not have access to any personal information that is stored with these connected social media accounts such as emails and passwords. If you wish to remove the information stored on inSite, you can always delete your account.<br/><br/>
               Twilio: Twilio is the service that inSite uses for 2-Factor Authentication. Twilio stores your inSite email and phone number in order to do this effectively. Twilio will not share or sell this information to 3rd parties. 
               This information is shared within the Twilio group of companies only inorder to ensure that the services provided work as expected.<br/>
-              Twilio's Privacy Policy: <a href="https://www.twilio.com/legal/privacy" target="_blank">https://www.twilio.com/legal/privacy</a><br/><br/>
+              Twilio's Privacy Policy: <a href="https://www.twilio.com/legal/privacy" target="_blank" rel="noreferrer">https://www.twilio.com/legal/privacy</a><br/><br/>
               MongoDB: MongoDB is the service that inSite uses to store account information such as your email and password. MongoDB does not sell or use any information that is stored on their servers. <br/>
-              MongoDB Privacy Policy: <a href="https://www.mongodb.com/legal/privacy-policy" target="_blank">https://www.mongodb.com/legal/privacy-policy</a>
+              MongoDB Privacy Policy: <a href="https://www.mongodb.com/legal/privacy-policy" target="_blank" rel="noreferrer">https://www.mongodb.com/legal/privacy-policy</a>
           </Banner.Text>
       </Banner.Entity>
       <Banner.Entity>
