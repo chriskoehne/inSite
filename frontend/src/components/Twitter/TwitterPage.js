@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
-import TwitterTest from './TwitterTest.js'
 import TwitterWordGraph from './TwitterWordGraph';
 
 const TwitterPage = (props) => {

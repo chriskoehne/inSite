@@ -7,7 +7,7 @@ import styles from './Twitter.module.css';
 import { SocialIcon } from 'react-social-icons';
 import { TagCloud } from 'react-tagcloud';
 
-const c = require('../Reddit/constants/constants');
+const c = require('./constants/constants.js')
 
 function getUncommon(sentence) {
     var wordArr = sentence.match(/\w+/g),
@@ -90,35 +90,7 @@ const TwitterWordGraph = (props) => {
   }, []);
 
   useEffect(() => {
-    const convert = async () => {
-      setLoading(true);
-      if (!user.code) {
-        setLoading(false);
-        return;
-      }
-      const result = await axios.post(
-        '/twitter/codeToToken/',
-        { code: user.code }
-      );
-      // console.log(result.data);
-      if (result.data.accessToken) {
-        const token = result.data.accessToken;
-        setTwitterToken(token);
-        localStorage.setItem(
-          'twitterToken',
-          JSON.stringify({ token: token, date: Date.now() })
-        );
-      } else {
-        // console.log('could not convert token');
-      }
-      setLoading(false);
-    };
-
-    if (!hasToken() && user.code) {
-      convert();
-    } else if (hasToken()) {
-      setTwitterToken(JSON.parse(localStorage.getItem('twitterToken')).token);
-    }
+    setTwitterToken(JSON.parse(localStorage.getItem('twitterToken')).token);
   }, [user]);
 
   useEffect(() => {
@@ -129,7 +101,7 @@ const TwitterWordGraph = (props) => {
       );
     }
 
-    const getUser = async () => {
+    const getWCloud = async () => {
       // console.log('Calling Twitter API. Here is localStorage:');
       // console.log(localStorage);
       const twitterQuery = {
@@ -147,7 +119,6 @@ const TwitterWordGraph = (props) => {
         array.forEach((comm) => {
             comm_str += comm.text;
         });
-        console.log(comm_str)
         setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
       } 
       // else {
@@ -157,7 +128,7 @@ const TwitterWordGraph = (props) => {
 
     if (twitterToken) {
       // console.log('Calling Twitter');
-      getUser();
+      getWCloud();
     }
   }, [twitterToken]);
   
