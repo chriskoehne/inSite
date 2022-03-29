@@ -84,6 +84,42 @@ const TwitterCard = (props) => {
       );
     }
 
+    const getUser = async () => {
+      // console.log('Calling Twitter API. Here is localStorage:');
+      // console.log(localStorage);
+      const twitterQuery = {
+        accessToken: twitterToken
+      };
+      const twitterRes = await axios.get(
+        '/twitter/getUser/',
+        { params: twitterQuery }
+      );
+      if (twitterRes) {
+        // console.log('Received Tweets from Twitter!');
+        console.log()
+        console.log(twitterRes.data);
+        console.log(twitterRes.data.data.id)
+        localStorage.setItem('twitter-user-id', twitterRes.data.data.id)
+      } 
+      // else {
+      //   console.log('Could not get Tweets from Twitter!');
+      // }
+    };
+
+    if (twitterToken) {
+      // console.log('Calling Twitter');
+      getUser();
+    }
+  }, [twitterToken]);
+
+  useEffect(() => {
+    if (!hasToken() && twitterToken) {
+      localStorage.setItem(
+        'twitterToken',
+        JSON.stringify({ token: twitterToken, date: Date.now() })
+      );
+    }
+
     const callTwitter = async () => {
       // console.log('Calling Twitter API. Here is localStorage:');
       // console.log(localStorage);

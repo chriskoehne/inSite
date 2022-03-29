@@ -48,3 +48,34 @@ exports.test = async function (req, res, next) {
   }
 };
 
+exports.me = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Test Controller');
+    let result = await twitterService.me(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.tweets = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Test Controller');
+    console.log(req)
+    let result = await twitterService.tweets(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+

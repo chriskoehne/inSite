@@ -79,7 +79,48 @@ exports.test = async function (req, res) {
       'https://api.twitter.com/2/tweets/search/recent?query=entity:"food"&max_results=10',
       { headers: headers }
     );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};
 
+exports.me = async function (req, res) {
+  try {
+    // console.log('In Twitter Test Service');
+    const token = req.query.accessToken;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/me',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.tweets = async function (req, res) {
+  try {
+    // console.log('In Twitter Test Service');
+    const token = req.query.accessToken;
+    const userID = req.query.userID;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/' + userID + '/tweets?max_results=100',
+      { headers: headers }
+    );
     return twitterRes.data;
   } catch (err) {
     console.log('twitter big error catch');
