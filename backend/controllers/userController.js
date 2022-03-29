@@ -1,4 +1,5 @@
 const c = require('../constants/constants');
+const mongoose = require('mongoose')
 
 var userService = require('../services/userService');
 
@@ -55,6 +56,9 @@ exports.login = async function (req, res, next) {
       case c.GENERAL_TRY_CATCH_ERR:
         return res.status(400).json({ message: result });
     }
+    if (!mongoose.isValidObjectId(result)) {
+      return res.status(400).json({ message: result.message });
+    }
     //success
     return res.status(200).json({ message: result }); //should be the user's id
   } catch (e) {
@@ -63,13 +67,32 @@ exports.login = async function (req, res, next) {
   }
 };
 
-exports.updateDarkmode = async function (req, res, next) {
+exports.updateDarkMode = async function (req, res, next) {
   try {
-    let result = await userService.updateDarkmode(
+    let result = await userService.updateDarkMode(
       req.body.email,
-      req.body.darkmode
+      req.body.darkMode
     );
-    return res.status(200).json({ message: result });
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.updateCardOrder = async function (req, res, next) {
+  try {
+    let result = await userService.updateCardOrder(
+      req.body.email,
+      req.body.cardOrder
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
   } catch (e) {
     return res.status(400).json({ message: e.message });
   }

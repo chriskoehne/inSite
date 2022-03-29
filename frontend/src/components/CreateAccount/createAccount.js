@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 // import Popup from 'reactjs-popup';
 import axios from 'axios';
@@ -17,6 +17,8 @@ const CreateAccount = (props) => {
   const [showErrorModal, setErrorModal] = useState('');
   const [verifyText, setVerifyText] = useState('');
 
+  const verifyRef = useRef();
+
   useEffect(() => {
     if (!showModal) {
       setVerifyText('');
@@ -32,9 +34,14 @@ const CreateAccount = (props) => {
       code: smsCode,
     };
     try {
-      const res = await axios.post('http://localhost:5000/verifyUser/', body);
+      const res = await axios.post('/verifyUser/', body);
       if (res.status === 200) {
-        localStorage.setItem('email', email);
+        console.log(res.data.user);
+        if (res.data.user.settings.darkMode) {
+          document.body.classList.add('dark');
+        }
+        localStorage.setItem('settings', JSON.stringify(res.data.user.settings));
+        localStorage.setItem('email', res.data.user.email);
         props.navigate('/dashboard', { state: { email: email } });
       } else {
         setVerifyText('Incorrect code!');
@@ -79,7 +86,7 @@ const CreateAccount = (props) => {
       return;
     } else {
       axios
-        .post('http://localhost:5000/userCreation/', body)
+        .post('/userCreation/', body)
         .then((res) => {
           console.log('now res is');
           console.log(res);
@@ -123,15 +130,20 @@ const CreateAccount = (props) => {
       <div className={styles.background}>
         <div className={styles.createAcc_background}>
           <h1>Create Account</h1>
-          <Modal show={showModal}>
+          <Modal
+            show={showModal}
+            onShow={() => {
+              verifyRef.current.focus();
+            }}
+          >
             <Modal.Header>
               <Modal.Title>Verify phone number</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={styles.modalText}>
               The phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.
-              <div style={{color: 'red'}}> {verifyText} </div>
+              <div style={{ color: 'red' }}> {verifyText} </div>
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>
@@ -139,6 +151,7 @@ const CreateAccount = (props) => {
                     type='text'
                     className='form-control'
                     placeholder='Code'
+                    ref={verifyRef}
                     onChange={(e) => {
                       setSMSCode(e.target.value);
                     }}

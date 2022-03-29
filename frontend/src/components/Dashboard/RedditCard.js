@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-// import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
 
@@ -12,20 +11,20 @@ const RedditCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
-  // const [messages, setMessages] = useState([]);
-  // const [posts, setPosts] = useState([]);
   const [me, setMe] = useState({});
-  // const [updatedToken, setUpdatedToken] = useState('');
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
+      // console.log("no reddit token in localstorage")
       return false;
     }
     const date = JSON.parse(localStorage.getItem('redditToken')).date;
     if ((Date.now() - date) / 36e5 >= 1) {
+      // console.log("too old reddit token")
       localStorage.removeItem('redditToken');
       return false;
     }
+    // console.log("yea localstorage has the reddit token")
     return true;
   };
 
@@ -33,16 +32,19 @@ const RedditCard = (props) => {
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
-    if (currentUrl.includes('&')) {
-      let start = currentUrl.indexOf('state') + 6;
-      start = currentUrl.indexOf('code') + 5;
+    if (currentUrl.includes('state=reddit')) {
+      let start = currentUrl.indexOf('code') + 5;
       const almostCode = currentUrl.substring(start);
       c = almostCode.substring(0, almostCode.length - 2);
+      setUser({
+        email: e,
+        code: c,
+      });
+    } else {
+      setUser({
+        email: e
+      });
     }
-    setUser({
-      email: e,
-      code: c,
-    });
   }, []);
 
   useEffect(() => {
@@ -52,10 +54,9 @@ const RedditCard = (props) => {
         setLoading(false);
         return;
       }
-      const result = await axios.post(
-        'http://localhost:5000/reddit/codeToToken/',
-        { code: user.code }
-      );
+      const result = await axios.post('/reddit/codeToToken/', {
+        code: user.code,
+      });
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -64,7 +65,7 @@ const RedditCard = (props) => {
         );
         setRedditToken(token);
       } else {
-        console.log('could not convert token');
+        // console.log('could not convert token');
       }
       setLoading(false);
     };
@@ -90,7 +91,7 @@ const RedditCard = (props) => {
         accessToken: redditToken,
       };
       if (me && !me.name) {
-        const ansMe = await axios.get('http://localhost:5000/reddit/me', {
+        const ansMe = await axios.get('/reddit/me', {
           params: redditMeQuery,
         });
 
@@ -100,17 +101,15 @@ const RedditCard = (props) => {
             accessToken: redditToken,
             username: ansMe.data.name,
           };
-          const ansOverview = await axios.get(
-            'http://localhost:5000/reddit/userOverview',
-            { params: redditUserQuery }
-          );
+          const ansOverview = await axios.get('/reddit/userOverview', {
+            params: redditUserQuery,
+          });
           if (ansOverview.status === 200) {
             setComments(ansOverview.data.comments);
-            // setMessages(ansOverview.data.messages);
-            // setPosts(ansOverview.data.posts);
+
           }
 
-          console.log('loading done');
+          // console.log('loading done');
         }
       }
       setLoading(false);
@@ -123,14 +122,14 @@ const RedditCard = (props) => {
 
   const authenticateReddit = async (e) => {
     e.preventDefault();
-    const result = await axios.post('http://localhost:5000/reddit/login/', {
+    const result = await axios.post('/reddit/login/', {
       email: user.email,
     });
     if (result.data.success) {
-      console.log('got the link!');
+      // console.log('got the link!');
       window.location.href = result.data.link;
     } else {
-      console.log('there was an error in Reddit user signup');
+      // console.log('there was an error in Reddit user signup');
     }
   };
 
@@ -163,7 +162,7 @@ const RedditCard = (props) => {
       return <h2>Loading...</h2>;
     }
 
-    if (redditToken) {
+    if (hasToken()) {
       return (
         <BarChart
           data={getScores(comments)}
@@ -180,7 +179,7 @@ const RedditCard = (props) => {
     } else {
       return (
         <div className={styles.centered}>
-          <Button className={styles.buttons} onClick={authenticateReddit}>
+          <Button className={`${styles.buttons} ${styles.redditB}`} onClick={authenticateReddit}>
             Authorize Reddit
           </Button>
         </div>
@@ -197,7 +196,10 @@ const RedditCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: 'var(--reddit)' }} className={styles.socialsCard}>
+      <Card
+        style={{ borderColor: 'var(--reddit)' }}
+        className={styles.socialsCard}
+      >
         <Card.Body>
           <Card.Title>{icon()} Reddit</Card.Title>
           <Card.Text></Card.Text>

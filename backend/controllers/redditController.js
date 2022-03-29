@@ -1,15 +1,12 @@
-const path = require('path');
 const c = require('../constants/constants');
 
-var redditService = require(path.resolve(
-  __dirname,
-  '../services/redditService'
-));
+var redditService = require('../services/redditService');
 
 exports.login = async function (req, res, next) {
   try {
-    let result = await redditService.login(req.body.email); //add await?
-    //two fields
+    // console.log('In Reddit Login Controller');
+    let result = await redditService.login(req.body.email); 
+    
     if (result.link) {
       return res.status(200).json({
         success: true,
@@ -26,8 +23,9 @@ exports.login = async function (req, res, next) {
 
 exports.convert = async function (req, res, next) {
   try {
-    let result = await redditService.convert(req, res); //add await?
-    //two fields
+    // console.log('In Reddit Convert Controller');
+    let result = await redditService.convert(req, res); 
+    
     if (result) {
       return res
         .status(200)
@@ -40,11 +38,9 @@ exports.convert = async function (req, res, next) {
 
 exports.redditMe = async function (req, res, next) {
   try {
-    console.log("controller, getting username");
-    let result = await redditService.redditMe(req, res); //add await?
-    //two fields
-    // console.log("in controller")
-    // console.log(result)
+    // console.log("In Reddit Me Controller");
+    let result = await redditService.redditMe(req, res);
+    
     if (result) {
       return res.status(200).json({ success: true, name: result.name }); //only returns name for now
     }
@@ -55,12 +51,9 @@ exports.redditMe = async function (req, res, next) {
 
 exports.userOverview = async function (req, res, next) {
   try {
-    console.log('controller, getting overview');
-    let result = await redditService.userOverview(req, res); //add await?
-    //two fields
-    // console.log("in controller")
-    // console.log("Overview Info")
-    // console.log(result.data)
+    // console.log('In Reddit Overview Controller');
+    let result = await redditService.userOverview(req, res);
+   
     //result.data.children - divide by kind
     var posts = [];
     var comments = [];
@@ -79,12 +72,12 @@ exports.userOverview = async function (req, res, next) {
             posts.push(item.data);
         }
       });
-      // console.log(array)
+
       return res.status(200).json({
         posts: posts,
         comments: comments,
         messages: messages,
-      }); //only returns name for now
+      });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -93,7 +86,7 @@ exports.userOverview = async function (req, res, next) {
 
 exports.userComments = async function (req, res, next) {
   try {
-    console.log('controller, getting comments');
+    // console.log('In Reddit Comments Controller');
     let result = await redditService.userComments(req, res);
     if (result) {
       return res.status(200).json({ success: true, overview: result });
@@ -105,29 +98,9 @@ exports.userComments = async function (req, res, next) {
 
 exports.userSubKarma = async function (req, res, next) {
   try {
-    console.log("controller, getting Sub Karma");
-    let result = await redditService.userSubKarma(req, res); //add await?
+    // console.log("In Reddit Sub Karma Controller");
+    let result = await redditService.userSubKarma(req, res); 
 
-    // console.log("Subreddit Karma");
-    // console.log(result.data);
-
-    // var scores = {};
-    // for (item in result.data) {
-    //   // console.log(result.data[item].sr);
-    //   scores[result.data[item].sr] = result.data[item].comment_karma + result.data[item].link_karma;
-    // }
-    
-    // console.log(scores);
-
-    // var sort_items = Object.keys(scores).map(function(key) {
-    //   return [key, scores[key]];
-    // });
-
-    // sort_items.sort(function(first, second) {
-    //   return second[1] - first[1];
-    // });
-
-    // console.log(items.slice(0, 5));
 
     if (result) {
       return res
@@ -144,12 +117,8 @@ exports.userSubKarma = async function (req, res, next) {
 
 exports.userTotalKarma = async function (req, res, next) {
   try {
-    console.log("controller, getting Total Karma");
-    let result = await redditService.userTotalKarma(req, res); //add await?
-
-    // console.log("Comment Karma: " + result.data.comment_karma);
-    // console.log("Link Karma: " + result.data.link_karma);
-    // console.log("Award Karma: " + result.data.awardee_karma);
+    // console.log("In Reddit Total Karma Controller");
+    let result = await redditService.userTotalKarma(req, res); 
       
     if (result) {
       return res

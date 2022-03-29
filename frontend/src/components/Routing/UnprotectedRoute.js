@@ -14,10 +14,10 @@ const UnprotectedRoute = (props) => {
 
   const getUnauthenticated = async () => {
     try {
-      await axios.post('http://localhost:5000/cookieCheck/');
+      await axios.post('/cookieCheck/');
       setAuthed(true);
     } catch (err) {
-      localStorage.clear()
+      localStorage.clear();
       setAuthed(false);
     }
     setLoading(false);

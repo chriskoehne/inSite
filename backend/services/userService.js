@@ -1,11 +1,9 @@
-const path = require('path');
 const bcrypt = require('bcrypt');
-const config = require(path.resolve(__dirname, '../config.json'));
 const c = require('../constants/constants');
-const authToken = config.TwilioAuthToken;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 var authy = require('authy')(authToken);
 
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 exports.signup = async function (email, password, phone) {
   try {
     if ((await User.find({ email: email })).length > 0) {
@@ -99,25 +97,45 @@ exports.check = async function (email, password) {
           resolve(c.AUTHY_REQUEST_SMS_ERR); //reject?
         } else {
           console.log(authyres.message);
+          console.log(result.id);
           resolve(result.id);
         }
       });
     });
   } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+exports.updateDarkMode = async function (email, darkMode) {
+  try {
+    console.log('here')
+    const filter = { email: email };
+    const update = { settings: { darkMode: darkMode } };
+    console.log(update)
+    let result = await User.findOneAndUpdate(filter, update);
+    console.log(result)
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    return c.SUCCESS;
+  } catch (err) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
 
-exports.updateDarkmode = async function (email, darkmode) {
+exports.updateCardOrder = async function (email, cardOrder) {
   try {
     const filter = { email: email };
-    const update = { darkmode: darkmode };
+    const update = { settings: { cardOrder: cardOrder } };
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
     return c.SUCCESS;
   } catch (err) {
+    console.log(err)
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };

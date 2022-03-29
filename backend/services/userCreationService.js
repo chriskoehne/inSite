@@ -1,17 +1,15 @@
-const path = require('path');
 const bcrypt = require('bcrypt');
 const c = require('../constants/constants');
 
-const config = require(path.resolve(__dirname, '../config.json'));
-const authToken = config.TwilioAuthToken;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 var authy = require('authy')(authToken);
 
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 exports.signup = async function (email, password, phone) {
   try {
     if ((await User.find({ email: email })).length > 0) {
-      console.log(c.EMAIL_TAKEN)
+      console.log(c.EMAIL_TAKEN);
       return c.EMAIL_TAKEN;
     }
 
@@ -40,19 +38,18 @@ exports.signup = async function (email, password, phone) {
             { authyId: regres.user.id }
           );
           await authy.request_sms(regres.user.id, function (err, smsres) {
-              if (err) {
-                console.log(err);
-                resolve(c.AUTHY_REQUEST_SMS_ERR);
-              }
-              console.log('sent user code');
-              console.log(smsres);
-              console.log(result)
-              resolve(result.id); //should use a constant for this?
-            });
+            if (err) {
+              console.log(err);
+              resolve(c.AUTHY_REQUEST_SMS_ERR);
+            }
+            console.log('sent user code');
+            console.log(smsres);
+            console.log(result);
+            resolve(result.id); //should use a constant for this?
+          });
         }
       });
     });
-
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;
@@ -61,23 +58,21 @@ exports.signup = async function (email, password, phone) {
 
 exports.deleteUser = async function (email) {
   try {
-    console.log("deleting user")
-    let user = await User.findOne({ email: email })
-    let authyId = user.authyId
-    let deleted = await User.remove({_id: user._id})
-    
+    console.log('deleting user');
+    let user = await User.findOne({ email: email });
+    let authyId = user.authyId;
+    let deleted = await User.remove({ _id: user._id });
+
     return await new Promise((resolve) => {
       authy.delete_user(authyId, function (err, res) {
         if (err) {
-          resolve({deleted, err})
-        }
-        else {
-          console.log('success')
-          resolve(deleted, res)
+          resolve({ deleted, err });
+        } else {
+          console.log('success');
+          resolve(deleted, res);
         }
       });
     });
-
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;
