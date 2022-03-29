@@ -66,7 +66,6 @@ exports.me = async function (req, res, next) {
 exports.tweets = async function (req, res, next) {
   try {
     // console.log('In Twitter Test Controller');
-    console.log(req)
     let result = await twitterService.tweets(req, res);
 
     if (result) {
