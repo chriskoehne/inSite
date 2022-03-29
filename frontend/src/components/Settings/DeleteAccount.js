@@ -5,7 +5,7 @@ import axios from 'axios';
 import styles from './Settings.module.css';
 import { logout } from '../../auth/auth';
 
-const DeleteAccount = () => {
+const DeleteAccount = (props) => {
   const email = localStorage.getItem('email');
   const [modal, setModal] = useState(false);
   const handleCloseError = () => setModal(false);
@@ -22,7 +22,7 @@ const DeleteAccount = () => {
       const res = await axios.post('/userDelete/', body);
       if (res.status === 200) {
         setModal(false);
-        logout();
+        logout(props);
       } else {
         console.log('I am a failure');
       }

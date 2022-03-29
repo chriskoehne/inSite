@@ -33,15 +33,15 @@ const Customization = () => {
   }, [darkMode]);
 
   const toggle = (checked) => {
-    setDarkMode(checked);
+    let settings = JSON.parse(localStorage.getItem('settings'));
+    settings.darkMode = checked;
     if (checked) {
-      localStorage.setItem('darkMode', true);
-
       document.body.classList.add('dark');
     } else {
-      localStorage.setItem('darkMode', false);
       document.body.classList.remove('dark');
     }
+    localStorage.setItem('settings', JSON.stringify(settings));
+    setDarkMode(checked);
   };
 
   return (

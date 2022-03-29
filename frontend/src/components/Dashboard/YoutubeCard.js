@@ -15,16 +15,13 @@ const YoutubeCard = (props) => {
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
-      // console.log("no youtube token in localstorage")
       return false;
     }
     const date = JSON.parse(localStorage.getItem('youtubeToken')).date;
     if ((Date.now() - date) / 36e5 >= 1) {
-      // console.log("youtube token too old")
       localStorage.removeItem('youtubeToken');
       return false;
     }
-    // console.log("youtube token in localstorage")
     return true;
   };
 
@@ -33,7 +30,6 @@ const YoutubeCard = (props) => {
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
     if (currentUrl.includes('code') && currentUrl.includes('scope')) {
-      // console.log("grabbing code from url")
       let start = currentUrl.indexOf('code') + 5;
       let end = currentUrl.indexOf('&scope');
       c = currentUrl.substring(start, end);
@@ -41,15 +37,12 @@ const YoutubeCard = (props) => {
         email: e,
         code: c,
       });
-      // console.log(c)
-    //   c = almostCode.substring(0, almostCode.length - 2);
     } else {
       setUser({
         email: e
       });
     }
     
-    // console.log(user)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,13 +53,10 @@ const YoutubeCard = (props) => {
         setLoading(false);
         return;
       }
-      // console.log("before convert call")
       const result = await axios.post(
         '/youtube/codeToToken/',
         { code: user.code }
       );
-      // console.log("after convert call")
-      // console.log(result)
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -75,9 +65,6 @@ const YoutubeCard = (props) => {
         );
         setYoutubeToken(token);
       } 
-      // else {
-      //   console.log('could not convert token');
-      // }
       setLoading(false);
     };
 
@@ -113,7 +100,6 @@ const YoutubeCard = (props) => {
             console.log(subscriptions);
           }
 
-          // console.log('loading done');
         }
       }
       setLoading(false);
@@ -132,10 +118,9 @@ const YoutubeCard = (props) => {
       email: user.email,
     });
     if (result.data.success) {
-        // console.log('got the link!');
         window.location.href = result.data.link;
       } else {
-        // console.log('there was an error in youtube user signup');
+        console.log('there was an error in youtube user signup');
       }
     return;
   };

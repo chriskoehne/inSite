@@ -94,10 +94,10 @@ const RedditPage = (props) => {
   const [commentGraphMonth, setCommentGraphMonth] = useState(false);
   const [mostControversialPost, setmostControlversialPost] = useState({});
   const [mostControversialComment, setMostControversialComment] = useState({});
-  //chartComment 
+  //chartComment
   const [chartCommentData, setChartCommentData] = useState({
-    datasets: []
-  })
+    datasets: [],
+  });
   //testing chartData stuff
   const [chartMonthData, setChartMonthData] = useState({
     datasets: [],
@@ -159,7 +159,7 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
-            console.log(ansOverview.data)
+            console.log(ansOverview.data);
             setComments(ansOverview.data.comments);
             setPosts(ansOverview.data.posts);
             let pst = ansOverview.data.posts;
@@ -240,31 +240,32 @@ const RedditPage = (props) => {
           });
           if (ansSubKarma.status === 200) {
             setSubKarmaList(ansSubKarma.data.subKarmaList);
-            console.log(ansSubKarma.data.subKarmaList)
-            let labels = [] 
+            console.log(ansSubKarma.data.subKarmaList);
+            let labels = [];
             let subKarmaDataset = [
-              { label: "Comment Karma",
+              {
+                label: 'Comment Karma',
                 borderColor: '#ff4500',
                 backgroundColor: '#ff4500',
-              }, 
+              },
               {
-                label: "Post Karma",
+                label: 'Post Karma',
                 borderColor: 'black',
                 backgroundColor: 'white',
                 borderWidth: 1,
-              }
-            ]
-            let comKarma = []
-            let postKarma = []
+              },
+            ];
+            let comKarma = [];
+            let postKarma = [];
             Object.keys(ansSubKarma.data.subKarmaList).map((key, index) => {
-              labels.push("r/" + ansSubKarma.data.subKarmaList[key].sr)
-              comKarma.push(ansSubKarma.data.subKarmaList[key].comment_karma)
-              postKarma.push(ansSubKarma.data.subKarmaList[key].link_karma )
-            })
-            subKarmaDataset[0].data = comKarma
-            subKarmaDataset[1].data = postKarma
-            console.log(subKarmaDataset)
-            setChartCommentData({ labels: labels, datasets: subKarmaDataset })
+              labels.push('r/' + ansSubKarma.data.subKarmaList[key].sr);
+              comKarma.push(ansSubKarma.data.subKarmaList[key].comment_karma);
+              postKarma.push(ansSubKarma.data.subKarmaList[key].link_karma);
+            });
+            subKarmaDataset[0].data = comKarma;
+            subKarmaDataset[1].data = postKarma;
+            console.log(subKarmaDataset);
+            setChartCommentData({ labels: labels, datasets: subKarmaDataset });
             // console.log(subKarmaList);
           }
 
@@ -384,19 +385,21 @@ const RedditPage = (props) => {
     return document.body.classList.contains('dark') ? 'light' : 'dark';
   };
 
-  console.log(chartCommentData)
-  console.log(chartThirtyData)
-  let options= {
+  console.log(chartCommentData);
+  console.log(chartThirtyData);
+  let options = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-        yAxes: [{
-            ticks: {
-                beginAtZero:true
-            }
-        }]
-    }
-}
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  };
 
   //clunky, but follow the above and add to the following if statements for the other social medias
 
@@ -449,13 +452,13 @@ const RedditPage = (props) => {
           <Card className={styles.socialsCard}>
             <Row className={styles.chartContainer}>
               <Bar
-                    height={'50vh'}
-                    width={'75vw'}
-                    color={'#ff4500'}
-                    data={chartCommentData}
-                    options={options}
-                  />
-                <div style={{ paddingTop: '2%' }}>
+                height={'50vh'}
+                width={'75vw'}
+                color={'#ff4500'}
+                data={chartCommentData}
+                options={options}
+              />
+              <div style={{ paddingTop: '2%' }}>
                 Here we see a graphical representation of a user's Karma score
                 by Subreddit
               </div>
@@ -510,7 +513,17 @@ const RedditPage = (props) => {
                       {getMaxItem(posts, getMaxScore(posts)).title}
                     </Card.Title>
                     <Card.Text>
-                    <iframe id="reddit-embed" src={"https://www.redditmedia.com" + getMaxItem(posts, getMaxScore(posts)).permalink +"?depth=1&amp;showmore=false&amp;embed=true&amp;"} sandbox="allow-scripts allow-same-origin allow-popups" className={styles.embeddedComment}></iframe>
+                      <iframe
+                        id='reddit-embed'
+                        style={{height: '200px'}}
+                        src={
+                          'https://www.redditmedia.com' +
+                          getMaxItem(posts, getMaxScore(posts)).permalink +
+                          '?depth=1&amp;showmore=false&amp;embed=true&amp;'
+                        }
+                        sandbox='allow-scripts allow-same-origin allow-popups'
+                        className={styles.embeddedComment}
+                      ></iframe>
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -525,7 +538,18 @@ const RedditPage = (props) => {
                       {getMaxItem(comments, getMaxScore(comments)).link_title}
                     </Card.Title>
                     <Card.Text>
-                    <iframe id="reddit-embed" src={"https://www.redditmedia.com" + getMaxItem(comments, getMaxScore(comments)).permalink +"?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false"} sandbox="allow-scripts allow-same-origin allow-popups" className={styles.embeddedComment}></iframe>
+                      <iframe
+                        id='reddit-embed'
+                        style={{height: '200px'}}
+                        src={
+                          'https://www.redditmedia.com' +
+                          getMaxItem(comments, getMaxScore(comments))
+                            .permalink +
+                          '?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false'
+                        }
+                        sandbox='allow-scripts allow-same-origin allow-popups'
+                        className={styles.embeddedComment}
+                      ></iframe>
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -540,7 +564,17 @@ const RedditPage = (props) => {
                       {getMinItem(posts, getMinScore(posts)).title}
                     </Card.Title>
                     <Card.Text>
-                    <iframe id="reddit-embed" src={"https://www.redditmedia.com" + getMinItem(posts, getMinScore(posts)).permalink +"?depth=1&amp;showmore=false&amp;embed=true&amp;"} sandbox="allow-scripts allow-same-origin allow-popups" className={styles.embeddedComment}></iframe>
+                      <iframe
+                        id='reddit-embed'
+                        style={{height: '200px'}}
+                        src={
+                          'https://www.redditmedia.com' +
+                          getMinItem(posts, getMinScore(posts)).permalink +
+                          '?depth=1&amp;showmore=false&amp;embed=true&amp;'
+                        }
+                        sandbox='allow-scripts allow-same-origin allow-popups'
+                        className={styles.embeddedComment}
+                      ></iframe>
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -555,7 +589,18 @@ const RedditPage = (props) => {
                       {getMinItem(comments, getMinScore(comments)).link_title}
                     </Card.Title>
                     <Card.Text>
-                    <iframe id="reddit-embed" src={"https://www.redditmedia.com" + getMinItem(comments, getMinScore(comments)).permalink +"?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false"} sandbox="allow-scripts allow-same-origin allow-popups" className={styles.embeddedComment}></iframe>
+                      <iframe
+                        id='reddit-embed'
+                        style={{height: '200px'}}
+                        src={
+                          'https://www.redditmedia.com' +
+                          getMinItem(comments, getMinScore(comments))
+                            .permalink +
+                          '?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false'
+                        }
+                        sandbox='allow-scripts allow-same-origin allow-popups'
+                        className={styles.embeddedComment}
+                      ></iframe>
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -567,7 +612,16 @@ const RedditPage = (props) => {
                 <Card className={styles.textCard}>
                   <Card.Body>
                     <Card.Title>{mostControversialPost.title}</Card.Title>
-                    <iframe id="reddit-embed" src={"https://www.redditmedia.com" + mostControversialPost.permalink +"?depth=1&amp;showmore=false&amp;embed=true&amp;"} sandbox="allow-scripts allow-same-origin allow-popups" className={styles.embeddedComment}></iframe>
+                    <iframe
+                      id='reddit-embed'
+                      src={
+                        'https://www.redditmedia.com' +
+                        mostControversialPost.permalink +
+                        '?depth=1&amp;showmore=false&amp;embed=true&amp;'
+                      }
+                      sandbox='allow-scripts allow-same-origin allow-popups'
+                      className={styles.embeddedComment}
+                    ></iframe>
                   </Card.Body>
                 </Card>
               </Col>
@@ -580,7 +634,16 @@ const RedditPage = (props) => {
                     <Card.Title>
                       {mostControversialComment.link_title}
                     </Card.Title>
-                    <iframe id="reddit-embed" src={"https://www.redditmedia.com" + mostControversialComment.permalink +"?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false"} sandbox="allow-scripts allow-same-origin allow-popups" className={styles.embeddedComment}></iframe>
+                    <iframe
+                      id='reddit-embed'
+                      src={
+                        'https://www.redditmedia.com' +
+                        mostControversialComment.permalink +
+                        '?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false'
+                      }
+                      sandbox='allow-scripts allow-same-origin allow-popups'
+                      className={styles.embeddedComment}
+                    ></iframe>
                   </Card.Body>
                 </Card>
               </Col>
