@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Container, Row, Nav } from 'react-bootstrap';
-import React from 'react';
+
 import styles from './Settings.module.css';
 import { logout } from '../../auth/auth';
 import Customization from './Customization';
 import ChangePassword from './ChangePassword';
 import DeleteAccount from './DeleteAccount';
+import Permissions from './Permissions';
 
 const SettingsDrawer = (props) => {
   return (
@@ -28,8 +29,8 @@ const SettingsDrawer = (props) => {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link className={styles.settingsLinks} href='/settings#deauthorize'>
-          Deauthorize Social Media
+        <Nav.Link className={styles.settingsLinks} href='/settings#permissions'>
+          Permissions
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
@@ -53,21 +54,6 @@ const SettingsDrawer = (props) => {
 };
 
 
-
-const Deauthorize = () => {
-  return (
-    <div id='deauthorize' className={styles.deauthorize}>
-      <h4>Deauthorize Social Media</h4>
-      <h5>piss</h5>
-      <h5>piss</h5>
-      <h5>piss</h5>
-      <h5>piss</h5>
-      <h5>piss</h5>
-      <h5>piss</h5>
-    </div>
-  );
-};
-
 const Logout = (props) => {
   return (
     <div id='logout' className={styles.logout}>
@@ -81,9 +67,8 @@ const Logout = (props) => {
   );
 };
 
-
 const Settings = (props) => {
-  console.log(props)
+  console.log(props);
   return (
     <Container fluid>
       <Row>
@@ -99,11 +84,11 @@ const Settings = (props) => {
           <hr />
           <ChangePassword />
           <hr />
-          <Deauthorize />
+          <Permissions />
           <hr />
           <Logout />
           <hr />
-          <DeleteAccount navigate={props.navigate}/>
+          <DeleteAccount navigate={props.navigate} />
           <hr />
         </Col>
       </Row>

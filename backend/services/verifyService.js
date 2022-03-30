@@ -5,7 +5,7 @@ var authy = require('authy')(authToken);
 const User = require('../database/models/User');
 exports.check = async function (email, code) {
   try {
-    console.log(email);
+    // console.log(email);
     let user = await User.findOne({ email: email }).select('-password -__v');
 
     if (!user) {

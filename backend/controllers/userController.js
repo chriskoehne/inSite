@@ -97,3 +97,54 @@ exports.updateCardOrder = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.updatePermissions = async function (req, res, next) {
+  try {
+    let result = await userService.updatePermissions(
+      req.body.email,
+      req.body.permissions
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.updateRedditData = async function (req, res, next) {
+  try {
+    let result = await userService.updateRedditData(
+      req.body.email,
+      req.body.property,
+      req.body.data
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getRedditData = async function (req, res, next) {
+  try {
+
+    let result = await userService.getRedditData(
+      req.query.email,
+    );
+    switch (result) {
+      case c.USER_INVALID_PERMISSIONS:
+      case c.USER_NOT_FOUND:
+      case c.GENERAL_TRY_CATCH_ERR:
+        return res.status(400).json({ message: result });
+    }
+
+    return res.status(200).json({ message: result });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};

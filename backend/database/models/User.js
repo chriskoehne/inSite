@@ -15,20 +15,41 @@ const userSchema = new mongoose.Schema(
     },
     password: { type: String, required: true },
     authyId: { type: String, required: true, default: 'unset' },
-    redditUsername: { type: String, required: false },
-    redditPassword: { type: String, required: false },
-
+    // redditUsername: { type: String, required: false },
+    // redditPassword: { type: String, required: false },
+    redditData: {  
+      type: {
+        overview: { type: Object, required: true, default: null },
+        subKarma: { type: Object, required: true, default: null },
+        totalKarma: { type: Object, required: true, default: null },
+      },
+      required: true,
+      _id: false,
+    },
+    
     settings: {
       type: {
         darkMode: { type: Boolean, required: true, default: false },
-        cardOrder: { type: [String], required: false, default: ['reddit', 'twitter', 'instagram', 'youtube']},
+        cardOrder: {
+          type: [String],
+          required: false,
+          default: ['reddit', 'twitter', 'instagram', 'youtube'],
+        },
+        permissions: {
+          type: {
+            reddit: { type: Boolean, required: true, default: false },
+            twitter: { type: Boolean, required: true, default: false },
+            instagram: { type: Boolean, required: true, default: false },
+            youtube: { type: Boolean, required: true, default: false },
+          },
+          required: true,
+          _id: false,
+        },
       },
-      required: true,
-      default: {},
       _id: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 const User = mongoose.model('User', userSchema);

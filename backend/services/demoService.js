@@ -27,7 +27,7 @@ exports.signup = async function (req, res) {
     if ((await User.find({ email: email })).length > 0) {
       res.status(400).send({ message: 'email already in use' });
       return;
-    } 
+    }
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     let result = await User.create({
@@ -35,14 +35,13 @@ exports.signup = async function (req, res) {
       password: hashedPassword,
     });
 
-    console.log
+    console.log;
     if (result instanceof User) {
-      return ({ message: 'User registered successfully!' });
+      return { message: 'User registered successfully!' };
     } else {
       res.send({ message: 'Failure creating user' });
     }
     return;
-
   } catch (err) {
     return err;
   }
@@ -70,4 +69,18 @@ exports.amogus = async function () {
   ⢷⣶⣤⣀⠉⠉⠉⠉⠉⠄⠀⠀⠀⠀⠈⣿⣆⡀⠀⠀⠀⠀⠀⠀⢀⣠⣴⡾⠃⠀
   ⠀⠈⠉⠛⠿⣶⣦⣄⣀⠀⠀⠀⠀⠀⠀⠈⠛⠻⢿⣿⣾⣿⡿⠿⠟⠋⠁⠀⠀⠀
 `;
+};
+
+exports.updateSchema = async function (req, res) {
+  let uh = await User.updateMany(
+    {},
+    {
+      redditData: {
+        overview: null,
+        subKarma: null,
+        totalKarma: null,
+      }
+    }
+  );
+  res.status(200).send(uh);
 };
