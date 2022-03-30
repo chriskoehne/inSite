@@ -119,11 +119,12 @@ const RedditPage = (props) => {
 
     const doTheThing = async () => {
       setLoading(true);
-      if (!hasToken()) {
+
+      if (await getStoredRedditData()) {
+        setLoading(false);
+      } else if (!hasToken()) {
         navigate('/dashboard');
         return;
-      } else if (await getStoredRedditData()) {
-        setLoading(false);
       } else {
         setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
       }
