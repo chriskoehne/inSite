@@ -120,4 +120,17 @@ router.get(
   twitterController.test
 );
 
+router.get(
+  '/twitter/getUser', 
+  auth.verifyToken, 
+  twitterController.me
+);
+
+router.get(
+  '/twitter/tweets', 
+  auth.verifyToken, 
+  twitterController.tweets
+);
+
+
 module.exports = router;
