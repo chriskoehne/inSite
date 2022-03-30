@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Switch from 'react-switch';
 import axios from 'axios';
 import styles from './Settings.module.css';

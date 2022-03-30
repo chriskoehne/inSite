@@ -24,7 +24,6 @@ import { getMonths, getDays, getLastThirty } from './RedditComments';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
 import { getUncommon, getWordList, isFalsy } from './helperFunctions';
 
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -93,12 +92,16 @@ const RedditPage = (props) => {
         const ans = await axios.get('/user/reddit', {
           params: { email: localStorage.getItem('email') },
         });
-        if (ans.status === 200 && ans.data.message !== null && !isFalsy(ans.data.message)) {
-          const redditData = ans.data.message
-          console.log(redditData.overview)
-          setPosts(redditData.overview.posts)
+        if (
+          ans.status === 200 &&
+          ans.data.message !== null &&
+          !isFalsy(ans.data.message)
+        ) {
+          const redditData = ans.data.message;
+          console.log(redditData.overview);
+          setPosts(redditData.overview.posts);
           setComments(redditData.overview.comments);
-          setSubKarmaList(redditData.subKarma)
+          setSubKarmaList(redditData.subKarma);
           setCommentKarma(redditData.totalKarma.commentKarma);
           setLinkKarma(redditData.totalKarma.linkKarma);
           setAwardKarma(redditData.totalKarma.awardKarma);
@@ -120,7 +123,6 @@ const RedditPage = (props) => {
         navigate('/dashboard');
         return;
       } else if (await getStoredRedditData()) {
-
         setLoading(false);
       } else {
         setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
@@ -218,7 +220,7 @@ const RedditPage = (props) => {
     ];
     let comKarma = [];
     let postKarma = [];
-    Object.keys(subKarmaList).map((key, index) => {
+    Object.keys(subKarmaList).forEach((key, index) => {
       labels.push('r/' + subKarmaList[key].sr);
       comKarma.push(subKarmaList[key].comment_karma);
       postKarma.push(subKarmaList[key].link_karma);
@@ -528,6 +530,7 @@ const RedditPage = (props) => {
                     <Card.Title>{getMaxItem(posts).title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most upvoted post'
                         id='reddit-embed'
                         style={{ height: '200px' }}
                         src={
@@ -551,6 +554,7 @@ const RedditPage = (props) => {
                     <Card.Title>{getMaxItem(comments).link_title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most upvoted comment'
                         id='reddit-embed'
                         style={{ height: '200px' }}
                         src={
@@ -574,6 +578,7 @@ const RedditPage = (props) => {
                     <Card.Title>{getMinItem(posts).title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most downvoted post'
                         id='reddit-embed'
                         style={{ height: '200px' }}
                         src={
@@ -597,6 +602,7 @@ const RedditPage = (props) => {
                     <Card.Title>{getMinItem(comments).link_title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most downvoted comment'
                         id='reddit-embed'
                         style={{ height: '200px' }}
                         src={
@@ -619,6 +625,7 @@ const RedditPage = (props) => {
                   <Card.Body>
                     <Card.Title>{mostControversialPost.title}</Card.Title>
                     <iframe
+                      title='most controversial post'
                       id='reddit-embed'
                       src={
                         'https://www.redditmedia.com' +
@@ -641,6 +648,7 @@ const RedditPage = (props) => {
                       {mostControversialComment.link_title}
                     </Card.Title>
                     <iframe
+                      title='most controversial comment'
                       id='reddit-embed'
                       src={
                         'https://www.redditmedia.com' +

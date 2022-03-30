@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const useDidMountEffect = (func, deps) => {
     const didMount = useRef(false);
@@ -6,6 +6,7 @@ const useDidMountEffect = (func, deps) => {
     useEffect(() => {
         if (didMount.current) func();
         else didMount.current = true;
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps);
 }
 

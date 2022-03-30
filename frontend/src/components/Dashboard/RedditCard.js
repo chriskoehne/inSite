@@ -29,31 +29,6 @@ const RedditCard = (props) => {
     return true;
   };
 
-  const checkStored = async () => {
-    try {
-      if (!JSON.parse(localStorage.getItem('settings')).permissions.reddit) {
-        console.log('no permissions');
-        return false;
-      }
-      let ans = await axios.get('/user/reddit', {
-        params: { email: localStorage.getItem('email') },
-      });
-      if (
-        ans.status === 200 &&
-        ans.data.message !== null &&
-        !isFalsy(ans.data.message)
-      ) {
-        setHasStored(true)
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
   useEffect(() => {
     setLoading(true);
     const getStoredRedditData = async () => {
@@ -71,6 +46,7 @@ const RedditCard = (props) => {
           !isFalsy(ans.data.message)
         ) {
           setComments(ans.data.message.overview.comments);
+          setHasStored(true);
           console.log('loading done 1');
           return true;
         } else {

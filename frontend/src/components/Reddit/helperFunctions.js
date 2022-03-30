@@ -1,4 +1,3 @@
-import axios from 'axios';
 const c = require('./constants/constants');
 
 export function getUncommon(sentence) {

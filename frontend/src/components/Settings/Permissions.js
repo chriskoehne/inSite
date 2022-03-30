@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SocialIcon } from 'react-social-icons';
 import Switch from 'react-switch';
 import { Button, Modal } from 'react-bootstrap';
