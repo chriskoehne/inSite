@@ -60,7 +60,11 @@ router.get('/youtube/activity', auth.verifyToken, youtubeController.activity);
 
 router.get('/youtube/subscriptions', auth.verifyToken, youtubeController.subscriptions);
 
+router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostSubscribers);
+
 router.get('/youtube/likedVideos', auth.verifyToken, youtubeController.likedVideos);
+
+router.get('/youtube/popularVidsFromLiked', auth.verifyToken, youtubeController.popularVidsFromLiked);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 

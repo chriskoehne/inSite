@@ -64,6 +64,20 @@ exports.likedVideos = async function (req, res, next) {
   }
 };
 
+exports.popularVidsFromLiked = async function (req, res, next) {
+  try {
+    let result = await youtubeService.popularVidsFromLiked(req, res);
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.subscriptions = async function (req, res, next) {
   try {
     // console.log('In YouTube Subscriptions Controller');
@@ -78,3 +92,63 @@ exports.subscriptions = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.mostSubscribers = async function (req, res, next) {
+  try {
+    // console.log('In YouTube Subscriptions Controller');
+    let result = await youtubeService.mostSubscribers(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.popularLikedVideos = async function (req, res, next) {
+  try {
+    let result = await youtubeService.popularLikedVideos(req, res);
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+
+};
+
+exports.popularCategory = async function (req, res, next) {
+  try {
+    let result = await youtubeService.popularCategory(req, res);
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.popularComments = async function (req, res, next) {
+  try {
+    let result = await youtubeService.popularComments(req, res);
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+
+};
+
