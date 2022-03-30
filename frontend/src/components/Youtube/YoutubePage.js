@@ -13,6 +13,8 @@ const YoutubePage = (props) => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [activity, setActivity] = useState([]);
   const [likedVids, setLikedVids] = useState([]);
+  //const [mostSubscribers, setMostSubscribers] = useState([]);
+  const [popularVidsFromLiked, setPopularVids] = useState([]);
 
 
   const hasToken = () => {
@@ -60,10 +62,22 @@ const YoutubePage = (props) => {
         }
       }
       const likedVids = await axios.get('/youtube/likedVideos');
-      console.log("vids:")
+      console.log("Liked Videos:")
       console.log(likedVids)
       setLikedVids(likedVids.data.list)
+
+      const popularVidsFromLiked = await axios.get('/youtube/popularVidsFromLiked');
+      console.log("Popular Vids From Liked:")
+      console.log(popularVidsFromLiked)
+      setPopularVids(popularVidsFromLiked.data.list)
+
+      //const mostSubscribers = await axios.get('/youtube/mostSubscribers');
+      //console.log("channels:")
+      //console.log(mostSubscribers)
+      //setMostSubscribers(mostSubscribers.data.list)
+
       setLoading(false);
+
     };
     getData();
   }, [youtubeToken]);
@@ -101,15 +115,6 @@ const YoutubePage = (props) => {
       >
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <Row>
-              <Col>
-                <Row>Smthg youtube related</Row>
-              </Col>
-            </Row>
-          </Card>
-        </Carousel.Item>
-        <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
           <h3>Subscribed Channels</h3>
             <div>
             {subscriptions && subscriptions.map(sub =>
@@ -121,6 +126,7 @@ const YoutubePage = (props) => {
             </div>
           </Card>
         </Carousel.Item>
+        
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
           <h3>Liked Videos</h3>
@@ -135,6 +141,22 @@ const YoutubePage = (props) => {
             </div>
           </Card>
         </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+          <h3>Popular Videos From Your Favorite Category</h3>
+            <div>
+            {popularVidsFromLiked && popularVidsFromLiked.map(vid =>
+                        <tr key={vid.id}>
+                            <td>{vid.snippet.title}</td>
+                            <td>view count: {vid.statistics.viewCount} like count: {vid.statistics.likeCount}</td>
+                            <img src={vid.snippet.thumbnails.medium.url}/>
+                        </tr>
+                    )}
+            </div>
+          </Card>
+        </Carousel.Item>
+        
+        
       </Carousel>
     </div>
   );
