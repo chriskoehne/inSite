@@ -87,6 +87,35 @@ exports.test = async function (req, res) {
   }
 };
 
+exports.tweetCount = async function (req, res) {
+  try {
+    console.log('In Twitter Tweet Count Service');
+    const token = req.query.accessToken;
+    const id = req.query.userId;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+
+    var params = new searchParams();
+    console.log('Twitter id: ' + id)
+    params.set('query', 'from:RS_ROCKINROHAN');
+    //params.set('tweet.fields', 'created_at')
+    params.set('max_results', 10);
+
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/tweets/search/recent?query=from:' + id + '&tweet.fields=created_at',
+      { headers: headers }
+    );
+    console.log('TWEETS RETURNED ARE: ' + twitterRes.data)
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
 exports.me = async function (req, res) {
   try {
     // console.log('In Twitter Test Service');
@@ -110,7 +139,7 @@ exports.me = async function (req, res) {
 
 exports.tweets = async function (req, res) {
   try {
-    // console.log('In Twitter Test Service');
+    console.log('In Twitter Test Service');
     const token = req.query.accessToken;
     const userID = req.query.userID;
 

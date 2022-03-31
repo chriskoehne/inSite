@@ -111,11 +111,9 @@ exports.popularVidsFromLiked = async function (req, res) {
     //console.log('result: ' + result)
     var vidList = result.data.items
     const catArr = [] 
-      var i = 0
       vidList.forEach(vid => {
-        catArr[i] = vid.snippet.categoryId
+        catArr.push(vid.snippet.categoryId)
         console.log('CATEGORY ID: ' + vid.snippet.categoryId)
-        i++
       });
 
       const maxCat = mode(catArr)
