@@ -15,7 +15,6 @@ const c = require('../Reddit/constants/constants');
 const TwitterPage = (props) => {
   const [twitterToken, setTwitterToken] = useState('');
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
   const [userId, setUserId] = useState(0);
   const [chartDayData, setChartDayData] = useState({
@@ -54,7 +53,6 @@ const TwitterPage = (props) => {
 
   useEffect(() => {
     if (!twitterToken) {
-      setLoading(true);
       return;
     }
 
