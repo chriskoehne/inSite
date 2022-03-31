@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
+import BarChart from '../Charts/BarChart';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +18,7 @@ const YoutubePage = (props) => {
   //const [mostSubscribers, setMostSubscribers] = useState([]);
   const [popularVidsFromLiked, setPopularVids] = useState([]);
   const [popularVidsCategory, setPopularVidsCategory] = useState('');
+  const [playlistCounts, setPlaylistCounts] = useState([]);
 
 
   const hasToken = () => {
@@ -75,8 +77,13 @@ const YoutubePage = (props) => {
       setPopularVidsCategory(c[popularVidsFromLiked.data.list[0].snippet.categoryId])
       
       const youtubePlaylists = await axios.get('/youtube/playlists');
-      console.log("youtube playlists:")
-      console.log(youtubePlaylists)
+      // for each in youtubePlaylists.data.list:
+      // item.contentDetails.itemCount
+      let itemCounts = []
+      youtubePlaylists.data.list.forEach(item => {
+        itemCounts.push(item.contentDetails.itemCount)
+      });
+      setPlaylistCounts(itemCounts);
 
       setLoading(false);
 
@@ -92,7 +99,18 @@ const YoutubePage = (props) => {
     setIndex(selectedIndex);
   };
 
-
+  const getMaxCount = (list) => {
+    if (loading) {
+      return {};
+    }
+    var maxCount = 0;
+    list.forEach(function (item, index) {
+      if (item > maxCount) {
+        maxCount = item;
+      }
+    });
+    return maxCount;
+  };
 
   return loading ? (
     <div
@@ -116,11 +134,19 @@ const YoutubePage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
-          <h3>Playlist Content Counts</h3>
-            <div>
-              <p>insert a bar graph with the number of playlists and their content counts</p>
-            </div>
+        <Card className={styles.socialsCard}>
+            <Row className={styles.chartContainer}>
+              <BarChart
+                height={'60vh'}
+                data={playlistCounts}
+                maxVal={getMaxCount(playlistCounts)}
+                label='Playlist Counts'
+                xaxis='PlaylistCounts'
+              />
+              <div style={{ paddingTop: '2%' }}>
+                Here we see a graphical representation of the number of playlists a user has, divided into buckets which represent the number of videos per playlist.
+              </div>
+            </Row>
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
