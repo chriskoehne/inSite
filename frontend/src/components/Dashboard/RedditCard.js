@@ -73,7 +73,7 @@ const RedditCard = (props) => {
           code: c,
         });
         console.log('loading done 2');
-        // setLoading(false);
+        setLoading(false);
       } else if (await getStoredRedditData()) {
         setLoading(false);
       } else {
@@ -201,7 +201,7 @@ const RedditCard = (props) => {
             }
           }
         }
-        setLoading(false)
+        setLoading(false);
       }
     };
     if (redditToken) {
