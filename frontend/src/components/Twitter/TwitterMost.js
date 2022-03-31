@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Carousel, Button, Row, Card, Col } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
-import { Timeline, Tweet } from 'react-twitter-widgets'
+import { Tweet } from 'react-twitter-widgets'
 // import LineChart from '../Charts/LineChart';
-
-const c = require('./constants/constants.js')
 
 function getTweetsID(data) {
   var ids = '';
