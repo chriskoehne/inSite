@@ -86,11 +86,11 @@ router.get(
   youtubeController.subscriptions
 );
 
-router.get(
-  '/youtube/likedVideos',
-  auth.verifyToken,
-  youtubeController.likedVideos
-);
+router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostSubscribers);
+
+router.get('/youtube/likedVideos', auth.verifyToken, youtubeController.likedVideos);
+
+router.get('/youtube/popularVidsFromLiked', auth.verifyToken, youtubeController.popularVidsFromLiked);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 
@@ -144,7 +144,50 @@ router.post(
   twitterController.convert
 );
 
-router.get('/twitter/test', auth.verifyToken, twitterController.test);
+// router.get('/twitter/test', auth.verifyToken, twitterController.test);
+
+router.get(
+  '/twitter/tweetCount', 
+  auth.verifyToken, 
+  twitterController.tweetCount
+);
+
+router.get(
+  '/twitter/getUser', 
+  auth.verifyToken, 
+  twitterController.me
+);
+
+router.get(
+  '/twitter/tweets', 
+  auth.verifyToken, 
+  twitterController.tweets
+);
+
+router.get(
+  '/twitter/followers', 
+  auth.verifyToken, 
+  twitterController.followers
+);
+
+router.get(
+  '/twitter/following', 
+  auth.verifyToken, 
+  twitterController.following
+);
+
+router.get(
+  '/twitter/likes', 
+  auth.verifyToken, 
+  twitterController.likes
+);
+
+router.get(
+  '/twitter/tweetLikes', 
+  auth.verifyToken, 
+  twitterController.tweetLikes
+);
+
 
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);
