@@ -4,6 +4,7 @@ import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
 import { Tweet } from 'react-twitter-widgets'
+import ReactTooltip from 'react-tooltip';
 // import LineChart from '../Charts/LineChart';
 
 function getTweetsID(data) {
@@ -149,16 +150,17 @@ const TwitterMost = (props) => {
       <div>
           <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
           <div className={styles.embedTweets}>
-              <h3>Wow this Tweet was popular:</h3>
+              <h3 data-tip="Your most liked tweet">Wow this Tweet was popular:</h3>
               <Tweet tweetId={mostLikedTweet} className={styles.embedTweets} options={{ align: 'center'}} />
-              <h3>This one must've been worth sharing:</h3>
+              <h3 data-tip="Your most retweeted tweet">This one must've been worth sharing:</h3>
               <Tweet tweetId={mostRetweet} className={styles.embedTweets} options={{ align: 'center'}} />
-              <h3>People had a lot to say about this one:</h3>
+              <h3 data-tip="Your most quoted tweet">People had a lot to say about this one:</h3>
               <Tweet tweetId={mostQuotedTweet} className={styles.embedTweets} options={{ align: 'center'}} />
-              <h3>People were BUZZING over this:</h3>
+              <h3 data-tip="Your most replied tweet">People were BUZZING over this:</h3>
               <Tweet tweetId={mostRepliedTweet} className={styles.embedTweets} options={{ align: 'center'}} />
           </div>
           </Card>
+          <ReactTooltip/>
       </div>
       
   );

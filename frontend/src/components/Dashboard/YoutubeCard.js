@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
 import { SocialIcon } from "react-social-icons";
 import BarChart from "../Charts/BarChart";
+import ReactTooltip from 'react-tooltip';
 
 const YoutubeCard = (props) => {
   const [youtubeToken, setYoutubeToken] = useState("");
@@ -159,12 +160,6 @@ const YoutubeCard = (props) => {
           maxVal={getMaxCount(playlistCounts)}
           label="Playlist Counts"
           xaxis="PlaylistCounts"
-          color={'#ff3333'}
-          onClick={function () {
-            props.navigate("youtube", {
-              state: { email: user.email, accessToken: youtubeToken },
-            });
-          }}
         />
       );
     } else {
@@ -172,10 +167,12 @@ const YoutubeCard = (props) => {
         <div className={styles.centered}>
           <Button
             className={`${styles.buttons} ${styles.youtubeB}`}
+            data-tip='Connect your YouTube account to inSite to begin seeing your YouTube usage metrics!'
             onClick={authenticateYoutube}
           >
             Authorize YouTube
           </Button>
+          <ReactTooltip/>
         </div>
       );
     }
@@ -192,7 +189,20 @@ const YoutubeCard = (props) => {
         className={styles.socialsCard}
       >
         <Card.Body>
-          <Card.Title>{icon()} Youtube</Card.Title>
+          <Card.Title>{icon()} Youtube
+            <Button
+                className={`${styles.buttons} ${styles.youtubeB}`}
+                data-tip="See more insights about your YouTube, such as playlist count and reccomendations"
+                style={{ float: "right" }}
+                onClick={function () {
+                  props.navigate("youtube", {
+                    state: { email: user.email, accessToken: youtubeToken },
+                  });
+                }}
+              >
+                See more
+              </Button>
+          </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
         </Card.Body>
