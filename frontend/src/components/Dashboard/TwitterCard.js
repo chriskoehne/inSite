@@ -123,20 +123,7 @@ const TwitterCard = (props) => {
     const callTwitter = async () => {
       // console.log('Calling Twitter API. Here is localStorage:');
       // console.log(localStorage);
-      const twitterQuery = {
-        accessToken: twitterToken,
-      };
-      const twitterRes = await axios.get(
-        '/twitter/test/',
-        { params: twitterQuery }
-      );
-      if (twitterRes) {
-        // console.log('Received Tweets from Twitter!');
-        console.log(twitterRes.data);
-      } 
-      // else {
-      //   console.log('Could not get Tweets from Twitter!');
-      // }
+      console.log('insert twitter call here for graph on twitter card');
     };
 
     if (twitterToken) {

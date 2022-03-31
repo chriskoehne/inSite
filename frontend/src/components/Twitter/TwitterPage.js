@@ -3,6 +3,7 @@ import { Card, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
 import TwitterWordGraph from './TwitterWordGraph';
+import TwitterFollows from './TwitterFollows';
 
 const TwitterPage = (props) => {
   const [index, setIndex] = useState(0);
@@ -24,9 +25,7 @@ const TwitterPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
-            penis
-          </Card>
+          <TwitterFollows />
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <TwitterWordGraph />

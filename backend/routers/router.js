@@ -128,5 +128,17 @@ router.get(
   twitterController.tweets
 );
 
+router.get(
+  '/twitter/followers', 
+  auth.verifyToken, 
+  twitterController.followers
+);
+
+router.get(
+  '/twitter/following', 
+  auth.verifyToken, 
+  twitterController.following
+);
+
 
 module.exports = router;
