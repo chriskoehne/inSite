@@ -101,12 +101,12 @@ const YoutubeCard = (props) => {
           }
         }
       }
-      const youtubePlaylists = await axios.get('/youtube/playlists');
+      const youtubePlaylists = await axios.get("/youtube/playlists");
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
-      let itemCounts = []
-      youtubePlaylists.data.list.forEach(item => {
-        itemCounts.push(item.contentDetails.itemCount)
+      let itemCounts = [];
+      youtubePlaylists.data.list.forEach((item) => {
+        itemCounts.push(item.contentDetails.itemCount);
       });
       setPlaylistCounts(itemCounts);
 
@@ -153,23 +153,18 @@ const YoutubeCard = (props) => {
 
     if (hasToken()) {
       return (
-        <Row className={styles.chartContainer}>
-              <BarChart
-                height={'60vh'}
-                data={playlistCounts}
-                maxVal={getMaxCount(playlistCounts)}
-                label='Playlist Counts'
-                xaxis='PlaylistCounts'
-                onClick={function () {
-                  props.navigate("youtube", {
-                    state: { email: user.email, accessToken: youtubeToken },
-                  });
-                }}
-              />
-              <div style={{ paddingTop: '2%' }}>
-                Here we see a graphical representation of the number of playlists a user has, divided into buckets which represent the number of videos per playlist.
-              </div>
-            </Row>
+        <BarChart
+          height={"60vh"}
+          data={playlistCounts}
+          maxVal={getMaxCount(playlistCounts)}
+          label="Playlist Counts"
+          xaxis="PlaylistCounts"
+          onClick={function () {
+            props.navigate("youtube", {
+              state: { email: user.email, accessToken: youtubeToken },
+            });
+          }}
+        />
       );
     } else {
       return (
