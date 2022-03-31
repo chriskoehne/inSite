@@ -46,3 +46,14 @@ exports.cookieCheck = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.updateSchema = async function (req, res, next) {
+  try {
+    let result = await demoService.updateSchema(req, res);
+    res.status(200).json(result);
+  } catch (e) {
+    console.log(e)
+    return res.status(400).json({ message: e.message });
+  }
+};
+

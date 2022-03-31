@@ -55,7 +55,7 @@ const Dashboard = (props) => {
   return (
     <div className={styles.box}>
       <Row xs={1} md={2} className={styles.cardRow}>
-        {orderCards()}
+      { orderCards() }
       </Row>
     </div>
   );

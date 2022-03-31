@@ -124,7 +124,6 @@ exports.userTotalKarma = async function (req, res, next) {
       return res
         .status(200)
         .json({
-          success: true,
           commentKarma: result.data.comment_karma,
           linkKarma: result.data.link_karma,
           awardKarma: result.data.awardee_karma,
