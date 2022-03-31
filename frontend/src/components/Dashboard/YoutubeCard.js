@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Row, Button, Card, Col } from "react-bootstrap";
+import { Button, Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
 import { SocialIcon } from "react-social-icons";
