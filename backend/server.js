@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000; //config port in env or jwt (dotenv requi
 
 const server = express();
 
-server.use(express.json());
+server.use(express.json({limit: '50mb'}));
 server.use(cookieParser());
 
 const corsOptions = {

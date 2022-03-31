@@ -23,6 +23,7 @@
 .socialsCard {
   height: 100%;
   background-color: rgba(255, 255, 255, 0);
+  overflow: auto;
 }
 .socialsCard .dark {
   height: 100%;
@@ -118,11 +119,22 @@
   border-color: var(--youtube);
 }
 
-
 .centered {
   height: 17vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.refreshButton {
+  position: relative;
+  margin-right: 0;
+  float: right;
+  top: -9.5%;
+  height: 9.5%;
+  padding-right: 10px !important;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size: 1em;
 }
