@@ -8,6 +8,7 @@ import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
 import TwitterFollows from './TwitterFollows';
 import TwitterLikes from './TwitterLikes';
+import TwitterMost from './TwitterMost';
 
 const c = require('../Reddit/constants/constants');
 
@@ -140,6 +141,9 @@ const TwitterPage = (props) => {
           <TwitterWordGraph />
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
+        <TwitterMost />
+        </Carousel.Item>
+      <Carousel.Item className={styles.slideshowCard}>
             <Card className={styles.socialsCard}>
             <LineChart
                       height={'65vh'}
