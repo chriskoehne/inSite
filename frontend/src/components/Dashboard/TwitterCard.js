@@ -17,32 +17,30 @@ const TwitterCard = (props) => {
   });
   const [userId, setUserId] = useState('');
 
-  
-
-  let getDays = function(wee) {
+  let getDays = function (wee) {
     let arr = [0, 0, 0, 0, 0, 0, 0];
     let dayArr = ['', '', '', '', '', '', ''];
-    let currentYear = new Date()
-    console.log('CURRENT YEAR: ' + (currentYear.getTime()/1000 - 604800))
-    wee.data.forEach(e => {
-        console.log('CREATE TIME: ' + e.created_at)
-        var dt = new Date(e.created_at)
-        if (dt >= currentYear.getTime() / 1000 - 604800) {
-            let d = new Date(dt * 1000); //get current Date
-            arr[d.getDay()] += 1;
-        }
+    let currentYear = new Date();
+    console.log('CURRENT YEAR: ' + (currentYear.getTime() / 1000 - 604800));
+    wee.data.forEach((e) => {
+      console.log('CREATE TIME: ' + e.created_at);
+      var dt = new Date(e.created_at);
+      if (dt >= currentYear.getTime() / 1000 - 604800) {
+        let d = new Date(dt * 1000); //get current Date
+        arr[d.getDay()] += 1;
+      }
     });
     for (let i = 0; i < 7; i++) {
-        let x = new Date();
-        x.setDate(x.getDate() - i)
-        dayArr[i] = c.WEEK[x.getDay()]
+      let x = new Date();
+      x.setDate(x.getDate() - i);
+      dayArr[i] = c.WEEK[x.getDay()];
     }
     let numComm = [0, 0, 0, 0, 0, 0, 0];
     for (let i = 0; i < 7; i++) {
-        numComm[i] = arr[c.WEEKKEY[dayArr[i]]]
-    } 
-    return { daysOfWeek: dayArr, numTweets: numComm }
-}
+      numComm[i] = arr[c.WEEKKEY[dayArr[i]]];
+    }
+    return { daysOfWeek: dayArr, numTweets: numComm };
+  };
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {
@@ -72,7 +70,7 @@ const TwitterCard = (props) => {
       });
     } else {
       setUser({
-        email: e
+        email: e,
       });
     }
   }, []);
@@ -84,10 +82,9 @@ const TwitterCard = (props) => {
         setLoading(false);
         return;
       }
-      const result = await axios.post(
-        '/twitter/codeToToken/',
-        { code: user.code }
-      );
+      const result = await axios.post('/twitter/codeToToken/', {
+        code: user.code,
+      });
       // console.log(result.data);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
@@ -122,21 +119,20 @@ const TwitterCard = (props) => {
       // console.log(localStorage);
       console.log('Calling getUser');
       const twitterQuery = {
-        accessToken: twitterToken
+        accessToken: twitterToken,
       };
-      const twitterRes = await axios.get(
-        '/twitter/getUser/',
-        { params: twitterQuery }
-      );
+      const twitterRes = await axios.get('/twitter/getUser/', {
+        params: twitterQuery,
+      });
       if (twitterRes) {
         //console.log('Received Tweets from Twitter!');
-        console.log('This is the user data')
+        console.log('This is the user data');
         console.log(twitterRes.data);
-        console.log('This is the user id')
-        console.log(twitterRes.data.data.id)
-        localStorage.setItem('twitter-user-id', twitterRes.data.data.id)
-        setUserId(twitterRes.data.data.id)
-      } 
+        console.log('This is the user id');
+        console.log(twitterRes.data.data.id);
+        localStorage.setItem('twitter-user-id', twitterRes.data.data.id);
+        setUserId(twitterRes.data.data.id);
+      }
       // else {
       //   console.log('Could not get Tweets from Twitter!');
       // }
@@ -159,20 +155,19 @@ const TwitterCard = (props) => {
     const callTwitter = async () => {
       // console.log('Calling Twitter API. Here is localStorage:');
       // console.log(localStorage);
-      const id = localStorage.getItem('twitter-user-id')
-      console.log('TWITTER ID IN CARD: ' + id)
+      const id = localStorage.getItem('twitter-user-id');
+      console.log('TWITTER ID IN CARD: ' + id);
       const twitterQuery = {
         accessToken: twitterToken,
-        userId: userId
+        userId: userId,
       };
-      const twitterRes = await axios.get(
-        '/twitter/tweetCount/',
-        { params: twitterQuery }
-      );
+      const twitterRes = await axios.get('/twitter/tweetCount/', {
+        params: twitterQuery,
+      });
       if (twitterRes) {
         console.log('Received Tweets from Twitter!');
         console.log(twitterRes.data);
-        let timeArr = twitterRes.data
+        let timeArr = twitterRes.data;
         //console.log('TIMEARR: ' + timeArr)
         let dayDate = getDays(timeArr);
         let dayDataset = {
@@ -181,16 +176,15 @@ const TwitterCard = (props) => {
             {
               label: 'Number of Tweets in last week',
               data: dayDate.numTweets.reverse(),
-              borderColor: '#ff4500',
-              backgroundColor: '#ff4500',
+              borderColor: '#05aced',
+              backgroundColor: '#05aced',
             },
           ],
         };
         setChartDayData(dayDataset);
-      } 
-       else {
-         console.log('Could not get Tweets from Twitter!');
-       }
+      } else {
+        console.log('Could not get Tweets from Twitter!');
+      }
     };
 
     if (twitterToken && userId) {
@@ -219,24 +213,26 @@ const TwitterCard = (props) => {
     if (twitterToken) {
       return (
         <div className={styles.centered}>
-                  <LineChart
-                    height={'25vh'}
-                    width={'45vw'}
-                    color={'#03a9f4'}
-                    data={chartDayData}
-                    onClick={function () {
-                      props.navigate('twitter', {
-                        state: { email: user.email, accessToken:twitterToken },
-                      });
-                    }}
-                  />
+          <LineChart
+            height={'25vh'}
+            width={'45vw'}
+            color={'#05aced'}
+            data={chartDayData}
+            onClick={function () {
+              props.navigate('twitter', {
+                state: { email: user.email, accessToken: twitterToken },
+              });
+            }}
+          />
         </div>
       );
-    }
-    else {
+    } else {
       return (
         <div className={styles.centered}>
-          <Button className={`${styles.buttons} ${styles.twitterB}`} onClick={authenticateTwitter}>
+          <Button
+            className={`${styles.buttons} ${styles.twitterB}`}
+            onClick={authenticateTwitter}
+          >
             Authorize Twitter
           </Button>
         </div>
@@ -247,10 +243,13 @@ const TwitterCard = (props) => {
   const icon = () => {
     return <SocialIcon fgColor='white' url='https://twitter.com/' />;
   };
-  
+
   return (
     <Col className={styles.cardCol}>
-      <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
+      <Card
+        style={{ borderColor: 'var(--twitter)' }}
+        className={styles.socialsCard}
+      >
         <Card.Body>
           <Card.Title>{icon()} Twitter</Card.Title>
           <Card.Text></Card.Text>
