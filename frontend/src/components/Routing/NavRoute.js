@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
 import { Outlet } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
 const OurNavbar = (props) => {
   return (
@@ -15,11 +16,11 @@ const OurNavbar = (props) => {
           </div>
         </Navbar.Brand>
         <Nav>
-          <Nav.Link style={{ color: 'white', marginRight: '2vw' }} href='/faq'>
+          <Nav.Link style={{ color: 'white', marginRight: '2vw' }} href='/faq' data-tip='Frequently Asked Questions about inSite'>
             FAQ
           </Nav.Link>
           <div style={{width: '25%'}}></div>
-          <Nav.Link style={{ color: 'white' }} href='/settings'>
+          <Nav.Link style={{ color: 'white' }} href='/settings' data-tip='Configure your settings, such as dark mode, card order, and social media authorizations'>
             settings
           </Nav.Link>
         </Nav>
@@ -36,6 +37,7 @@ const NavRoute = (props) => {
 
   return (
     <div className={styles.box}>
+      <ReactTooltip/>
       <OurNavbar props={props} />
       <Outlet />
     </div>

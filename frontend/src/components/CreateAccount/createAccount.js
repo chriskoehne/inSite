@@ -128,6 +128,7 @@ const CreateAccount = (props) => {
 
   return (
     <div>
+      <ReactTooltip/>
       <div className={styles.background}>
         <div className={styles.createAcc_background}>
           <h1>Create Account</h1>
@@ -241,7 +242,6 @@ const CreateAccount = (props) => {
           </form>
         </div>
       </div>
-    <ReactTooltip />
     </div>
   );
 };

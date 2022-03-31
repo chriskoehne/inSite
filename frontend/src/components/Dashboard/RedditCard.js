@@ -6,8 +6,8 @@ import styles from './Dashboard.module.css';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
 import { isFalsy } from '../Reddit/helperFunctions';
-
 import useDidMountEffect from '../../hooks/useDidMountEffect';
+import ReactTooltip from 'react-tooltip';
 
 const RedditCard = (props) => {
   const [redditToken, setRedditToken] = useState('');
@@ -274,6 +274,7 @@ const RedditCard = (props) => {
           <Button
             className={`${styles.buttons} ${styles.redditB}`}
             onClick={authenticateReddit}
+            data-tip='Connect your Reddit account to inSite to begin seeing your Reddit usage metrics!'
           >
             Authorize Reddit
           </Button>
@@ -304,6 +305,7 @@ const RedditCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
+      <ReactTooltip/>
       <Card
         style={{ borderColor: 'var(--reddit)' }}
         className={styles.socialsCard}

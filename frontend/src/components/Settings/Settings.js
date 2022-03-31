@@ -7,6 +7,7 @@ import Customization from './Customization';
 import ChangePassword from './ChangePassword';
 import DeleteAccount from './DeleteAccount';
 import Permissions from './Permissions';
+import ReactTooltip from 'react-tooltip';
 
 const SettingsDrawer = (props) => {
   return (
