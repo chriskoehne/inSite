@@ -6,6 +6,8 @@ import styles from './Twitter.module.css';
 import TwitterWordGraph from './TwitterWordGraph';
 import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
+import TwitterFollows from './TwitterFollows';
+import TwitterLikes from './TwitterLikes';
 
 const c = require('../Reddit/constants/constants');
 
@@ -145,6 +147,36 @@ const TwitterPage = (props) => {
       </div>
     );
 
+  const isDarkMode = () => {
+    return document.body.classList.contains('dark') ? 'light' : 'dark';
+  };
+
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
+
+  return (
+    <div className={styles.box}>
+      <Carousel
+        variant={isDarkMode()}
+        className={styles.slideshow}
+        activeIndex={index}
+        onSelect={handleSelect}
+      >
+        <Carousel.Item className={styles.slideshowCard}>
+          <TwitterFollows />
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <TwitterLikes />
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <TwitterWordGraph />
+        </Carousel.Item>
+      </Carousel>
+    </div>
+  );
+
+};
 
 }
 export default TwitterPage;
