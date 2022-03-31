@@ -170,3 +170,46 @@ exports.following = async function (req, res) {
     return err;
   }
 };
+
+exports.likes = async function (req, res) {
+  try {
+    // console.log('In Twitter Likes Service');
+    const token = req.query.accessToken;
+    const userID = req.query.userID;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/' + userID + '/tweets?exclude=retweets',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.tweetLikes = async function (req, res) {
+  try {
+    // console.log('In Twitter Tweet Likes Service');
+    const token = req.query.accessToken;
+    const tweetsIds = req.query.tweetsIds;
+    // console.log('IDs: ' + tweetsIds);
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/tweets?tweet.fields=public_metrics&ids=' + tweetsIds,
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};

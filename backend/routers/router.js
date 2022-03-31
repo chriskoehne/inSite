@@ -140,5 +140,17 @@ router.get(
   twitterController.following
 );
 
+router.get(
+  '/twitter/likes', 
+  auth.verifyToken, 
+  twitterController.likes
+);
+
+router.get(
+  '/twitter/tweetLikes', 
+  auth.verifyToken, 
+  twitterController.tweetLikes
+);
+
 
 module.exports = router;

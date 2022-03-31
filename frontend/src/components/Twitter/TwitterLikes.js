@@ -4,57 +4,25 @@ import { Button, Row, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
 // import LineChart from '../Charts/LineChart';
-import { SocialIcon } from 'react-social-icons';
-import { TagCloud } from 'react-tagcloud';
 
 const c = require('./constants/constants.js')
 
-function getUncommon(sentence) {
-    var wordArr = sentence.match(/\w+/g),
-      commonObj = {},
-      uncommonArr = [],
-      word,
-      i;
-  
-    let common = c.WORDLIST;
-    for (i = 0; i < common.length; i++) {
-      commonObj[common[i].trim()] = true;
+function getTweetsID(data) {
+  var ids = '';
+  var i;
+  for (i = 0; i < data.length; i++) {
+    if (i === data.length - 1) {
+      ids = ids + data[i].id; 
+    } else {
+      ids = ids + data[i].id + ','; 
     }
-  
-    for (i = 0; i < wordArr.length; i++) {
-      word = wordArr[i].trim().toLowerCase();
-      if (!commonObj[word]) {
-        uncommonArr.push(word);
-      }
-    }
-  
-    return uncommonArr;
   }
+  return ids;
+}
 
-  function getWordList(str) {
-    let arr = [];
-    let array = str.split(' ');
-    let map = {};
-    for (let i = 0; i < array.length; i++) {
-      let item = array[i];
-      map[item] = map[item] + 1 || 1;
-    }
-    for (const property in map) {
-      let obj = {};
-      obj.value = property;
-      obj.count = map[property];
-      arr.push(obj);
-    }
-    arr.sort((a, b) => b.count - a.count);
-    return arr.slice(0, 30);
-  }
-
-const TwitterWordGraph = (props) => {
+const TwitterLikes = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
-  const [loading, setLoading] = useState(false);
   const [twitterToken, setTwitterToken] = useState('');
-  const [tagCloud, setTagCloud] = useState([]);
-  const [tweets, setTweets] = useState('')
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {
@@ -114,15 +82,30 @@ const TwitterWordGraph = (props) => {
       );
       if (twitterRes) {
         // console.log('Received Tweets from Twitter!');
-        let array = twitterRes.data.data
-        let comm_str = '';
-        array.forEach((comm) => {
-            comm_str += comm.text;
-        });
-        setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
+        // console.log(twitterRes.data);
+        const tweetsIds = getTweetsID(twitterRes.data.data);
+        // console.log(tweetsIds);
+
+        const twitterLikesQuery = {
+          accessToken: twitterToken,
+          tweetsIds: tweetsIds
+        };
+
+        const twitterLikesRes = await axios.get(
+          '/twitter/tweetLikes',
+          { params: twitterLikesQuery }
+        );
+
+        if (twitterLikesRes) {
+          console.log('Received Twitter Likes');
+          console.log(twitterLikesRes.data);
+        } 
+        // else {
+        //   console.log('Did not receive Twitter Likes info');
+        // }
       } 
       // else {
-      //   console.log('Could not get Tweets from Twitter!');
+      //   console.log('Could not get Tweets from Twitter for Likes!');
       // }
     };
 
@@ -137,10 +120,11 @@ const TwitterWordGraph = (props) => {
           <Row>
               <Col>
                 <h3>
-                  AHHH
+                  Twitter Likes Page
                 </h3>
                 <div>
                     Hiiii
+                    {/* Maybe make a line graph of each tweet by how many likes they got. (Likes are found in twitterLikesRes.data[array of size 10].public_metrics.like_count)*/}
                 </div>
               </Col>
             </Row>
@@ -148,4 +132,4 @@ const TwitterWordGraph = (props) => {
   );
 };
 
-export default TwitterWordGraph;
+export default TwitterLikes;

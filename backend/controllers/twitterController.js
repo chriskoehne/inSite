@@ -108,3 +108,34 @@ exports.following = async function (req, res, next) {
   }
 };
 
+exports.likes = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Likes Controller');
+    let result = await twitterService.likes(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.tweetLikes = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Tweet Likes Controller');
+    let result = await twitterService.tweetLikes(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+
