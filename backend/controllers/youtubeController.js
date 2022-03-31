@@ -64,6 +64,20 @@ exports.likedVideos = async function (req, res, next) {
   }
 };
 
+exports.playlists = async function (req, res, next) {
+  try {
+    let result = await youtubeService.playlists(req, res);
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.popularVidsFromLiked = async function (req, res, next) {
   try {
     let result = await youtubeService.popularVidsFromLiked(req, res);

@@ -73,10 +73,10 @@ const YoutubePage = (props) => {
       console.log(popularVidsFromLiked)
       setPopularVids(popularVidsFromLiked.data.list)
       setPopularVidsCategory(c[popularVidsFromLiked.data.list[0].snippet.categoryId])
-      //const mostSubscribers = await axios.get('/youtube/mostSubscribers');
-      //console.log("channels:")
-      //console.log(mostSubscribers)
-      //setMostSubscribers(mostSubscribers.data.list)
+      
+      const youtubePlaylists = await axios.get('/youtube/playlists');
+      console.log("youtube playlists:")
+      console.log(youtubePlaylists)
 
       setLoading(false);
 
@@ -115,6 +115,14 @@ const YoutubePage = (props) => {
         activeIndex={index}
         onSelect={handleSelect}
       >
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+          <h3>Playlist Content Counts</h3>
+            <div>
+              <p>insert a bar graph with the number of playlists and their content counts</p>
+            </div>
+          </Card>
+        </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
           <h3>Subscribed Channels</h3>

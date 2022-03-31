@@ -92,9 +92,26 @@ exports.likedVideos = async function (req, res) {
   }
 };
 
+exports.playlists = async function (req, res) {
+  try {
+    console.log("playlists:")
+    const result = await service.playlists.list({
+      auth: oauth2Client,
+      part: 'snippet,contentDetails',
+      mine: true
+    });
+    console.log(result)
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
 exports.popularVidsFromLiked = async function (req, res) {
   try {
-    console.log('In YouTube video list Service');
+    // console.log('In YouTube video list Service');
     const result = await service.videos.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails,statistics',
@@ -108,12 +125,12 @@ exports.popularVidsFromLiked = async function (req, res) {
       var i = 0
       vidList.forEach(vid => {
         catArr[i] = vid.snippet.categoryId
-        console.log('CATEGORY ID: ' + vid.snippet.categoryId)
+        // console.log('CATEGORY ID: ' + vid.snippet.categoryId)
         i++
       });
 
       const maxCat = mode(catArr)
-      console.log('maxCat: ' + maxCat)
+      // console.log('maxCat: ' + maxCat)
 
       const response = await service.videos.list({
         auth: oauth2Client,
