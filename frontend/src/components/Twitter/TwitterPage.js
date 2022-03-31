@@ -5,6 +5,7 @@ import styles from './Twitter.module.css';
 import TwitterWordGraph from './TwitterWordGraph';
 import TwitterFollows from './TwitterFollows';
 import TwitterLikes from './TwitterLikes';
+import TwitterMost from './TwitterMost';
 
 const TwitterPage = (props) => {
   const [index, setIndex] = useState(0);
@@ -33,6 +34,9 @@ const TwitterPage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <TwitterWordGraph />
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+        <TwitterMost />
         </Carousel.Item>
       </Carousel>
     </div>

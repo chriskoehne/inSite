@@ -181,7 +181,7 @@ exports.likes = async function (req, res) {
       Authorization: 'Bearer ' + token,
     };
     const twitterRes = await axios.get(
-      'https://api.twitter.com/2/users/' + userID + '/tweets?exclude=retweets',
+      'https://api.twitter.com/2/users/' + userID + '/tweets?exclude=retweets&max_results=100',
       { headers: headers }
     );
     return twitterRes.data;
