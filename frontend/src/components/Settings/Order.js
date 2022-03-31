@@ -6,6 +6,7 @@ import styles from './Settings.module.css';
 import axios from 'axios';
 
 import { ReactComponent as ListBullet } from './ListBullet.svg';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 
 let socialMedias = [
   {
@@ -80,7 +81,7 @@ const Order = () => {
   let settings = JSON.parse(localStorage.getItem('settings'));
   const [cardOrder, setCardOrder] = useState(orderCards());
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     const updateCardOrder = async () => {
       try {
         let idsOnly = [];

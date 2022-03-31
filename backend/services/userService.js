@@ -111,17 +111,16 @@ exports.check = async function (email, password) {
 
 exports.updateDarkMode = async function (email, darkMode) {
   try {
-    console.log('here');
     const filter = { email: email };
-    const update = { settings: { darkMode: darkMode } };
-    console.log(update);
-    let result = await User.findOneAndUpdate(filter, update);
-    console.log(result);
+    const update = { 'settings.darkMode': darkMode };
+    let result = await User.findOneAndUpdate(filter, update, { new: true });
+    // console.log(result);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
     return c.SUCCESS;
   } catch (err) {
+    console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
@@ -129,8 +128,8 @@ exports.updateDarkMode = async function (email, darkMode) {
 exports.updateCardOrder = async function (email, cardOrder) {
   try {
     const filter = { email: email };
-    const update = { settings: { cardOrder: cardOrder } };
-    let result = await User.findOneAndUpdate(filter, update);
+    const update = { 'settings.cardOrder': cardOrder };
+    let result = await User.findOneAndUpdate(filter, update, { new: true });
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
@@ -142,9 +141,10 @@ exports.updateCardOrder = async function (email, cardOrder) {
 };
 
 exports.updatePermissions = async function (email, permissions) {
+  // return;
   try {
     const filter = { email: email };
-    const update = { settings: { permissions: permissions } };
+    const update = { 'settings.permissions': permissions };
     if (!permissions.reddit) {
       update['redditData'] = {
         overview: null,
@@ -161,10 +161,11 @@ exports.updatePermissions = async function (email, permissions) {
     if (!permissions.youtube) {
       update['youtubeData'] = null;
     }
-    let result = await User.findOneAndUpdate(filter, update);
+    let result = await User.findOneAndUpdate(filter, update, { new: true });
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
+    // console.log(result);
     return c.SUCCESS;
   } catch (err) {
     console.log(err);
@@ -197,9 +198,11 @@ exports.getRedditData = async function (email) {
     if (!user) {
       return c.USER_NOT_FOUND;
     }
+    // console.log(user);
     if (!user.settings.permissions.reddit) {
       c.USER_INVALID_PERMISSIONS;
     }
+
     return user.redditData;
   } catch (err) {
     console.log(err);

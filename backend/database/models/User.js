@@ -5,6 +5,38 @@
 
 const mongoose = require('mongoose');
 
+const permissionsSchema = new mongoose.Schema(
+  {
+    reddit: { type: Boolean, required: true, default: false },
+    twitter: { type: Boolean, required: true, default: false },
+    instagram: { type: Boolean, required: true, default: false },
+    youtube: { type: Boolean, required: true, default: false },
+  },
+  { _id: false }
+);
+
+const settingsSchema = new mongoose.Schema(
+  {
+    darkMode: { type: Boolean, required: true, default: false },
+    cardOrder: {
+      type: [String],
+      required: false,
+      default: ['reddit', 'twitter', 'instagram', 'youtube'],
+    },
+    permissions: { type: permissionsSchema, required: true, default: {} },
+  },
+  { _id: false }
+);
+
+const redditDataSchema = new mongoose.Schema(
+  {
+    overview: { type: Object, required: true, default: {} },
+    subKarma: { type: Object, required: true, default: {} },
+    totalKarma: { type: Object, required: true, default: {} },
+  },
+  {_id: false,}
+);
+
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -15,39 +47,8 @@ const userSchema = new mongoose.Schema(
     },
     password: { type: String, required: true },
     authyId: { type: String, required: true, default: 'unset' },
-    // redditUsername: { type: String, required: false },
-    // redditPassword: { type: String, required: false },
-    redditData: {  
-      type: {
-        overview: { type: Object, required: true, default: null },
-        subKarma: { type: Object, required: true, default: null },
-        totalKarma: { type: Object, required: true, default: null },
-      },
-      required: true,
-      _id: false,
-    },
-    
-    settings: {
-      type: {
-        darkMode: { type: Boolean, required: true, default: false },
-        cardOrder: {
-          type: [String],
-          required: false,
-          default: ['reddit', 'twitter', 'instagram', 'youtube'],
-        },
-        permissions: {
-          type: {
-            reddit: { type: Boolean, required: true, default: false },
-            twitter: { type: Boolean, required: true, default: false },
-            instagram: { type: Boolean, required: true, default: false },
-            youtube: { type: Boolean, required: true, default: false },
-          },
-          required: true,
-          _id: false,
-        },
-      },
-      _id: false,
-    },
+    settings: { type: settingsSchema, required: true, default: {} },
+    redditData: { type: redditDataSchema, required: true, default: {} },
   },
   { timestamps: true, strict: false }
 );

@@ -53,7 +53,6 @@ const SettingsDrawer = (props) => {
   );
 };
 
-
 const Logout = (props) => {
   return (
     <div id='logout' className={styles.logout}>

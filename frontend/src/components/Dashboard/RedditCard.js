@@ -308,13 +308,12 @@ const RedditCard = (props) => {
         style={{ borderColor: 'var(--reddit)' }}
         className={styles.socialsCard}
       >
-        <Card.Body >
+        <Card.Body>
           <Card.Title>{icon()} Reddit</Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
           {/* <div className={styles.refreshButton}>{refreshButton()}</div> */}
           {refreshButton()}
-          
         </Card.Body>
       </Card>
     </Col>

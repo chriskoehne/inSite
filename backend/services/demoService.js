@@ -75,11 +75,14 @@ exports.updateSchema = async function (req, res) {
   let uh = await User.updateMany(
     {},
     {
-      redditData: {
-        overview: null,
-        subKarma: null,
-        totalKarma: null,
-      }
+      settings: {
+        permissions: {
+          reddit: false,
+          twitter: false,
+          instagram: false,
+          youtube: false,
+        },
+      },
     }
   );
   res.status(200).send(uh);

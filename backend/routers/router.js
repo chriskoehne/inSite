@@ -147,6 +147,6 @@ router.post(
 router.get('/twitter/test', auth.verifyToken, twitterController.test);
 
 /* Don't delete this, I use it to help update the schemas */
-// router.post('/updateSchema', demoController.updateSchema);
+router.post('/updateSchema', demoController.updateSchema);
 
 module.exports = router;

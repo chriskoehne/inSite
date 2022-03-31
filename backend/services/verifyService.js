@@ -23,7 +23,6 @@ exports.check = async function (email, code) {
             console.log('error caught');
             // res.status(400).send({ message: "invalid code" });
             resolve(c.AUTHY_VERIFY_ERROR);
-
           } else {
             console.log(authyres);
 
@@ -34,6 +33,7 @@ exports.check = async function (email, code) {
               settings: user.settings,
               //add other wanted properties here
             };
+            console.log(safeUser);
             resolve({ user: safeUser });
           }
         }

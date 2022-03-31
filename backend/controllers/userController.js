@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 var userService = require('../services/userService');
 
 exports.userCreation = async function (req, res, next) {
+  // console.log('userCreation')
   try {
     let result = await userService.signup(
       req.body.email,
@@ -33,6 +34,7 @@ exports.userCreation = async function (req, res, next) {
 };
 
 exports.deleteUser = async function (req, res, next) {
+  // console.log('delete')
   try {
     let result = await userService.deleteUser(req.body.email);
     return res.status(200).json({ message: result });
@@ -42,6 +44,8 @@ exports.deleteUser = async function (req, res, next) {
 };
 
 exports.login = async function (req, res, next) {
+  // console.log('login')
+
   try {
     /* FOR DEVELOPMENT ONLY */
     // let result = '620f3de16decd5056284765d';
@@ -68,6 +72,8 @@ exports.login = async function (req, res, next) {
 };
 
 exports.updateDarkMode = async function (req, res, next) {
+  // console.log('updateDarkMode')
+
   try {
     let result = await userService.updateDarkMode(
       req.body.email,
@@ -84,6 +90,7 @@ exports.updateDarkMode = async function (req, res, next) {
 };
 
 exports.updateCardOrder = async function (req, res, next) {
+  // console.log('updateCardOrder')
   try {
     let result = await userService.updateCardOrder(
       req.body.email,
@@ -99,6 +106,7 @@ exports.updateCardOrder = async function (req, res, next) {
 };
 
 exports.updatePermissions = async function (req, res, next) {
+  // console.log('updatePermissions')
   try {
     let result = await userService.updatePermissions(
       req.body.email,
@@ -114,6 +122,7 @@ exports.updatePermissions = async function (req, res, next) {
 };
 
 exports.updateRedditData = async function (req, res, next) {
+  // console.log('updateRedditData')
   try {
     let result = await userService.updateRedditData(
       req.body.email,
@@ -130,6 +139,7 @@ exports.updateRedditData = async function (req, res, next) {
 };
 
 exports.getRedditData = async function (req, res, next) {
+  // console.log('getRedditData')
   try {
 
     let result = await userService.getRedditData(
