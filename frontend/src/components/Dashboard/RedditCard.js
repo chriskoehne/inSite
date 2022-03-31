@@ -113,6 +113,11 @@ const RedditCard = (props) => {
     }
   }, [user]);
 
+
+  useDidMountEffect(() => {
+    setLoading(false)
+  }, [comments])
+
   useDidMountEffect(() => {
     if (!hasToken() && redditToken) {
       localStorage.setItem(
@@ -157,6 +162,8 @@ const RedditCard = (props) => {
               console.log(err);
             }
             setComments(ansOverview.data.comments);
+          } else {
+            setComments({})
           }
           const ansSubKarma = await axios.get("/reddit/userSubKarma", {
             params: redditUserQuery,
@@ -201,6 +208,7 @@ const RedditCard = (props) => {
             }
           }
         }
+        
       }
     };
     if (redditToken) {

@@ -155,7 +155,7 @@ const YoutubeCard = (props) => {
     if (hasToken()) {
       return (
         <BarChart
-          height={"60vh"}
+          // height={"60vh"}
           data={playlistCounts}
           maxVal={getMaxCount(playlistCounts)}
           label="Playlist Counts"

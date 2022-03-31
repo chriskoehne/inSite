@@ -15,7 +15,6 @@ const c = require('../Reddit/constants/constants');
 const TwitterPage = (props) => {
   const [twitterToken, setTwitterToken] = useState('');
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
   const [userId, setUserId] = useState(0);
   const [chartDayData, setChartDayData] = useState({
@@ -54,7 +53,6 @@ const TwitterPage = (props) => {
 
   useEffect(() => {
     if (!twitterToken) {
-      setLoading(true);
       return;
     }
 
@@ -62,9 +60,9 @@ const TwitterPage = (props) => {
         let arr = [0, 0, 0, 0, 0, 0, 0];
         let dayArr = ['', '', '', '', '', '', ''];
         let currentYear = new Date()
-        console.log('CURRENT YEAR: ' + (currentYear.getTime()/1000 - 604800))
+        // console.log('CURRENT YEAR: ' + (currentYear.getTime()/1000 - 604800))
         wee.data.forEach(e => {
-            console.log('CREATE TIME: ' + e.created_at)
+            // console.log('CREATE TIME: ' + e.created_at)
             var dt = new Date(e.created_at)
             if (dt >= currentYear.getTime() / 1000 - 604800) {
                 let d = new Date(dt * 1000); //get current Date
@@ -88,7 +86,7 @@ const TwitterPage = (props) => {
       // console.log(localStorage);
       const id = localStorage.getItem('twitter-user-id')
       setUserId(id);
-      console.log('TWITTER ID IN GET DATA: ' + id)
+      // console.log('TWITTER ID IN GET DATA: ' + id)
       const twitterQuery = {
         accessToken: twitterToken,
         userId: id

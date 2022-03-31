@@ -240,6 +240,7 @@ const RedditPage = (props) => {
     }
 
     const getData = async () => {
+      // console.log('getting reddit data');
       setLoading(true);
       const redditMeQuery = {
         accessToken: redditToken,
@@ -249,6 +250,7 @@ const RedditPage = (props) => {
           params: redditMeQuery,
         });
         if (ansMe.status === 200) {
+          // console.log('reddit me worked');
           setMe(ansMe.data);
           //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
           const redditUserQuery = {
@@ -259,7 +261,7 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
-            // console.log(ansOverview.data);
+            // console.log('reddit overview worked');
             try {
               if (
                 JSON.parse(localStorage.getItem('settings')).permissions.reddit
@@ -276,6 +278,8 @@ const RedditPage = (props) => {
             } catch (err) {
               console.log(err);
             }
+            setPosts(ansOverview.data.posts);
+            setComments(ansOverview.data.comments);
           }
 
           const ansSubKarma = await axios.get('/reddit/userSubKarma', {
@@ -305,6 +309,7 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
+            // console.log('reddit karma worked');
             try {
               if (
                 JSON.parse(localStorage.getItem('settings')).permissions.reddit

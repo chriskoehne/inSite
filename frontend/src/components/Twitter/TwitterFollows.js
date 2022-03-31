@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Row, Card, Col } from 'react-bootstrap';
+import { Row, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
 // import LineChart from '../Charts/LineChart';
-
-const c = require('./constants/constants.js')
 
 const TwitterFollows = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });

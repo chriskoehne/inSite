@@ -114,7 +114,6 @@ const LineChart = (props) => {
       <div style={{ height: props.height, width: props.width }}>
         <Line
           data={props.data}
-          color={props.color}
           onClick={props.onClick}
           ref={chartRef}
           options={{
