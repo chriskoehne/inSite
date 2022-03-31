@@ -121,6 +121,12 @@ router.get(
 );
 
 router.get(
+  '/twitter/tweetCount', 
+  auth.verifyToken, 
+  twitterController.tweetCount
+);
+
+router.get(
   '/twitter/getUser', 
   auth.verifyToken, 
   twitterController.me
