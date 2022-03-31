@@ -110,12 +110,12 @@ const TwitterMost = (props) => {
               let values = e.public_metrics
               //console.log(e)
               //console.log(values)
-              console.log(mostLiked)
-              console.log(values.like_count)
+              // console.log(mostLiked)
+              // console.log(values.like_count)
               if (mostLiked < values.like_count) {
                 mostLiked = values.like_count
                 setMostLikedTweet(e.id)
-                console.log(e.id)
+                // console.log(e.id)
               }
               if (mostRetweet < values.retweet_count) {
                 mostRetweet = values.retweet_count
