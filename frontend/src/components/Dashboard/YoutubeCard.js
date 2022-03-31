@@ -154,11 +154,12 @@ const YoutubeCard = (props) => {
     if (hasToken()) {
       return (
         <BarChart
-          height={"60vh"}
+          // height={"60vh"}
           data={playlistCounts}
           maxVal={getMaxCount(playlistCounts)}
           label="Playlist Counts"
           xaxis="PlaylistCounts"
+          color={'#ff3333'}
           onClick={function () {
             props.navigate("youtube", {
               state: { email: user.email, accessToken: youtubeToken },

@@ -142,6 +142,7 @@ const YoutubePage = (props) => {
                 maxVal={getMaxCount(playlistCounts)}
                 label='Playlist Counts'
                 xaxis='PlaylistCounts'
+                color={'#ff3333'}
               />
               <div style={{ paddingTop: '2%' }}>
                 Here we see a graphical representation of the number of playlists a user has, divided into buckets which represent the number of videos per playlist.
