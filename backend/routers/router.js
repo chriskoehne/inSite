@@ -90,6 +90,8 @@ router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostS
 
 router.get('/youtube/likedVideos', auth.verifyToken, youtubeController.likedVideos);
 
+router.get('/youtube/playlists', auth.verifyToken, youtubeController.playlists);
+
 router.get('/youtube/popularVidsFromLiked', auth.verifyToken, youtubeController.popularVidsFromLiked);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);

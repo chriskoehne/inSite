@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Card, Col, Carousel, Button, ButtonGroup } from 'react-bootstrap';
+import BarChart from '../Charts/BarChart';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,6 +8,7 @@ import styles from './Youtube.module.css';
 
 const YoutubePage = (props) => {
   const navigate = useNavigate();
+  const c = require('./constants/youtubeCategoryConstants');
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
   const [youtubeToken, setYoutubeToken] = useState('');
@@ -15,6 +17,8 @@ const YoutubePage = (props) => {
   const [likedVids, setLikedVids] = useState([]);
   //const [mostSubscribers, setMostSubscribers] = useState([]);
   const [popularVidsFromLiked, setPopularVids] = useState([]);
+  const [popularVidsCategory, setPopularVidsCategory] = useState('');
+  const [playlistCounts, setPlaylistCounts] = useState([]);
 
 
   const hasToken = () => {
@@ -70,11 +74,16 @@ const YoutubePage = (props) => {
       console.log("Popular Vids From Liked:")
       console.log(popularVidsFromLiked)
       setPopularVids(popularVidsFromLiked.data.list)
-
-      //const mostSubscribers = await axios.get('/youtube/mostSubscribers');
-      //console.log("channels:")
-      //console.log(mostSubscribers)
-      //setMostSubscribers(mostSubscribers.data.list)
+      setPopularVidsCategory(c[popularVidsFromLiked.data.list[0].snippet.categoryId])
+      
+      const youtubePlaylists = await axios.get('/youtube/playlists');
+      // for each in youtubePlaylists.data.list:
+      // item.contentDetails.itemCount
+      let itemCounts = []
+      youtubePlaylists.data.list.forEach(item => {
+        itemCounts.push(item.contentDetails.itemCount)
+      });
+      setPlaylistCounts(itemCounts);
 
       setLoading(false);
 
@@ -90,7 +99,18 @@ const YoutubePage = (props) => {
     setIndex(selectedIndex);
   };
 
-
+  const getMaxCount = (list) => {
+    if (loading) {
+      return {};
+    }
+    var maxCount = 0;
+    list.forEach(function (item, index) {
+      if (item > maxCount) {
+        maxCount = item;
+      }
+    });
+    return maxCount;
+  };
 
   return loading ? (
     <div
@@ -113,6 +133,22 @@ const YoutubePage = (props) => {
         activeIndex={index}
         onSelect={handleSelect}
       >
+        <Carousel.Item className={styles.slideshowCard}>
+        <Card className={styles.socialsCard}>
+            <Row className={styles.chartContainer}>
+              <BarChart
+                height={'60vh'}
+                data={playlistCounts}
+                maxVal={getMaxCount(playlistCounts)}
+                label='Playlist Counts'
+                xaxis='PlaylistCounts'
+              />
+              <div style={{ paddingTop: '2%' }}>
+                Here we see a graphical representation of the number of playlists a user has, divided into buckets which represent the number of videos per playlist.
+              </div>
+            </Row>
+          </Card>
+        </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
           <h3>Subscribed Channels</h3>
@@ -144,6 +180,7 @@ const YoutubePage = (props) => {
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
           <h3>Popular Videos From Your Favorite Category</h3>
+            <h3>{popularVidsCategory}</h3>
             <div>
             {popularVidsFromLiked && popularVidsFromLiked.map(vid =>
                         <tr key={vid.id}>
