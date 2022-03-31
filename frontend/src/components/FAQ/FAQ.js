@@ -4,10 +4,11 @@ import Banner from "../Banner/Banner";
 
 const FAQ = (props) => {
   return (
-    <Banner>
-      <Banner.Header>
+    <Banner >
+      {/* <Banner.Header >
           Frequently Asked Questions
-      </Banner.Header>
+      </Banner.Header> */}
+      <h1 style={{textAlign: 'center'}}>Frequently Asked Questions</h1>
       <Banner.Entity>
           <Banner.Question>
               How much personal information does inSite store?

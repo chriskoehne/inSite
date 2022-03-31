@@ -1,8 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Switch from 'react-switch';
 import axios from 'axios';
 import styles from './Settings.module.css';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 
 import Order from './Order';
 
@@ -12,7 +13,7 @@ const Customization = () => {
       JSON.parse(localStorage.getItem('settings')).darkMode === true
   );
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     const updateDarkMode = async () => {
       try {
         const body = {
@@ -53,7 +54,7 @@ const Customization = () => {
       <label>
         <Switch
           onChange={toggle}
-          offColor={'#DEDEDE'}
+          offColor={'#dedede'}
           onColor={'#2c2c2c'}
           checked={darkMode}
           /*TODO: Fix spacing */
@@ -74,13 +75,13 @@ const Customization = () => {
       <h5> Dashboard Cards Order </h5>
       <Order />
       <br />
-      <h5>Reddit Default shit</h5>
+      {/* <h5>Reddit Default shit</h5>
       setting
       <br />
       setting
       <br />
       setting
-      <br />
+      <br /> */}
     </div>
   );
 };

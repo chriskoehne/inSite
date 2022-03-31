@@ -51,14 +51,40 @@ router.post(
   userController.updateCardOrder
 );
 
+router.post(
+  '/user/settings/permissions',
+  auth.verifyToken,
+  userController.updatePermissions
+);
+
+
+router.post(
+  '/user/reddit/',
+  auth.verifyToken,
+  userController.updateRedditData
+);
+
+router.get(
+  '/user/reddit/',
+  auth.verifyToken,
+  userController.getRedditData
+);
 
 router.post('/youtube/login', auth.verifyToken, youtubeController.login);
 
-router.post('/youtube/codeToToken', auth.verifyToken, youtubeController.convert);
+router.post(
+  '/youtube/codeToToken',
+  auth.verifyToken,
+  youtubeController.convert
+);
 
 router.get('/youtube/activity', auth.verifyToken, youtubeController.activity);
 
-router.get('/youtube/subscriptions', auth.verifyToken, youtubeController.subscriptions);
+router.get(
+  '/youtube/subscriptions',
+  auth.verifyToken,
+  youtubeController.subscriptions
+);
 
 router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostSubscribers);
 
@@ -114,13 +140,13 @@ router.post(
 
 router.post('/twitter/login', auth.verifyToken, twitterController.login);
 
-router.post('/twitter/codeToToken', auth.verifyToken, twitterController.convert);
-
-router.get(
-  '/twitter/test', 
-  auth.verifyToken, 
-  twitterController.test
+router.post(
+  '/twitter/codeToToken',
+  auth.verifyToken,
+  twitterController.convert
 );
+
+// router.get('/twitter/test', auth.verifyToken, twitterController.test);
 
 router.get(
   '/twitter/tweetCount', 
@@ -164,5 +190,8 @@ router.get(
   twitterController.tweetLikes
 );
 
+
+/* Don't delete this, I use it to help update the schemas */
+router.post('/updateSchema', demoController.updateSchema);
 
 module.exports = router;

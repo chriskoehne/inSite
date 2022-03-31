@@ -39,9 +39,8 @@
   padding-bottom: 2%vh;
 }
 
-.deauthorize {
+.permissions {
   padding-top: 2%;
-  width: 30em;
   padding-bottom: 2%;
 }
 
@@ -69,6 +68,21 @@
   padding-left: 10px;
   padding-right: 10px;
   height: 70px;
+}
+
+.permissionsItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--text-main);
+  border-radius: 0.5em;
+  background-color: var(--sidebar);
+  margin: 0.5em;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 50px;
+  width: 150px;
 }
 
 .dnd {
