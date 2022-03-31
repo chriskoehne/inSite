@@ -134,7 +134,7 @@ const TwitterCard = (props) => {
         console.log(twitterRes.data);
         console.log('This is the user id')
         console.log(twitterRes.data.data.id)
-        //localStorage.setItem('twitter-user-id', twitterRes.data.data.id)
+        localStorage.setItem('twitter-user-id', twitterRes.data.data.id)
         setUserId(twitterRes.data.data.id)
       } 
       // else {

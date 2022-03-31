@@ -14,6 +14,7 @@ const TwitterPage = (props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
+  const [userId, setUserId] = useState(0);
   const [chartDayData, setChartDayData] = useState({
     datasets: [],
   });
@@ -83,6 +84,7 @@ const TwitterPage = (props) => {
         // console.log('Calling Twitter API. Here is localStorage:');
         // console.log(localStorage);
         const id = localStorage.getItem('twitter-user-id')
+        setUserId(id);
         console.log('TWITTER ID IN GET DATA: ' + id)
         const twitterQuery = {
           accessToken: twitterToken,
@@ -116,7 +118,7 @@ const TwitterPage = (props) => {
         }
       };
     getData();
-  }, [twitterToken]);
+  }, [twitterToken, userId]);
 
     return (
       <div className={styles.box}>
