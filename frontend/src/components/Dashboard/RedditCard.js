@@ -278,6 +278,7 @@ const RedditCard = (props) => {
           >
             Authorize Reddit
           </Button>
+          <ReactTooltip/>
         </div>
       );
     }
@@ -305,7 +306,6 @@ const RedditCard = (props) => {
 
   return (
     <Col className={styles.cardCol}>
-      <ReactTooltip/>
       <Card
         style={{ borderColor: 'var(--reddit)' }}
         className={styles.socialsCard}

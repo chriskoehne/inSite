@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
 import { SocialIcon } from "react-social-icons";
 import BarChart from "../Charts/BarChart";
+import ReactTooltip from 'react-tooltip';
 
 const YoutubeCard = (props) => {
   const [youtubeToken, setYoutubeToken] = useState("");
@@ -171,10 +172,12 @@ const YoutubeCard = (props) => {
         <div className={styles.centered}>
           <Button
             className={`${styles.buttons} ${styles.youtubeB}`}
+            data-tip='Connect your YouTube account to inSite to begin seeing your YouTube usage metrics!'
             onClick={authenticateYoutube}
           >
             Authorize YouTube
           </Button>
+          <ReactTooltip/>
         </div>
       );
     }

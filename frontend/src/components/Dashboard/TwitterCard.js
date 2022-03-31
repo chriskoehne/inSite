@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
+import ReactTooltip from 'react-tooltip';
 
 const c = require('../Reddit/constants/constants');
 
@@ -236,9 +237,10 @@ const TwitterCard = (props) => {
     else {
       return (
         <div className={styles.centered}>
-          <Button className={`${styles.buttons} ${styles.twitterB}`} onClick={authenticateTwitter}>
+          <Button className={`${styles.buttons} ${styles.twitterB}`} onClick={authenticateTwitter} data-tip='Connect your Twitter account to inSite to begin seeing your Twitter usage metrics!'>
             Authorize Twitter
           </Button>
+          <ReactTooltip/>
         </div>
       );
     }

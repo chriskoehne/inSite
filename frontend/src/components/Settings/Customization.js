@@ -4,7 +4,7 @@ import Switch from 'react-switch';
 import axios from 'axios';
 import styles from './Settings.module.css';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
-
+import ReactTooltip from 'react-tooltip';
 import Order from './Order';
 
 const Customization = () => {
