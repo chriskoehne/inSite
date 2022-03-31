@@ -160,11 +160,6 @@ const YoutubeCard = (props) => {
           maxVal={getMaxCount(playlistCounts)}
           label="Playlist Counts"
           xaxis="PlaylistCounts"
-          onClick={function () {
-            props.navigate("youtube", {
-              state: { email: user.email, accessToken: youtubeToken },
-            });
-          }}
         />
       );
     } else {
@@ -194,7 +189,20 @@ const YoutubeCard = (props) => {
         className={styles.socialsCard}
       >
         <Card.Body>
-          <Card.Title>{icon()} Youtube</Card.Title>
+          <Card.Title>{icon()} Youtube
+            <Button
+                className={`${styles.buttons} ${styles.youtubeB}`}
+                data-tip="See more insights about your YouTube, such as playlist count and reccomendations"
+                style={{ float: "right" }}
+                onClick={function () {
+                  props.navigate("youtube", {
+                    state: { email: user.email, accessToken: youtubeToken },
+                  });
+                }}
+              >
+                See more
+              </Button>
+          </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
         </Card.Body>

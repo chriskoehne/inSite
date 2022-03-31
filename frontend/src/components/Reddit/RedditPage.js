@@ -23,6 +23,7 @@ import { TagCloud } from 'react-tagcloud';
 import { getMonths, getDays, getLastThirty } from './RedditComments';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
 import { getUncommon, getWordList, isFalsy } from './helperFunctions';
+import ReactTooltip from 'react-tooltip';
 
 ChartJS.register(
   CategoryScale,
@@ -445,10 +446,10 @@ const RedditPage = (props) => {
           <Card className={styles.socialsCard}>
             <Row>
               <Col>
-                <Row>Total Karma: {totalKarma}</Row>
-                <Row>Post Karma: {linkKarma}</Row>
-                <Row>Comment Karma: {commentKarma}</Row>
-                <Row>Award Karma: {awardKarma}</Row>
+                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Total Karma: {totalKarma}</Row>
+                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Post Karma: {linkKarma}</Row>
+                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Comment Karma: {commentKarma}</Row>
+                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Award Karma: {awardKarma}</Row>
                 <Row>Number of Posts: {posts.length}</Row>
                 <Row>Number of Comments: {comments.length}</Row>
                 <Row>
@@ -726,6 +727,7 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
       </Carousel>
+      <ReactTooltip/>
     </div>
   );
 };

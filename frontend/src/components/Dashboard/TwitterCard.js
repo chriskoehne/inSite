@@ -225,11 +225,6 @@ const TwitterCard = (props) => {
                     width={'45vw'}
                     color={'#03a9f4'}
                     data={chartDayData}
-                    onClick={function () {
-                      props.navigate('twitter', {
-                        state: { email: user.email, accessToken:twitterToken },
-                      });
-                    }}
                   />
         </div>
       );
@@ -254,7 +249,20 @@ const TwitterCard = (props) => {
     <Col className={styles.cardCol}>
       <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
         <Card.Body>
-          <Card.Title>{icon()} Twitter</Card.Title>
+          <Card.Title>{icon()} Twitter
+            <Button
+                className={`${styles.buttons} ${styles.twitterB}`}
+                data-tip="See more insights about your Twitter, such as the words you use most often and your most liked and retweeted Tweets"
+                style={{ float: "right" }}
+                onClick={function () {
+                  props.navigate("twitter", {
+                    state: { email: user.email, accessToken: twitterToken },
+                  });
+                }}
+              >
+                See more
+              </Button>
+          </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
         </Card.Body>
