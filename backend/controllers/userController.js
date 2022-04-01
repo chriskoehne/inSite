@@ -89,6 +89,24 @@ exports.updateDarkMode = async function (req, res, next) {
   }
 };
 
+exports.updateToolTips = async function (req, res, next) {
+  // console.log('updateToolTip')
+
+  try {
+    let result = await userService.updateToolTips(
+      req.body.email,
+      req.body.toolTips
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.updateCardOrder = async function (req, res, next) {
   // console.log('updateCardOrder')
   try {

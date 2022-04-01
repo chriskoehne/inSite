@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './Settings.module.css';
 import ReactTooltip from 'react-tooltip';
+import hasToolTips from '../../helpers/hasToolTips';
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState('');
@@ -50,14 +51,16 @@ const ChangePassword = () => {
 
   return (
     <div id='changePassword' className={styles.changePassword}>
-      <ReactTooltip/>
+      <ReactTooltip />
       <Modal show={modal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Change Password</Modal.Title>
         </Modal.Header>
         <Modal.Body>{modalMessage}</Modal.Body>
       </Modal>
-      <h4 data-tip='Change your inSite account password'>Change Password</h4>
+      <h4 data-tip={hasToolTips() ? 'Change your inSite account password' : ''}>
+        Change Password
+      </h4>
       <form className={styles.ChangePassword} onSubmit={handleSubmit}>
         <div className='form-group'>
           <label>Old Password: </label>
@@ -72,7 +75,11 @@ const ChangePassword = () => {
         <div className='form-group'>
           <label>New Password: </label>
           <input
-            data-tip='Passwords must be at least 8 characters and contain at least one letter and one number'
+            data-tip={
+              hasToolTips()
+                ? 'Passwords must be at least 8 characters and contain at least one letter and one number'
+                : ''
+            }
             type='password'
             className='form-control'
             placeholder='New Password'
