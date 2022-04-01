@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Row, Button, Card, Col } from "react-bootstrap";
+import { Button, Card, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Dashboard.module.css";
 import { SocialIcon } from "react-social-icons";
@@ -88,6 +88,8 @@ const YoutubeCard = (props) => {
     const callYoutube = async () => {
       setLoading(true);
       if (activity.length === 0) {
+        console.log(user.code)
+
         const act = await axios.get("/youtube/activity");
         console.log("got activity:");
         console.log(act);
@@ -191,7 +193,7 @@ const YoutubeCard = (props) => {
         <Card.Body>
           <Card.Title>{icon()} Youtube
             <Button
-                className={`${styles.buttons} ${styles.youtubeB}`}
+                className={`${styles.seeMore} ${styles.youtubeB}`}
                 data-tip="See more insights about your YouTube, such as playlist count and reccomendations"
                 style={{ float: "right" }}
                 onClick={function () {

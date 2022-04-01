@@ -317,7 +317,7 @@ const RedditCard = (props) => {
           <Card.Title>
             {icon()} Reddit
             <Button
-              className={`${styles.buttons} ${styles.redditB}`}
+              className={`${styles.seeMore} ${styles.redditB}`}
               data-tip="See more insights about your Reddit, such as most liked, controversial, and disliked post"
               style={{ float: "right" }}
               onClick={function () {

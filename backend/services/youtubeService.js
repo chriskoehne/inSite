@@ -94,13 +94,13 @@ exports.likedVideos = async function (req, res) {
 
 exports.playlists = async function (req, res) {
   try {
-    console.log("playlists:")
+    // console.log("playlists:")
     const result = await service.playlists.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
       mine: true
     });
-    console.log(result)
+    // console.log(result)
     return result.data;
   } catch (err) {
     console.log('big error catch');

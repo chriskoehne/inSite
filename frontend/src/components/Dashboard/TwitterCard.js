@@ -22,9 +22,9 @@ const TwitterCard = (props) => {
     let arr = [0, 0, 0, 0, 0, 0, 0];
     let dayArr = ['', '', '', '', '', '', ''];
     let currentYear = new Date();
-    console.log('CURRENT YEAR: ' + (currentYear.getTime() / 1000 - 604800));
+    // console.log('CURRENT YEAR: ' + (currentYear.getTime() / 1000 - 604800));
     wee.data.forEach((e) => {
-      console.log('CREATE TIME: ' + e.created_at);
+      // console.log('CREATE TIME: ' + e.created_at);
       var dt = new Date(e.created_at);
       if (dt >= currentYear.getTime() / 1000 - 604800) {
         let d = new Date(dt * 1000); //get current Date
@@ -247,7 +247,7 @@ const TwitterCard = (props) => {
         <Card.Body>
           <Card.Title>{icon()} Twitter
             <Button
-                className={`${styles.buttons} ${styles.twitterB}`}
+                className={`${styles.seeMore} ${styles.twitterB}`}
                 data-tip="See more insights about your Twitter, such as the words you use most often and your most liked and retweeted Tweets"
                 style={{ float: "right" }}
                 onClick={function () {

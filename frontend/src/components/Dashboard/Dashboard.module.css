@@ -138,3 +138,13 @@
   padding-bottom: 0px;
   font-size: 1em;
 }
+
+.seeMore {
+  font-size: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 10%;
+  color: white;
+  font-weight: bold;
+}
