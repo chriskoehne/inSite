@@ -7,7 +7,6 @@ import TwitterWordGraph from './TwitterWordGraph';
 import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
 import TwitterFollows from './TwitterFollows';
-import TwitterLikes from './TwitterLikes';
 import TwitterMost from './TwitterMost';
 import TwitterLikesGraph from './TwitterLikesGraph';
 
@@ -176,9 +175,6 @@ const TwitterPage = (props) => {
       >
         <Carousel.Item className={styles.slideshowCard}>
           <TwitterFollows />
-        </Carousel.Item>
-        <Carousel.Item className={styles.slideshowCard}>
-          <TwitterLikes />
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <TwitterWordGraph />

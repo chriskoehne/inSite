@@ -8,8 +8,6 @@ import styles from './Twitter.module.css';
 const TwitterFollows = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [twitterToken, setTwitterToken] = useState('');
-  const [followers, setFollowers] = useState([]);
-  const [followed, setFollowed] = useState([]);
   const [followersSize, setFollowersSize] = useState(0);
   const [followedSize, setFollowedSize] = useState(0);
   const [followersMetrics, setFollowersMetrics] = useState([]);
@@ -88,7 +86,6 @@ const TwitterFollows = (props) => {
         console.log('Received Followers from Twitter!');
         console.log(twitterFollowersRes.data);
         setFollowersSize(twitterFollowersRes.data.data.length)
-        setFollowers(twitterFollowersRes.data.data.slice(0, 5));
 
         const ids = getTweetsID(twitterFollowersRes.data.data.slice(0, 5));
 
@@ -119,7 +116,6 @@ const TwitterFollows = (props) => {
         console.log('Received Following from Twitter!');
         console.log(twitterFollowedRes.data);
         setFollowedSize(twitterFollowedRes.data.data.length)
-        setFollowed(twitterFollowedRes.data.data.slice(0, 5));
 
         const ids = getTweetsID(twitterFollowedRes.data.data.slice(0, 5));
 
@@ -162,7 +158,7 @@ const TwitterFollows = (props) => {
           </h3>
             {Object.keys(followersMetrics).map((key, index) => (
               <p key={index}>
-                <img style={{paddingRight : '10px'}} src={followersMetrics[key].profile_image_url}></img>
+                <img style={{paddingRight : '10px'}} src={followersMetrics[key].profile_image_url} alt=""></img>
                 <a href={"https://www.twitter.com/" + followersMetrics[key].username} target="_blank" rel="noreferrer">{followersMetrics[key].name}</a>: 
                 Username: {followersMetrics[key].username}, Following: {followersMetrics[key].public_metrics.following_count}, Followers: {followersMetrics[key].public_metrics.followers_count}, Tweets: {followersMetrics[key].public_metrics.tweet_count}
               </p>
@@ -177,7 +173,7 @@ const TwitterFollows = (props) => {
           </h3>
             {Object.keys(followedMetrics).map((key, index) => (
               <p key={index}>
-                <img style={{paddingRight : '10px'}} src={followedMetrics[key].profile_image_url}></img> 
+                <img style={{paddingRight : '10px'}} src={followedMetrics[key].profile_image_url} alt=""></img> 
                 <a href={"https://www.twitter.com/" + followedMetrics[key].username} target="_blank" rel="noreferrer">{followedMetrics[key].name}</a>: 
                 Username: {followedMetrics[key].username}, Following: {followedMetrics[key].public_metrics.following_count}, Followers: {followedMetrics[key].public_metrics.followers_count}, Tweets: {followedMetrics[key].public_metrics.tweet_count}
               </p>
