@@ -7,6 +7,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  defaults
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
@@ -24,6 +25,8 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+defaults.color  = document.body.classList.contains('dark') ? '#e3e3e3' : 'grey'
+
 /*
 const generateList = (min, max, steps) => {
   // minimum step size
@@ -111,7 +114,6 @@ const LineChart = (props) => {
       <div style={{ height: props.height, width: props.width }}>
         <Line
           data={props.data}
-          color={props.color}
           onClick={props.onClick}
           ref={chartRef}
           options={{

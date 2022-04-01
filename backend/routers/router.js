@@ -51,16 +51,48 @@ router.post(
   userController.updateCardOrder
 );
 
+router.post(
+  '/user/settings/permissions',
+  auth.verifyToken,
+  userController.updatePermissions
+);
+
+
+router.post(
+  '/user/reddit/',
+  auth.verifyToken,
+  userController.updateRedditData
+);
+
+router.get(
+  '/user/reddit/',
+  auth.verifyToken,
+  userController.getRedditData
+);
 
 router.post('/youtube/login', auth.verifyToken, youtubeController.login);
 
-router.post('/youtube/codeToToken', auth.verifyToken, youtubeController.convert);
+router.post(
+  '/youtube/codeToToken',
+  auth.verifyToken,
+  youtubeController.convert
+);
 
 router.get('/youtube/activity', auth.verifyToken, youtubeController.activity);
 
-router.get('/youtube/subscriptions', auth.verifyToken, youtubeController.subscriptions);
+router.get(
+  '/youtube/subscriptions',
+  auth.verifyToken,
+  youtubeController.subscriptions
+);
+
+router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostSubscribers);
 
 router.get('/youtube/likedVideos', auth.verifyToken, youtubeController.likedVideos);
+
+router.get('/youtube/playlists', auth.verifyToken, youtubeController.playlists);
+
+router.get('/youtube/popularVidsFromLiked', auth.verifyToken, youtubeController.popularVidsFromLiked);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 
@@ -108,12 +140,58 @@ router.post(
 
 router.post('/twitter/login', auth.verifyToken, twitterController.login);
 
-router.post('/twitter/codeToToken', auth.verifyToken, twitterController.convert);
+router.post(
+  '/twitter/codeToToken',
+  auth.verifyToken,
+  twitterController.convert
+);
+
+// router.get('/twitter/test', auth.verifyToken, twitterController.test);
 
 router.get(
-  '/twitter/test', 
+  '/twitter/tweetCount', 
   auth.verifyToken, 
-  twitterController.test
+  twitterController.tweetCount
 );
+
+router.get(
+  '/twitter/getUser', 
+  auth.verifyToken, 
+  twitterController.me
+);
+
+router.get(
+  '/twitter/tweets', 
+  auth.verifyToken, 
+  twitterController.tweets
+);
+
+router.get(
+  '/twitter/followers', 
+  auth.verifyToken, 
+  twitterController.followers
+);
+
+router.get(
+  '/twitter/following', 
+  auth.verifyToken, 
+  twitterController.following
+);
+
+router.get(
+  '/twitter/likes', 
+  auth.verifyToken, 
+  twitterController.likes
+);
+
+router.get(
+  '/twitter/tweetLikes', 
+  auth.verifyToken, 
+  twitterController.tweetLikes
+);
+
+
+/* Don't delete this, I use it to help update the schemas */
+router.post('/updateSchema', demoController.updateSchema);
 
 module.exports = router;

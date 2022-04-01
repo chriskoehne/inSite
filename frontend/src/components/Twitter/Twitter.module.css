@@ -60,3 +60,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.embedTweets {
+  width: 100%;
+}
