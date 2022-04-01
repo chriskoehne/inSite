@@ -153,4 +153,19 @@ exports.tweetLikes = async function (req, res, next) {
   }
 };
 
+exports.followMetrics = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Tweet Follow Metrics Controller');
+    let result = await twitterService.followMetrics(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 
