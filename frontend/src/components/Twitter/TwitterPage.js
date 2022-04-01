@@ -150,8 +150,8 @@ const TwitterPage = (props) => {
             {
               label: 'Number of Tweets in last week',
               data: dayDate.numTweets.reverse(),
-              borderColor: '#ff4500',
-              backgroundColor: '#ff4500',
+              borderColor: '#05aced',
+              backgroundColor: '#05aced',
             },
           ],
         };
