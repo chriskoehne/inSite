@@ -449,7 +449,7 @@ const RedditPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
+          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
             <Row>
               <h2>Karma Overview</h2>
               <br /><br /><br />
@@ -714,7 +714,7 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
+          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
             <Row>
               <Col>
                 <h3>
