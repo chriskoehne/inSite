@@ -17,6 +17,7 @@ const TwitterPage = (props) => {
   const navigate = useNavigate();
   const [index, setIndex] = useState(0);
   const [userId, setUserId] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [chartDayData, setChartDayData] = useState({
     datasets: [],
   });
