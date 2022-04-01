@@ -125,6 +125,22 @@ exports.updateDarkMode = async function (email, darkMode) {
   }
 };
 
+exports.updateToolTips = async function (email, toolTips) {
+  try {
+    const filter = { email: email };
+    const update = { 'settings.toolTips': toolTips };
+    let result = await User.findOneAndUpdate(filter, update, { new: true });
+    // console.log(result);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
 exports.updateCardOrder = async function (email, cardOrder) {
   try {
     const filter = { email: email };
