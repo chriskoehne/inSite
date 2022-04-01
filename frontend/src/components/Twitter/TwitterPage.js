@@ -23,6 +23,8 @@ const TwitterPage = (props) => {
     datasets: [],
   });
 
+  console.log(loading)
+
   const isDarkMode = () => {
     return document.body.classList.contains('dark') ? 'light' : 'dark';
   };
