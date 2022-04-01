@@ -40,7 +40,10 @@ const Login = (props) => {
         if (res.data.user.settings.darkMode) {
           document.body.classList.add('dark');
         }
-        localStorage.setItem('settings', JSON.stringify(res.data.user.settings));
+        localStorage.setItem(
+          'settings',
+          JSON.stringify(res.data.user.settings)
+        );
         localStorage.setItem('email', res.data.user.email);
         props.navigate('/dashboard', { state: { email: email } });
       } else {
@@ -129,7 +132,7 @@ const Login = (props) => {
             <Modal.Header closeButton>
               <Modal.Title>Login Error</Modal.Title>
             </Modal.Header>
-            <Modal.Body color='black'>{errorText}</Modal.Body>
+            <Modal.Body className={styles.modalText}>{errorText}</Modal.Body>
           </Modal>
           <form onSubmit={handleSubmit}>
             <div className='form-group'>

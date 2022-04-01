@@ -1,10 +1,7 @@
 const {google} = require('googleapis');
-const { isAsyncFunction } = require('util/types');
+// const { isAsyncFunction } = require('util/types');
 const youtubeClientId = process.env.YOUTUBE_CLIENT_ID;
 const youtubeClientSecret = process.env.YOUTUBE_CLIENT_SECRET;
-
-console.log(youtubeClientId)
-console.log(youtubeClientSecret)
 
 if (process.env.DEV) {
   var redirectURI = 'https://127.0.0.1:3000/dashboard'
@@ -18,9 +15,6 @@ const oauth2Client = new google.auth.OAuth2(
   youtubeClientSecret,
   redirectURI //maybe dont need?
 );
-
-
-
 
 const service = google.youtube('v3');
 
@@ -48,7 +42,7 @@ exports.login = async function (email) {
 exports.convert = async function (req, res) {
   try {
     // console.log('In YouTube Convert Service');
-    console.log(req.body);
+    // console.log(req.body);
     const code = req.body.code;
 
     const {tokens} = await oauth2Client.getToken(decodeURIComponent(code))
@@ -98,9 +92,26 @@ exports.likedVideos = async function (req, res) {
   }
 };
 
+exports.playlists = async function (req, res) {
+  try {
+    // console.log("playlists:")
+    const result = await service.playlists.list({
+      auth: oauth2Client,
+      part: 'snippet,contentDetails',
+      mine: true
+    });
+    // console.log(result)
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
 exports.popularVidsFromLiked = async function (req, res) {
   try {
-    console.log('In YouTube video list Service');
+    // console.log('In YouTube video list Service');
     const result = await service.videos.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails,statistics',
@@ -113,11 +124,10 @@ exports.popularVidsFromLiked = async function (req, res) {
     const catArr = [] 
       vidList.forEach(vid => {
         catArr.push(vid.snippet.categoryId)
-        console.log('CATEGORY ID: ' + vid.snippet.categoryId)
       });
 
       const maxCat = mode(catArr)
-      console.log('maxCat: ' + maxCat)
+      // console.log('maxCat: ' + maxCat)
 
       const response = await service.videos.list({
         auth: oauth2Client,

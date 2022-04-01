@@ -9,9 +9,8 @@ let getMonths = function (comments) {
         let currentYear = new Date()
         comments.forEach(e => {
             //e.data.created
-            //console.log(e.data.created)
-            if (e.data.created >= currentYear.getTime() / 1000 - 31556926) {
-                let d = new Date(e.data.created * 1000); //get current Date
+            if (e.created >= currentYear.getTime() / 1000 - 31556926) {
+                let d = new Date(e.created * 1000); //get current Date
                 arr[d.getMonth()] += 1;
             } 
         });
@@ -34,8 +33,8 @@ let getDays = function(comments) {
     let currentYear = new Date()
     comments.forEach(e => {
         //e.data.created
-        if (e.data.created >= currentYear.getTime() / 1000 - 604800) {
-            let d = new Date(e.data.created * 1000); //get current Date
+        if (e.created >= currentYear.getTime() / 1000 - 604800) {
+            let d = new Date(e.created * 1000); //get current Date
             arr[d.getDay()] += 1;
         }
     });
@@ -56,10 +55,10 @@ let getLastThirty = function (comments) {
     let dayArr = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
     let currentYear = new Date()
     comments.forEach(e => {
-        if (e.data.created >= currentYear.getTime() / 1000 - 86400 * 30) {
-            let day = Math.ceil((currentYear.getTime() / 1000 - e.data.created)/ 86400);
-            if ((currentYear.getTime() / 1000 - e.data.created)/ 86400 <= .5) {
-                day = Math.floor((currentYear.getTime() / 1000 - e.data.created)/ 86400);
+        if (e.created >= currentYear.getTime() / 1000 - 86400 * 30) {
+            let day = Math.ceil((currentYear.getTime() / 1000 - e.created)/ 86400);
+            if ((currentYear.getTime() / 1000 - e.created)/ 86400 <= .5) {
+                day = Math.floor((currentYear.getTime() / 1000 - e.created)/ 86400);
             }
             arr[day] += 1;
         }

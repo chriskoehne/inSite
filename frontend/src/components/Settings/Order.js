@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { SocialIcon } from 'react-social-icons';
 import styles from './Settings.module.css';
 import axios from 'axios';
 
 import { ReactComponent as ListBullet } from './ListBullet.svg';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 
 let socialMedias = [
   {
@@ -80,7 +81,7 @@ const Order = () => {
   let settings = JSON.parse(localStorage.getItem('settings'));
   const [cardOrder, setCardOrder] = useState(orderCards());
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     const updateCardOrder = async () => {
       try {
         let idsOnly = [];

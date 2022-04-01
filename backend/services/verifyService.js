@@ -5,7 +5,7 @@ var authy = require('authy')(authToken);
 const User = require('../database/models/User');
 exports.check = async function (email, code) {
   try {
-    console.log(email);
+    // console.log(email);
     let user = await User.findOne({ email: email }).select('-password -__v');
 
     if (!user) {
@@ -23,9 +23,8 @@ exports.check = async function (email, code) {
             console.log('error caught');
             // res.status(400).send({ message: "invalid code" });
             resolve(c.AUTHY_VERIFY_ERROR);
-
           } else {
-            console.log(authyres);
+            // console.log(authyres);
 
             // should redo this by removing them from the mongo query
             const safeUser = {
@@ -34,6 +33,7 @@ exports.check = async function (email, code) {
               settings: user.settings,
               //add other wanted properties here
             };
+            // console.log(safeUser);
             resolve({ user: safeUser });
           }
         }
