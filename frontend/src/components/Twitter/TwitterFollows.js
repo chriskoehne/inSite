@@ -8,6 +8,23 @@ import styles from './Twitter.module.css';
 const TwitterFollows = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [twitterToken, setTwitterToken] = useState('');
+  const [followersSize, setFollowersSize] = useState(0);
+  const [followedSize, setFollowedSize] = useState(0);
+  const [followersMetrics, setFollowersMetrics] = useState([]);
+  const [followedMetrics, setFollowedMetrics] = useState([]);
+
+  function getTweetsID(data) {
+    var ids = '';
+    var i;
+    for (i = 0; i < data.length; i++) {
+      if (i === data.length - 1) {
+        ids = ids + data[i].id; 
+      } else {
+        ids = ids + data[i].id + ','; 
+      }
+    }
+    return ids;
+  }
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {
@@ -61,13 +78,32 @@ const TwitterFollows = (props) => {
         accessToken: twitterToken,
         userID: localStorage.getItem('twitter-user-id')
       };
-      const twitterFollowsRes = await axios.get(
+      const twitterFollowersRes = await axios.get(
         '/twitter/followers',
         { params: twitterQuery }
       );
-      if (twitterFollowsRes) {
+      if (twitterFollowersRes) {
         console.log('Received Followers from Twitter!');
-        console.log(twitterFollowsRes.data);
+        console.log(twitterFollowersRes.data);
+        setFollowersSize(twitterFollowersRes.data.data.length)
+
+        const ids = getTweetsID(twitterFollowersRes.data.data.slice(0, 5));
+
+        const newTwitterQuery = {
+          accessToken: twitterToken,
+          ids: ids
+        };
+
+        const twitterFollowersMetricsRes = await axios.get(
+          '/twitter/followMetrics',
+          { params: newTwitterQuery }
+        );
+
+        if (twitterFollowersMetricsRes) {
+          console.log('Twitter Followers Metrics Received:');
+          console.log(twitterFollowersMetricsRes.data);
+          setFollowersMetrics(twitterFollowersMetricsRes.data.data);
+        }
       } 
       // else {
       //   console.log('Could not get Followers from Twitter!');
@@ -79,6 +115,25 @@ const TwitterFollows = (props) => {
       if (twitterFollowedRes) {
         console.log('Received Following from Twitter!');
         console.log(twitterFollowedRes.data);
+        setFollowedSize(twitterFollowedRes.data.data.length)
+
+        const ids = getTweetsID(twitterFollowedRes.data.data.slice(0, 5));
+
+        const newTwitterQuery = {
+          accessToken: twitterToken,
+          ids: ids
+        };
+
+        const twitterFollowedMetricsRes = await axios.get(
+          '/twitter/followMetrics',
+          { params: newTwitterQuery }
+        );
+
+        if (twitterFollowedMetricsRes) {
+          console.log('Twitter Followed Metrics Received:');
+          console.log(twitterFollowedMetricsRes.data);
+          setFollowedMetrics(twitterFollowedMetricsRes.data.data);
+        }
       } 
       // else {
       //   console.log('Could not get Following from Twitter!');
@@ -92,20 +147,40 @@ const TwitterFollows = (props) => {
   }, [twitterToken]);
   
   return (
-      <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
-          <Row>
-              <Col>
-                <h3>
-                  Twitter Follows Page
-                  {/* Maybe say how many followers total + the last 5 followers received */}
-                </h3>
-                <div>
-                    Hiiii
-                    {/* Maybe say how many users they follow + the last 5 people they followed */}
-                </div>
-              </Col>
-            </Row>
-      </Card>
+    <Card style={{ borderColor: 'var(--twitter)', justifyContent: 'center'}} className={styles.socialsCard}>
+      <Row>
+        <Col>
+          <h1>
+            Total followers: {followersSize}
+          </h1>
+          <h3>
+            Most Recent Followers:<br></br>
+          </h3>
+            {Object.keys(followersMetrics).map((key, index) => (
+              <p key={index}>
+                <img style={{paddingRight : '10px'}} src={followersMetrics[key].profile_image_url} alt=""></img>
+                <a href={"https://www.twitter.com/" + followersMetrics[key].username} target="_blank" rel="noreferrer">{followersMetrics[key].name}</a>: 
+                Username: {followersMetrics[key].username}, Following: {followersMetrics[key].public_metrics.following_count}, Followers: {followersMetrics[key].public_metrics.followers_count}, Tweets: {followersMetrics[key].public_metrics.tweet_count}
+              </p>
+            ))}
+        </Col>
+        <Col>
+          <h1>
+            Total following: {followedSize}
+          </h1>
+          <h3>
+            Most Recent Accounts You've Followed:<br></br>
+          </h3>
+            {Object.keys(followedMetrics).map((key, index) => (
+              <p key={index}>
+                <img style={{paddingRight : '10px'}} src={followedMetrics[key].profile_image_url} alt=""></img> 
+                <a href={"https://www.twitter.com/" + followedMetrics[key].username} target="_blank" rel="noreferrer">{followedMetrics[key].name}</a>: 
+                Username: {followedMetrics[key].username}, Following: {followedMetrics[key].public_metrics.following_count}, Followers: {followedMetrics[key].public_metrics.followers_count}, Tweets: {followedMetrics[key].public_metrics.tweet_count}
+              </p>
+            ))}
+        </Col>
+      </Row>
+    </Card>
   );
 };
 

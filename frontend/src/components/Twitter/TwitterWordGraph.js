@@ -129,19 +129,19 @@ const TwitterWordGraph = (props) => {
   }, [twitterToken]);
   
   return (
-      <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
-          <Row>
-              <Col>
-                <h3>
-                  Woooaaahhh Relax! You're tweeting all over the place <br></br>
-                  Here's some of the words you most frequently tweet:
-                </h3>
-                <div className={styles.cloudCentered}>
-                    <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
-                </div>
-              </Col>
-            </Row>
-      </Card>
+    <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
+        <Row>
+            <Col>
+              <h3>
+                Woooaaahhh Relax! You're tweeting all over the place <br></br>
+                Here's some of the words you most frequently tweet:
+              </h3>
+              <div className={styles.cloudCentered}>
+                  <TagCloud tags={tagCloud} minSize={32} maxSize={60} />
+              </div>
+            </Col>
+          </Row>
+    </Card>
   );
 };
 
