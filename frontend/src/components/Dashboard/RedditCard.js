@@ -315,7 +315,7 @@ const RedditCard = (props) => {
         <Card.Body>
           <Card.Title>
             {icon()} Reddit
-            {redditToken ?
+            {redditToken || hasStored ?
               <Button
                 className={`${styles.seeMore} ${styles.redditB}`}
                 data-tip={hasToolTips() ? 'See more insights about your Reddit, such as most liked, controversial, and disliked post': ''}
