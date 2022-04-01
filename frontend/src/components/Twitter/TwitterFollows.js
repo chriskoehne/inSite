@@ -151,7 +151,7 @@ const TwitterFollows = (props) => {
   }, [twitterToken]);
   
   return (
-    <Card style={{ borderColor: 'var(--twitter)' }} className={styles.socialsCard}>
+    <Card style={{ borderColor: 'var(--twitter)', justifyContent: 'center'}} className={styles.socialsCard}>
       <Row>
         <Col>
           <h1>
