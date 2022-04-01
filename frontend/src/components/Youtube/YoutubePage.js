@@ -164,7 +164,8 @@ const YoutubePage = (props) => {
                 subscriptions.map((sub) => (
                   <tr key={sub.id}>
                     <td>{sub.snippet.title}</td>
-                    <img alt='' src={sub.snippet.thumbnails.medium.url} />
+                    <a href={"https://youtube.com/c/" + sub.snippet.title} target='_blank'>
+                    <img alt='' src={sub.snippet.thumbnails.medium.url} /></a>
                   </tr>
                 ))}
             </div>
@@ -183,7 +184,8 @@ const YoutubePage = (props) => {
                       view count: {vid.statistics.viewCount} like count:{' '}
                       {vid.statistics.likeCount}
                     </td>
-                    <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    <a href={"https://youtube.com/watch?v=" + vid.id} target='_blank'>
+                    <img alt='' src={vid.snippet.thumbnails.medium.url} /></a>
                   </tr>
                 ))}
             </div>
@@ -210,7 +212,8 @@ const YoutubePage = (props) => {
                       view count: {vid.statistics.viewCount} like count:{' '}
                       {vid.statistics.likeCount}
                     </td>
-                    <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    <a href={"https://youtube.com/watch?v=" + vid.id} target='_blank'>
+                    <img alt='' src={vid.snippet.thumbnails.medium.url} /></a>
                   </tr>
                 ))}
             </div>
