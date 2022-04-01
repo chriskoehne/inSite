@@ -162,6 +162,7 @@ const YoutubeCard = (props) => {
           maxVal={getMaxCount(playlistCounts)}
           label="Playlist Counts"
           xaxis="PlaylistCounts"
+          color={"#ff3333"}
         />
       );
     } else {
