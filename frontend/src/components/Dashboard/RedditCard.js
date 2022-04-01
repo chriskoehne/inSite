@@ -315,18 +315,20 @@ const RedditCard = (props) => {
         <Card.Body>
           <Card.Title>
             {icon()} Reddit
-            <Button
-              className={`${styles.seeMore} ${styles.redditB}`}
-              data-tip={hasToolTips() ? 'See more insights about your Reddit, such as most liked, controversial, and disliked post': ''}
-              style={{ float: 'right' }}
-              onClick={function () {
-                props.navigate('reddit', {
-                  state: { email: user.email, accessToken: redditToken },
-                });
-              }}
-            >
-              See more
-            </Button>
+            {redditToken ?
+              <Button
+                className={`${styles.seeMore} ${styles.redditB}`}
+                data-tip={hasToolTips() ? 'See more insights about your Reddit, such as most liked, controversial, and disliked post': ''}
+                style={{ float: 'right' }}
+                onClick={function () {
+                  props.navigate('reddit', {
+                    state: { email: user.email, accessToken: redditToken },
+                  });
+                }}
+              >
+                See more
+              </Button>
+          : null}
           </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>

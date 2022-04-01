@@ -216,7 +216,7 @@ const TwitterCard = (props) => {
       return (
         <div className={styles.centered}>
           <LineChart
-            height={'25vh'}
+            height={'20vh'}
             width={'45vw'}
             color={'#03a9f4'}
             data={chartDayData}
@@ -256,22 +256,24 @@ const TwitterCard = (props) => {
         <Card.Body>
           <Card.Title>
             {icon()} Twitter
-            <Button
-              className={`${styles.seeMore} ${styles.twitterB}`}
-              data-tip={
-                hasToolTips()
-                  ? 'See more insights about your Twitter, such as the words you use most often and your most liked and retweeted Tweets'
-                  : ''
-              }
-              style={{ float: 'right' }}
-              onClick={function () {
-                props.navigate('twitter', {
-                  state: { email: user.email, accessToken: twitterToken },
-                });
-              }}
-            >
-              See more
-            </Button>
+            {twitterToken ?
+              <Button
+                className={`${styles.seeMore} ${styles.twitterB}`}
+                data-tip={
+                  hasToolTips()
+                    ? 'See more insights about your Twitter, such as the words you use most often and your most liked and retweeted Tweets'
+                    : ''
+                }
+                style={{ float: 'right' }}
+                onClick={function () {
+                  props.navigate('twitter', {
+                    state: { email: user.email, accessToken: twitterToken },
+                  });
+                }}
+              >
+                See more
+              </Button>
+          : null}
           </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
