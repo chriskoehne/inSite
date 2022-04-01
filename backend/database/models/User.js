@@ -18,6 +18,7 @@ const permissionsSchema = new mongoose.Schema(
 const settingsSchema = new mongoose.Schema(
   {
     darkMode: { type: Boolean, required: true, default: false },
+    toolTips: { type: Boolean, required: true, default: true },
     cardOrder: {
       type: [String],
       required: false,

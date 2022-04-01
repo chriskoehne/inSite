@@ -6,8 +6,9 @@ import styles from './Dashboard.module.css';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
 import { isFalsy } from '../Reddit/helperFunctions';
-
 import useDidMountEffect from '../../hooks/useDidMountEffect';
+import ReactTooltip from 'react-tooltip';
+import hasToolTips from '../../helpers/hasToolTips';
 
 const RedditCard = (props) => {
   const [redditToken, setRedditToken] = useState('');
@@ -73,7 +74,7 @@ const RedditCard = (props) => {
           code: c,
         });
         console.log('loading done 2');
-        // setLoading(false);
+        setLoading(false);
       } else if (await getStoredRedditData()) {
         setLoading(false);
       } else {
@@ -81,7 +82,7 @@ const RedditCard = (props) => {
           email: e,
         });
         console.log('loading done 3');
-        // setLoading(false);
+        setLoading(false);
       }
     };
     doTheThing();
@@ -113,10 +114,9 @@ const RedditCard = (props) => {
     }
   }, [user]);
 
-
   useDidMountEffect(() => {
-    setLoading(false)
-  }, [comments])
+    setLoading(false);
+  }, [comments]);
 
   useDidMountEffect(() => {
     if (!hasToken() && redditToken) {
@@ -163,7 +163,7 @@ const RedditCard = (props) => {
             }
             setComments(ansOverview.data.comments);
           } else {
-            setComments({})
+            setComments({});
           }
           const ansSubKarma = await axios.get('/reddit/userSubKarma', {
             params: redditUserQuery,
@@ -208,7 +208,6 @@ const RedditCard = (props) => {
             }
           }
         }
-        
       }
     };
     if (redditToken) {
@@ -269,11 +268,6 @@ const RedditCard = (props) => {
           label='Comment Scores'
           xaxis='Comment score'
           color={'#ff4500'}
-          onClick={function () {
-            props.navigate('reddit', {
-              state: { email: user.email, accessToken: redditToken },
-            });
-          }}
         />
       );
     } else {
@@ -282,9 +276,11 @@ const RedditCard = (props) => {
           <Button
             className={`${styles.buttons} ${styles.redditB}`}
             onClick={authenticateReddit}
+            data-tip={hasToolTips() ? 'Connect your Reddit account to inSite to begin seeing your Reddit usage metrics!' : ''}
           >
             Authorize Reddit
           </Button>
+          <ReactTooltip />
         </div>
       );
     }
@@ -317,7 +313,21 @@ const RedditCard = (props) => {
         className={styles.socialsCard}
       >
         <Card.Body>
-          <Card.Title>{icon()} Reddit</Card.Title>
+          <Card.Title>
+            {icon()} Reddit
+            <Button
+              className={`${styles.seeMore} ${styles.redditB}`}
+              data-tip={hasToolTips() ? 'See more insights about your Reddit, such as most liked, controversial, and disliked post': ''}
+              style={{ float: 'right' }}
+              onClick={function () {
+                props.navigate('reddit', {
+                  state: { email: user.email, accessToken: redditToken },
+                });
+              }}
+            >
+              See more
+            </Button>
+          </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
           {/* <div className={styles.refreshButton}>{refreshButton()}</div> */}

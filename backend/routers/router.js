@@ -46,6 +46,12 @@ router.post(
 );
 
 router.post(
+  '/user/settings/toolTips',
+  auth.verifyToken,
+  userController.updateToolTips
+);
+
+router.post(
   '/user/settings/cardOrder',
   auth.verifyToken,
   userController.updateCardOrder
