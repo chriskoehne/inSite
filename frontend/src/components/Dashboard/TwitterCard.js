@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
+import ReactTooltip from 'react-tooltip';
 
 const c = require('../Reddit/constants/constants');
 
@@ -21,9 +22,9 @@ const TwitterCard = (props) => {
     let arr = [0, 0, 0, 0, 0, 0, 0];
     let dayArr = ['', '', '', '', '', '', ''];
     let currentYear = new Date();
-    console.log('CURRENT YEAR: ' + (currentYear.getTime() / 1000 - 604800));
+    // console.log('CURRENT YEAR: ' + (currentYear.getTime() / 1000 - 604800));
     wee.data.forEach((e) => {
-      console.log('CREATE TIME: ' + e.created_at);
+      // console.log('CREATE TIME: ' + e.created_at);
       var dt = new Date(e.created_at);
       if (dt >= currentYear.getTime() / 1000 - 604800) {
         let d = new Date(dt * 1000); //get current Date
@@ -213,28 +214,21 @@ const TwitterCard = (props) => {
     if (twitterToken) {
       return (
         <div className={styles.centered}>
-          <LineChart
-            height={'25vh'}
-            width={'45vw'}
-            color={'#05aced'}
-            data={chartDayData}
-            onClick={function () {
-              props.navigate('twitter', {
-                state: { email: user.email, accessToken: twitterToken },
-              });
-            }}
-          />
+                  <LineChart
+                    height={'25vh'}
+                    width={'45vw'}
+                    color={'#03a9f4'}
+                    data={chartDayData}
+                  />
         </div>
       );
     } else {
       return (
         <div className={styles.centered}>
-          <Button
-            className={`${styles.buttons} ${styles.twitterB}`}
-            onClick={authenticateTwitter}
-          >
+          <Button className={`${styles.buttons} ${styles.twitterB}`} onClick={authenticateTwitter} data-tip='Connect your Twitter account to inSite to begin seeing your Twitter usage metrics!'>
             Authorize Twitter
           </Button>
+          <ReactTooltip/>
         </div>
       );
     }
@@ -251,7 +245,20 @@ const TwitterCard = (props) => {
         className={styles.socialsCard}
       >
         <Card.Body>
-          <Card.Title>{icon()} Twitter</Card.Title>
+          <Card.Title>{icon()} Twitter
+            <Button
+                className={`${styles.seeMore} ${styles.twitterB}`}
+                data-tip="See more insights about your Twitter, such as the words you use most often and your most liked and retweeted Tweets"
+                style={{ float: "right" }}
+                onClick={function () {
+                  props.navigate("twitter", {
+                    state: { email: user.email, accessToken: twitterToken },
+                  });
+                }}
+              >
+                See more
+              </Button>
+          </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
         </Card.Body>

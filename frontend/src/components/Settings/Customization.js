@@ -4,7 +4,7 @@ import Switch from 'react-switch';
 import axios from 'axios';
 import styles from './Settings.module.css';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
-
+import ReactTooltip from 'react-tooltip';
 import Order from './Order';
 
 const Customization = () => {
@@ -47,9 +47,10 @@ const Customization = () => {
 
   return (
     <div id='customization' className={styles.customization}>
+      <ReactTooltip/>
       <h4>Customization</h4>
       <br />
-      <h5 style={{ marginBottom: '0' }}>Dark Mode</h5>
+      <h5 style={{ marginBottom: '0' }} data-tip='Globally toggle dark/light mode'>Dark Mode</h5>
       <br />
       <label>
         <Switch
@@ -72,13 +73,13 @@ const Customization = () => {
       </label>
       <br />
       <br />
-      <h5> Dashboard Cards Order </h5>
+      <h5 data-tip='Change the order of cards on dashboard i.e. first card in this list corresponds with the top-left card'> Dashboard Cards Order </h5>
       <Order />
       <br />
       {/* <h5>Reddit Default shit</h5>
       setting
       <br />
-      setting
+      setting 2
       <br />
       setting
       <br /> */}

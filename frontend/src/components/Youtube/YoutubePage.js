@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Youtube.module.css';
+import ReactTooltip from 'react-tooltip';
 
 const YoutubePage = (props) => {
   const navigate = useNavigate();
@@ -189,8 +190,8 @@ const YoutubePage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <h3>Popular Videos From Your Favorite Category</h3>
-            <h3>{popularVidsCategory}</h3>
+          <h3>Popular Videos From Your Favorite Category</h3>
+            <h3 data-tip="Based on YouTube's most popular categories, such as music, gaming, and entertainment">{popularVidsCategory}</h3>
             <div>
               {popularVidsFromLiked &&
                 popularVidsFromLiked.map((vid) => (
@@ -207,6 +208,7 @@ const YoutubePage = (props) => {
           </Card>
         </Carousel.Item>
       </Carousel>
+      <ReactTooltip/>
     </div>
   );
 };
