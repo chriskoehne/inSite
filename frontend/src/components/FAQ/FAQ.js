@@ -4,17 +4,18 @@ import Banner from "../Banner/Banner";
 
 const FAQ = (props) => {
   return (
-    <Banner>
-      <Banner.Header>
+    <Banner >
+      {/* <Banner.Header >
           Frequently Asked Questions
-      </Banner.Header>
+      </Banner.Header> */}
+      <h1 style={{textAlign: 'center'}}>Frequently Asked Questions</h1>
       <Banner.Entity>
           <Banner.Question>
               How much personal information does inSite store?
           </Banner.Question>
           <Banner.Text>
               inSite: Besides given email, password, and phone number, inSite stores no other information permenantly. If a social media account has been connected to inSite, access to that account's history is stored on inSite for one hour. 
-              inSite does not have access to any personal information that is stored with these connected social media accounts such as emails and passwords. If you wish to remove the information stored on inSite, you can always delete your account.<br/><br/>
+              inSite does not have access to any personal information that is stored with these connected social media accounts such as emails and passwords. If you wish to remove the information stored on inSite, you can always revoke permission to store temporary information in the "Settings" page, or fully delete your account to remove permanent information.<br/><br/>
               Twilio: Twilio is the service that inSite uses for 2-Factor Authentication. Twilio stores your inSite email and phone number in order to do this effectively. Twilio will not share or sell this information to 3rd parties. 
               This information is shared within the Twilio group of companies only inorder to ensure that the services provided work as expected.<br/>
               Twilio's Privacy Policy: <a href="https://www.twilio.com/legal/privacy" target="_blank" rel="noreferrer">https://www.twilio.com/legal/privacy</a><br/><br/>

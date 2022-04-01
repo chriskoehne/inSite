@@ -89,7 +89,7 @@ exports.test = async function (req, res) {
 
 exports.tweetCount = async function (req, res) {
   try {
-    console.log('In Twitter Tweet Count Service');
+    // console.log('In Twitter Tweet Count Service');
     const token = req.query.accessToken;
     const id = req.query.userId;
 
@@ -97,17 +97,17 @@ exports.tweetCount = async function (req, res) {
       Authorization: 'Bearer ' + token,
     };
 
-    var params = new searchParams();
-    console.log('Twitter id: ' + id)
-    params.set('query', 'from:RS_ROCKINROHAN');
-    //params.set('tweet.fields', 'created_at')
-    params.set('max_results', 10);
+    // var params = new searchParams();
+    // console.log('Twitter id: ' + id)
+    // params.set('query', 'from:RS_ROCKINROHAN');
+    // //params.set('tweet.fields', 'created_at')
+    // params.set('max_results', 10);
 
     const twitterRes = await axios.get(
       'https://api.twitter.com/2/tweets/search/recent?query=from:' + id + '&tweet.fields=created_at',
       { headers: headers }
     );
-    console.log('TWEETS RETURNED ARE: ' + twitterRes.data)
+    // console.log('TWEETS RETURNED ARE: ' + twitterRes.data)
     return twitterRes.data;
   } catch (err) {
     console.log('twitter big error catch');
@@ -148,6 +148,91 @@ exports.tweets = async function (req, res) {
     };
     const twitterRes = await axios.get(
       'https://api.twitter.com/2/users/' + userID + '/tweets?max_results=100',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.followers = async function (req, res) {
+  try {
+    // console.log('In Twitter Followers Service');
+    const token = req.query.accessToken;
+    const userID = req.query.userID;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/' + userID + '/followers',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.following = async function (req, res) {
+  try {
+    // console.log('In Twitter Following Service');
+    const token = req.query.accessToken;
+    const userID = req.query.userID;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/' + userID + '/following?max_results=1000',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.likes = async function (req, res) {
+  try {
+    // console.log('In Twitter Likes Service');
+    const token = req.query.accessToken;
+    const userID = req.query.userID;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/' + userID + '/tweets?exclude=retweets&max_results=100',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('twitter big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.tweetLikes = async function (req, res) {
+  try {
+    // console.log('In Twitter Tweet Likes Service');
+    const token = req.query.accessToken;
+    const tweetsIds = req.query.tweetsIds;
+    // console.log('IDs: ' + tweetsIds);
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/tweets?tweet.fields=public_metrics&ids=' + tweetsIds,
       { headers: headers }
     );
     return twitterRes.data;

@@ -23,7 +23,7 @@ exports.userCreation = async function (req, res, next) {
         break;
       default:
         //success
-        console.log('should be success controller');
+        // console.log('should be success controller');
         return res.status(200).json({ message: result }); //should be the user's id
     }
   } catch (e) {

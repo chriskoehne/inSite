@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Row, Card, Col } from 'react-bootstrap';
+import { Row, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
-// import LineChart from '../Charts/LineChart';
-import { SocialIcon } from 'react-social-icons';
 import { TagCloud } from 'react-tagcloud';
 
 const c = require('./constants/constants.js')
@@ -50,11 +48,9 @@ function getUncommon(sentence) {
   }
 
 const TwitterWordGraph = (props) => {
-  const [user, setUser] = useState({ email: '', code: '' });
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState({ email: '', code: '' })
   const [twitterToken, setTwitterToken] = useState('');
   const [tagCloud, setTagCloud] = useState([]);
-  const [tweets, setTweets] = useState('')
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {

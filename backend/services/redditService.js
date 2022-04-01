@@ -205,7 +205,6 @@ exports.userTotalKarma = async function (req, res) {
       { headers: headers }
     );
     
-
     return redditRes.data;
   } catch (err) {
     console.log('big error catch');

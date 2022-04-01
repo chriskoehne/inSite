@@ -3,9 +3,9 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
 import { Outlet } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
 const OurNavbar = (props) => {
-
   return (
     <Navbar className={styles.navbar}>
       <Container>
@@ -15,21 +15,29 @@ const OurNavbar = (props) => {
             <h2 className={styles.site}>Site</h2>
           </div>
         </Navbar.Brand>
-        <Nav.Link style={{color: 'white'}} href="/faq">FAQ</Nav.Link>
-        <Nav.Link style={{color: 'white'}} href="/settings">settings</Nav.Link>
+        <Nav>
+          <Nav.Link style={{ color: 'white', marginRight: '2vw' }} href='/faq' data-tip='Frequently Asked Questions about inSite'>
+            FAQ
+          </Nav.Link>
+          <div style={{width: '25%'}}></div>
+          <Nav.Link style={{ color: 'white' }} href='/settings' data-tip='Configure your settings, such as dark mode, card order, and social media authorizations'>
+            settings
+          </Nav.Link>
+        </Nav>
       </Container>
     </Navbar>
   );
 };
 
 const NavRoute = (props) => {
-  /** 
+  /**
    * If authorized, return an outlet that will render child elements
    * If not, return element that will navigate to login page
    */
 
   return (
     <div className={styles.box}>
+      <ReactTooltip/>
       <OurNavbar props={props} />
       <Outlet />
     </div>
