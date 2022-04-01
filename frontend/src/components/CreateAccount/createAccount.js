@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import { Button, Container, Row, Col } from "react-bootstrap";
 // import Popup from 'reactjs-popup';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import styles from './createAccount.module.css';
+import ReactTooltip from 'react-tooltip';
 
 const CreateAccount = (props) => {
   const [email, setEmail] = useState('');
@@ -16,6 +17,8 @@ const CreateAccount = (props) => {
   const [errorText, setErrorText] = useState('');
   const [showErrorModal, setErrorModal] = useState('');
   const [verifyText, setVerifyText] = useState('');
+
+  const verifyRef = useRef();
 
   useEffect(() => {
     if (!showModal) {
@@ -32,9 +35,14 @@ const CreateAccount = (props) => {
       code: smsCode,
     };
     try {
-      const res = await axios.post('http://localhost:5000/verifyUser/', body);
+      const res = await axios.post('/verifyUser/', body);
       if (res.status === 200) {
-        localStorage.setItem('email', email);
+        console.log(res.data.user);
+        if (res.data.user.settings.darkMode) {
+          document.body.classList.add('dark');
+        }
+        localStorage.setItem('settings', JSON.stringify(res.data.user.settings));
+        localStorage.setItem('email', res.data.user.email);
         props.navigate('/dashboard', { state: { email: email } });
       } else {
         setVerifyText('Incorrect code!');
@@ -79,7 +87,7 @@ const CreateAccount = (props) => {
       return;
     } else {
       axios
-        .post('http://localhost:5000/userCreation/', body)
+        .post('/userCreation/', body)
         .then((res) => {
           console.log('now res is');
           console.log(res);
@@ -120,18 +128,24 @@ const CreateAccount = (props) => {
 
   return (
     <div>
+      <ReactTooltip/>
       <div className={styles.background}>
         <div className={styles.createAcc_background}>
           <h1>Create Account</h1>
-          <Modal show={showModal}>
+          <Modal
+            show={showModal}
+            onShow={() => {
+              verifyRef.current.focus();
+            }}
+          >
             <Modal.Header>
               <Modal.Title>Verify phone number</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={styles.modalText}>
               The phone number provided was used to create a two factor user.
               Please enter the code sent to your phone to verify this
               connection.
-              <div style={{color: 'red'}}> {verifyText} </div>
+              <div style={{ color: 'red' }}> {verifyText} </div>
               <form onSubmit={handleClose}>
                 <div className='form-group'>
                   <label>Code: </label>
@@ -139,6 +153,7 @@ const CreateAccount = (props) => {
                     type='text'
                     className='form-control'
                     placeholder='Code'
+                    ref={verifyRef}
                     onChange={(e) => {
                       setSMSCode(e.target.value);
                     }}
@@ -165,6 +180,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Email: </label>
               <input
+                data-tip='Emails must contain an @ to be valid'
                 type='text'
                 className='form-control'
                 placeholder='email'
@@ -176,6 +192,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Password: </label>
               <input
+                data-tip='Passwords must be at least 8 characters and contain at least one letter and one number'
                 type='password'
                 className='form-control'
                 placeholder='password'
@@ -187,6 +204,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Confirm Password: </label>
               <input
+                data-tip='Passwords must be at least 8 characters and contain at least one letter and one number'
                 type='password'
                 className='form-control'
                 placeholder='password'
@@ -198,6 +216,7 @@ const CreateAccount = (props) => {
             <div className='form-group'>
               <label>Phone: </label>
               <input
+                data-tip='This phone # will be used for two-factor authentication on log-in'
                 type='text'
                 className='form-control'
                 placeholder='phone'

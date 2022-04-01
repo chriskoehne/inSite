@@ -1,26 +1,27 @@
-const path = require('path');
-const bcrypt = require('bcrypt');
 const Reddit = require('reddit');
-const { link } = require('fs');
-const config = require(path.resolve(__dirname, '../config.json'));
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 var btoa = require('btoa');
 var axios = require('axios');
 const { Agent } = require('http');
-var formData = require('form-data');
 var searchParams = require('url-search-params');
+
+if (process.env.DEV) {
+  var redirectURI = 'https://127.0.0.1:3000/dashboard/'
+} else {
+  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard'
+}
 
 exports.test = async function (req, res) {
   try {
-    // console.log(req.body);
+    // console.log('In Reddit Test Service');
     const email = req.body.email;
     let result = await User.find({ email: email });
 
     const reddit = new Reddit({
       username: result.redditUsername,
       password: result.redditPassword,
-      appId: config.redditAppId,
-      appSecret: config.redditSecret,
+      appId: process.env.REDDIT_APP_ID,
+      appSecret: process.env.REDDIT_SECRET,
       userAgent: 'MyApp/1.0.0 (http://example.com)',
     });
 
@@ -33,18 +34,14 @@ exports.test = async function (req, res) {
 
 exports.login = async function (email) {
   try {
-    console.log('In Login');
-
-    //TODO change the client_id to grab from config file
+    // console.log('In Reddit Login Service');
+    const clientID = process.env.REDDIT_APP_ID;
+    
     const link =
       'https://www.reddit.com/api/v1/authorize?client_id=' +
-      config.redditAppId +
-      '&response_type=code&state=' +
-      email +
-      '&redirect_uri=https://127.0.0.1:3000/dashboard/&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
-
-    console.log('link');
-    console.log(link);
+      clientID +
+      '&response_type=code&state=reddit&redirect_uri=' + redirectURI + 
+      '&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
 
     return { link: link, verificationString: email };
   } catch (err) {
@@ -56,16 +53,22 @@ exports.login = async function (email) {
 
 exports.convert = async function (req, res) {
   try {
-    console.log(req.body);
+    // console.log("In Reddit Convert Service");
+    
     const code = req.body.code;
 
     var params = new searchParams();
     params.set('grant_type', 'authorization_code');
     params.set('code', code);
-    params.set('redirect_uri', 'https://127.0.0.1:3000/dashboard/');
+    params.set('redirect_uri', redirectURI);
 
     const body = params;
-    const auth = btoa(config.redditAppId + ':' + config.redditSecret);
+    const redditAppId = process.env.REDDIT_APP_ID;
+    const redditSecret = process.env.REDDIT_SECRET;
+
+    const auth = btoa(
+      redditAppId + ':' + redditSecret
+    );
     const finalAuth = 'Basic ' + auth;
 
     const headers = {
@@ -73,17 +76,16 @@ exports.convert = async function (req, res) {
       'User-Agent': 'inSite by inSite',
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    //reddit post call
+    
     const redditRes = await axios.post(
       'https://www.reddit.com/api/v1/access_token',
       body,
       { headers: headers }
     );
-    // console.log("in service")
-    //console.log(redditRes.data)
+    
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('reddit big error catch');
     // console.log(err)
     return err;
   }
@@ -91,13 +93,10 @@ exports.convert = async function (req, res) {
 
 exports.redditMe = async function (req, res) {
   try {
-    // console.log(req.body);
+    // console.log('In Reddit Me Service');
+    
     const token = req.query.accessToken;
-    // const subReddit = req.body.subReddit;
-
-    // console.log("in service, token is")
-    // console.log(token)
-    // const body = params;
+    
     const finalAuth = 'bearer ' + token;
 
     const headers = {
@@ -106,11 +105,6 @@ exports.redditMe = async function (req, res) {
     const redditRes = await axios.get('https://oauth.reddit.com/api/v1/me', {
       headers: headers,
     });
-    // console.log("service subreddit answersssss:")
-    //console.log(redditRes)
-    // let ans = redditRes.toJSON();
-    // console.log(ans.status)
-    // console.log(ans.name)
 
     return redditRes.data;
   } catch (err) {
@@ -122,19 +116,11 @@ exports.redditMe = async function (req, res) {
 
 exports.userOverview = async function (req, res) {
   try {
-    // console.log(req.body);
+    // console.log('In Reddit Overview Service');
+    
     const token = req.query.accessToken;
     const username = req.query.username;
-    // console.log(req)
-    console.log('user ' + username);
-    // const subReddit = req.body.subReddit;
-
-    console.log('in overview service, username is');
-    console.log(username);
-
-    console.log('in service, token is');
-    console.log(token);
-    // const body = params;
+    
     const finalAuth = 'bearer ' + token;
 
     const headers = {
@@ -144,10 +130,6 @@ exports.userOverview = async function (req, res) {
       'https://oauth.reddit.com/user/' + username + '/overview.json?limit=100',
       { headers: headers }
     );
-    // console.log("service subreddit answer:")
-
-    // console.log(ans.name)
-    // console.log(redditRes.data)
 
     return redditRes.data;
   } catch (err) {
@@ -159,13 +141,10 @@ exports.userOverview = async function (req, res) {
 
 exports.userComments = async function (req, res) {
   try {
+    // console.log('In Reddit Comments Service');
     const token = req.query.accessToken;
     const username = req.query.username;
-    // console.log(req)
-    // console.log("user " + username)
-    // console.log("in service, token is")
-    // console.log(token)
-    // const body = params;
+    
     const finalAuth = 'bearer ' + token;
     const headers = {
       Authorization: finalAuth,
@@ -174,8 +153,7 @@ exports.userComments = async function (req, res) {
       'https://oauth.reddit.com/user/' + username + '/comments.json?limit=100',
       { headers: headers }
     );
-    // console.log("service subreddit answer:")
-    // console.log(redditRes)
+    
     return redditRes.data;
   } catch (err) {
     console.log('big error catch');
@@ -185,6 +163,7 @@ exports.userComments = async function (req, res) {
 
 exports.userSubKarma = async function (req, res) {
   try {
+    // console.log('In Reddit Sub Karma Service');
     const token = req.query.accessToken;
 
     const finalAuth = 'bearer ' + token;
@@ -193,13 +172,10 @@ exports.userSubKarma = async function (req, res) {
       Authorization: finalAuth,
     };
 
-    // console.log("Sub Karma Info");
-
     const redditRes = await axios.get(
       'https://oauth.reddit.com/api/v1/me/karma',
       { headers: headers }
     );
-    // console.log(redditRes.data);
 
     return redditRes.data;
   } catch (err) {
@@ -213,6 +189,7 @@ exports.userSubKarma = async function (req, res) {
 
 exports.userTotalKarma = async function (req, res) {
   try {
+    // console.log('In Reddit Total Karma Service');
     const token = req.query.accessToken;
     const username = req.query.username;
 
@@ -222,16 +199,12 @@ exports.userTotalKarma = async function (req, res) {
       Authorization: finalAuth,
     };
 
-    // console.log("Total Karma Info");
 
     const redditRes = await axios.get(
       'https://oauth.reddit.com/user/' + username + '/about',
       { headers: headers }
     );
-    // console.log("Comment Karma: " + redditRes.data.data.comment_karma);
-    // console.log("Link Karma: " + redditRes.data.data.link_karma);
-    // console.log("Award Karma: " + redditRes.data.data.awardee_karma);
-
+    
     return redditRes.data;
   } catch (err) {
     console.log('big error catch');
@@ -242,19 +215,11 @@ exports.userTotalKarma = async function (req, res) {
 
     exports.userOverview = async function (req, res) {
       try {
-        // console.log(req.body);
+        // console.log('In Reddit Overview Controversial Service');
+        
         const token = req.query.accessToken;
         const username = req.query.username;
-        // console.log(req)
-        console.log('user ' + username);
-        // const subReddit = req.body.subReddit;
-
-        console.log('in overview service, username is');
-        console.log(username);
-
-        console.log('in service, token is');
-        console.log(token);
-        // const body = params;
+        
         const finalAuth = 'bearer ' + token;
 
         const headers = {
@@ -266,10 +231,6 @@ exports.userTotalKarma = async function (req, res) {
             '/overview?limit=100&sort=controversial',
           { headers: headers }
         );
-        // console.log("service subreddit answer:")
-
-        // console.log(ans.name)
-        //console.log(redditRes)
 
         return redditRes.data;
       } catch (err) {
@@ -281,13 +242,10 @@ exports.userTotalKarma = async function (req, res) {
 
     exports.userComments = async function (req, res) {
       try {
+        // console.log('In Reddit Comments Controversial Service');
         const token = req.query.accessToken;
         const username = req.query.username;
-        // console.log(req)
-        // console.log("user " + username)
-        // console.log("in service, token is")
-        // console.log(token)
-        // const body = params;
+        
         const finalAuth = 'bearer ' + token;
         const headers = {
           Authorization: finalAuth,
@@ -298,8 +256,7 @@ exports.userTotalKarma = async function (req, res) {
             '/comments.json?limit=100&sort=controversial',
           { headers: headers }
         );
-        // console.log("service subreddit answer:")
-        // console.log(redditRes)
+        
         return redditRes.data;
       } catch (err) {
         console.log('big error catch');

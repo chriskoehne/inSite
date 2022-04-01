@@ -3,18 +3,56 @@
  * @author Chris Koehne <cdkoehne@gmail.com>
  */
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, lowercase: true, validate: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/},
-  password: { type: String , required: true },
-  authyId: { type: String, required: true, default: 'unset' },
-  redditUsername: { type: String, required: false },
-  redditPassword: { type: String, required: false },
-  darkmode: { type: Boolean, required: false },
+const permissionsSchema = new mongoose.Schema(
+  {
+    reddit: { type: Boolean, required: true, default: false },
+    twitter: { type: Boolean, required: true, default: false },
+    instagram: { type: Boolean, required: true, default: false },
+    youtube: { type: Boolean, required: true, default: false },
+  },
+  { _id: false }
+);
 
-}, { timestamps: true });
+const settingsSchema = new mongoose.Schema(
+  {
+    darkMode: { type: Boolean, required: true, default: false },
+    cardOrder: {
+      type: [String],
+      required: false,
+      default: ['reddit', 'twitter', 'instagram', 'youtube'],
+    },
+    permissions: { type: permissionsSchema, required: true, default: {} },
+  },
+  { _id: false }
+);
 
-const User = mongoose.model("User", userSchema);
+const redditDataSchema = new mongoose.Schema(
+  {
+    overview: { type: Object, required: true, default: {} },
+    subKarma: { type: Object, required: true, default: {} },
+    totalKarma: { type: Object, required: true, default: {} },
+  },
+  {_id: false,}
+);
+
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      validate: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+    },
+    password: { type: String, required: true },
+    authyId: { type: String, required: true, default: 'unset' },
+    settings: { type: settingsSchema, required: true, default: {} },
+    redditData: { type: redditDataSchema, required: true, default: {} },
+  },
+  { timestamps: true, strict: false }
+);
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

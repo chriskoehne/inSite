@@ -1,0 +1,46 @@
+name: Deploy Backend to Google App Engine
+
+on:
+  push:
+    branches:
+      - chris/deploymentTest
+      - prod
+
+jobs:
+  deploy:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Environment Variables
+        uses: gokiwibot/gcp-yaml-compiler@v1.0
+        with:
+          file: ./backend/app.yaml
+        env:
+          CLOUDINARY_API_KEY: '${{ secrets.CLOUDINARY_API_KEY }}'
+          CLOUDINARY_API_SECRET: '${{ secrets.CLOUDINARY_API_SECRET }}'
+          CLOUDINARY_CLOUD_NAME: '${{ secrets.CLOUDINARY_CLOUD_NAME }}'
+          DATABASE_URI: '${{ secrets.DATABASE_URI }}'
+          JWT_SECRET: '${{ secrets.JWT_SECRET }}'
+          REDDIT_APP_ID: '${{ secrets.REDDIT_APP_ID }}'
+          REDDIT_SECRET: '${{ secrets.REDDIT_SECRET }}'
+          TWILIO_AUTH_TOKEN: '${{ secrets.TWILIO_AUTH_TOKEN }}'
+
+      - name: Install Dependencies
+        working-directory: ./backend/
+        run: npm ci
+
+      - name: Authenticate to Google Cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: Deploy to App Engine
+        id: 'deploy'
+        uses: 'google-github-actions/deploy-appengine@v0'
+        with:
+          working_directory: './backend/'

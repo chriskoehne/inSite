@@ -7,6 +7,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  defaults
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
@@ -24,6 +25,8 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+defaults.color  = document.body.classList.contains('dark') ? '#e3e3e3' : 'grey'
+
 /*
 const generateList = (min, max, steps) => {
   // minimum step size
@@ -81,10 +84,7 @@ const LineChart = (props) => {
       } else {
         const body = { image: base64 };
         try {
-          const cloudinaryRes = await axios.post(
-            'http://localhost:5000/uploadImage/',
-            body
-          );
+          const cloudinaryRes = await axios.post('/uploadImage/', body);
           if (cloudinaryRes.status !== 200) {
             console.log('cloudinary error');
           }
@@ -114,7 +114,6 @@ const LineChart = (props) => {
       <div style={{ height: props.height, width: props.width }}>
         <Line
           data={props.data}
-          color={props.color}
           onClick={props.onClick}
           ref={chartRef}
           options={{

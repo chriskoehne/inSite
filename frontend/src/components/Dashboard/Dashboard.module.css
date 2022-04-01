@@ -1,5 +1,3 @@
-
-
 .box {
   margin-top: 2%;
   display: flex;
@@ -25,8 +23,9 @@
 .socialsCard {
   height: 100%;
   background-color: rgba(255, 255, 255, 0);
+  overflow: auto;
 }
-.socialsCard .dark{
+.socialsCard .dark {
   height: 100%;
 }
 
@@ -36,23 +35,88 @@
   overflow: hidden;
   white-space: nowrap;
   height: 7vh;
-  background-color: var(--reddit);
   color: white;
   font-weight: bold;
+}
+
+.redditB {
+  background-color: var(--reddit);
   border-color: var(--reddit);
 }
-.buttons:hover {
+
+.redditB:hover {
   background-color: #e63e00;
   border-color: #e63e00;
 }
 
-.buttons:active {
+.redditB:focus {
   background-color: var(--reddit);
   border-color: var(--reddit);
 }
-.buttons:focus {
+
+.redditB:active {
   background-color: var(--reddit);
   border-color: var(--reddit);
+}
+
+.twitterB {
+  background-color: var(--twitter);
+  border-color: var(--twitter);
+}
+
+.twitterB:hover {
+  background-color: #3798dd;
+  border-color: #3798dd;
+}
+
+.twitterB:focus {
+  background-color: var(--twitter);
+  border-color: var(--twitter);
+}
+
+.twitterB:active {
+  background-color: var(--twitter);
+  border-color: var(--twitter);
+}
+
+.instagramB {
+  background-color: var(--instagram);
+  border-color: var(--instagram);
+}
+
+.instagramB:hover {
+  background-color: #cf3160;
+  border-color: #cf3160;
+}
+
+.instagramB:focus {
+  background-color: var(--instagram);
+  border-color: var(--instagram);
+}
+
+.instagramB:active {
+  background-color: var(--instagram);
+  border-color: var(--instagram);
+}
+
+.youtubeB {
+  background-color: var(--youtube);
+  border-color: var(--youtube);
+}
+
+.youtubeB:hover {
+  background-color: #d40e0e;
+  border-color: #d40e0e;
+}
+
+.youtubeB:focus {
+  background-color: var(--youtube);
+  border-color: var(--youtube);
+}
+
+.youtubeB:active {
+  background-color: var(--youtube);
+  border-color: var(--youtube);
 }
 
 .centered {
@@ -61,4 +125,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.refreshButton {
+  position: relative;
+  margin-right: 0;
+  float: right;
+  top: -9.5%;
+  height: 9.5%;
+  padding-right: 10px !important;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size: 1em;
+}
+
+.seeMore {
+  font-size: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 10%;
+  color: white;
+  font-weight: bold;
 }

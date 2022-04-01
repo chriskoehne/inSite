@@ -6,7 +6,7 @@
 }
 
 .box {
-  /* put darkmode here */
+  /* put darkMode here */
   background-color: var(--secondary);
   display: flex;
   flex-flow: column;

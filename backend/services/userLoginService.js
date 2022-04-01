@@ -1,12 +1,11 @@
-const path = require('path');
 const bcrypt = require('bcrypt');
-const config = require(path.resolve(__dirname, '../config.json'));
+
 const c = require('../constants/constants');
-const authToken = config.TwilioAuthToken;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 var authy = require('authy')(authToken);
 
 
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 exports.check = async function (email, password) {
   try {
 
@@ -35,6 +34,7 @@ exports.check = async function (email, password) {
 
 
   } catch (err) {
-    return c.GENERAL_TRY_CATCH_ERR;
+    return err
+    // return c.GENERAL_TRY_CATCH_ERR;
   }
 };

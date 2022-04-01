@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import PieChart from '../Charts/PieChart';
-import axios from "axios";
+import axios from 'axios';
 import { RWebShare } from 'react-web-share';
 import { saveAs } from 'file-saver';
 
@@ -25,10 +25,7 @@ const Home = (props) => {
       } else {
         const body = { image: base64 };
         try {
-          const cloudinaryRes = await axios.post(
-            'http://localhost:5000/uploadImage/',
-            body
-          );
+          const cloudinaryRes = await axios.post('/uploadImage/', body);
           if (cloudinaryRes.status !== 200) {
             console.log('cloudinary error');
           }

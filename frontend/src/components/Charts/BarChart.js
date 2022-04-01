@@ -7,14 +7,13 @@ import {
   Title,
   Tooltip,
   Legend,
+  defaults
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
 import { RWebShare } from 'react-web-share';
 import { saveAs } from 'file-saver';
 const pica = require('pica')();
-
-// import faker from "@faker-js/faker";
 
 ChartJS.register(
   CategoryScale,
@@ -24,6 +23,9 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+defaults.color  = document.body.classList.contains('dark') ? '#e3e3e3' : 'grey'
+
 
 const generateList = (min, max, steps) => {
   // minimum step size
@@ -94,10 +96,7 @@ const BarChart = (props) => {
       } else {
         const body = { image: base64 };
         try {
-          const cloudinaryRes = await axios.post(
-            'http://localhost:5000/uploadImage/',
-            body
-          );
+          const cloudinaryRes = await axios.post('/uploadImage/', body);
           if (cloudinaryRes.status !== 200) {
             console.log('cloudinary error');
           }
@@ -128,7 +127,7 @@ const BarChart = (props) => {
       {
         label: label,
         data: partitionedData,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: props.color,
       },
     ],
   };

@@ -1,23 +1,18 @@
-const path = require('path');
-const bcrypt = require('bcrypt');
 const c = require('../constants/constants');
-
-const config = require(path.resolve(__dirname, '../config.json'));
-
-const authToken = config.TwilioAuthToken;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 var authy = require('authy')(authToken);
 
-const User = require(path.resolve(__dirname, '../database/models/user'));
+const User = require('../database/models/User');
 exports.check = async function (email, code) {
   try {
-    console.log(email);
+    // console.log(email);
     let user = await User.findOne({ email: email }).select('-password -__v');
 
     if (!user) {
       return c.USER_NOT_FOUND;
     }
-    console.log('user is');
-    console.log(user);
+    // console.log('user is');
+    // console.log(user);
     return new Promise((resolve) => {
       authy.verify(
         user.authyId,
@@ -29,15 +24,16 @@ exports.check = async function (email, code) {
             // res.status(400).send({ message: "invalid code" });
             resolve(c.AUTHY_VERIFY_ERROR);
           } else {
-            console.log(authyres);
+            // console.log(authyres);
 
             // should redo this by removing them from the mongo query
             const safeUser = {
               _id: user._id,
               email: user.email,
-              darkmode: user.darkmode,
+              settings: user.settings,
               //add other wanted properties here
             };
+            // console.log(safeUser);
             resolve({ user: safeUser });
           }
         }

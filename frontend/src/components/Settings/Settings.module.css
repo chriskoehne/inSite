@@ -14,7 +14,8 @@
 .sidebar {
   height: 100vh;
   background-color: var(--sidebar);
-  width: 24vw;
+  /* width: 24vw; */
+  width: 300px;
   padding: 2%;
 }
 
@@ -23,24 +24,23 @@
   padding: 2vh;
   overflow-y: scroll;
   position: fixed;
-  margin-left: 25vw;
+  margin-left: 310px;
 }
 
 .customization {
   padding-top: 2%;
-  width: 30em;
+  width: 400px;
   padding-bottom: 2%;
 }
 
 .changePassword {
   padding-top: 2%;
-  width: 30em;
+  width: 30%;
   padding-bottom: 2%vh;
 }
 
-.deauthorize {
+.permissions {
   padding-top: 2%;
-  width: 30em;
   padding-bottom: 2%;
 }
 
@@ -54,4 +54,37 @@
   width: 30em;
   padding-top: 80vh;
   padding-bottom: 10vh;
+}
+
+.socialsItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+  border-radius: 0.5em;
+  background-color: var(--sidebar);
+  margin: 0.5em;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 70px;
+}
+
+.permissionsItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--text-main);
+  border-radius: 0.5em;
+  background-color: var(--sidebar);
+  margin: 0.5em;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 50px;
+  width: 150px;
+}
+
+.dnd {
+  padding: 0;
 }
