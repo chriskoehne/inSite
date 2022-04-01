@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import TwitterFollows from './TwitterFollows';
 import TwitterLikes from './TwitterLikes';
 import TwitterMost from './TwitterMost';
+import TwitterLikesGraph from './TwitterLikesGraph';
 
 const c = require('../Reddit/constants/constants');
 
@@ -150,6 +151,9 @@ const TwitterPage = (props) => {
                       data={chartDayData}
                     />
             </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterLikesGraph />
           </Carousel.Item>
       </Carousel>
     </div>
