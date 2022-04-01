@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Button, Card, Col } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./Dashboard.module.css";
-import { SocialIcon } from "react-social-icons";
-import BarChart from "../Charts/BarChart";
-import { isFalsy } from "../Reddit/helperFunctions";
-import useDidMountEffect from "../../hooks/useDidMountEffect";
-import ReactTooltip from "react-tooltip";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Button, Card, Col } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import styles from './Dashboard.module.css';
+import { SocialIcon } from 'react-social-icons';
+import BarChart from '../Charts/BarChart';
+import { isFalsy } from '../Reddit/helperFunctions';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
+import ReactTooltip from 'react-tooltip';
+import hasToolTips from '../../helpers/hasToolTips';
 
 const RedditCard = (props) => {
-  const [redditToken, setRedditToken] = useState("");
-  const [user, setUser] = useState({ email: "", code: "", stored: false });
+  const [redditToken, setRedditToken] = useState('');
+  const [user, setUser] = useState({ email: '', code: '', stored: false });
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
   const [me, setMe] = useState({});
   const [hasStored, setHasStored] = useState(false);
 
   const hasToken = () => {
-    if (!localStorage.hasOwnProperty("redditToken")) {
+    if (!localStorage.hasOwnProperty('redditToken')) {
       return false;
     }
-    const date = JSON.parse(localStorage.getItem("redditToken")).date;
+    const date = JSON.parse(localStorage.getItem('redditToken')).date;
     if ((Date.now() - date) / 36e5 >= 1) {
-      localStorage.removeItem("redditToken");
+      localStorage.removeItem('redditToken');
       return false;
     }
     return true;
@@ -33,12 +34,12 @@ const RedditCard = (props) => {
     setLoading(true);
     const getStoredRedditData = async () => {
       try {
-        if (!JSON.parse(localStorage.getItem("settings")).permissions.reddit) {
-          console.log("no permissions");
+        if (!JSON.parse(localStorage.getItem('settings')).permissions.reddit) {
+          console.log('no permissions');
           return false;
         }
-        let ans = await axios.get("/user/reddit", {
-          params: { email: localStorage.getItem("email") },
+        let ans = await axios.get('/user/reddit', {
+          params: { email: localStorage.getItem('email') },
         });
         if (
           ans.status === 200 &&
@@ -47,7 +48,7 @@ const RedditCard = (props) => {
         ) {
           setComments(ans.data.message.overview.comments);
           setHasStored(true);
-          console.log("loading done 1");
+          console.log('loading done 1');
           return true;
         } else {
           return false;
@@ -59,20 +60,20 @@ const RedditCard = (props) => {
     };
     const doTheThing = async () => {
       let c = null;
-      const e = localStorage.getItem("email");
+      const e = localStorage.getItem('email');
       const currentUrl = window.location.href;
 
       // Get the code from the url if redirected and add it to the user state
-      if (currentUrl.includes("state=reddit")) {
-        console.log("here");
-        let start = currentUrl.indexOf("code") + 5;
+      if (currentUrl.includes('state=reddit')) {
+        console.log('here');
+        let start = currentUrl.indexOf('code') + 5;
         const almostCode = currentUrl.substring(start);
         c = almostCode.substring(0, almostCode.length - 2);
         setUser({
           email: e,
           code: c,
         });
-        console.log("loading done 2");
+        console.log('loading done 2');
         setLoading(false);
       } else if (await getStoredRedditData()) {
         setLoading(false);
@@ -80,7 +81,7 @@ const RedditCard = (props) => {
         setUser({
           email: e,
         });
-        console.log("loading done 3");
+        console.log('loading done 3');
         setLoading(false);
       }
     };
@@ -92,13 +93,13 @@ const RedditCard = (props) => {
       if (!user.code) {
         return;
       }
-      const result = await axios.post("/reddit/codeToToken/", {
+      const result = await axios.post('/reddit/codeToToken/', {
         code: user.code,
       });
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
-          "redditToken",
+          'redditToken',
           JSON.stringify({ token: token, date: Date.now() })
         );
         setRedditToken(token);
@@ -109,19 +110,18 @@ const RedditCard = (props) => {
     if (!hasToken() && user.code) {
       convert();
     } else if (hasToken()) {
-      setRedditToken(JSON.parse(localStorage.getItem("redditToken")).token);
+      setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
     }
   }, [user]);
 
-
   useDidMountEffect(() => {
-    setLoading(false)
-  }, [comments])
+    setLoading(false);
+  }, [comments]);
 
   useDidMountEffect(() => {
     if (!hasToken() && redditToken) {
       localStorage.setItem(
-        "redditToken",
+        'redditToken',
         JSON.stringify({ token: redditToken, date: Date.now() })
       );
     }
@@ -131,7 +131,7 @@ const RedditCard = (props) => {
         accessToken: redditToken,
       };
       if (me && !me.name) {
-        const ansMe = await axios.get("/reddit/me", {
+        const ansMe = await axios.get('/reddit/me', {
           params: redditMeQuery,
         });
 
@@ -141,21 +141,21 @@ const RedditCard = (props) => {
             accessToken: redditToken,
             username: ansMe.data.name,
           };
-          const ansOverview = await axios.get("/reddit/userOverview", {
+          const ansOverview = await axios.get('/reddit/userOverview', {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
             try {
               if (
-                JSON.parse(localStorage.getItem("settings")).permissions.reddit
+                JSON.parse(localStorage.getItem('settings')).permissions.reddit
               ) {
                 const body = {
-                  email: localStorage.getItem("email"),
-                  property: "overview",
+                  email: localStorage.getItem('email'),
+                  property: 'overview',
                   data: ansOverview.data,
                 };
 
-                const storeData = await axios.post("/user/reddit", body);
+                const storeData = await axios.post('/user/reddit', body);
                 console.log(storeData);
               }
             } catch (err) {
@@ -163,23 +163,23 @@ const RedditCard = (props) => {
             }
             setComments(ansOverview.data.comments);
           } else {
-            setComments({})
+            setComments({});
           }
-          const ansSubKarma = await axios.get("/reddit/userSubKarma", {
+          const ansSubKarma = await axios.get('/reddit/userSubKarma', {
             params: redditUserQuery,
           });
           if (ansSubKarma.status === 200) {
             try {
               if (
-                JSON.parse(localStorage.getItem("settings")).permissions.reddit
+                JSON.parse(localStorage.getItem('settings')).permissions.reddit
               ) {
                 const body = {
-                  email: localStorage.getItem("email"),
-                  property: "subKarma",
+                  email: localStorage.getItem('email'),
+                  property: 'subKarma',
                   data: ansSubKarma.data.subKarmaList,
                 };
 
-                const storeData = await axios.post("/user/reddit", body);
+                const storeData = await axios.post('/user/reddit', body);
                 console.log(storeData);
               }
             } catch (err) {
@@ -187,20 +187,20 @@ const RedditCard = (props) => {
             }
           }
 
-          const ansTotalKarma = await axios.get("/reddit/userTotalKarma", {
+          const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
             try {
               if (
-                JSON.parse(localStorage.getItem("settings")).permissions.reddit
+                JSON.parse(localStorage.getItem('settings')).permissions.reddit
               ) {
                 const body = {
-                  email: localStorage.getItem("email"),
-                  property: "totalKarma",
+                  email: localStorage.getItem('email'),
+                  property: 'totalKarma',
                   data: ansTotalKarma.data,
                 };
-                const storeData = await axios.post("/user/reddit", body);
+                const storeData = await axios.post('/user/reddit', body);
                 console.log(storeData);
               }
             } catch (err) {
@@ -208,7 +208,6 @@ const RedditCard = (props) => {
             }
           }
         }
-        
       }
     };
     if (redditToken) {
@@ -219,7 +218,7 @@ const RedditCard = (props) => {
 
   const authenticateReddit = async (e) => {
     e.preventDefault();
-    const result = await axios.post("/reddit/login/", {
+    const result = await axios.post('/reddit/login/', {
       email: user.email,
     });
     if (result.data.success) {
@@ -266,9 +265,9 @@ const RedditCard = (props) => {
         <BarChart
           data={getScores(comments)}
           maxVal={getMaxScore(comments)}
-          label="Comment Scores"
-          xaxis="Comment score"
-          color={"#ff4500"}
+          label='Comment Scores'
+          xaxis='Comment score'
+          color={'#ff4500'}
         />
       );
     } else {
@@ -277,7 +276,7 @@ const RedditCard = (props) => {
           <Button
             className={`${styles.buttons} ${styles.redditB}`}
             onClick={authenticateReddit}
-            data-tip="Connect your Reddit account to inSite to begin seeing your Reddit usage metrics!"
+            data-tip={hasToolTips() ? 'Connect your Reddit account to inSite to begin seeing your Reddit usage metrics!' : ''}
           >
             Authorize Reddit
           </Button>
@@ -288,9 +287,9 @@ const RedditCard = (props) => {
   };
   const icon = () => {
     if (redditToken) {
-      return <SocialIcon fgColor="white" url="https://reddit.com/user/me" />;
+      return <SocialIcon fgColor='white' url='https://reddit.com/user/me' />;
     } else {
-      return <SocialIcon fgColor="white" url="https://reddit.com/" />;
+      return <SocialIcon fgColor='white' url='https://reddit.com/' />;
     }
   };
 
@@ -301,7 +300,7 @@ const RedditCard = (props) => {
           className={`${styles.refreshButton} ${styles.redditB}`}
           onClick={authenticateReddit}
         >
-          <div style={{ paddingBottom: "10px" }}>Refresh Data</div>
+          <div style={{ paddingBottom: '10px' }}>Refresh Data</div>
         </Button>
       );
     }
@@ -310,7 +309,7 @@ const RedditCard = (props) => {
   return (
     <Col className={styles.cardCol}>
       <Card
-        style={{ borderColor: "var(--reddit)" }}
+        style={{ borderColor: 'var(--reddit)' }}
         className={styles.socialsCard}
       >
         <Card.Body>
@@ -318,10 +317,10 @@ const RedditCard = (props) => {
             {icon()} Reddit
             <Button
               className={`${styles.seeMore} ${styles.redditB}`}
-              data-tip="See more insights about your Reddit, such as most liked, controversial, and disliked post"
-              style={{ float: "right" }}
+              data-tip={hasToolTips() ? 'See more insights about your Reddit, such as most liked, controversial, and disliked post': ''}
+              style={{ float: 'right' }}
               onClick={function () {
-                props.navigate("reddit", {
+                props.navigate('reddit', {
                   state: { email: user.email, accessToken: redditToken },
                 });
               }}
