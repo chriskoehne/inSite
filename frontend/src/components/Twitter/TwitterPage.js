@@ -18,6 +18,7 @@ const TwitterPage = (props) => {
   const navigate = useNavigate();
   const [index, setIndex] = useState(0);
   const [userId, setUserId] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [chartDayData, setChartDayData] = useState({
     datasets: [],
   });
@@ -42,20 +43,61 @@ const TwitterPage = (props) => {
     return true;
   };
 
-  useEffect(() => {
-    if (!hasToken()) {
-      navigate('/dashboard');
-    } else {
-      setTwitterToken(JSON.parse(localStorage.getItem('twitterToken')).token);
-    }
-    //TODO: replace below following process in https://betterprogramming.pub/stop-lying-to-react-about-missing-dependencies-10612e9aeeda
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    useEffect(() => {
+      if (!hasToken()) {
+        navigate('/dashboard');
+      } else {
+        setTwitterToken(JSON.parse(localStorage.getItem('twitterToken')).token);
+      }
+      //TODO: replace below following process in https://betterprogramming.pub/stop-lying-to-react-about-missing-dependencies-10612e9aeeda
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-  useEffect(() => {
-    if (!twitterToken) {
-      return;
+    useEffect(() => {
+      if (!hasToken() && twitterToken) {
+        localStorage.setItem(
+          'twitterToken',
+          JSON.stringify({ token: twitterToken, date: Date.now() })
+        );
+      }
+    
+    const getUser = async () => {
+      // console.log('Calling Twitter API. Here is localStorage:');
+      // console.log(localStorage);
+      console.log('Calling getUser');
+      const twitterQuery = {
+        accessToken: twitterToken
+      };
+      const twitterRes = await axios.get(
+        '/twitter/getUser/',
+        { params: twitterQuery }
+      );
+      if (twitterRes) {
+        //console.log('Received Tweets from Twitter!');
+        console.log('This is the user data')
+        console.log(twitterRes.data);
+        console.log('This is the user id')
+        console.log(twitterRes.data.data.id)
+        localStorage.setItem('twitter-user-id', twitterRes.data.data.id)
+        setUserId(twitterRes.data.data.id)
+      } 
+      // else {
+      //   console.log('Could not get Tweets from Twitter!');
+      // }
+    };
+
+    if (twitterToken) {
+      // console.log('Calling Twitter');
+      getUser();
     }
+  }, [twitterToken]);
+  
+    useEffect(() => {
+      if (!twitterToken) {
+        setLoading(true);
+        return;
+      }
+
 
       let getDays = function(wee) {
         let arr = [0, 0, 0, 0, 0, 0, 0];
