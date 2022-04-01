@@ -199,11 +199,12 @@ const YoutubeCard = (props) => {
         <Card.Body>
           <Card.Title>
             {icon()} Youtube
+            {youtubeToken ?
             <Button
               className={`${styles.seeMore} ${styles.youtubeB}`}
               data-tip={
                 hasToolTips()
-                  ? 'See more insights about your YouTube, such as playlist count and reccomendations'
+                  ? 'See more insights about your YouTube, such as playlist count and recommendations'
                   : ''
               }
               style={{ float: 'right' }}
@@ -215,6 +216,7 @@ const YoutubeCard = (props) => {
             >
               See more
             </Button>
+          : null}
           </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
