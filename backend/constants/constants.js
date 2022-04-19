@@ -12,6 +12,8 @@ module.exports = {
   AUTHY_REQUEST_SMS_ERR: 'Authy SMS error!',
   AUTHY_VERIFY_ERROR: 'Authy verify error!',
 
+  INVALID_SECRET_ERR: 'Invalid secret error!',
+
   CLOUDINARY_ERROR: 'Cloudinary error!',
 
   GENERAL_TRY_CATCH_ERR: 'General try-catch error!',

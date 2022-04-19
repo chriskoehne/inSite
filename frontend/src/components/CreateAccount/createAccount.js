@@ -6,6 +6,8 @@ import { Modal } from 'react-bootstrap';
 import styles from './createAccount.module.css';
 import ReactTooltip from 'react-tooltip';
 
+const QRCode = require('qrcode');
+
 const CreateAccount = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,8 @@ const CreateAccount = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [phone, setPhone] = useState('');
   const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
-  const [smsCode, setSMSCode] = useState('');
+  const [secretCode, setSecretCode] = useState('');
+  const [qr, setqr] = useState('');
   const [errorText, setErrorText] = useState('');
   const [showErrorModal, setErrorModal] = useState('');
   const [verifyText, setVerifyText] = useState('');
@@ -29,14 +32,14 @@ const CreateAccount = (props) => {
   const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
   const handleClose = async (e) => {
     e.preventDefault();
-    console.log('verifying sms code');
+    console.log('verifying secret code');
     const body = {
       email: email,
-      code: smsCode,
+      code: secretCode,
     };
     try {
       const res = await axios.post('/verifyUser/', body);
-      if (res.status === 200) {
+      if (res.data.user.verified) {
         console.log(res.data.user);
         if (res.data.user.settings.darkMode) {
           document.body.classList.add('dark');
@@ -88,12 +91,28 @@ const CreateAccount = (props) => {
     } else {
       axios
         .post('/userCreation/', body)
-        .then((res) => {
+        .then(async (res) => {
           console.log('now res is');
           console.log(res);
           if (res.status === 200) {
             console.log('the modal should popup now');
-            setShowModal(true);
+            try {
+              const data_url = await QRCode.toDataURL(res.data.message.otpauth_url)
+              console.log("qr code url is")
+              console.log(data_url);
+              setqr(data_url)
+              setShowModal(true);
+            } catch (err) {
+              console.log("qrcode generation error catch")
+              console.log(err)
+            }
+            
+              // Display this data URL to the user in an <img> tag
+              // Example:
+              // write('<img src="' + data_url + '">');
+              //'<img src="' + data_url + '">'
+            // setVerifyText(<img src= {data_url}/>)
+            // setShowModal(true);
           } else {
             // console.log('there was an error in user creation');
             setErrorText('there was an error in user creation');
@@ -139,23 +158,22 @@ const CreateAccount = (props) => {
             }}
           >
             <Modal.Header>
-              <Modal.Title>Verify phone number</Modal.Title>
+              <Modal.Title>Scan QR code</Modal.Title>
             </Modal.Header>
             <Modal.Body className={styles.modalText}>
-              The phone number provided was used to create a two factor user.
-              Please enter the code sent to your phone to verify this
-              connection.
+              Please scan the qr code below with an authenticator.
               <div style={{ color: 'red' }}> {verifyText} </div>
               <form onSubmit={handleClose}>
+                <img src={qr}></img>
                 <div className='form-group'>
-                  <label>Code: </label>
+                  <label>Secret Code: </label>
                   <input
                     type='text'
                     className='form-control'
                     placeholder='Code'
                     ref={verifyRef}
                     onChange={(e) => {
-                      setSMSCode(e.target.value);
+                      setSecretCode(e.target.value);
                     }}
                   />
                 </div>

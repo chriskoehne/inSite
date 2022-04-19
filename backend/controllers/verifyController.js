@@ -20,8 +20,8 @@ exports.verify = async function (req, res, next) {
         break;
     }
 
-    generateToken(result.user.id, result.user.email, res);
-    return res.status(200).json({ user: result.user });
+    generateToken(result.id, result.email, res);
+    return res.status(200).json({ user: result });
   } catch (e) {
     console.log(e);
     return res.status(400).json({ message: e.message });
