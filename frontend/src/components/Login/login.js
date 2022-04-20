@@ -10,11 +10,6 @@ const Login = (props) => {
   const [secretCode, setSecretCode] = useState('');
   const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
   const [showErrorModal, setErrorModal] = useState('');
-  // const [id, setId] = useState('');
-
-  const verifyRef = useRef();
-
-  const [verifyText, setVerifyText] = useState('');
 
   useEffect(() => {
     if (!showModal) {

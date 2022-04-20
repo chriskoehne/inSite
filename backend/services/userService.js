@@ -6,7 +6,7 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 var authy = require('authy')(authToken);
 
 const User = require('../database/models/User');
-exports.signup = async function (email, password, phone) {
+exports.signup = async function (email, password) {
   try {
     if ((await User.find({ email: email })).length > 0) {
       console.log(c.EMAIL_TAKEN);
@@ -34,30 +34,7 @@ exports.signup = async function (email, password, phone) {
       { mfaSecret: secret }
     );
     return secret
-    //TODO: test this works later
-    // return await new Promise((resolve) => {
-    //   authy.register_user(email, phone, async function (err, regres) {
-    //     if (!regres || err) {
-    //       console.log(err);
-    //       resolve(c.AUTHY_REGISTER_ERR); //reject?
-    //     } else {
-    //       let result = await User.findOneAndUpdate(
-    //         { email: email },
-    //         { authyId: regres.user.id }
-    //       );
-    //       await authy.request_sms(regres.user.id, function (err, smsres) {
-    //         if (err) {
-    //           console.log(err);
-    //           resolve(c.AUTHY_REQUEST_SMS_ERR);
-    //         }
-    //         console.log('sent user code');
-    //         console.log(smsres);
-    //         console.log(result);
-    //         resolve(result.id); //should use a constant for this?
-    //       });
-    //     }
-    //   });
-    // });
+    
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;

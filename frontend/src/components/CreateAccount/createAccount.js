@@ -13,8 +13,6 @@ const CreateAccount = (props) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [phone, setPhone] = useState('');
-  const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
   const [secretCode, setSecretCode] = useState('');
   const [qr, setqr] = useState('');
   const [errorText, setErrorText] = useState('');
@@ -63,7 +61,6 @@ const CreateAccount = (props) => {
     const body = {
       email: email,
       password: password,
-      phone: phone,
     };
     console.log('lasdas');
     if (
@@ -106,13 +103,6 @@ const CreateAccount = (props) => {
               console.log("qrcode generation error catch")
               console.log(err)
             }
-            
-              // Display this data URL to the user in an <img> tag
-              // Example:
-              // write('<img src="' + data_url + '">');
-              //'<img src="' + data_url + '">'
-            // setVerifyText(<img src= {data_url}/>)
-            // setShowModal(true);
           } else {
             // console.log('there was an error in user creation');
             setErrorText('there was an error in user creation');
@@ -129,21 +119,6 @@ const CreateAccount = (props) => {
         });
     }
   };
-
-  // Formats Phone Number
-  function formatPhoneNumber(value) {
-    if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, '');
-    const phoneNumberLength = phoneNumber.length;
-    if (phoneNumberLength < 4) return phoneNumber;
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
 
   return (
     <div>
@@ -229,21 +204,6 @@ const CreateAccount = (props) => {
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
                 }}
-              />
-            </div>
-            <div className='form-group'>
-              <label>Phone: </label>
-              <input
-                data-tip='This phone # will be used for two-factor authentication on log-in'
-                type='text'
-                className='form-control'
-                placeholder='phone'
-                onChange={(e) => {
-                  const phoneNum = formatPhoneNumber(e.target.value);
-                  setFormatPhone(phoneNum);
-                  setPhone(e.target.value);
-                }}
-                value={formatPhone}
               />
             </div>
             <br></br>

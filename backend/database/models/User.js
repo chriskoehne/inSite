@@ -29,6 +29,16 @@ const settingsSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const mfaSchema = new mongoose.Schema(
+  {
+    ascii: { type: String, required: true},
+    hex: { type: String, required: true},
+    base32: { type: String, required: true},
+    otpauth_url: { type: String, required: true}
+  },
+  { _id: false }
+);
+
 const redditDataSchema = new mongoose.Schema(
   {
     overview: { type: Object, required: true, default: {} },
@@ -47,8 +57,8 @@ const userSchema = new mongoose.Schema(
       validate: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
     },
     password: { type: String, required: true },
-    authyId: { type: String, required: true, default: 'unset' },
     settings: { type: settingsSchema, required: true, default: {} },
+    mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },
   },
   { timestamps: true, strict: false }
