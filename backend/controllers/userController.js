@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 
 var userService = require('../services/userService');
 
+const generateToken = require('../auth/authentication').generateToken;
+
 exports.userCreation = async function (req, res, next) {
   // console.log('userCreation')
   try {
@@ -65,6 +67,7 @@ exports.login = async function (req, res, next) {
       return res.status(400).json({ message: result.message });
     }
     //success
+    generateToken(result.id, result.email, res);
     return res.status(200).json({ user: result }); //should be the user's id
   } catch (e) {
     console.log(e);

@@ -10,7 +10,7 @@ const Login = (props) => {
   const [secretCode, setSecretCode] = useState('');
   const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
   const [showErrorModal, setErrorModal] = useState('');
-  const [id, setId] = useState('');
+  // const [id, setId] = useState('');
 
   const verifyRef = useRef();
 
@@ -39,7 +39,8 @@ const Login = (props) => {
         console.log(res);
         if (res.status === 200) {
           console.log('good status');
-          setId(res.data.user.id);
+          // setId(res.data.user.id);
+          
           if (res.data.user.settings.darkMode) {
             document.body.classList.add('dark');
           }

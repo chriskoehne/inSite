@@ -102,7 +102,7 @@ exports.check = async function (email, password, secret) {
     const verified = speakeasy.totp.verify({ secret: result.mfaSecret.base32,
       encoding: 'base32',
       token: secret });
-    console.log("verified result is")
+    console.log("verified result in login is")
     console.log(verified)
     if (verified) {
       const safeUser = {
