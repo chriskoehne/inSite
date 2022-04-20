@@ -16,8 +16,6 @@ exports.userCreation = async function (req, res, next) {
     // console.log(result);
 
     switch (result) {
-      case c.AUTHY_REGISTER_ERR:
-      case c.AUTHY_REQUEST_SMS_ERR:
       case c.USER_NOT_FOUND:
       case c.USER_CREATION_ERR:
       case c.EMAIL_TAKEN:
@@ -55,7 +53,6 @@ exports.login = async function (req, res, next) {
     let result = await userService.check(req.body.email, req.body.password, req.body.secret);
 
     switch (result) {
-      case c.AUTHY_REQUEST_SMS_ERR:
       case c.USER_NOT_FOUND:
       case c.INCORRECT_PASSWORD:
       case c.INVALID_SECRET_ERR:

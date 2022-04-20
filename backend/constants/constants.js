@@ -8,17 +8,12 @@ module.exports = {
   USER_FIND_AND_UPDATE_ERR: 'Error updating user!',
   USER_INVALID_PERMISSIONS: 'Invalid Permissions',
 
-  AUTHY_REGISTER_ERR: 'Authy register error!',
-  AUTHY_REQUEST_SMS_ERR: 'Authy SMS error!',
-  AUTHY_VERIFY_ERROR: 'Authy verify error!',
-
   INVALID_SECRET_ERR: 'Invalid secret error!',
 
   CLOUDINARY_ERROR: 'Cloudinary error!',
 
   GENERAL_TRY_CATCH_ERR: 'General try-catch error!',
 
-  AUTHY_REGISTER_SUCCESS: 'Authy register success!',
   SUCCESS: 'Success!', //general success message
 
   COMMENT: 't1',

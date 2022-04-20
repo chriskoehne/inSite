@@ -11,12 +11,6 @@ const Login = (props) => {
   const [errorText, setErrorText] = useState(''); // Set Error Text on Login Fail
   const [showErrorModal, setErrorModal] = useState('');
 
-  useEffect(() => {
-    if (!showModal) {
-      setVerifyText('');
-    }
-  }, [showModal]);
-
   const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
 
   const handleSubmit = (e) => {

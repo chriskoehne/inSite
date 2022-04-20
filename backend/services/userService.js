@@ -3,7 +3,6 @@ const c = require('../constants/constants');
 const { findOne } = require('../database/models/User');
 const speakeasy = require("speakeasy");
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-var authy = require('authy')(authToken);
 
 const User = require('../database/models/User');
 exports.signup = async function (email, password) {
@@ -27,8 +26,7 @@ exports.signup = async function (email, password) {
     }
 
     const secret = await speakeasy.generateSecret();
-    console.log("user creation secrets are")
-    console.log(secret)
+    
     result = await User.findOneAndUpdate(
       { email: email },
       { mfaSecret: secret }
@@ -45,19 +43,8 @@ exports.deleteUser = async function (email) {
   try {
     console.log('deleting user');
     let user = await User.findOne({ email: email });
-    let authyId = user.authyId;
     let deleted = await User.remove({ _id: user._id });
-
-    return await new Promise((resolve) => {
-      authy.delete_user(authyId, function (err, res) {
-        if (err) {
-          resolve({ deleted, err });
-        } else {
-          console.log('success');
-          resolve(deleted, res);
-        }
-      });
-    });
+    return deleted;
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;

@@ -31,10 +31,10 @@ const settingsSchema = new mongoose.Schema(
 
 const mfaSchema = new mongoose.Schema(
   {
-    ascii: { type: String, required: true},
-    hex: { type: String, required: true},
-    base32: { type: String, required: true},
-    otpauth_url: { type: String, required: true}
+    ascii: { type: String, required: false},
+    hex: { type: String, required: false},
+    base32: { type: String, required: false},
+    otpauth_url: { type: String, required: false}
   },
   { _id: false }
 );

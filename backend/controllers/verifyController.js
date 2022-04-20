@@ -14,7 +14,6 @@ exports.verify = async function (req, res, next) {
 
     switch (result) {
       case c.USER_NOT_FOUND:
-      case c.AUTHY_VERIFY_ERROR:
       case c.GENERAL_TRY_CATCH_ERR:
         return res.status(400).json({ message: result });
         break;
