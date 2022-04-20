@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt');
 const c = require('../constants/constants');
 const { findOne } = require('../database/models/User');
+const speakeasy = require("speakeasy");
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-var authy = require('authy')(authToken);
 
 const User = require('../database/models/User');
-exports.signup = async function (email, password, phone) {
+exports.signup = async function (email, password) {
   try {
     if ((await User.find({ email: email })).length > 0) {
       console.log(c.EMAIL_TAKEN);
@@ -25,30 +25,14 @@ exports.signup = async function (email, password, phone) {
       return c.USER_CREATION_ERR;
     }
 
-    //TODO: test this works later
-    return await new Promise((resolve) => {
-      authy.register_user(email, phone, async function (err, regres) {
-        if (!regres || err) {
-          console.log(err);
-          resolve(c.AUTHY_REGISTER_ERR); //reject?
-        } else {
-          let result = await User.findOneAndUpdate(
-            { email: email },
-            { authyId: regres.user.id }
-          );
-          await authy.request_sms(regres.user.id, function (err, smsres) {
-            if (err) {
-              console.log(err);
-              resolve(c.AUTHY_REQUEST_SMS_ERR);
-            }
-            console.log('sent user code');
-            console.log(smsres);
-            console.log(result);
-            resolve(result.id); //should use a constant for this?
-          });
-        }
-      });
-    });
+    const secret = await speakeasy.generateSecret();
+    
+    result = await User.findOneAndUpdate(
+      { email: email },
+      { mfaSecret: secret }
+    );
+    return secret
+    
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;
@@ -59,26 +43,15 @@ exports.deleteUser = async function (email) {
   try {
     console.log('deleting user');
     let user = await User.findOne({ email: email });
-    let authyId = user.authyId;
     let deleted = await User.remove({ _id: user._id });
-
-    return await new Promise((resolve) => {
-      authy.delete_user(authyId, function (err, res) {
-        if (err) {
-          resolve({ deleted, err });
-        } else {
-          console.log('success');
-          resolve(deleted, res);
-        }
-      });
-    });
+    return deleted;
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
 
-exports.check = async function (email, password) {
+exports.check = async function (email, password, secret) {
   try {
     let result = await User.findOne({
       email: email,
@@ -90,19 +63,25 @@ exports.check = async function (email, password) {
     if (!(await bcrypt.compare(password, result.password))) {
       return c.INCORRECT_PASSWORD;
     }
-
-    return await new Promise((resolve) => {
-      authy.request_sms(result.authyId, function (err, authyres) {
-        if (!authyres || err) {
-          console.log(err);
-          resolve(c.AUTHY_REQUEST_SMS_ERR); //reject?
-        } else {
-          console.log(authyres.message);
-          console.log(result.id);
-          resolve(result.id);
-        }
-      });
-    });
+    const verified = speakeasy.totp.verify({ secret: result.mfaSecret.base32,
+      encoding: 'base32',
+      token: secret });
+    console.log("verified result in login is")
+    console.log(verified)
+    if (verified) {
+      const safeUser = {
+        id: result._id,
+        email: result.email,
+        settings: result.settings,
+        mfaSecret: result.mfaSecret,
+        verified: verified
+        //add other wanted properties here
+      };
+      return safeUser
+    } else {
+      return c.INVALID_SECRET_ERR
+    }
+    
   } catch (err) {
     console.log(err);
     return err;
