@@ -46,6 +46,12 @@ router.post(
 );
 
 router.post(
+  '/user/settings/toolTips',
+  auth.verifyToken,
+  userController.updateToolTips
+);
+
+router.post(
   '/user/settings/cardOrder',
   auth.verifyToken,
   userController.updateCardOrder
@@ -189,7 +195,11 @@ router.get(
   auth.verifyToken, 
   twitterController.tweetLikes
 );
-
+router.get(
+  '/twitter/followMetrics', 
+  auth.verifyToken, 
+  twitterController.followMetrics
+);
 
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);

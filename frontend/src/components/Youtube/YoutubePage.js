@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Youtube.module.css';
 import ReactTooltip from 'react-tooltip';
+import hasToolTips from '../../helpers/hasToolTips';
 
 const YoutubePage = (props) => {
   const navigate = useNavigate();
@@ -163,7 +164,13 @@ const YoutubePage = (props) => {
                 subscriptions.map((sub) => (
                   <tr key={sub.id}>
                     <td>{sub.snippet.title}</td>
-                    <img alt ='' src={sub.snippet.thumbnails.medium.url} />
+                    <a
+                      href={'https://youtube.com/c/' + sub.snippet.title}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <img alt='' src={sub.snippet.thumbnails.medium.url} />
+                    </a>
                   </tr>
                 ))}
             </div>
@@ -182,7 +189,13 @@ const YoutubePage = (props) => {
                       view count: {vid.statistics.viewCount} like count:{' '}
                       {vid.statistics.likeCount}
                     </td>
-                    <img alt ='' src={vid.snippet.thumbnails.medium.url} />
+                    <a
+                      href={'https://youtube.com/watch?v=' + vid.id}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    </a>
                   </tr>
                 ))}
             </div>
@@ -190,8 +203,16 @@ const YoutubePage = (props) => {
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-          <h3>Popular Videos From Your Favorite Category</h3>
-            <h3 data-tip="Based on YouTube's most popular categories, such as music, gaming, and entertainment">{popularVidsCategory}</h3>
+            <h3>Popular Videos From Your Favorite Category</h3>
+            <h3
+              data-tip={
+                hasToolTips()
+                  ? "Based on YouTube's most popular categories, such as music, gaming, and entertainment"
+                  : ''
+              }
+            >
+              {popularVidsCategory}
+            </h3>
             <div>
               {popularVidsFromLiked &&
                 popularVidsFromLiked.map((vid) => (
@@ -201,14 +222,20 @@ const YoutubePage = (props) => {
                       view count: {vid.statistics.viewCount} like count:{' '}
                       {vid.statistics.likeCount}
                     </td>
-                    <img alt ='' src={vid.snippet.thumbnails.medium.url} />
+                    <a
+                      href={'https://youtube.com/watch?v=' + vid.id}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    </a>
                   </tr>
                 ))}
             </div>
           </Card>
         </Carousel.Item>
       </Carousel>
-      <ReactTooltip/>
+      <ReactTooltip />
     </div>
   );
 };

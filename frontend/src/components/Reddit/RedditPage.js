@@ -24,6 +24,7 @@ import { getMonths, getDays, getLastThirty } from './RedditComments';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
 import { getUncommon, getWordList, isFalsy } from './helperFunctions';
 import ReactTooltip from 'react-tooltip';
+import hasToolTips from '../../helpers/hasToolTips';
 
 ChartJS.register(
   CategoryScale,
@@ -448,20 +449,61 @@ const RedditPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
+          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
             <Row>
+              <h2>Karma Overview</h2>
+              <br /><br /><br />
               <Col>
-                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Total Karma: {totalKarma}</Row>
-                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Post Karma: {linkKarma}</Row>
-                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Comment Karma: {commentKarma}</Row>
-                <Row data-tip="Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation">Award Karma: {awardKarma}</Row>
-                <Row>Number of Posts: {posts.length}</Row>
-                <Row>Number of Comments: {comments.length}</Row>
+                <h4
+                  data-tip={
+                    hasToolTips()
+                      ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                      : ''
+                  }
+                >
+                  Total Karma: {totalKarma}
+                </h4>
+                <br />
                 <Row>
+                  <Col
+                    data-tip={
+                      hasToolTips()
+                        ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                        : ''
+                    }
+                  >
+                    <h5>Post Karma: {linkKarma}</h5>
+                  </Col>
+                  <Col
+                    data-tip={
+                      hasToolTips()
+                        ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                        : ''
+                    }
+                  >
+                    <h5>Comment Karma: {commentKarma}</h5>
+                  </Col>
+                  <Col
+                    data-tip={
+                      hasToolTips()
+                        ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                        : ''
+                    }
+                  >
+                    <h5>Award Karma: {awardKarma}</h5>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col><h5>Number of Posts: {posts.length}</h5></Col>
+                  <Col><h5>Number of Comments: {comments.length}</h5></Col>
+                </Row>
+                <br/>
+                <Row>
+                  <h3>Top Subreddits</h3>
                   {Object.keys(subKarmaList).map((key, index) => (
                     <p key={index}>
                       {' '}
-                      Subreddit: {subKarmaList[key].sr}, comment karma:{' '}
+                      r/{subKarmaList[key].sr}: comment karma:{' '}
                       {subKarmaList[key].comment_karma}, post karma:{' '}
                       {subKarmaList[key].link_karma}
                     </p>
@@ -672,7 +714,7 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
+          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
             <Row>
               <Col>
                 <h3>
@@ -732,7 +774,7 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
       </Carousel>
-      <ReactTooltip/>
+      <ReactTooltip />
     </div>
   );
 };

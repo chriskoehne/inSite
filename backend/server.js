@@ -43,3 +43,4 @@ server.listen(PORT, () => {
   console.log('\x1b[36m%s\x1b[0m', 'Startup Successful, BACKEND is ONLINE');
   console.log(`BACKEND listening on port ${PORT} uwu...`);
 });
+

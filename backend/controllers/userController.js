@@ -3,20 +3,19 @@ const mongoose = require('mongoose')
 
 var userService = require('../services/userService');
 
+const generateToken = require('../auth/authentication').generateToken;
+
 exports.userCreation = async function (req, res, next) {
   // console.log('userCreation')
   try {
     let result = await userService.signup(
       req.body.email,
       req.body.password,
-      req.body.phone
     );
     // console.log('in controller, result is');
     // console.log(result);
 
     switch (result) {
-      case c.AUTHY_REGISTER_ERR:
-      case c.AUTHY_REQUEST_SMS_ERR:
       case c.USER_NOT_FOUND:
       case c.USER_CREATION_ERR:
       case c.EMAIL_TAKEN:
@@ -51,20 +50,21 @@ exports.login = async function (req, res, next) {
     // let result = '620f3de16decd5056284765d';
 
     /* UNCOMMENT THIS */
-    let result = await userService.check(req.body.email, req.body.password);
+    let result = await userService.check(req.body.email, req.body.password, req.body.secret);
 
     switch (result) {
-      case c.AUTHY_REQUEST_SMS_ERR:
       case c.USER_NOT_FOUND:
       case c.INCORRECT_PASSWORD:
+      case c.INVALID_SECRET_ERR:
       case c.GENERAL_TRY_CATCH_ERR:
         return res.status(400).json({ message: result });
     }
-    if (!mongoose.isValidObjectId(result)) {
+    if (!mongoose.isValidObjectId(result.id)) {
       return res.status(400).json({ message: result.message });
     }
     //success
-    return res.status(200).json({ message: result }); //should be the user's id
+    generateToken(result.id, result.email, res);
+    return res.status(200).json({ user: result }); //should be the user's id
   } catch (e) {
     console.log(e);
     return res.status(400).json({ message: e.message });
@@ -78,6 +78,24 @@ exports.updateDarkMode = async function (req, res, next) {
     let result = await userService.updateDarkMode(
       req.body.email,
       req.body.darkMode
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.updateToolTips = async function (req, res, next) {
+  // console.log('updateToolTip')
+
+  try {
+    let result = await userService.updateToolTips(
+      req.body.email,
+      req.body.toolTips
     );
     if (result === c.SUCCESS) {
       return res.status(200).json({ message: result });

@@ -7,8 +7,8 @@ import TwitterWordGraph from './TwitterWordGraph';
 import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
 import TwitterFollows from './TwitterFollows';
-import TwitterLikes from './TwitterLikes';
 import TwitterMost from './TwitterMost';
+import TwitterLikesGraph from './TwitterLikesGraph';
 
 const c = require('../Reddit/constants/constants');
 
@@ -21,6 +21,8 @@ const TwitterPage = (props) => {
   const [chartDayData, setChartDayData] = useState({
     datasets: [],
   });
+
+  console.log(loading)
 
   const isDarkMode = () => {
     return document.body.classList.contains('dark') ? 'light' : 'dark';
@@ -149,8 +151,8 @@ const TwitterPage = (props) => {
             {
               label: 'Number of Tweets in last week',
               data: dayDate.numTweets.reverse(),
-              borderColor: '#ff4500',
-              backgroundColor: '#ff4500',
+              borderColor: '#05aced',
+              backgroundColor: '#05aced',
             },
           ],
         };
@@ -175,9 +177,6 @@ const TwitterPage = (props) => {
           <TwitterFollows />
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
-          <TwitterLikes />
-        </Carousel.Item>
-        <Carousel.Item className={styles.slideshowCard}>
           <TwitterWordGraph />
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
@@ -192,6 +191,9 @@ const TwitterPage = (props) => {
                       data={chartDayData}
                     />
             </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterLikesGraph />
           </Carousel.Item>
       </Carousel>
     </div>
