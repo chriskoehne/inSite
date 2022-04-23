@@ -107,6 +107,97 @@ exports.subscriptions = async function (req, res, next) {
   }
 };
 
+exports.channelInfo = async function (req, res, next) {
+  try {
+    console.log('In YouTube CHANNEL INFO Controller');
+    let result = await youtubeService.channelInfo(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.videoList = async function (req, res, next) {
+  try {
+    console.log('In YouTube VIDEO LIST Controller');
+    let result = await youtubeService.videoList(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.myPopularVids = async function (req, res, next) {
+  try {
+    console.log('In YouTube MY POPULAR VIDS Controller');
+    let result = await youtubeService.myPopularVids(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.myPopularCat = async function (req, res, next) {
+  try {
+    console.log('In YouTube MY POPULAR CATEGORIES Controller');
+    let result = await youtubeService.myPopularCat(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.myVidCats = async function (req, res, next) {
+  try {
+    console.log('In YouTube MY VIDCATS Controller');
+    let result = await youtubeService.myVidCats(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.myVidComments = async function (req, res, next) {
+  try {
+    console.log('In YouTube MY VIDCOMMENTS Controller');
+    let result = await youtubeService.myVidComments(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+
 exports.mostSubscribers = async function (req, res, next) {
   try {
     // console.log('In YouTube Subscriptions Controller');

@@ -92,6 +92,24 @@ exports.likedVideos = async function (req, res) {
   }
 };
 
+exports.myPopularCat = async function (req, res) {
+  try {
+    console.log('In YouTube POPULAR CATEGORY Service');
+    const result = await service.search.list({
+      auth: oauth2Client,
+      part: 'snippet',
+      type: 'video',
+      forMine: true,
+      maxResults: 30
+    });
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
 exports.playlists = async function (req, res) {
   try {
     // console.log("playlists:")
@@ -176,6 +194,105 @@ exports.subscriptions = async function (req, res) {
       mine: true,
       maxResults: 50
     });
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.channelInfo = async function (req, res) {
+  try {
+    console.log('In YouTube CHANNEL INFO Service');
+    const result = await service.channels.list({
+      auth: oauth2Client,
+      part: 'snippet,statistics',
+      mine: true,
+      maxResults: 50
+    });
+    console.log('channelInfo returns: ' + result.data)
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.videoList = async function (req, res) {
+  try {
+    const channelId = req.query.channelId;
+    console.log('In YouTube VIDEO LIST for channel: ' + channelId);
+    const result = await service.search.list({
+      auth: oauth2Client,
+        part: 'snippet',
+        maxResults: 50,
+        type: 'video',
+        channelId: channelId
+
+    });
+    console.log('videoList returns: ' + result.data)
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.myPopularVids = async function (req, res) {
+  try {
+    const channelId = req.query.myPopularVids;
+    console.log('In YouTube MY POPULAR VIDS for channel: ' + channelId);
+    const result = await service.search.list({
+      auth: oauth2Client,
+        part: 'snippet',
+        maxResults: 5,
+        type: 'video',
+        forMine: true,
+        order: 'viewCount'
+
+    });
+    console.log('myPopularVids returns: ' + result.data)
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.myVidCats = async function (req, res) {
+  try {
+    const videoId = req.query.videoId;
+    console.log('In YouTube MY VIDCATS for video: ' + videoId);
+    const result = await service.videos.list({
+      auth: oauth2Client,
+        part: 'snippet',
+        id: videoId
+
+    });
+    console.log('myVidCats returns: ' + result.data)
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.myVidComments = async function (req, res) {
+  try {
+    const videoId = req.query.videoId;
+    console.log('In YouTube MY VIDCOMMENTS for video: ' + videoId);
+    const result = await service.commentThreads.list({
+      auth: oauth2Client,
+        part: 'snippet',
+        videoId: videoId
+
+    });
+    console.log('myVidComments returns: ' + result.data)
     return result.data;
   } catch (err) {
     console.log('big error catch');

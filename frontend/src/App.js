@@ -13,6 +13,7 @@ import RedditPage from './components/Reddit/RedditPage';
 import InstagramPage from './components/Instagram/InstagramPage';
 import TwitterPage from './components/Twitter/TwitterPage';
 import YoutubePage from './components/Youtube/YoutubePage';
+import YoutubeCCPage from './components/Youtube/YoutubeCCPage';
 import './App.css';
 import Logout from './components/testing/Logout';
 import Settings from './components/Settings/Settings';
@@ -84,6 +85,12 @@ const App = () => {
       <Route exact path='/youtube' element={<ProtectedRoute />}>
         <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<YoutubePage navigate={navigate} />} />
+        </Route>
+      </Route>
+
+      <Route exact path='/youtubecc' element={<ProtectedRoute />}>
+        <Route element={<NavRoute navigate={navigate} />}>
+          <Route index element={<YoutubeCCPage navigate={navigate} />} />
         </Route>
       </Route>
 
