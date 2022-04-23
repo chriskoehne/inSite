@@ -26,7 +26,7 @@ exports.convert = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, accessToken: result.access_token });
+        .json({ success: true, accessToken: result.access_token, refreshToken: result.refresh_token, expiries: result.expires_in });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });

@@ -32,7 +32,7 @@ const YoutubeCard = (props) => {
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
-    if (currentUrl.includes('code') && currentUrl.includes('scope')) {
+    if (currentUrl.includes('code') && currentUrl.includes('scope') && !currentUrl.includes('twitch')) {
       let start = currentUrl.indexOf('code') + 5;
       let end = currentUrl.indexOf('&scope');
       c = currentUrl.substring(start, end);
@@ -56,6 +56,7 @@ const YoutubeCard = (props) => {
         setLoading(false);
         return;
       }
+      console.log('getting youtube token');
       const result = await axios.post('/youtube/codeToToken/', {
         code: user.code,
       });

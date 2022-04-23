@@ -203,13 +203,13 @@ router.get(
   twitterController.followMetrics
 );
 
-router.get(
+router.post(
   '/twitch/login', 
   auth.verifyToken, 
   twitchController.login
 );
 
-router.get(
+router.post(
   '/twitch/convert', 
   auth.verifyToken, 
   twitchController.convert

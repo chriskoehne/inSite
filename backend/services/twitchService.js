@@ -1,4 +1,6 @@
 var axios = require('axios');
+var btoa = require('btoa');
+var searchParams = require('url-search-params');
 
 if (process.env.DEV) {
     var redirectURI = 'https://127.0.0.1:3000/dashboard'
@@ -30,30 +32,28 @@ exports.convert = async function (req, res) {
       const code = req.body.code;
   
       var params = new searchParams();
+      params.set('client_id', process.env.TWITCH_CLIENT_ID);
+      params.set('client_secret', process.env.TWITCH_CLIENT_SECRET);
       params.set('code', code);
       params.set('grant_type', 'authorization_code');
       params.set('redirect_uri', redirectURI);
-      params.set('code_verifier', 'challenge')
   
       const body = params;
-      const auth = btoa(process.env.TWITTER_CLIENT_ID + ':' + process.env.TWITTER_CLIENT_SECRET);
-      const finalAuth = 'Basic ' + auth;
   
-      const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: finalAuth,
-      };
+      // const headers = {
+      //   'Content-Type': 'application/x-www-form-urlencoded',
+      //   Authorization: finalAuth,
+      // };
   
-      const twitterRes = await axios.post(
-        'https://api.twitter.com/2/oauth2/token',
-        body,
-        { headers: headers }
+      const result = await axios.post(
+        'https://id.twitch.tv/oauth2/token',
+        body
       );
   
-      return twitterRes.data;
+      return result.data;
     } catch (err) {
-      console.log('twitter big error catch');
-      // console.log(err)
+      console.log('big error catch');
+      console.log(err)
       return err;
     }
   };

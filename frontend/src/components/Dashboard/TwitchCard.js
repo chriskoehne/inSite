@@ -7,6 +7,7 @@ import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
+import LineChartDemo from '../Charts/LineChartDemo';
 
 const TwitchCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
@@ -34,7 +35,8 @@ const TwitchCard = (props) => {
     const currentUrl = window.location.href;
     if (currentUrl.includes('state=twitch')) {
       let start = currentUrl.indexOf('code') + 5;
-      c = currentUrl.substring(start);
+      let end = currentUrl.indexOf('scope') - 1;
+      c = currentUrl.substring(start, end);
       setUser({
         email: e,
         code: c,
@@ -56,7 +58,7 @@ const TwitchCard = (props) => {
       const result = await axios.post('/twitch/convert/', {
         code: user.code,
       });
-      // console.log(result.data);
+      console.log(result.data);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitchToken(token);
@@ -184,12 +186,7 @@ const TwitchCard = (props) => {
     if (twitchToken) {
       return (
         <div className={styles.centered}>
-          <LineChart
-            height={'20vh'}
-            width={'45vw'}
-            color={'#03a9f4'}
-            // data={chartDayData}
-          />
+          <LineChartDemo />
         </div>
       );
     } else {
