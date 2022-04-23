@@ -1,0 +1,34 @@
+var twitchService = require('../services/twitchService');
+
+exports.login = async function(req, res, next) {
+  try {
+    // console.log('In Twitch Login Controller');
+    let result = await twitchService.login(req.body.email);
+    if (result.link) {
+      return res.status(200).json({
+        success: true,
+        link: result.link,
+        verificationString: result.verificationString,
+      });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch(e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.convert = async function (req, res, next) {
+  try {
+    // console.log('In Twitch Convert Controller');
+    let result = await twitchService.convert(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, accessToken: result.access_token });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};

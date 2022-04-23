@@ -10,7 +10,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Welcome from './components/Welcome/Welcome';
 import CookieCheck from './components/testing/CookieCheck';
 import RedditPage from './components/Reddit/RedditPage';
-import InstagramPage from './components/Instagram/InstagramPage';
+import TwitchPage from './components/Twitch/TwitchPage';
 import TwitterPage from './components/Twitter/TwitterPage';
 import YoutubePage from './components/Youtube/YoutubePage';
 import './App.css';
@@ -87,9 +87,9 @@ const App = () => {
         </Route>
       </Route>
 
-      <Route exact path='/instagram' element={<ProtectedRoute />}>
+      <Route exact path='/twitch' element={<ProtectedRoute />}>
         <Route element={<NavRoute navigate={navigate} />}>
-          <Route index element={<InstagramPage navigate={navigate} />} />
+          <Route index element={<TwitchPage navigate={navigate} />} />
         </Route>
       </Route>
 

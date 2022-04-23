@@ -79,24 +79,24 @@
   border-color: var(--twitter);
 }
 
-.instagramB {
-  background-color: var(--instagram);
-  border-color: var(--instagram);
+.twitchB {
+  background-color: var(--twitch);
+  border-color: var(--twitch);
 }
 
-.instagramB:hover {
+.twitchB:hover {
   background-color: #cf3160;
   border-color: #cf3160;
 }
 
-.instagramB:focus {
-  background-color: var(--instagram);
-  border-color: var(--instagram);
+.twitchB:focus {
+  background-color: var(--twitch);
+  border-color: var(--twitch);
 }
 
-.instagramB:active {
-  background-color: var(--instagram);
-  border-color: var(--instagram);
+.twitchB:active {
+  background-color: var(--twitch);
+  border-color: var(--twitch);
 }
 
 .youtubeB {

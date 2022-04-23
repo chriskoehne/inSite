@@ -25,7 +25,7 @@ const FAQ = (props) => {
       </Banner.Entity>
       <Banner.Entity>
           <Banner.Question>
-              Now that I am logged in to inSite, how do I log in to Reddit/Twitter/YouTube/Instagram?
+              Now that I am logged in to inSite, how do I log in to Reddit/Twitter/YouTube/Twitch?
           </Banner.Question>
           <Banner.Text>
               Once you have logged in and see the inSite dashboard, simply click on Authorize (Social Media) and you will be taken to a log in page for the account that you are trying to connect. 

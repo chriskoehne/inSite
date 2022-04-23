@@ -36,12 +36,12 @@ let socialMedias = [
     ),
   },
   {
-    id: 'instagram',
-    name: 'Instagram',
+    id: 'twitch',
+    name: 'Twitch',
     icon: (
       <SocialIcon
         fgColor='white'
-        network='instagram'
+        network='twitch'
         onClick={(e) => {
           e.preventDefault();
         }}
