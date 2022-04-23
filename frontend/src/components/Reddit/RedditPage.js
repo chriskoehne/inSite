@@ -14,56 +14,17 @@ import {
   Title,
   Tooltip,
   Legend,
+  defaults,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 // import faker from '@faker-js/faker';
 import styles from './Reddit.module.css';
 import { TagCloud } from 'react-tagcloud';
 import { getMonths, getDays, getLastThirty } from './RedditComments';
-
-const c = require('./constants/constants');
-// const redditColor = getComputedStyle(document.documentElement).getPropertyValue('--reddit');
-
-// Used to create the word clouds
-function getUncommon(sentence) {
-  var wordArr = sentence.match(/\w+/g),
-    commonObj = {},
-    uncommonArr = [],
-    word,
-    i;
-
-  let common = c.WORDLIST;
-  for (i = 0; i < common.length; i++) {
-    commonObj[common[i].trim()] = true;
-  }
-
-  for (i = 0; i < wordArr.length; i++) {
-    word = wordArr[i].trim().toLowerCase();
-    if (!commonObj[word]) {
-      uncommonArr.push(word);
-    }
-  }
-
-  return uncommonArr;
-}
-
-function getWordList(str) {
-  let arr = [];
-  let array = str.split(' ');
-  let map = {};
-  for (let i = 0; i < array.length; i++) {
-    let item = array[i];
-    map[item] = map[item] + 1 || 1;
-  }
-  for (const property in map) {
-    let obj = {};
-    obj.value = property;
-    obj.count = map[property];
-    arr.push(obj);
-  }
-  arr.sort((a, b) => b.count - a.count);
-  return arr.slice(0, 30);
-}
+import useDidMountEffect from '../../hooks/useDidMountEffect';
+import { getUncommon, getWordList, isFalsy } from './helperFunctions';
+import ReactTooltip from 'react-tooltip';
+import hasToolTips from '../../helpers/hasToolTips';
 
 ChartJS.register(
   CategoryScale,
@@ -74,6 +35,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+defaults.color = document.body.classList.contains('dark') ? '#e3e3e3' : 'grey';
 
 const RedditPage = (props) => {
   const navigate = useNavigate();
@@ -92,7 +54,7 @@ const RedditPage = (props) => {
   const [commentGraphDay, setCommentGraphDay] = useState(true);
   const [commentGraphThirty, setCommentGraphThirty] = useState(false);
   const [commentGraphMonth, setCommentGraphMonth] = useState(false);
-  const [mostControversialPost, setmostControlversialPost] = useState({});
+  const [mostControversialPost, setmostControversialPost] = useState({});
   const [mostControversialComment, setMostControversialComment] = useState({});
   //chartComment
   const [chartCommentData, setChartCommentData] = useState({
@@ -123,24 +85,164 @@ const RedditPage = (props) => {
   };
 
   useEffect(() => {
-    if (!hasToken()) {
-      navigate('/dashboard');
-    } else {
-      setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
-    }
+    const getStoredRedditData = async () => {
+      try {
+        if (!JSON.parse(localStorage.getItem('settings')).permissions.reddit) {
+          console.log('no permissions');
+          return false;
+        }
+        const ans = await axios.get('/user/reddit', {
+          params: { email: localStorage.getItem('email') },
+        });
+        if (
+          ans.status === 200 &&
+          ans.data.message !== null &&
+          !isFalsy(ans.data.message)
+        ) {
+          const redditData = ans.data.message;
+          console.log(redditData.overview);
+          setPosts(redditData.overview.posts);
+          setComments(redditData.overview.comments);
+          setSubKarmaList(redditData.subKarma);
+          setCommentKarma(redditData.totalKarma.commentKarma);
+          setLinkKarma(redditData.totalKarma.linkKarma);
+          setAwardKarma(redditData.totalKarma.awardKarma);
+          setTotalKarma(redditData.totalKarma.totalKarma);
+          console.log('loading done 1');
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
+    };
+
+    const doTheThing = async () => {
+      setLoading(true);
+
+      if (await getStoredRedditData()) {
+        setLoading(false);
+      } else if (!hasToken()) {
+        navigate('/dashboard');
+        return;
+      } else {
+        setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
+      }
+    };
+    doTheThing();
     //TODO: replace below following process in https://betterprogramming.pub/stop-lying-to-react-about-missing-dependencies-10612e9aeeda
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useDidMountEffect(() => {
+    let postArr = [];
+    posts.forEach((e) => {
+      if (e.is_self) {
+        postArr.push(e);
+      }
+    });
+    // most controversial post
+    let mostControversialP = postArr[0];
+    postArr.forEach((e) => {
+      if (mostControversialP.upvote_ratio > e.upvote_ratio) {
+        mostControversialP = e;
+      }
+    });
+    setmostControversialPost(mostControversialP);
+  }, [posts]);
+
+  useDidMountEffect(() => {
+    //setCommentByMonths
+    let commentStr = '';
+    comments.forEach((comm) => {
+      commentStr += comm.body;
+    });
+    setTagCloud(getWordList(getUncommon(commentStr).join(' ')));
+    // get comments by Month
+    let mostControversial = comments[0];
+    //console.log(mostControversial.data);
+    let monthsData = getMonths(comments);
+    let monthsDataset = {
+      labels: monthsData.monthYear.reverse(),
+      datasets: [
+        {
+          label: 'Number of Comments',
+          data: monthsData.numComments.reverse(),
+          borderColor: '#ff4500',
+          backgroundColor: '#ff4500',
+          xaxis: 'Months',
+        },
+      ],
+    };
+    let dayDate = getDays(comments);
+    let dayDataset = {
+      labels: dayDate.daysOfWeek.reverse(),
+      datasets: [
+        {
+          label: 'Number of Comments',
+          data: dayDate.numComments.reverse(),
+          borderColor: '#ff4500',
+          backgroundColor: '#ff4500',
+        },
+      ],
+    };
+    let thirtyDate = getLastThirty(comments);
+    let thirtyDataset = {
+      labels: thirtyDate.lastThirty.reverse(),
+      datasets: [
+        {
+          label: 'Number of Comments',
+          data: thirtyDate.numComments.reverse(),
+          borderColor: '#ff4500',
+          backgroundColor: '#ff4500',
+        },
+      ],
+    };
+    setChartThirtyData(thirtyDataset);
+    setChartDayData(dayDataset);
+    setChartMonthData(monthsDataset);
+    setMostControversialComment(mostControversial);
+  }, [comments]);
+
+  useDidMountEffect(() => {
+    let labels = [];
+    let subKarmaDataset = [
+      {
+        label: 'Comment Karma',
+        borderColor: '#ff4500',
+        backgroundColor: '#ff4500',
+      },
+      {
+        label: 'Post Karma',
+        borderColor: 'black',
+        backgroundColor: 'white',
+        borderWidth: 1,
+      },
+    ];
+    let comKarma = [];
+    let postKarma = [];
+    Object.keys(subKarmaList).forEach((key, index) => {
+      labels.push('r/' + subKarmaList[key].sr);
+      comKarma.push(subKarmaList[key].comment_karma);
+      postKarma.push(subKarmaList[key].link_karma);
+    });
+    subKarmaDataset[0].data = comKarma;
+    subKarmaDataset[1].data = postKarma;
+    // console.log(subKarmaDataset);
+    setChartCommentData({ labels: labels, datasets: subKarmaDataset });
+    // console.log(subKarmaList);
+  }, [subKarmaList]);
+
   useEffect(() => {
     if (!redditToken) {
-      setLoading(true);
       return;
     }
 
     const getData = async () => {
+      // console.log('getting reddit data');
       setLoading(true);
-
       const redditMeQuery = {
         accessToken: redditToken,
       };
@@ -149,6 +251,7 @@ const RedditPage = (props) => {
           params: redditMeQuery,
         });
         if (ansMe.status === 200) {
+          // console.log('reddit me worked');
           setMe(ansMe.data);
           //because me contains vital information, such as a username, maybe we should nest all of the calls? or perhaps get one big blob of data from one backend call?
           const redditUserQuery = {
@@ -159,127 +262,75 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
-            console.log(ansOverview.data);
-            setComments(ansOverview.data.comments);
+            // console.log('reddit overview worked');
+            try {
+              if (
+                JSON.parse(localStorage.getItem('settings')).permissions.reddit
+              ) {
+                const body = {
+                  email: localStorage.getItem('email'),
+                  property: 'overview',
+                  data: ansOverview.data,
+                };
+
+                const storeData = await axios.post('/user/reddit', body);
+                console.log(storeData);
+              }
+            } catch (err) {
+              console.log(err);
+            }
             setPosts(ansOverview.data.posts);
-            let pst = ansOverview.data.posts;
-            let arrPost = [];
-            pst.forEach((e) => {
-              if (e.is_self) {
-                arrPost.push(e);
-              }
-            });
-            let mostControversial = arrPost[0];
-            arrPost.forEach((e) => {
-              if (mostControversial.upvote_ratio > e.upvote_ratio) {
-                mostControversial = e;
-              }
-            });
-            setmostControlversialPost(mostControversial);
-          }
-          const ansComments = await axios.get('/reddit/userComments', {
-            params: redditUserQuery,
-          });
-          if (ansComments.status === 200) {
-            let array = ansComments.data.overview.data.children;
-            //setCommentByMonths
-            let comm_str = '';
-            array.forEach((comm) => {
-              comm_str += comm.data.body;
-            });
-            getUncommon(comm_str);
-            setTagCloud(getWordList(getUncommon(comm_str).join(' ')));
-            // get comments by Month
-            let mostControversial = array[0];
-            //console.log(mostControversial.data);
-            let monthsData = getMonths(array);
-            let monthsDataset = {
-              labels: monthsData.monthYear.reverse(),
-              datasets: [
-                {
-                  label: 'Number of Comments',
-                  data: monthsData.numComments.reverse(),
-                  borderColor: '#ff4500',
-                  backgroundColor: '#ff4500',
-                  xaxis: 'Months',
-                },
-              ],
-            };
-            let dayDate = getDays(array);
-            let dayDataset = {
-              labels: dayDate.daysOfWeek.reverse(),
-              datasets: [
-                {
-                  label: 'Number of Comments',
-                  data: dayDate.numComments.reverse(),
-                  borderColor: '#ff4500',
-                  backgroundColor: '#ff4500',
-                },
-              ],
-            };
-            let thirtyDate = getLastThirty(array);
-            let thirtyDataset = {
-              labels: thirtyDate.lastThirty.reverse(),
-              datasets: [
-                {
-                  label: 'Number of Comments',
-                  data: thirtyDate.numComments.reverse(),
-                  borderColor: '#ff4500',
-                  backgroundColor: '#ff4500',
-                },
-              ],
-            };
-            setChartThirtyData(thirtyDataset);
-            setChartDayData(dayDataset);
-            setChartMonthData(monthsDataset);
-            setMostControversialComment(mostControversial.data);
+            setComments(ansOverview.data.comments);
           }
 
           const ansSubKarma = await axios.get('/reddit/userSubKarma', {
             params: redditUserQuery,
           });
           if (ansSubKarma.status === 200) {
+            try {
+              if (
+                JSON.parse(localStorage.getItem('settings')).permissions.reddit
+              ) {
+                const body = {
+                  email: localStorage.getItem('email'),
+                  property: 'subKarma',
+                  data: ansSubKarma.data.subKarmaList,
+                };
+
+                const storeData = await axios.post('/user/reddit', body);
+                console.log(storeData);
+              }
+            } catch (err) {
+              console.log(err);
+            }
             setSubKarmaList(ansSubKarma.data.subKarmaList);
-            console.log(ansSubKarma.data.subKarmaList);
-            let labels = [];
-            let subKarmaDataset = [
-              {
-                label: 'Comment Karma',
-                borderColor: '#ff4500',
-                backgroundColor: '#ff4500',
-              },
-              {
-                label: 'Post Karma',
-                borderColor: 'black',
-                backgroundColor: 'white',
-                borderWidth: 1,
-              },
-            ];
-            let comKarma = [];
-            let postKarma = [];
-            Object.keys(ansSubKarma.data.subKarmaList).map((key, index) => {
-              labels.push('r/' + ansSubKarma.data.subKarmaList[key].sr);
-              comKarma.push(ansSubKarma.data.subKarmaList[key].comment_karma);
-              postKarma.push(ansSubKarma.data.subKarmaList[key].link_karma);
-            });
-            subKarmaDataset[0].data = comKarma;
-            subKarmaDataset[1].data = postKarma;
-            console.log(subKarmaDataset);
-            setChartCommentData({ labels: labels, datasets: subKarmaDataset });
-            // console.log(subKarmaList);
           }
 
           const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
+            // console.log('reddit karma worked');
+            try {
+              if (
+                JSON.parse(localStorage.getItem('settings')).permissions.reddit
+              ) {
+                const body = {
+                  email: localStorage.getItem('email'),
+                  property: 'totalKarma',
+                  data: ansTotalKarma.data,
+                };
+                const storeData = await axios.post('/user/reddit', body);
+                console.log(storeData);
+              }
+            } catch (err) {
+              console.log(err);
+            }
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
             setTotalKarma(ansTotalKarma.data.totalKarma);
           }
-
-          console.log('loading done');
         }
       }
       setLoading(false);
@@ -288,63 +339,36 @@ const RedditPage = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redditToken]);
 
-  const getMaxScore = (list) => {
+  const getMaxItem = (list) => {
     if (loading) {
       return {};
     }
-    var maxScore = 0;
-    list.forEach(function (item, index) {
+    let maxItem = {};
+    let maxScore = -Infinity;
+    for (let item of list) {
       if (item.score > maxScore) {
+        maxItem = item;
         maxScore = item.score;
       }
-    });
-    return maxScore;
-  };
-
-  const getMaxItem = (list, maxScore) => {
-    if (loading) {
-      return {};
     }
-    var maxItem = {};
-    list.forEach(function (item, index) {
-      if (item.score === maxScore) {
-        maxItem = item;
-      }
-    });
     return maxItem;
   };
 
-  const getMinScore = (list) => {
+  const getMinItem = (list) => {
     if (loading) {
       return {};
     }
-    var minScore = 0;
-    list.forEach(function (item, index) {
+    let minItem = {};
+    let minScore = Infinity;
+    for (let item of list) {
+      if (list === posts && !item.title) {
+        continue;
+      }
       if (item.score < minScore) {
-        if (list === posts && !item.title) {
-          // skip non-post items
-          return;
-        }
+        minItem = item;
         minScore = item.score;
       }
-    });
-    return minScore;
-  };
-
-  const getMinItem = (list, minScore) => {
-    if (loading) {
-      return {};
     }
-    var minItem = {};
-    list.forEach(function (item, index) {
-      if (item.score === minScore) {
-        if (list === posts && !item.title) {
-          // skip non-post items
-          return;
-        }
-        minItem = item;
-      }
-    });
     return minItem;
   };
 
@@ -385,8 +409,8 @@ const RedditPage = (props) => {
     return document.body.classList.contains('dark') ? 'light' : 'dark';
   };
 
-  console.log(chartCommentData);
-  console.log(chartThirtyData);
+  // console.log(chartCommentData);
+  // console.log(chartThirtyData);
   let options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -425,20 +449,61 @@ const RedditPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
+          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
             <Row>
+              <h2>Karma Overview</h2>
+              <br /><br /><br />
               <Col>
-                <Row>Total Karma: {totalKarma}</Row>
-                <Row>Post Karma: {linkKarma}</Row>
-                <Row>Comment Karma: {commentKarma}</Row>
-                <Row>Award Karma: {awardKarma}</Row>
-                <Row>Number of Posts: {posts.length}</Row>
-                <Row>Number of Comments: {comments.length}</Row>
+                <h4
+                  data-tip={
+                    hasToolTips()
+                      ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                      : ''
+                  }
+                >
+                  Total Karma: {totalKarma}
+                </h4>
+                <br />
                 <Row>
+                  <Col
+                    data-tip={
+                      hasToolTips()
+                        ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                        : ''
+                    }
+                  >
+                    <h5>Post Karma: {linkKarma}</h5>
+                  </Col>
+                  <Col
+                    data-tip={
+                      hasToolTips()
+                        ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                        : ''
+                    }
+                  >
+                    <h5>Comment Karma: {commentKarma}</h5>
+                  </Col>
+                  <Col
+                    data-tip={
+                      hasToolTips()
+                        ? "Karma: A user's score, totaling their amount of upvotes against their downvotes. Mostly it's about reputation"
+                        : ''
+                    }
+                  >
+                    <h5>Award Karma: {awardKarma}</h5>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col><h5>Number of Posts: {posts.length}</h5></Col>
+                  <Col><h5>Number of Comments: {comments.length}</h5></Col>
+                </Row>
+                <br/>
+                <Row>
+                  <h3>Top Subreddits</h3>
                   {Object.keys(subKarmaList).map((key, index) => (
                     <p key={index}>
                       {' '}
-                      Subreddit: {subKarmaList[key].sr}, comment karma:{' '}
+                      r/{subKarmaList[key].sr}: comment karma:{' '}
                       {subKarmaList[key].comment_karma}, post karma:{' '}
                       {subKarmaList[key].link_karma}
                     </p>
@@ -470,8 +535,9 @@ const RedditPage = (props) => {
             <Row className={styles.chartContainer}>
               <BarChart
                 height={'60vh'}
+                color={'#ff4500'}
                 data={getScores(posts)}
-                maxVal={getMaxScore(posts)}
+                maxVal={getMaxItem(posts).score}
                 label='Post Scores'
                 xaxis='post score'
               />
@@ -488,8 +554,9 @@ const RedditPage = (props) => {
             <Row className={styles.chartContainer}>
               <BarChart
                 height={'60vh'}
+                color={'#ff4500'}
                 data={getScores(comments)}
-                maxVal={getMaxScore(comments)}
+                maxVal={getMaxItem(comments).score}
                 label='Comment Scores'
                 xaxis='Comment score'
               />
@@ -505,20 +572,19 @@ const RedditPage = (props) => {
           <Card className={styles.socialsCard}>
             <Row>
               <Col>
-                Most Upvoted Post - {getMaxScore(posts)} Karma{' '}
+                Most Upvoted Post - {getMaxItem(posts).score} Karma{' '}
                 {/* TODO karma or upvotes */}
                 <Card className={styles.textCard}>
                   <Card.Body>
-                    <Card.Title>
-                      {getMaxItem(posts, getMaxScore(posts)).title}
-                    </Card.Title>
+                    <Card.Title>{getMaxItem(posts).title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most upvoted post'
                         id='reddit-embed'
-                        style={{height: '200px'}}
+                        style={{ height: '200px' }}
                         src={
                           'https://www.redditmedia.com' +
-                          getMaxItem(posts, getMaxScore(posts)).permalink +
+                          getMaxItem(posts).permalink +
                           '?depth=1&amp;showmore=false&amp;embed=true&amp;'
                         }
                         sandbox='allow-scripts allow-same-origin allow-popups'
@@ -531,20 +597,18 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               <Col>
-                Most Upvoted Comment - {getMaxScore(comments)} Karma
+                Most Upvoted Comment - {getMaxItem(comments).score} Karma
                 <Card className={styles.textCard}>
                   <Card.Body>
-                    <Card.Title>
-                      {getMaxItem(comments, getMaxScore(comments)).link_title}
-                    </Card.Title>
+                    <Card.Title>{getMaxItem(comments).link_title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most upvoted comment'
                         id='reddit-embed'
-                        style={{height: '200px'}}
+                        style={{ height: '200px' }}
                         src={
                           'https://www.redditmedia.com' +
-                          getMaxItem(comments, getMaxScore(comments))
-                            .permalink +
+                          getMaxItem(comments).permalink +
                           '?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false'
                         }
                         sandbox='allow-scripts allow-same-origin allow-popups'
@@ -557,19 +621,18 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               <Col>
-                Most Downvoted Post - {getMinScore(posts)} Karma
+                Most Downvoted Post - {getMinItem(posts).score} Karma
                 <Card className={styles.textCard}>
                   <Card.Body>
-                    <Card.Title>
-                      {getMinItem(posts, getMinScore(posts)).title}
-                    </Card.Title>
+                    <Card.Title>{getMinItem(posts).title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most downvoted post'
                         id='reddit-embed'
-                        style={{height: '200px'}}
+                        style={{ height: '200px' }}
                         src={
                           'https://www.redditmedia.com' +
-                          getMinItem(posts, getMinScore(posts)).permalink +
+                          getMinItem(posts).permalink +
                           '?depth=1&amp;showmore=false&amp;embed=true&amp;'
                         }
                         sandbox='allow-scripts allow-same-origin allow-popups'
@@ -582,20 +645,18 @@ const RedditPage = (props) => {
             </Row>
             <Row>
               <Col>
-                Most Downvoted Comment - {getMinScore(comments)} Karma
+                Most Downvoted Comment - {getMinItem(comments).core} Karma
                 <Card className={styles.textCard}>
                   <Card.Body>
-                    <Card.Title>
-                      {getMinItem(comments, getMinScore(comments)).link_title}
-                    </Card.Title>
+                    <Card.Title>{getMinItem(comments).link_title}</Card.Title>
                     <Card.Text>
                       <iframe
+                        title='most downvoted comment'
                         id='reddit-embed'
-                        style={{height: '200px'}}
+                        style={{ height: '200px' }}
                         src={
                           'https://www.redditmedia.com' +
-                          getMinItem(comments, getMinScore(comments))
-                            .permalink +
+                          getMinItem(comments).permalink +
                           '?depth=1&amp;showmore=false&amp;embed=true&amp;showmedia=false'
                         }
                         sandbox='allow-scripts allow-same-origin allow-popups'
@@ -613,6 +674,7 @@ const RedditPage = (props) => {
                   <Card.Body>
                     <Card.Title>{mostControversialPost.title}</Card.Title>
                     <iframe
+                      title='most controversial post'
                       id='reddit-embed'
                       src={
                         'https://www.redditmedia.com' +
@@ -635,6 +697,7 @@ const RedditPage = (props) => {
                       {mostControversialComment.link_title}
                     </Card.Title>
                     <iframe
+                      title='most controversial comment'
                       id='reddit-embed'
                       src={
                         'https://www.redditmedia.com' +
@@ -651,7 +714,7 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
+          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
             <Row>
               <Col>
                 <h3>
@@ -711,6 +774,7 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
       </Carousel>
+      <ReactTooltip />
     </div>
   );
 };

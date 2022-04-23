@@ -60,3 +60,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.embedTweets {
+  width: 100%;
+}
+
+.profile {
+  border-style: solid;
+  border-radius: 25px;
+  margin: 1vh;
+  padding: 10px;
+}
+
+.profile img {
+  border-radius: 50%;
+  width: 5vw;
+  border: 0;
+}

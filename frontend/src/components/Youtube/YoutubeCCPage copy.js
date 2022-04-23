@@ -8,20 +8,22 @@ import styles from './Youtube.module.css';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
 
-const YoutubePage = (props) => {
+const YoutubeCCPage = (props) => {
+  
   const navigate = useNavigate();
   const c = require('./constants/youtubeCategoryConstants');
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
   const [youtubeToken, setYoutubeToken] = useState('');
   const [subscriptions, setSubscriptions] = useState([]);
+  const [videoList, setVideoList] = useState([]);
   const [activity, setActivity] = useState([]);
   const [likedVids, setLikedVids] = useState([]);
   //const [mostSubscribers, setMostSubscribers] = useState([]);
   const [popularVidsFromLiked, setPopularVids] = useState([]);
   const [popularVidsCategory, setPopularVidsCategory] = useState('');
   const [playlistCounts, setPlaylistCounts] = useState([]);
-  const [user, setUser] = useState({ email: '', code: '' });
+  
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
@@ -50,22 +52,28 @@ const YoutubePage = (props) => {
       setLoading(true);
       return;
     }
-    const getData = async () => {
+  const getData = async () => {
       setLoading(true);
-      if (activity.length === 0) {
-        const act = await axios.get('/youtube/activity');
-        console.log('got activity:');
-        console.log(act);
-        if (act.status === 200) {
-          setActivity(act.data.list);
-          const subs = await axios.get('/youtube/subscriptions');
-          console.log('got subs');
-          console.log(subs);
-          if (subs.status === 200) {
-            setSubscriptions(subs.data.list);
-          }
-        }
+    const subs = await axios.get('/youtube/channelInfo');
+      console.log('got channelInfo');
+      console.log(subs);
+      if (subs.status === 200) {
+        setSubscriptions(subs.data.list);
       }
+     let channelId = subs.data.list[0].id
+
+     const youtubeQuery = {
+      channelId: channelId
+    };
+
+     const vids = await axios.get('/youtube/videoList', { params: youtubeQuery });
+      console.log('got videoList');
+      console.log(vids);
+      if (vids.status === 200) {
+        setVideoList(vids.data.list);
+      }
+
+      /*
       const likedVids = await axios.get('/youtube/likedVideos');
       console.log('Liked Videos:');
       console.log(likedVids);
@@ -89,7 +97,7 @@ const YoutubePage = (props) => {
         itemCounts.push(item.contentDetails.itemCount);
       });
       setPlaylistCounts(itemCounts);
-
+      */
       setLoading(false);
 
     };
@@ -117,7 +125,7 @@ const YoutubePage = (props) => {
     });
     return maxCount;
   };
-
+  
   return loading ? (
     <div
       style={{
@@ -139,33 +147,13 @@ const YoutubePage = (props) => {
         activeIndex={index}
         onSelect={handleSelect}
       >
-        <Carousel.Item className={styles.slideshowCard}>
+          <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
-            <Row className={styles.chartContainer}>
-              <BarChart
-                height={'60vh'}
-                data={playlistCounts}
-                maxVal={getMaxCount(playlistCounts)}
-                label='Playlist Counts'
-                xaxis='PlaylistCounts'
-                color={'#ff3333'}
-              />
-              <div style={{ paddingTop: '2%' }}>
-                Here we see a graphical representation of the number of
-                playlists a user has, divided into buckets which represent the
-                number of videos per playlist.
-              </div>
-            </Row>
-          </Card>
-        </Carousel.Item>
-        <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
-            <h3>Subscribed Channels</h3>
+            <h3>Overview of Channel - </h3>
             <div>
               {subscriptions &&
                 subscriptions.map((sub) => (
                   <tr key={sub.id}>
-                    <td>{sub.snippet.title}</td>
                     <a
                       href={'https://youtube.com/c/' + sub.snippet.title}
                       target='_blank'
@@ -173,89 +161,28 @@ const YoutubePage = (props) => {
                     >
                       <img alt='' src={sub.snippet.thumbnails.medium.url} />
                     </a>
+                    <h1>
+                      Videos: List of Videos ({sub.statistics.videoCount} videos)
+                    </h1>
+                    <td>Number of Subscribers: {sub.statistics.subscriberCount}</td>
                   </tr>
                 ))}
             </div>
-          </Card>
-        </Carousel.Item>
-
-        <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
-            <h3>Liked Videos</h3>
             <div>
-              {likedVids &&
-                likedVids.map((vid) => (
-                  <tr key={vid.id}>
-                    <td>{vid.snippet.title}</td>
-                    <td>
-                      view count: {vid.statistics.viewCount} like count:{' '}
-                      {vid.statistics.likeCount}
-                    </td>
+              {videoList && 
+                videoList.map((video) => (
+                  <tr key={video.id}>
+                    <td>{video.snippet.title}</td>
                     <a
-                      href={'https://youtube.com/watch?v=' + vid.id}
+                      href={'https://youtube.com/c/' + video.snippet.title}
                       target='_blank'
                       rel='noreferrer'
                     >
-                      <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                      <img alt='' src={video.snippet.thumbnails.medium.url} />
                     </a>
                   </tr>
                 ))}
             </div>
-          </Card>
-        </Carousel.Item>
-        
-        <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
-            <h3>Popular Videos From Your Favorite Category</h3>
-            <h3
-              data-tip={
-                hasToolTips()
-                  ? "Based on YouTube's most popular categories, such as music, gaming, and entertainment"
-                  : ''
-              }
-            >
-              {popularVidsCategory}
-            </h3>
-            <div>
-              {popularVidsFromLiked &&
-                popularVidsFromLiked.map((vid) => (
-                  <tr key={vid.id}>
-                    <td>{vid.snippet.title}</td>
-                    <td>
-                      view count: {vid.statistics.viewCount} like count:{' '}
-                      {vid.statistics.likeCount}
-                    </td>
-                    <a
-                      href={'https://youtube.com/watch?v=' + vid.id}
-                      target='_blank'
-                      rel='noreferrer'
-                    >
-                      <img alt='' src={vid.snippet.thumbnails.medium.url} />
-                    </a>
-                  </tr>
-                ))}
-            </div>
-          </Card>
-        </Carousel.Item>
-        <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard}>
-          <h3>Want to see metrics for your own videos?</h3>
-          <Button
-              className={`${styles.seeMore} ${styles.youtubeB}`}
-              data-tip={
-                hasToolTips()
-                  ? 'See more insights about your YouTube, such as playlist count and recommendations'
-                  : ''
-              }
-              //style={styles.seeMore}
-              onClick={function () {
-                props.navigate('youtubecc', {
-                  state: { email: user.email, accessToken: youtubeToken },
-                });
-              }}
-            >
-              Click Here
-            </Button>
           </Card>
         </Carousel.Item>
       </Carousel>
@@ -264,4 +191,4 @@ const YoutubePage = (props) => {
   );
 };
 
-export default YoutubePage;
+export default YoutubeCCPage;

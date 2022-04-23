@@ -48,6 +48,21 @@ exports.test = async function (req, res, next) {
   }
 };
 
+exports.tweetCount = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Test Controller');
+    let result = await twitterService.tweetCount(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.me = async function (req, res, next) {
   try {
     // console.log('In Twitter Test Controller');
@@ -77,4 +92,80 @@ exports.tweets = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.followers = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Followers Controller');
+    let result = await twitterService.followers(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.following = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Following Controller');
+    let result = await twitterService.following(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.likes = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Likes Controller');
+    let result = await twitterService.likes(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.tweetLikes = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Tweet Likes Controller');
+    let result = await twitterService.tweetLikes(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.followMetrics = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Tweet Follow Metrics Controller');
+    let result = await twitterService.followMetrics(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 

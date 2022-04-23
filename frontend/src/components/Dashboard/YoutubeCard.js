@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
+import ReactTooltip from 'react-tooltip';
+import hasToolTips from '../../helpers/hasToolTips';
 
 const YoutubeCard = (props) => {
   const [youtubeToken, setYoutubeToken] = useState('');
@@ -12,6 +14,7 @@ const YoutubeCard = (props) => {
   const [loading, setLoading] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
   const [activity, setActivity] = useState([]);
+  const [playlistCounts, setPlaylistCounts] = useState([]);
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
@@ -39,10 +42,10 @@ const YoutubeCard = (props) => {
       });
     } else {
       setUser({
-        email: e
+        email: e,
       });
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,10 +56,9 @@ const YoutubeCard = (props) => {
         setLoading(false);
         return;
       }
-      const result = await axios.post(
-        '/youtube/codeToToken/',
-        { code: user.code }
-      );
+      const result = await axios.post('/youtube/codeToToken/', {
+        code: user.code,
+      });
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -64,7 +66,7 @@ const YoutubeCard = (props) => {
           JSON.stringify({ token: token, date: Date.now() })
         );
         setYoutubeToken(token);
-      } 
+      }
       setLoading(false);
     };
 
@@ -87,21 +89,31 @@ const YoutubeCard = (props) => {
     const callYoutube = async () => {
       setLoading(true);
       if (activity.length === 0) {
+        console.log(user.code);
+
         const act = await axios.get('/youtube/activity');
-        console.log("got activity:");
+        console.log('got activity:');
         console.log(act);
         if (act.status === 200) {
           setActivity(act.data.list);
           const subs = await axios.get('/youtube/subscriptions');
-          console.log("got subs");
+          console.log('got subs');
           console.log(subs);
           if (subs.status === 200) {
             setSubscriptions(subs.data.list);
             console.log(subscriptions);
           }
-
         }
       }
+      const youtubePlaylists = await axios.get('/youtube/playlists');
+      // for each in youtubePlaylists.data.list:
+      // item.contentDetails.itemCount
+      let itemCounts = [];
+      youtubePlaylists.data.list.forEach((item) => {
+        itemCounts.push(item.contentDetails.itemCount);
+      });
+      setPlaylistCounts(itemCounts);
+
       setLoading(false);
     };
     if (youtubeToken) {
@@ -111,6 +123,19 @@ const YoutubeCard = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [youtubeToken]);
 
+  const getMaxCount = (list) => {
+    if (loading) {
+      return {};
+    }
+    var maxCount = 0;
+    list.forEach(function (item, index) {
+      if (item > maxCount) {
+        maxCount = item;
+      }
+    });
+    return maxCount;
+  };
+
   const authenticateYoutube = async (e) => {
     e.preventDefault();
     //create link to go to
@@ -118,10 +143,10 @@ const YoutubeCard = (props) => {
       email: user.email,
     });
     if (result.data.success) {
-        window.location.href = result.data.link;
-      } else {
-        console.log('there was an error in youtube user signup');
-      }
+      window.location.href = result.data.link;
+    } else {
+      console.log('there was an error in youtube user signup');
+    }
     return;
   };
 
@@ -133,16 +158,12 @@ const YoutubeCard = (props) => {
     if (hasToken()) {
       return (
         <BarChart
-          data={[1, 2, 3, 4]}
-          //   maxVal={getMaxScore(comments)}
-          //   label='Comment Scores'
-          //   xaxis='Comment score'
-          color={'#FF0000'}
-          onClick={function () {
-            props.navigate('youtube', {
-              state: { email: user.email, accessToken: youtubeToken },
-            });
-          }}
+          // height={"60vh"}
+          data={playlistCounts}
+          maxVal={getMaxCount(playlistCounts)}
+          label='Playlist Counts'
+          xaxis='PlaylistCounts'
+          color={'#ff3333'}
         />
       );
     } else {
@@ -150,10 +171,16 @@ const YoutubeCard = (props) => {
         <div className={styles.centered}>
           <Button
             className={`${styles.buttons} ${styles.youtubeB}`}
+            data-tip={
+              hasToolTips()
+                ? 'Connect your YouTube account to inSite to begin seeing your YouTube usage metrics!'
+                : ''
+            }
             onClick={authenticateYoutube}
           >
             Authorize YouTube
           </Button>
+          <ReactTooltip />
         </div>
       );
     }
@@ -170,7 +197,27 @@ const YoutubeCard = (props) => {
         className={styles.socialsCard}
       >
         <Card.Body>
-          <Card.Title>{icon()} Youtube</Card.Title>
+          <Card.Title>
+            {icon()} Youtube
+            {youtubeToken ?
+            <Button
+              className={`${styles.seeMore} ${styles.youtubeB}`}
+              data-tip={
+                hasToolTips()
+                  ? 'See more insights about your YouTube, such as playlist count and recommendations'
+                  : ''
+              }
+              style={{ float: 'right' }}
+              onClick={function () {
+                props.navigate('youtube', {
+                  state: { email: user.email, accessToken: youtubeToken },
+                });
+              }}
+            >
+              See more
+            </Button>
+          : null}
+          </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>
         </Card.Body>

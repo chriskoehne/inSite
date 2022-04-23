@@ -1,10 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Switch from 'react-switch';
 import axios from 'axios';
 import styles from './Settings.module.css';
-
+import useDidMountEffect from '../../hooks/useDidMountEffect';
+import ReactTooltip from 'react-tooltip';
 import Order from './Order';
+import hasToolTips from '../../helpers/hasToolTips';
 
 const Customization = () => {
   const [darkMode, setDarkMode] = useState(
@@ -12,7 +14,12 @@ const Customization = () => {
       JSON.parse(localStorage.getItem('settings')).darkMode === true
   );
 
-  useEffect(() => {
+  const [toolTips, setToolTips] = useState(
+    localStorage.hasOwnProperty('settings') &&
+      JSON.parse(localStorage.getItem('settings')).toolTips === true
+  );
+
+  useDidMountEffect(() => {
     const updateDarkMode = async () => {
       try {
         const body = {
@@ -32,7 +39,27 @@ const Customization = () => {
     updateDarkMode();
   }, [darkMode]);
 
-  const toggle = (checked) => {
+  useDidMountEffect(() => {
+    const updateToolTips = async () => {
+      try {
+        const body = {
+          email: localStorage.getItem('email'),
+          toolTips: toolTips,
+        };
+        const res = await axios.post('/user/settings/toolTips', body);
+        if (res.status === 200) {
+          console.log(res);
+        } else {
+          console.log('Could not update toolTips!');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    updateToolTips();
+  }, [toolTips]);
+
+  const toggleDarkMode = (checked) => {
     let settings = JSON.parse(localStorage.getItem('settings'));
     settings.darkMode = checked;
     if (checked) {
@@ -44,16 +71,29 @@ const Customization = () => {
     setDarkMode(checked);
   };
 
+  const toggleToolTips = (checked) => {
+    let settings = JSON.parse(localStorage.getItem('settings'));
+    settings.toolTips = checked;
+    localStorage.setItem('settings', JSON.stringify(settings));
+    setToolTips(checked);
+  };
+
   return (
     <div id='customization' className={styles.customization}>
+      <ReactTooltip />
       <h4>Customization</h4>
       <br />
-      <h5 style={{ marginBottom: '0' }}>Dark Mode</h5>
+      <h5
+        style={{ marginBottom: '0' }}
+        data-tip={hasToolTips() ? 'Globally toggle dark/light mode' : ''}
+      >
+        Dark Mode
+      </h5>
       <br />
       <label>
         <Switch
-          onChange={toggle}
-          offColor={'#DEDEDE'}
+          onChange={toggleDarkMode}
+          offColor={'#dedede'}
           onColor={'#2c2c2c'}
           checked={darkMode}
           /*TODO: Fix spacing */
@@ -71,16 +111,42 @@ const Customization = () => {
       </label>
       <br />
       <br />
-      <h5> Dashboard Cards Order </h5>
+      <h5
+        style={{ marginBottom: '0' }}
+        data-tip={hasToolTips() ? 'Globally toggle tool tips' : ''}
+      >
+        Tool Tips
+      </h5>
+      <br />
+      <label>
+        <Switch
+          onChange={toggleToolTips}
+          offColor={'#dedede'}
+          onColor={'#f9c449'}
+          checked={toolTips}
+        />
+      </label>
+      <br />
+      <br />
+      <h5
+        data-tip={
+          hasToolTips()
+            ? 'Change the order of cards on dashboard i.e. first card in this list corresponds with the top-left card'
+            : ''
+        }
+      >
+        {' '}
+        Dashboard Cards Order{' '}
+      </h5>
       <Order />
       <br />
-      <h5>Reddit Default shit</h5>
+      {/* <h5>Reddit Default shit</h5>
       setting
       <br />
-      setting
+      setting 2
       <br />
       setting
-      <br />
+      <br /> */}
     </div>
   );
 };

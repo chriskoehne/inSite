@@ -5,6 +5,39 @@
 
 const mongoose = require('mongoose');
 
+const permissionsSchema = new mongoose.Schema(
+  {
+    reddit: { type: Boolean, required: true, default: false },
+    twitter: { type: Boolean, required: true, default: false },
+    instagram: { type: Boolean, required: true, default: false },
+    youtube: { type: Boolean, required: true, default: false },
+  },
+  { _id: false }
+);
+
+const settingsSchema = new mongoose.Schema(
+  {
+    darkMode: { type: Boolean, required: true, default: false },
+    toolTips: { type: Boolean, required: true, default: true },
+    cardOrder: {
+      type: [String],
+      required: false,
+      default: ['reddit', 'twitter', 'instagram', 'youtube'],
+    },
+    permissions: { type: permissionsSchema, required: true, default: {} },
+  },
+  { _id: false }
+);
+
+const redditDataSchema = new mongoose.Schema(
+  {
+    overview: { type: Object, required: true, default: {} },
+    subKarma: { type: Object, required: true, default: {} },
+    totalKarma: { type: Object, required: true, default: {} },
+  },
+  {_id: false,}
+);
+
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -15,20 +48,10 @@ const userSchema = new mongoose.Schema(
     },
     password: { type: String, required: true },
     authyId: { type: String, required: true, default: 'unset' },
-    redditUsername: { type: String, required: false },
-    redditPassword: { type: String, required: false },
-
-    settings: {
-      type: {
-        darkMode: { type: Boolean, required: true, default: false },
-        cardOrder: { type: [String], required: false, default: ['reddit', 'twitter', 'instagram', 'youtube']},
-      },
-      required: true,
-      default: {},
-      _id: false,
-    },
+    settings: { type: settingsSchema, required: true, default: {} },
+    redditData: { type: redditDataSchema, required: true, default: {} },
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 const User = mongoose.model('User', userSchema);
