@@ -36,7 +36,6 @@ exports.login = async function (email) {
   try {
     // console.log('In Reddit Login Service');
     const clientID = process.env.REDDIT_APP_ID;
-    
     const link =
       'https://www.reddit.com/api/v1/authorize?client_id=' +
       clientID +

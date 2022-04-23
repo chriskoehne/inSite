@@ -3,10 +3,10 @@ var redditService = require('../services/redditService'); // skipping over the c
 
 
 exports.monitor = async function (email, password) {
-    console.log(Date.now())
+    console.log("monitoring")
     let users = await User.find({});
     users.forEach(async (user) => {
-        console.log(user.email)
+        console.log("checking: " + user.email)
         // check for refresh need
         if (user.reddit) {
             if (user.reddit.expires_in <= Date.now()) {
