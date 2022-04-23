@@ -84,6 +84,8 @@ router.post(
   youtubeController.convert
 );
 
+router.post('/youtube/check', auth.verifyToken, youtubeController.check);
+
 router.get('/youtube/activity', auth.verifyToken, youtubeController.activity);
 
 router.get(

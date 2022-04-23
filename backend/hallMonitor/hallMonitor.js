@@ -15,6 +15,7 @@ exports.monitor = async function (email, password) {
     
             }
         }
+        //youtube refreshes on its own using the oauthclient
     });
 };
 

@@ -44,7 +44,7 @@ const RedditCard = (props) => {
       );
       setRedditToken(ans.data.reddit.access_token);
     } 
-  })
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -129,8 +129,6 @@ const RedditCard = (props) => {
     };
     if (!hasToken() && user.code) {
       convert();
-    } else if (hasToken()) {
-      setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
     }
   }, [user]);
 

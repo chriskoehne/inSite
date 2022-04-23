@@ -1,3 +1,4 @@
+const User = require('../database/models/User');
 const {google} = require('googleapis');
 // const { isAsyncFunction } = require('util/types');
 const youtubeClientId = process.env.YOUTUBE_CLIENT_ID;
@@ -33,7 +34,26 @@ exports.login = async function (email) {
 
     return {link: url}
   } catch (err) {
-    console.log(err);
+    // console.log(err);
+    console.log('big error catch');
+    return err;
+  }
+};
+
+exports.check = async function (email) {
+  try {
+    // console.log('In Reddit Login Service');
+    let result = await User.findOne({ email: email })
+    // console.log("in backend check, result is")
+    // console.log(result)
+    if (result.youtube) {
+      return result.youtube
+    } else {
+      return false
+    }
+
+  } catch (err) {
+    // console.log(err);
     console.log('big error catch');
     return err;
   }
@@ -49,18 +69,26 @@ exports.convert = async function (req, res) {
 
     oauth2Client.setCredentials(tokens);
 
+    const email = req.body.email;
+    // store the oauth2Client directly in the db
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { youtube: tokens}
+    );
 
-    return tokens; //perhaps unnecessary given it is stored in the backend client?
+    return oauth2Client; //perhaps unnecessary given it is stored in the backend client?
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
 
-exports.activity = async function (req, res) {
+exports.activity = async function (client) {
   try {
     // console.log('In YouTube Activity Service');
+
+    oauth2Client.setCredentials(JSON.parse(client));
     const result = await service.activities.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
@@ -75,9 +103,11 @@ exports.activity = async function (req, res) {
   }
 };
 
-exports.likedVideos = async function (req, res) {
+exports.likedVideos = async function (client) {
   try {
-    console.log('In YouTube video list Service');
+    // console.log('In YouTube liked videos Service');
+    // console.log(client)
+    oauth2Client.setCredentials(JSON.parse(client));
     const result = await service.videos.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails,statistics',
@@ -87,14 +117,16 @@ exports.likedVideos = async function (req, res) {
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
 
-exports.playlists = async function (req, res) {
+exports.playlists = async function (client) {
   try {
     // console.log("playlists:")
+    oauth2Client.setCredentials(JSON.parse(client));
+
     const result = await service.playlists.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
@@ -104,14 +136,18 @@ exports.playlists = async function (req, res) {
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
 
-exports.popularVidsFromLiked = async function (req, res) {
+exports.popularVidsFromLiked = async function (client) {
   try {
-    // console.log('In YouTube video list Service');
+    // console.log('In YouTube popular vids from liked Service');
+    // console.log(client)
+    oauth2Client.setCredentials(JSON.parse(client));
+    // console.log(oauth2Client)
+
     const result = await service.videos.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails,statistics',
@@ -167,9 +203,12 @@ function mode(array) {
   return maxEl;
 }
 
-exports.subscriptions = async function (req, res) {
+exports.subscriptions = async function (client) {
   try {
-    // console.log('In YouTube Subscriptions Service');
+    console.log('In YouTube Subscriptions Service');
+    console.log(client)
+    oauth2Client.setCredentials(JSON.parse(client));
+
     const result = await service.subscriptions.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
@@ -179,13 +218,15 @@ exports.subscriptions = async function (req, res) {
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
 
-async function subCount(cid) {
+async function subCount(cid, client) {
   console.log('cid: ' + cid)
+  oauth2Client.setCredentials(JSON.parse(client));
+
   const response = await service.channels.list({
     auth: oauth2Client, 
     part: 'snippet,statistics',
@@ -197,9 +238,11 @@ async function subCount(cid) {
   return c
 }
 
-exports.mostSubscribers = async function (req, res) {
+exports.mostSubscribers = async function (client) {
   try {
     // console.log('In YouTube Subscriptions Service');
+    oauth2Client.setCredentials(JSON.parse(client));
+
     const result = await service.subscriptions.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
@@ -214,14 +257,14 @@ exports.mostSubscribers = async function (req, res) {
     channelList.forEach(cid => {
       channelArr[i] = cid.snippet.resourceId.channelId
       console.log('CHANNEL ID: ' + cid.snippet.resourceId.channelId)
-      subscriberCountArr[i] = subCount(channelArr[i])
+      subscriberCountArr[i] = subCount(channelArr[i], client)
       i++
     });
       
     return channelList[0];
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
