@@ -41,7 +41,7 @@ exports.login = async function (email) {
       'https://www.reddit.com/api/v1/authorize?client_id=' +
       clientID +
       '&response_type=code&state=reddit&redirect_uri=' + redirectURI + 
-      '&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
+      '&duration=permanent&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
 
     return { link: link, verificationString: email };
   } catch (err) {
@@ -51,12 +51,29 @@ exports.login = async function (email) {
   }
 };
 
-exports.convert = async function (req, res) {
+exports.check = async function (email) {
+  try {
+    // console.log('In Reddit Login Service');
+    let result = await User.findOne({ email: email })
+    // console.log("in backend check, result is")
+    // console.log(result)
+    if (result.reddit) {
+      return result.reddit
+    } else {
+      return false
+    }
+
+  } catch (err) {
+    console.log(err);
+    console.log('big error catch');
+    return err;
+  }
+};
+
+exports.convert = async function (code, email) {
   try {
     // console.log("In Reddit Convert Service");
     
-    const code = req.body.code;
-
     var params = new searchParams();
     params.set('grant_type', 'authorization_code');
     params.set('code', code);
@@ -82,8 +99,65 @@ exports.convert = async function (req, res) {
       body,
       { headers: headers }
     );
-    
+
+    var intermediate = redditRes.data;
+
+    // delete intermediate.expires_in;
+    intermediate.expires_in = Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
+
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { reddit: intermediate}
+    );
+
     return redditRes.data;
+  } catch (err) {
+    console.log('reddit big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.refresh = async function (token, email) {
+  try {
+    // console.log("In Reddit Convert Service");
+    
+    var params = new searchParams();
+    params.set('grant_type', 'refresh_token');
+    params.set('refresh_token', token);
+
+    const body = params;
+    const redditAppId = process.env.REDDIT_APP_ID;
+    const redditSecret = process.env.REDDIT_SECRET;
+
+    const auth = btoa(
+      redditAppId + ':' + redditSecret
+    );
+    const finalAuth = 'Basic ' + auth;
+
+    const headers = {
+      Authorization: finalAuth,
+      'User-Agent': 'inSite by inSite',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    
+    const redditRes = await axios.post(
+      'https://www.reddit.com/api/v1/access_token',
+      body,
+      { headers: headers }
+    );
+
+    var intermediate = redditRes.data;
+
+    // delete intermediate.expires_in;
+    intermediate.expires_in = Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
+
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { reddit: intermediate}
+    );
+    
+    return redditRes.data; //includes access token, etc
   } catch (err) {
     console.log('reddit big error catch');
     // console.log(err)

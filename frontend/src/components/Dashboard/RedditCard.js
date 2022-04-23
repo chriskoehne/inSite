@@ -30,6 +30,22 @@ const RedditCard = (props) => {
     return true;
   };
 
+  useEffect( async () => {
+    let ans = await axios.post('/reddit/check', {
+      params: { email: localStorage.getItem('email') },
+    });
+    console.log("in reddit card has token")
+    console.log(ans)
+    if (ans.data.success) {
+      // ans.data.reddit
+      localStorage.setItem(
+        'redditToken',
+        JSON.stringify({ token: ans.data.reddit.access_token })
+      );
+      setRedditToken(ans.data.reddit.access_token);
+    } 
+  })
+
   useEffect(() => {
     setLoading(true);
     const getStoredRedditData = async () => {
@@ -93,9 +109,13 @@ const RedditCard = (props) => {
       if (!user.code) {
         return;
       }
+      const e = localStorage.getItem('email');
       const result = await axios.post('/reddit/codeToToken/', {
         code: user.code,
+        email: e
       });
+      console.log("after conversion")
+      console.log(result)
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(

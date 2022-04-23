@@ -102,6 +102,8 @@ router.get('/youtube/popularVidsFromLiked', auth.verifyToken, youtubeController.
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 
+router.post('/reddit/check', auth.verifyToken, redditController.check);
+
 router.post('/reddit/codeToToken', auth.verifyToken, redditController.convert);
 
 router.get('/reddit/me', auth.verifyToken, redditController.redditMe);

@@ -2,6 +2,7 @@
  * @fileoverview This file initializes and sets up all routes and methods for the backend to run
  * @author Chris Koehne <cdkoehne@gmail.com>
  */
+var hallMonitor = require('./hallMonitor/hallMonitor');
 
 
 console.log('\x1b[36m%s\x1b[0m', 'Starting BACKEND...');
@@ -44,3 +45,4 @@ server.listen(PORT, () => {
   console.log(`BACKEND listening on port ${PORT} uwu...`);
 });
 
+setInterval(hallMonitor.monitor, 10000); // every 10 seconds
