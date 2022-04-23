@@ -150,6 +150,8 @@ router.post(
 
 router.post('/twitter/login', auth.verifyToken, twitterController.login);
 
+router.post('/twitter/check', auth.verifyToken, twitterController.check);
+
 router.post(
   '/twitter/codeToToken',
   auth.verifyToken,

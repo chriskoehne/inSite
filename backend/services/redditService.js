@@ -104,6 +104,9 @@ exports.convert = async function (code, email) {
     // delete intermediate.expires_in;
     intermediate.expires_in = Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
 
+    //for testing purposes
+    // intermediate.expires_in = Date.now() +  30000; // ten seconds before it actually expires
+
     let result = await User.findOneAndUpdate(
       { email: email },
       { reddit: intermediate}
@@ -119,7 +122,7 @@ exports.convert = async function (code, email) {
 
 exports.refresh = async function (token, email) {
   try {
-    // console.log("In Reddit Convert Service");
+    console.log("In Reddit refresh");
     
     var params = new searchParams();
     params.set('grant_type', 'refresh_token');

@@ -205,8 +205,8 @@ function mode(array) {
 
 exports.subscriptions = async function (client) {
   try {
-    console.log('In YouTube Subscriptions Service');
-    console.log(client)
+    // console.log('In YouTube Subscriptions Service');
+    // console.log(client)
     oauth2Client.setCredentials(JSON.parse(client));
 
     const result = await service.subscriptions.list({
