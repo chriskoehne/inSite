@@ -59,6 +59,22 @@ const TwitterCard = (props) => {
     return true;
   };
 
+  useEffect( async () => {
+    let ans = await axios.post('/twitter/check', {
+      params: { email: localStorage.getItem('email') },
+    });
+    console.log("in twitter card has token")
+    console.log(ans)
+    if (ans.data.success) {
+      // ans.data.reddit
+      localStorage.setItem(
+        'twitterToken',
+        JSON.stringify({ token: ans.data.twitter.access_token })
+      );
+      setTwitterToken(ans.data.twitter.access_token);
+    } 
+  }, []);
+
   useEffect(() => {
     let c = null;
     const e = localStorage.getItem('email');
@@ -86,6 +102,7 @@ const TwitterCard = (props) => {
       }
       const result = await axios.post('/twitter/codeToToken/', {
         code: user.code,
+        email: user.email
       });
       // console.log(result.data);
       if (result.data.accessToken) {
@@ -103,8 +120,6 @@ const TwitterCard = (props) => {
 
     if (!hasToken() && user.code) {
       convert();
-    } else if (hasToken()) {
-      setTwitterToken(JSON.parse(localStorage.getItem('twitterToken')).token);
     }
   }, [user]);
 

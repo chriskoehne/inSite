@@ -84,6 +84,8 @@ router.post(
   youtubeController.convert
 );
 
+router.post('/youtube/check', auth.verifyToken, youtubeController.check);
+
 router.get('/youtube/activity', auth.verifyToken, youtubeController.activity);
 
 router.get(
@@ -101,6 +103,8 @@ router.get('/youtube/playlists', auth.verifyToken, youtubeController.playlists);
 router.get('/youtube/popularVidsFromLiked', auth.verifyToken, youtubeController.popularVidsFromLiked);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
+
+router.post('/reddit/check', auth.verifyToken, redditController.check);
 
 router.post('/reddit/codeToToken', auth.verifyToken, redditController.convert);
 
@@ -145,6 +149,8 @@ router.post(
 );
 
 router.post('/twitter/login', auth.verifyToken, twitterController.login);
+
+router.post('/twitter/check', auth.verifyToken, twitterController.check);
 
 router.post(
   '/twitter/codeToToken',
