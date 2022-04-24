@@ -57,6 +57,8 @@ const userSchema = new mongoose.Schema(
       validate: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
     },
     password: { type: String, required: true },
+    phone: { type: String, required: false, default: ''},
+    phoneNotif: { type: Boolean, required: false, default: false},
     settings: { type: settingsSchema, required: true, default: {} },
     mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },

@@ -69,13 +69,14 @@ const RevokeAccess = () => {
           console.log("removing token from localstorage")
           localStorage.removeItem( current + 'Token');
           console.log(localStorage)
+          setShowModal(false);
           if (current === "youtube") {
               // redirect them to this site:
               // https://myaccount.google.com/permissions
               window.location.href = "https://myaccount.google.com/permissions";
+          } else {
+            window.location.reload(false);
           }
-          setShowModal(false);
-          window.location.reload(false);
     } catch(err) {
         console.log("error in revoke access")
     }
@@ -110,7 +111,7 @@ const RevokeAccess = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div id="permissions" className={styles.permissions}>
+      <div id="revokeAccess" className={styles.permissions}>
         <h4>Account Access</h4>
         <h5>Revoke inSite access</h5>
         <h6>Click a social media logo to revoke access</h6>
