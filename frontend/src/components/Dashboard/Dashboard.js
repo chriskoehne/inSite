@@ -21,20 +21,20 @@ const Dashboard = (props) => {
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
     />,
-    <InsightCard
-      id='instagram'
-      key='instagram'
-      title='Instagram'
-      text='Instagram'
-      borderColor='var(--instagram)'
-      isLoggedIn={true}
-      navigate={props.navigate}
-    />,
     <YoutubeCard
       id='youtube'
       key='youtube'
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
+    />,
+    <InsightCard
+      id='twitch'
+      key='twitch'
+      title='Twitch'
+      text='Twitch'
+      borderColor='var(--twitch)'
+      isLoggedIn={true}
+      navigate={props.navigate}
     />,
   ];
 

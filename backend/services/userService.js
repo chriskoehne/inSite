@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const c = require('../constants/constants');
 const { findOne } = require('../database/models/User');
-const speakeasy = require("speakeasy");
+const speakeasy = require('speakeasy');
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 const User = require('../database/models/User');
@@ -26,13 +26,12 @@ exports.signup = async function (email, password) {
     }
 
     const secret = await speakeasy.generateSecret();
-    
+
     result = await User.findOneAndUpdate(
       { email: email },
       { mfaSecret: secret }
     );
-    return secret
-    
+    return secret;
   } catch (err) {
     console.log(err.message);
     return c.GENERAL_TRY_CATCH_ERR;
@@ -63,25 +62,26 @@ exports.check = async function (email, password, secret) {
     if (!(await bcrypt.compare(password, result.password))) {
       return c.INCORRECT_PASSWORD;
     }
-    const verified = speakeasy.totp.verify({ secret: result.mfaSecret.base32,
+    const verified = speakeasy.totp.verify({
+      secret: result.mfaSecret.base32,
       encoding: 'base32',
-      token: secret });
-    console.log("verified result in login is")
-    console.log(verified)
+      token: secret,
+    });
+    console.log('verified result in login is');
+    console.log(verified);
     if (verified) {
       const safeUser = {
         id: result._id,
         email: result.email,
         settings: result.settings,
         mfaSecret: result.mfaSecret,
-        verified: verified
+        verified: verified,
         //add other wanted properties here
       };
-      return safeUser
+      return safeUser;
     } else {
-      return c.INVALID_SECRET_ERR
+      return c.INVALID_SECRET_ERR;
     }
-    
   } catch (err) {
     console.log(err);
     return err;
@@ -150,11 +150,11 @@ exports.updatePermissions = async function (email, permissions) {
     if (!permissions.twitter) {
       update['twitterData'] = null;
     }
-    if (!permissions.instagram) {
-      update['instagramData'] = null;
-    }
     if (!permissions.youtube) {
       update['youtubeData'] = null;
+    }
+    if (!permissions.twitch) {
+      update['twitchData'] = null;
     }
     let result = await User.findOneAndUpdate(filter, update, { new: true });
     if (result === null || result === undefined) {
@@ -172,7 +172,7 @@ exports.updateRedditData = async function (email, property, data) {
   try {
     const user = await User.findOne({ email: email });
     if (!user.settings.permissions.reddit) {
-      c.USER_INVALID_PERMISSIONS;
+      return c.USER_INVALID_PERMISSIONS;
     }
     const filter = { email: email };
     const update = { [`redditData.${property}`]: data };

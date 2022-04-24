@@ -65,7 +65,7 @@ router.post(
 
 
 router.post(
-  '/user/reddit/',
+  '/user/reddit/store',
   auth.verifyToken,
   userController.updateRedditData
 );
