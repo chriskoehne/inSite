@@ -4,11 +4,13 @@ var btoa = require('btoa');
 var axios = require('axios');
 const { Agent } = require('http');
 var searchParams = require('url-search-params');
+const c = require('../constants/constants');
+
 
 if (process.env.DEV) {
-  var redirectURI = 'https://127.0.0.1:3000/dashboard/'
+  var redirectURI = 'https://127.0.0.1:3000/dashboard/';
 } else {
-  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard'
+  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard';
 }
 
 exports.test = async function (req, res) {
@@ -39,7 +41,8 @@ exports.login = async function (email) {
     const link =
       'https://www.reddit.com/api/v1/authorize?client_id=' +
       clientID +
-      '&response_type=code&state=reddit&redirect_uri=' + redirectURI + 
+      '&response_type=code&state=reddit&redirect_uri=' +
+      redirectURI +
       '&duration=permanent&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
 
     return { link: link, verificationString: email };
@@ -53,15 +56,14 @@ exports.login = async function (email) {
 exports.check = async function (email) {
   try {
     // console.log('In Reddit Login Service');
-    let result = await User.findOne({ email: email })
+    let result = await User.findOne({ email: email });
     // console.log("in backend check, result is")
     // console.log(result)
     if (result.reddit) {
-      return result.reddit
+      return result.reddit;
     } else {
-      return false
+      return false;
     }
-
   } catch (err) {
     console.log(err);
     console.log('big error catch');
@@ -72,7 +74,7 @@ exports.check = async function (email) {
 exports.convert = async function (code, email) {
   try {
     // console.log("In Reddit Convert Service");
-    
+
     var params = new searchParams();
     params.set('grant_type', 'authorization_code');
     params.set('code', code);
@@ -82,9 +84,7 @@ exports.convert = async function (code, email) {
     const redditAppId = process.env.REDDIT_APP_ID;
     const redditSecret = process.env.REDDIT_SECRET;
 
-    const auth = btoa(
-      redditAppId + ':' + redditSecret
-    );
+    const auth = btoa(redditAppId + ':' + redditSecret);
     const finalAuth = 'Basic ' + auth;
 
     const headers = {
@@ -92,7 +92,7 @@ exports.convert = async function (code, email) {
       'User-Agent': 'inSite by inSite',
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    
+
     const redditRes = await axios.post(
       'https://www.reddit.com/api/v1/access_token',
       body,
@@ -102,14 +102,15 @@ exports.convert = async function (code, email) {
     var intermediate = redditRes.data;
 
     // delete intermediate.expires_in;
-    intermediate.expires_in = Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
+    intermediate.expires_in =
+      Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
 
     //for testing purposes
     // intermediate.expires_in = Date.now() +  30000; // ten seconds before it actually expires
 
     let result = await User.findOneAndUpdate(
       { email: email },
-      { reddit: intermediate}
+      { reddit: intermediate }
     );
 
     return redditRes.data;
@@ -122,8 +123,8 @@ exports.convert = async function (code, email) {
 
 exports.refresh = async function (token, email) {
   try {
-    console.log("In Reddit refresh");
-    
+    console.log('In Reddit refresh');
+
     var params = new searchParams();
     params.set('grant_type', 'refresh_token');
     params.set('refresh_token', token);
@@ -132,9 +133,7 @@ exports.refresh = async function (token, email) {
     const redditAppId = process.env.REDDIT_APP_ID;
     const redditSecret = process.env.REDDIT_SECRET;
 
-    const auth = btoa(
-      redditAppId + ':' + redditSecret
-    );
+    const auth = btoa(redditAppId + ':' + redditSecret);
     const finalAuth = 'Basic ' + auth;
 
     const headers = {
@@ -142,7 +141,7 @@ exports.refresh = async function (token, email) {
       'User-Agent': 'inSite by inSite',
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    
+
     const redditRes = await axios.post(
       'https://www.reddit.com/api/v1/access_token',
       body,
@@ -152,13 +151,14 @@ exports.refresh = async function (token, email) {
     var intermediate = redditRes.data;
 
     // delete intermediate.expires_in;
-    intermediate.expires_in = Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
+    intermediate.expires_in =
+      Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
 
     let result = await User.findOneAndUpdate(
       { email: email },
-      { reddit: intermediate}
+      { reddit: intermediate }
     );
-    
+
     return redditRes.data; //includes access token, etc
   } catch (err) {
     console.log('reddit big error catch');
@@ -170,9 +170,9 @@ exports.refresh = async function (token, email) {
 exports.redditMe = async function (req, res) {
   try {
     // console.log('In Reddit Me Service');
-    
+
     const token = req.query.accessToken;
-    
+
     const finalAuth = 'bearer ' + token;
 
     const headers = {
@@ -190,13 +190,9 @@ exports.redditMe = async function (req, res) {
   }
 };
 
-exports.userOverview = async function (req, res) {
+exports.userOverview = async function (token, username) {
   try {
-    // console.log('In Reddit Overview Service');
-    
-    const token = req.query.accessToken;
-    const username = req.query.username;
-    
+    console.log('In Reddit Overview Service');
     const finalAuth = 'bearer ' + token;
 
     const headers = {
@@ -215,12 +211,11 @@ exports.userOverview = async function (req, res) {
   }
 };
 
-exports.userComments = async function (req, res) {
+// I don't think we use this
+exports.userComments = async function (token, username) {
   try {
     // console.log('In Reddit Comments Service');
-    const token = req.query.accessToken;
-    const username = req.query.username;
-    
+
     const finalAuth = 'bearer ' + token;
     const headers = {
       Authorization: finalAuth,
@@ -229,7 +224,7 @@ exports.userComments = async function (req, res) {
       'https://oauth.reddit.com/user/' + username + '/comments.json?limit=100',
       { headers: headers }
     );
-    
+
     return redditRes.data;
   } catch (err) {
     console.log('big error catch');
@@ -237,10 +232,10 @@ exports.userComments = async function (req, res) {
   }
 };
 
-exports.userSubKarma = async function (req, res) {
+// I don't think we use this
+exports.userSubKarma = async function (token) {
   try {
     // console.log('In Reddit Sub Karma Service');
-    const token = req.query.accessToken;
 
     const finalAuth = 'bearer ' + token;
 
@@ -257,17 +252,14 @@ exports.userSubKarma = async function (req, res) {
   } catch (err) {
     console.log('big error catch');
     // console.log(err)
-    const headers = {
-      Authorization: finalAuth,
-    };
+    return err;
   }
 };
 
-exports.userTotalKarma = async function (req, res) {
+// I don't think we use this
+exports.userTotalKarma = async function (token, username) {
   try {
     // console.log('In Reddit Total Karma Service');
-    const token = req.query.accessToken;
-    const username = req.query.username;
 
     const finalAuth = 'bearer ' + token;
 
@@ -275,69 +267,41 @@ exports.userTotalKarma = async function (req, res) {
       Authorization: finalAuth,
     };
 
-
     const redditRes = await axios.get(
       'https://oauth.reddit.com/user/' + username + '/about',
       { headers: headers }
     );
-    
+
     return redditRes.data;
   } catch (err) {
     console.log('big error catch');
     // console.log(err)
-    const headers = {
-      Authorization: finalAuth,
-    };
+    return err;
+  }
+};
 
-    exports.userOverview = async function (req, res) {
-      try {
-        // console.log('In Reddit Overview Controversial Service');
-        
-        const token = req.query.accessToken;
-        const username = req.query.username;
-        
-        const finalAuth = 'bearer ' + token;
-
-        const headers = {
-          Authorization: finalAuth,
-        };
-        const redditRes = await axios.get(
-          'https://oauth.reddit.com/user/' +
-            username +
-            '/overview?limit=100&sort=controversial',
-          { headers: headers }
-        );
-
-        return redditRes.data;
-      } catch (err) {
-        console.log('big error catch');
-        // console.log(err)
-        return err;
-      }
-    };
-
-    exports.userComments = async function (req, res) {
-      try {
-        // console.log('In Reddit Comments Controversial Service');
-        const token = req.query.accessToken;
-        const username = req.query.username;
-        
-        const finalAuth = 'bearer ' + token;
-        const headers = {
-          Authorization: finalAuth,
-        };
-        const redditRes = await axios.get(
-          'https://oauth.reddit.com/user/' +
-            username +
-            '/comments.json?limit=100&sort=controversial',
-          { headers: headers }
-        );
-        
-        return redditRes.data;
-      } catch (err) {
-        console.log('big error catch');
-        return err;
-      }
-    };
+exports.updateRedditData = async function (email, property, data) {
+  try {
+    console.log('yo')
+    console.log(email)
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      console.log('here')
+      return c.USER_NOT_FOUND;
+    }
+    if (!user.settings.permissions.reddit) {
+      return c.USER_INVALID_PERMISSIONS;
+    }
+    const filter = { email: email };
+    const update = { [`redditData.${property}`]: data };
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    console.log('success ' + property)
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
   }
 };

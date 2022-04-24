@@ -12,8 +12,8 @@ const InsightCard = (props) => {
   let icon;
   switch (title) {
     case 'Twitch':
-      display = <LineChartDemo color={'#E94475'} />;
-      icon = <SocialIcon fgColor='white' url='https://twitch.com/kanyewest' />;
+      display = <LineChartDemo color={'#6442a5'} />;
+      icon = <SocialIcon fgColor='white' url='https://www.twitch.tv/' target='blank' rel='noreferrer'/>;
       break;
     case 'YouTube':
       display = <LineChartDemo color={'#ff3333'} />;

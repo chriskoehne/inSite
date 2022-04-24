@@ -97,7 +97,8 @@ const RedditPage = (props) => {
         if (
           ans.status === 200 &&
           ans.data.message !== null &&
-          !isFalsy(ans.data.message)
+          !isFalsy(ans.data.message) &&
+          !isFalsy(ans.data.message.overview)
         ) {
           const redditData = ans.data.message;
           console.log(redditData.overview);
@@ -257,28 +258,13 @@ const RedditPage = (props) => {
           const redditUserQuery = {
             accessToken: redditToken,
             username: ansMe.data.name,
+            email: localStorage.getItem('email'),
           };
           const ansOverview = await axios.get('/reddit/userOverview', {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
             // console.log('reddit overview worked');
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'overview',
-                  data: ansOverview.data,
-                };
-
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
             setPosts(ansOverview.data.posts);
             setComments(ansOverview.data.comments);
           }
@@ -287,22 +273,6 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansSubKarma.status === 200) {
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'subKarma',
-                  data: ansSubKarma.data.subKarmaList,
-                };
-
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
             setSubKarmaList(ansSubKarma.data.subKarmaList);
           }
 
@@ -310,22 +280,6 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
-            // console.log('reddit karma worked');
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'totalKarma',
-                  data: ansTotalKarma.data,
-                };
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
@@ -449,10 +403,15 @@ const RedditPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
+          <Card
+            style={{ justifyContent: 'center' }}
+            className={styles.socialsCard}
+          >
             <Row>
               <h2>Karma Overview</h2>
-              <br /><br /><br />
+              <br />
+              <br />
+              <br />
               <Col>
                 <h4
                   data-tip={
@@ -494,10 +453,14 @@ const RedditPage = (props) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col><h5>Number of Posts: {posts.length}</h5></Col>
-                  <Col><h5>Number of Comments: {comments.length}</h5></Col>
+                  <Col>
+                    <h5>Number of Posts: {posts.length}</h5>
+                  </Col>
+                  <Col>
+                    <h5>Number of Comments: {comments.length}</h5>
+                  </Col>
                 </Row>
-                <br/>
+                <br />
                 <Row>
                   <h3>Top Subreddits</h3>
                   {Object.keys(subKarmaList).map((key, index) => (
@@ -714,7 +677,10 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
-          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
+          <Card
+            style={{ justifyContent: 'center' }}
+            className={styles.socialsCard}
+          >
             <Row>
               <Col>
                 <h3>

@@ -9,8 +9,8 @@ const permissionsSchema = new mongoose.Schema(
   {
     reddit: { type: Boolean, required: true, default: false },
     twitter: { type: Boolean, required: true, default: false },
-    twitch: { type: Boolean, required: true, default: false },
     youtube: { type: Boolean, required: true, default: false },
+    twitch: { type: Boolean, required: true, default: false },
   },
   { _id: false }
 );
@@ -22,7 +22,7 @@ const settingsSchema = new mongoose.Schema(
     cardOrder: {
       type: [String],
       required: false,
-      default: ['reddit', 'twitter', 'twitch', 'youtube'],
+      default: ['reddit', 'twitter', 'youtube', 'twitch'],
     },
     permissions: { type: permissionsSchema, required: true, default: {} },
   },
