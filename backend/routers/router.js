@@ -91,6 +91,12 @@ router.post(
 );
 
 router.post(
+  '/user/sendsms/',
+  auth.verifyToken,
+  userController.sendsms
+);
+
+router.post(
   '/user/togglePhone/',
   auth.verifyToken,
   userController.toggleNotifs

@@ -2,7 +2,13 @@ const bcrypt = require('bcrypt');
 const c = require('../constants/constants');
 const { findOne } = require('../database/models/User');
 const speakeasy = require("speakeasy");
-const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
+const Nexmo = require('nexmo')
+
+const nexmo = new Nexmo({
+  apiKey: process.env.NEXMO_API_KEY,
+  apiSecret: process.env.NEXMO_API_SECRET
+})
 
 const User = require('../database/models/User');
 exports.signup = async function (email, password) {
@@ -251,6 +257,37 @@ exports.toggleNotifs = async function (email, status) {
     );
 
     return true;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.sendsms = async function (email, message) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return false;
+    }
+    console.log("about to send")
+    nexmo.message.sendSms("18554306125", user.phone, message, {
+      type: "unicode"
+    }, (err, responseData) => {
+      if (err) {
+        console.log(err);
+        return false;
+      } else {
+        if (responseData.messages[0]['status'] === "0") {
+          console.log("Message sent successfully.");
+          return true;
+        } else {
+          console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
+          return false;
+        }
+      }
+    })
+    //implement nexmo
+
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;

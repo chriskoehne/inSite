@@ -234,6 +234,25 @@ exports.toggleNotifs = async function (req, res, next) {
   }
 };
 
+exports.sendsms = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+    console.log("in controller, about to send sms")
+    let result = await userService.sendsms(
+      req.body.email,
+      req.body.message,
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.revokeAccess = async function (req, res, next) {
   // console.log('getRedditData')
   try {

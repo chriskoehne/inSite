@@ -19,6 +19,12 @@ const TextNotifs = () => {
     console.log(result);
     setOptIn(result.data.info.status);
     setNumber(result.data.info.phone);
+
+    const body = {
+        email: localStorage.getItem("email"),
+        message: "Hey Tom, just a test of the text notification functionality"
+    }
+    
   }, []);
 
   const updateNumber = async () => {
