@@ -76,6 +76,12 @@ router.get(
   userController.getRedditData
 );
 
+router.get(
+  '/user/revoke/',
+  auth.verifyToken,
+  userController.revokeAccess
+);
+
 router.post('/youtube/login', auth.verifyToken, youtubeController.login);
 
 router.post(
