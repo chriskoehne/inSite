@@ -1,14 +1,14 @@
 import React from 'react';
 import { Row, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import styles from './Instagram.module.css';
+import styles from './Twitch.module.css';
 
-const InstagramPage = (props) => {
+const TwitchPage = (props) => {
 
   
   return (
     <div className={styles.box}>
-      <h1>Instagram Page</h1>
+      <h1>Twitch Page</h1>
       <Row xs={1} md={2} className={styles.cardRow}>
       <Card className={styles.socialsCard}>
         <Card.Body>
@@ -23,4 +23,4 @@ const InstagramPage = (props) => {
 
 };
 
-export default InstagramPage;
+export default TwitchPage;

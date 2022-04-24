@@ -79,7 +79,7 @@ exports.updateSchema = async function (req, res) {
         permissions: {
           reddit: false,
           twitter: false,
-          instagram: false,
+          twitch: false,
           youtube: false,
         },
       },

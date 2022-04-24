@@ -58,7 +58,7 @@ const FAQ = (props) => {
       <Banner.Entity>
         <Banner.Question>
           Now that I am logged in to inSite, how do I log in to
-          Reddit/Twitter/YouTube/Instagram?
+          Reddit/Twitter/YouTube/Twitch?
         </Banner.Question>
         <Banner.Text>
           Once you have logged in and see the inSite dashboard, simply click on

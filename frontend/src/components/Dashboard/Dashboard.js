@@ -4,6 +4,7 @@ import InsightCard from './InsightCard';
 import RedditCard from './RedditCard';
 import TwitterCard from './TwitterCard';
 import YoutubeCard from './YoutubeCard';
+import TwitchCard from './TwitchCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 
@@ -21,14 +22,11 @@ const Dashboard = (props) => {
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
     />,
-    <InsightCard
-      id='instagram'
-      key='instagram'
-      title='Instagram'
-      text='Instagram'
-      borderColor='var(--instagram)'
-      isLoggedIn={true}
+    <TwitchCard
+      id='twitch'
+      key='twitch'
       navigate={props.navigate}
+      setExternalUrl={props.setExternalUrl}
     />,
     <YoutubeCard
       id='youtube'

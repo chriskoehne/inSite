@@ -150,8 +150,8 @@ exports.updatePermissions = async function (email, permissions) {
     if (!permissions.twitter) {
       update['twitterData'] = null;
     }
-    if (!permissions.instagram) {
-      update['instagramData'] = null;
+    if (!permissions.twitch) {
+      update['twitchData'] = null;
     }
     if (!permissions.youtube) {
       update['youtubeData'] = null;

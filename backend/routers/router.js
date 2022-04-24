@@ -17,6 +17,8 @@ const redditController = require('../controllers/redditController');
 
 const twitterController = require('../controllers/twitterController');
 
+const twitchController = require('../controllers/twitchController');
+
 const uploadController = require('../controllers/uploadController');
 
 const changePasswordController = require('../controllers/changePasswordController');
@@ -205,6 +207,18 @@ router.get(
   '/twitter/followMetrics', 
   auth.verifyToken, 
   twitterController.followMetrics
+);
+
+router.post(
+  '/twitch/login', 
+  auth.verifyToken, 
+  twitchController.login
+);
+
+router.post(
+  '/twitch/convert', 
+  auth.verifyToken, 
+  twitchController.convert
 );
 
 /* Don't delete this, I use it to help update the schemas */

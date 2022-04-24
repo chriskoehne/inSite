@@ -10,7 +10,7 @@ import styles from './Settings.module.css';
 const capitalized = {
   reddit: 'Reddit',
   twitter: 'Twitter',
-  instagram: 'Instagram',
+  twitch: 'Twitch',
   youtube: 'YouTube',
 };
 
@@ -180,7 +180,7 @@ const Permissions = () => {
           <div className={styles.permissionsItem}>
             <SocialIcon
               fgColor='white'
-              network='instagram'
+              network='twitch'
               style={{ height: '40px', width: '40px', marginRight: '24px' }}
               onClick={(e) => {
                 e.preventDefault();
@@ -188,10 +188,10 @@ const Permissions = () => {
             />
             <label style={{ paddingTop: '6px' }}>
               <Switch
-                onChange={() => toggle('instagram')}
+                onChange={() => toggle('twitch')}
                 offColor={'#bebebe'}
                 onColor={'#e94475'}
-                checked={permissions.instagram}
+                checked={permissions.twitch}
                 /*TODO: Fix spacing */
               />
             </label>
