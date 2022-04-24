@@ -10,8 +10,8 @@ import styles from './Settings.module.css';
 const capitalized = {
   reddit: 'Reddit',
   twitter: 'Twitter',
-  twitch: 'Twitch',
   youtube: 'YouTube',
+  twitch: 'Twitch',
 };
 
 const Permissions = () => {
@@ -180,27 +180,6 @@ const Permissions = () => {
           <div className={styles.permissionsItem}>
             <SocialIcon
               fgColor='white'
-              network='twitch'
-              style={{ height: '40px', width: '40px', marginRight: '24px' }}
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            />
-            <label style={{ paddingTop: '6px' }}>
-              <Switch
-                onChange={() => toggle('twitch')}
-                offColor={'#bebebe'}
-                onColor={'#e94475'}
-                checked={permissions.twitch}
-                /*TODO: Fix spacing */
-              />
-            </label>
-          </div>
-        </div>
-        <div style={{ width: '300px' }}>
-          <div className={styles.permissionsItem}>
-            <SocialIcon
-              fgColor='white'
               network='youtube'
               style={{ height: '40px', width: '40px', marginRight: '24px' }}
               onClick={(e) => {
@@ -213,6 +192,27 @@ const Permissions = () => {
                 offColor={'#bebebe'}
                 onColor={'#ff0000'}
                 checked={permissions.youtube}
+                /*TODO: Fix spacing */
+              />
+            </label>
+          </div>
+        </div>
+        <div style={{ width: '300px' }}>
+          <div className={styles.permissionsItem}>
+            <SocialIcon
+              fgColor='white'
+              network='twitch'
+              style={{ height: '40px', width: '40px', marginRight: '24px' }}
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            />
+            <label style={{ paddingTop: '6px' }}>
+              <Switch
+                onChange={() => toggle('twitch')}
+                offColor={'#bebebe'}
+                onColor={'#e94475'}
+                checked={permissions.twitch}
                 /*TODO: Fix spacing */
               />
             </label>

@@ -21,6 +21,12 @@ const Dashboard = (props) => {
       key='twitter'
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
+    />,    
+    <YoutubeCard
+      id='youtube'
+      key='youtube'
+      navigate={props.navigate}
+      setExternalUrl={props.setExternalUrl}
     />,
     <TwitchCard
       id='twitch'
@@ -28,12 +34,7 @@ const Dashboard = (props) => {
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
     />,
-    <YoutubeCard
-      id='youtube'
-      key='youtube'
-      navigate={props.navigate}
-      setExternalUrl={props.setExternalUrl}
-    />,
+
   ];
 
   const orderCards = () => {
