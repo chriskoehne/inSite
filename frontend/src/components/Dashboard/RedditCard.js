@@ -287,9 +287,9 @@ const RedditCard = (props) => {
   };
   const icon = () => {
     if (redditToken) {
-      return <SocialIcon fgColor='white' url='https://reddit.com/user/me' />;
+      return <SocialIcon fgColor='white' url='https://reddit.com/user/me' target='blank' rel='noreferrer'/>;
     } else {
-      return <SocialIcon fgColor='white' url='https://reddit.com/' />;
+      return <SocialIcon fgColor='white' url='https://reddit.com/' target='blank' rel='noreferrer'/>;
     }
   };
 
