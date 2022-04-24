@@ -250,6 +250,17 @@ exports.revokeAccess = async function (email, social) {
         );
         return true;
         break
+      case 'twitch':
+          console.log("its twitch")
+          if (!user.twitch) {
+            return false;
+          }
+          result = await User.updateOne(
+            { email: email },
+            { $unset: {twitch: "", twitchData: ""}}
+          );
+          return true;
+          break
     }
     return false;
 

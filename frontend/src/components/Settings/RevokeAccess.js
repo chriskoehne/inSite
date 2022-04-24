@@ -11,6 +11,7 @@ const capitalized = {
   reddit: "Reddit",
   twitter: "Twitter",
   youtube: "YouTube",
+  twitch: "Twitch"
 };
 
 const RevokeAccess = () => {
@@ -20,6 +21,8 @@ const RevokeAccess = () => {
   const [showReddit, setShowReddit] = useState(false);
   const [showTwitter, setShowTwitter] = useState(false);
   const [showYoutube, setShowYoutube] = useState(false);
+  const [showTwitch, setShowTwitch] = useState(false);
+
 
   useEffect(async () => {
     let redditAns = await axios.post("/reddit/check", {
@@ -40,7 +43,13 @@ const RevokeAccess = () => {
     if (youtubeAns.data.success) {
       setShowYoutube(true);
     }
-  }, [showReddit, showTwitter, showYoutube]);
+    let twitchAns = await axios.post("/twitch/check", {
+      params: { email: localStorage.getItem("email") },
+    });
+    if (twitchAns.data.success) {
+      setShowTwitch(true);
+    }
+  }, [showReddit, showTwitter, showYoutube, showTwitch]);
 
   const revoke = async () => {
     // revoke access for current and delete data?
@@ -66,6 +75,7 @@ const RevokeAccess = () => {
               window.location.href = "https://myaccount.google.com/permissions";
           }
           setShowModal(false);
+          window.location.reload(false);
     } catch(err) {
         console.log("error in revoke access")
     }
@@ -103,6 +113,7 @@ const RevokeAccess = () => {
       <div id="permissions" className={styles.permissions}>
         <h4>Account Access</h4>
         <h5>Revoke inSite access</h5>
+        <h6>Click a social media logo to revoke access</h6>
         <div style={{ width: "300px" }}>
           {showReddit ? (
             <SocialIcon
@@ -144,6 +155,22 @@ const RevokeAccess = () => {
               onClick={(e) => {
                 e.preventDefault();
                 setCurrent('youtube');
+                setShowModal(true);
+              }}
+            />
+          ) : (
+            <div />
+          )}
+        </div>
+        <div style={{ width: "300px" }}>
+          {showTwitch ? (
+            <SocialIcon
+              fgColor="white"
+              network="twitch"
+              style={{ height: "40px", width: "40px", marginRight: "24px" }}
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrent('twitch');
                 setShowModal(true);
               }}
             />

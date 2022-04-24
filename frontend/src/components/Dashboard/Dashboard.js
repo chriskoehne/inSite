@@ -43,10 +43,14 @@ const Dashboard = (props) => {
     ).cardOrder.entries()) {
       positions[val] = index;
     }
+    console.log("positions")
+    console.log(positions)
     let order = Array(4);
     for (const card of cards) {
       order[positions[card.props.id]] = card;
     }
+    console.log("order is")
+    console.log(order)
     return order;
   };
 

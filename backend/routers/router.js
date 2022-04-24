@@ -227,6 +227,8 @@ router.post(
   twitchController.convert
 );
 
+router.post('/twitch/check', auth.verifyToken, twitchController.check);
+
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);
 
