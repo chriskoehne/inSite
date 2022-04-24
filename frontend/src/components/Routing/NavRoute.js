@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './NavRoute.module.css';
 import { Outlet } from 'react-router-dom';
+import { BsBellFill } from 'react-icons/bs';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
 
@@ -18,7 +19,15 @@ const OurNavbar = (props) => {
         </Navbar.Brand>
         <Nav>
           <Nav.Link
-            style={{ color: 'white', marginRight: '2vw' }}
+            style={{ color: 'white', marginRight: '2vw'}}
+            href='/notifications'
+            data-tip={hasToolTips() ? 'View your notifications' : ''}
+          >
+            <BsBellFill />
+          </Nav.Link>
+
+          <Nav.Link
+            style={{ color: 'white', marginRight: '2vw'}}
             href='/faq'
             data-tip={
               hasToolTips() ? 'Frequently Asked Questions about inSite' : ''
@@ -26,9 +35,8 @@ const OurNavbar = (props) => {
           >
             FAQ
           </Nav.Link>
-          <div style={{ width: '25%' }}></div>
           <Nav.Link
-            style={{ color: 'white' }}
+            style={{ color: 'white', marginRight: '1vw'}}
             href='/settings'
             data-tip={
               hasToolTips()

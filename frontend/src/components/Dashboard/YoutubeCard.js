@@ -28,6 +28,22 @@ const YoutubeCard = (props) => {
     return true;
   };
 
+  useEffect( async () => {
+    let ans = await axios.post('/youtube/check', {
+      params: { email: localStorage.getItem('email') },
+    });
+    console.log("in youtube card has token")
+    console.log(ans)
+    if (ans.data.success) {
+      // ans.data.reddit
+      localStorage.setItem(
+        'youtubeToken',
+        JSON.stringify({ token: ans.data.youtube })
+      );
+      setYoutubeToken(ans.data.youtube);
+    } 
+  }, []);
+
   useEffect(() => {
     let c = null;
     const e = localStorage.getItem('email');
@@ -58,10 +74,11 @@ const YoutubeCard = (props) => {
       }
       console.log('getting youtube token');
       const result = await axios.post('/youtube/codeToToken/', {
+        email: user.email,
         code: user.code,
       });
-      if (result.data.accessToken) {
-        const token = result.data.accessToken;
+      if (result.data.client) {
+        const token = result.data.client;
         localStorage.setItem(
           'youtubeToken',
           JSON.stringify({ token: token, date: Date.now() })
@@ -73,8 +90,6 @@ const YoutubeCard = (props) => {
 
     if (!hasToken() && user.code) {
       convert();
-    } else if (hasToken()) {
-      setYoutubeToken(JSON.parse(localStorage.getItem('youtubeToken')).token);
     }
   }, [user]);
 
@@ -90,14 +105,14 @@ const YoutubeCard = (props) => {
     const callYoutube = async () => {
       setLoading(true);
       if (activity.length === 0) {
-        console.log(user.code);
-
-        const act = await axios.get('/youtube/activity');
+        console.log("about to call youtube activity with")
+        console.log(youtubeToken)
+        const act = await axios.get('/youtube/activity', {params: {client: youtubeToken}});
         console.log('got activity:');
         console.log(act);
         if (act.status === 200) {
           setActivity(act.data.list);
-          const subs = await axios.get('/youtube/subscriptions');
+          const subs = await axios.get('/youtube/subscriptions', {params: {client: youtubeToken}});
           console.log('got subs');
           console.log(subs);
           if (subs.status === 200) {
@@ -106,7 +121,7 @@ const YoutubeCard = (props) => {
           }
         }
       }
-      const youtubePlaylists = await axios.get('/youtube/playlists');
+      const youtubePlaylists = await axios.get('/youtube/playlists', {params: {client: youtubeToken}});
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
       let itemCounts = [];
@@ -188,7 +203,7 @@ const YoutubeCard = (props) => {
   };
 
   const icon = () => {
-    return <SocialIcon fgColor='white' url='https://youtube.com/kanyewest' />;
+    return <SocialIcon fgColor='white' url='https://youtube.com/' target='blank' rel='noreferrer'/>;
   };
 
   return (
@@ -211,7 +226,7 @@ const YoutubeCard = (props) => {
               style={{ float: 'right' }}
               onClick={function () {
                 props.navigate('youtube', {
-                  state: { email: user.email, accessToken: youtubeToken },
+                  state: { email: user.email, client: youtubeToken },
                 });
               }}
             >

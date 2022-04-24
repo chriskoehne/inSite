@@ -17,7 +17,7 @@ const InsightCard = (props) => {
       break;
     case 'YouTube':
       display = <LineChartDemo color={'#ff3333'} />;
-      icon = <SocialIcon fgColor='white' url='https://youtube.com/kanyewest' />;
+      icon = <SocialIcon fgColor='white' url='https://www.youtube.com/' target='blank' rel='noreferrer'/>;
       break;
     default:
       console.log('default case');
