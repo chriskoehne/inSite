@@ -204,3 +204,68 @@ exports.getRedditData = async function (email) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
+
+exports.revokeAccess = async function (email, social) {
+  try {
+    console.log(email)
+    console.log(social)
+    const user = await User.findOne({ email: email });
+    var result;
+    if (!user) {
+      return false;
+    }
+    console.log("revoking access for ")
+    console.log(social)
+    switch (social) {
+      case 'reddit':
+        console.log("its reddit")
+        if (!user.reddit) {
+          return false;
+        }
+        result = await User.updateOne(
+          { email: email },
+          { $unset: {reddit: "", redditData: ""}}
+        );
+        return true;
+        break
+      case 'twitter':
+        console.log("its twitter")
+        if (!user.twitter) {
+          return false;
+        }
+        result = await User.updateOne(
+          { email: email },
+          { $unset: {twitter: "", twitterData: ""}}
+        );
+        return true;
+        break
+      case 'youtube':
+        console.log("its youtube")
+        if (!user.youtube) {
+          return false;
+        }
+        result = await User.updateOne(
+          { email: email },
+          { $unset: {youtube: "", youtubeData: ""}}
+        );
+        return true;
+        break
+      case 'twitch':
+          console.log("its twitch")
+          if (!user.twitch) {
+            return false;
+          }
+          result = await User.updateOne(
+            { email: email },
+            { $unset: {twitch: "", twitchData: ""}}
+          );
+          return true;
+          break
+    }
+    return false;
+
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};

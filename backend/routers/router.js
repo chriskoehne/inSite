@@ -17,6 +17,8 @@ const redditController = require('../controllers/redditController');
 
 const twitterController = require('../controllers/twitterController');
 
+const twitchController = require('../controllers/twitchController');
+
 const uploadController = require('../controllers/uploadController');
 
 const changePasswordController = require('../controllers/changePasswordController');
@@ -74,6 +76,12 @@ router.get(
   '/user/reddit/',
   auth.verifyToken,
   userController.getRedditData
+);
+
+router.get(
+  '/user/revoke/',
+  auth.verifyToken,
+  userController.revokeAccess
 );
 
 router.post('/youtube/login', auth.verifyToken, youtubeController.login);
@@ -206,6 +214,20 @@ router.get(
   auth.verifyToken, 
   twitterController.followMetrics
 );
+
+router.post(
+  '/twitch/login', 
+  auth.verifyToken, 
+  twitchController.login
+);
+
+router.post(
+  '/twitch/convert', 
+  auth.verifyToken, 
+  twitchController.convert
+);
+
+router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);

@@ -176,3 +176,19 @@ exports.getRedditData = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.revokeAccess = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.revokeAccess(
+      req.query.email,
+      req.query.social
+    );
+
+    return res.status(200).json({ success: result });
+          
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
