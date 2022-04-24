@@ -177,6 +177,63 @@ exports.getRedditData = async function (req, res, next) {
   }
 };
 
+exports.getPhoneAndStatus = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+    console.log("getting phone and status")
+    console.log(req.query)
+    let result = await userService.getPhoneAndStatus(
+      req.query.email
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true, info: result });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.setPhone = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.setPhone(
+      req.body.email,
+      req.body.number,
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.toggleNotifs = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.toggleNotifs(
+      req.body.email,
+      req.body.status,
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.revokeAccess = async function (req, res, next) {
   // console.log('getRedditData')
   try {

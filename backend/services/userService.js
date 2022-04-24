@@ -205,6 +205,58 @@ exports.getRedditData = async function (email) {
   }
 };
 
+exports.getPhoneAndStatus = async function (email) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return false;
+    }
+
+    return {phone: user.phone, status: user.phoneNotif};
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.setPhone = async function (email, number) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return false;
+    }
+
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { phone: number }
+    );
+
+    return true;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.toggleNotifs = async function (email, status) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return false;
+    }
+
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { phoneNotif: status }
+    );
+
+    return true;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
 exports.revokeAccess = async function (email, social) {
   try {
     console.log(email)

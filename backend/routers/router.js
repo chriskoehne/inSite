@@ -79,6 +79,24 @@ router.get(
 );
 
 router.get(
+  '/user/phoneStatus/',
+  auth.verifyToken,
+  userController.getPhoneAndStatus
+);
+
+router.post(
+  '/user/setPhone/',
+  auth.verifyToken,
+  userController.setPhone
+);
+
+router.post(
+  '/user/togglePhone/',
+  auth.verifyToken,
+  userController.toggleNotifs
+);
+
+router.get(
   '/user/revoke/',
   auth.verifyToken,
   userController.revokeAccess
