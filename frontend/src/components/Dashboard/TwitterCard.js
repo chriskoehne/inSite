@@ -259,7 +259,7 @@ const TwitterCard = (props) => {
   };
 
   const icon = () => {
-    return <SocialIcon fgColor='white' url='https://twitter.com/' />;
+    return <SocialIcon fgColor='white' url='https://twitter.com/' target='blank' rel='noreferrer'/>;
   };
 
   return (

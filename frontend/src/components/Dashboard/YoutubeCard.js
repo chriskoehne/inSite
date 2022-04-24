@@ -202,7 +202,7 @@ const YoutubeCard = (props) => {
   };
 
   const icon = () => {
-    return <SocialIcon fgColor='white' url='https://youtube.com/kanyewest' />;
+    return <SocialIcon fgColor='white' url='https://youtube.com/' target='blank' rel='noreferrer'/>;
   };
 
   return (

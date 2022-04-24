@@ -17,6 +17,7 @@ import './App.css';
 import Logout from './components/testing/Logout';
 import Settings from './components/Settings/Settings';
 import FAQ from './components/FAQ/FAQ';
+import Notifications from './components/Notifications/Notifications';
 
 const App = () => {
   // handle darkMode. Not always working on first load for some reason. Also added to login.js
@@ -98,6 +99,12 @@ const App = () => {
       <Route exact path='/settings' element={<ProtectedRoute />}>
         <Route element={<NavRoute navigate={navigate} />}>
           <Route index element={<Settings navigate={navigate} />} />
+        </Route>
+      </Route>
+
+      <Route exact path='/notifications' element={<ProtectedRoute />}>
+        <Route element={<NavRoute navigate={navigate} />}>
+          <Route index element={<Notifications navigate={navigate} />} />
         </Route>
       </Route>
 
