@@ -56,8 +56,8 @@ exports.convert = async function (req, res) {
       { headers: headers }
     );
 
-    console.log("after twitter conversion")
-    console.log(twitterRes.data)
+    // console.log("after twitter conversion")
+    // console.log(twitterRes.data)
 
     var intermediate = twitterRes.data;
 
