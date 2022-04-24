@@ -20,7 +20,7 @@ exports.monitor = async function (email, password) {
         if (user.youtube) {
             if (user.youtube.expiry_date <= Date.now()) {
                 //refresh the token
-                console.log("youtube is expired. Does it still work on its own?")
+                console.log("youtube is expired. Does it still work on its own?") //answer is yes.
             }
         }
         if (user.twitter) {

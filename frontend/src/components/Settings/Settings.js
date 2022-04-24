@@ -7,6 +7,7 @@ import Customization from './Customization';
 import ChangePassword from './ChangePassword';
 import DeleteAccount from './DeleteAccount';
 import Permissions from './Permissions';
+import RevokeAccess from './RevokeAccess';
 
 const SettingsDrawer = (props) => {
   return (
@@ -84,6 +85,8 @@ const Settings = (props) => {
           <ChangePassword />
           <hr />
           <Permissions />
+          <hr />
+          <RevokeAccess />
           <hr />
           <Logout />
           <hr />
