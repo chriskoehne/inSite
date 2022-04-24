@@ -18,6 +18,24 @@ exports.login = async function(req, res, next) {
   }
 };
 
+exports.check = async function (req, res, next) {
+  try {
+    // console.log('In Reddit Login Controller');
+    let result = await twitterService.check(req.body.params.email); 
+    
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        twitter: result
+      });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.convert = async function (req, res, next) {
   try {
     // console.log('In Twitter Convert Controller');
