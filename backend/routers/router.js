@@ -229,6 +229,18 @@ router.post(
 
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
+router.get(
+  '/twitter/ownedLists', 
+  auth.verifyToken, 
+  twitterController.ownedLists
+);
+
+router.get(
+  '/twitter/tweetNonPublic', 
+  auth.verifyToken, 
+  twitterController.nonPublic
+);
+
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);
 
