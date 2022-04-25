@@ -54,7 +54,7 @@ exports.check = async function (req, res, next) {
 exports.getUser = async function (req, res, next) {
   try {
     // console.log('In Twitch User Controller');
-    let result = await twitchService.getUser(req.body.params.email); 
+    let result = await twitchService.getUser(req, res); 
     
     if (result) {
       return res

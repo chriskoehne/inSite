@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-import LineChart from '../Charts/LineChart';
+// import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
@@ -13,6 +13,7 @@ const TwitchCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [twitchToken, setTwitchToken] = useState('');
+  const [userId, setUserId] = useState('');
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitchToken')) {
@@ -112,13 +113,13 @@ const TwitchCard = (props) => {
         params: twitchQuery,
       });
       if (twitchRes) {
-        console.log('This is the user data');
-        console.log(twitchRes.data);
-        // setUserId(twitterRes.data.data.id);
+        // console.log('This is the user data');
+        // console.log(twitchRes.data);
+        setUserId(twitterRes.data.data.id);
       }
-      else {
-        console.log('Could not get User Info from Twitch!');
-      }
+      // else {
+      //   console.log('Could not get User Info from Twitch!');
+      // }
     };
 
     if (twitchToken) {
@@ -194,7 +195,7 @@ const TwitchCard = (props) => {
                 style={{ float: 'right' }}
                 onClick={function () {
                   props.navigate('twitch', {
-                    state: { email: user.email, accessToken: twitchToken },
+                    state: { email: user.email, accessToken: twitchToken, id: userId },
                   });
                 }}
               >

@@ -139,26 +139,25 @@ exports.check = async function (email) {
 
 exports.getUser = async function (req, res) {
   try {
-    console.log('In Twitch User Service');
-    const token = req.body.accessToken;
+    // console.log('In Twitch User Service');
+    const token = req.query.accessToken;
 
-    var params = new searchParams();
-    params.set('Authorization: Bearer ', token);
-    params.set('Client-Id', process.env.TWITCH_CLIENT_ID);
-
-    const headers = params;
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
 
     const result = await axios.get(
       'https://api.twitch.tv/helix/users',
       {headers: headers}
     );
 
-    console.log(result.data)
+    // console.log(result.data)
 
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
