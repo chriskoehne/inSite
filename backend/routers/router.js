@@ -84,6 +84,12 @@ router.get(
   userController.getPhoneAndStatus
 );
 
+router.get(
+  '/user/emailStatus/',
+  auth.verifyToken,
+  userController.getEmailStatus
+);
+
 router.post(
   '/user/setPhone/',
   auth.verifyToken,
@@ -91,15 +97,15 @@ router.post(
 );
 
 router.post(
-  '/user/sendsms/',
-  auth.verifyToken,
-  userController.sendsms
-);
-
-router.post(
   '/user/togglePhone/',
   auth.verifyToken,
   userController.toggleNotifs
+);
+
+router.post(
+  '/user/toggleEmail/',
+  auth.verifyToken,
+  userController.toggleEmailNotifs
 );
 
 router.get(

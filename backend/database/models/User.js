@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     phone: { type: String, required: false, default: ''},
     phoneNotif: { type: Boolean, required: false, default: false},
+    emailNotif: {type: Boolean, required: false, default: false},
     settings: { type: settingsSchema, required: true, default: {} },
     mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },

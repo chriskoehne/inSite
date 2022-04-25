@@ -196,6 +196,25 @@ exports.getPhoneAndStatus = async function (req, res, next) {
   }
 };
 
+exports.getEmailStatus = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+    console.log("getting phone and status")
+    console.log(req.query)
+    let result = await userService.getEmailStatus(
+      req.query.email
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true, info: result });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.setPhone = async function (req, res, next) {
   // console.log('getRedditData')
   try {
@@ -234,13 +253,13 @@ exports.toggleNotifs = async function (req, res, next) {
   }
 };
 
-exports.sendsms = async function (req, res, next) {
+exports.toggleEmailNotifs = async function (req, res, next) {
   // console.log('getRedditData')
   try {
-    console.log("in controller, about to send sms")
-    let result = await userService.sendsms(
+
+    let result = await userService.toggleEmailNotifs(
       req.body.email,
-      req.body.message,
+      req.body.status,
     );
     if (!result) {
       return res.status(200).json({ success: false });

@@ -2,13 +2,23 @@ const bcrypt = require('bcrypt');
 const c = require('../constants/constants');
 const { findOne } = require('../database/models/User');
 const speakeasy = require('speakeasy');
-// const authToken = process.env.TWILIO_AUTH_TOKEN;
+
+// for notifications
 const Nexmo = require('nexmo')
+const nodemailer = require('nodemailer');
 
 const nexmo = new Nexmo({
   apiKey: process.env.NEXMO_API_KEY,
   apiSecret: process.env.NEXMO_API_SECRET
 })
+
+const transport = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+      user: 'inSiteEmail407@gmail.com',
+      pass: 'insite407',
+  },
+});
 
 const User = require('../database/models/User');
 exports.signup = async function (email, password) {
@@ -225,6 +235,20 @@ exports.getPhoneAndStatus = async function (email) {
   }
 };
 
+exports.getEmailStatus = async function (email) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return false;
+    }
+
+    return {status: user.emailNotif};
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
 exports.setPhone = async function (email, number) {
   try {
     const user = await User.findOne({ email: email });
@@ -263,6 +287,25 @@ exports.toggleNotifs = async function (email, status) {
   }
 };
 
+exports.toggleEmailNotifs = async function (email, status) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return false;
+    }
+
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { emailNotif: status }
+    );
+
+    return true;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
 exports.sendsms = async function (email, message) {
   try {
     const user = await User.findOne({ email: email });
@@ -286,7 +329,33 @@ exports.sendsms = async function (email, message) {
         }
       }
     })
-    //implement nexmo
+
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.sendemail = async function (email, message) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return false;
+    }
+    console.log("about to send")
+    const mailOptions = {
+      from: 'inSiteEmail407@gmail.com',
+      to: email,
+      subject: 'inSite notification',
+      html: message,
+  };
+  transport.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        console.log(error);
+    }
+    console.log(`Message sent: ${info.response}`);
+});
+    
 
   } catch (err) {
     console.log(err);
