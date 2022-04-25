@@ -2,10 +2,10 @@ const User = require('../database/models/User');
 var redditService = require('../services/redditService'); // skipping over the controller because im already in the backend. Sue me
 var twitterService = require('../services/twitterService'); // skipping over the controller because im already in the backend. Sue me
 var twitchService = require('../services/twitchService');
+var userService = require('../services/userService');
 
-// for text notifications:
-// const smsres = await axios.post("/user/sendsms/", body)
-// make sure you are on the list of approved numbers (ask me - Tom)
+// for notifications, check if they are allowed in the user object, then send either email or text
+// for text, you need to be on the approved recipient list
 
 exports.monitor = async function (email, password) {
   console.log('monitoring');
@@ -34,8 +34,8 @@ exports.monitor = async function (email, password) {
     }
     if (user.twitch) {
       if (user.twitch.expires_in <= Date.now()) {
-        console.log('refreshing twitch');
-        console.log(user.email);
+        // console.log('refreshing twitch');
+        // console.log(user.email);
         await twitchService.refresh(user.email, user.twitch.refresh_token); //twitch refresh working
       }
     }
