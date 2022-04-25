@@ -33,8 +33,8 @@ const TwitchCard = (props) => {
     let ans = await axios.post('/twitch/check', {
       params: { email: localStorage.getItem('email') },
     });
-    console.log("in twitch card has token")
-    console.log(ans)
+    // console.log("in twitch card has token")
+    // console.log(ans)
     if (ans.data.success) {
       // ans.data.reddit
       localStorage.setItem(
@@ -46,7 +46,7 @@ const TwitchCard = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log("twitch card useeffect")
+    // console.log("twitch card useeffect")
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
@@ -103,84 +103,29 @@ const TwitchCard = (props) => {
       );
     }
 
-    // const getUser = async () => {
-    //   // console.log('Calling Twitter API. Here is localStorage:');
-    //   // console.log(localStorage);
-    //   console.log('Calling getUser');
-    //   const twitterQuery = {
-    //     accessToken: twitterToken,
-    //   };
-    //   const twitterRes = await axios.get('/twitter/getUser/', {
-    //     params: twitterQuery,
-    //   });
-    //   if (twitterRes) {
-    //     //console.log('Received Tweets from Twitter!');
-    //     console.log('This is the user data');
-    //     console.log(twitterRes.data);
-    //     console.log('This is the user id');
-    //     console.log(twitterRes.data.data.id);
-    //     localStorage.setItem('twitter-user-id', twitterRes.data.data.id);
-    //     setUserId(twitterRes.data.data.id);
-    //   }
-    //   // else {
-    //   //   console.log('Could not get Tweets from Twitter!');
-    //   // }
-    // };
+    const getUser = async () => {
+      console.log('Calling getUser');
+      const twitchQuery = {
+        accessToken: twitchToken,
+      };
+      const twitchRes = await axios.get('/twitch/getUser/', {
+        params: twitchQuery,
+      });
+      if (twitchRes) {
+        console.log('This is the user data');
+        console.log(twitchRes.data);
+        // setUserId(twitterRes.data.data.id);
+      }
+      else {
+        console.log('Could not get User Info from Twitch!');
+      }
+    };
 
-    // if (twitterToken) {
-    //   // console.log('Calling Twitter');
-    //   getUser();
-    // }
+    if (twitchToken) {
+      // console.log('Calling Twitch');
+      getUser();
+    }
   }, [twitchToken]);
-
-//   useEffect(() => {
-//     if (!hasToken() && twitterToken && userId) {
-//       localStorage.setItem(
-//         'twitterToken',
-//         JSON.stringify({ token: twitterToken, date: Date.now() })
-//       );
-//     }
-
-//     const callTwitter = async () => {
-//       // console.log('Calling Twitter API. Here is localStorage:');
-//       // console.log(localStorage);
-//       const id = localStorage.getItem('twitter-user-id');
-//       console.log('TWITTER ID IN CARD: ' + id);
-//       const twitterQuery = {
-//         accessToken: twitterToken,
-//         userId: userId,
-//       };
-//       const twitterRes = await axios.get('/twitter/tweetCount/', {
-//         params: twitterQuery,
-//       });
-//       if (twitterRes) {
-//         console.log('Received Tweets from Twitter!');
-//         console.log(twitterRes.data);
-//         let timeArr = twitterRes.data;
-//         //console.log('TIMEARR: ' + timeArr)
-//         let dayDate = getDays(timeArr);
-//         let dayDataset = {
-//           labels: dayDate.daysOfWeek.reverse(),
-//           datasets: [
-//             {
-//               label: 'Number of Tweets in last week',
-//               data: dayDate.numTweets.reverse(),
-//               borderColor: '#05aced',
-//               backgroundColor: '#05aced',
-//             },
-//           ],
-//         };
-//         setChartDayData(dayDataset);
-//       } else {
-//         console.log('Could not get Tweets from Twitter!');
-//       }
-//     };
-
-//     if (twitterToken && userId) {
-//       console.log('Calling Twitter');
-//       callTwitter();
-//     }
-//   }, [twitterToken, userId]);
 
   const authenticateTwitch = async (e) => {
     e.preventDefault();

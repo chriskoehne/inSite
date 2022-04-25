@@ -279,6 +279,12 @@ router.post(
   twitchController.convert
 );
 
+router.get(
+  '/twitch/getUser', 
+  auth.verifyToken, 
+  twitchController.getUser
+);
+
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
 router.get(

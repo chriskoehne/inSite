@@ -35,7 +35,7 @@ exports.convert = async function (req, res, next) {
 
 exports.check = async function (req, res, next) {
   try {
-    // console.log('In Reddit Login Controller');
+    // console.log('In Twitch Check Controller');
     let result = await twitchService.check(req.body.params.email); 
     
     if (result) {
@@ -43,6 +43,23 @@ exports.check = async function (req, res, next) {
         success: true,
         twitch: result
       });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getUser = async function (req, res, next) {
+  try {
+    // console.log('In Twitch User Controller');
+    let result = await twitchService.getUser(req.body.params.email); 
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
     } else {
       return res.status(200).json({ success: false });
     }
