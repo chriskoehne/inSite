@@ -3,6 +3,10 @@ var redditService = require('../services/redditService'); // skipping over the c
 var twitterService = require('../services/twitterService'); // skipping over the controller because im already in the backend. Sue me
 var twitchService = require('../services/twitchService');
 
+// for text notifications:
+// const smsres = await axios.post("/user/sendsms/", body)
+// make sure you are on the list of approved numbers (ask me - Tom)
+
 exports.monitor = async function (email, password) {
   console.log('monitoring');
   // console.log(Date.now())

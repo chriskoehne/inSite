@@ -101,6 +101,30 @@ router.get(
 );
 
 router.get(
+  '/user/phoneStatus/',
+  auth.verifyToken,
+  userController.getPhoneAndStatus
+);
+
+router.post(
+  '/user/setPhone/',
+  auth.verifyToken,
+  userController.setPhone
+);
+
+router.post(
+  '/user/sendsms/',
+  auth.verifyToken,
+  userController.sendsms
+);
+
+router.post(
+  '/user/togglePhone/',
+  auth.verifyToken,
+  userController.toggleNotifs
+);
+
+router.get(
   '/user/revoke/',
   auth.verifyToken,
   userController.revokeAccess
@@ -250,6 +274,18 @@ router.post(
 );
 
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
+
+router.get(
+  '/twitter/ownedLists', 
+  auth.verifyToken, 
+  twitterController.ownedLists
+);
+
+router.get(
+  '/twitter/tweetNonPublic', 
+  auth.verifyToken, 
+  twitterController.nonPublic
+);
 
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);

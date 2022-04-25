@@ -44,5 +44,5 @@ server.listen(PORT, () => {
   console.log(`BACKEND listening on port ${PORT} uwu...`);
 });
 
-setInterval(hallMonitor.monitor, 15000); // every 15 seconds
-setInterval(hallMonitor.socialsData, 65000);
+setInterval(hallMonitor.monitor, 60000); // every 60 seconds
+setInterval(hallMonitor.socialsData, 60000);

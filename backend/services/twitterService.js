@@ -351,3 +351,48 @@ exports.followMetrics = async function (req, res) {
     return err;
   }
 };
+
+  exports.ownedLists = async function (req, res) {
+    try {
+      
+      const token = req.query.accessToken;
+      const ids = req.query.userID;
+      console.log(ids)
+  
+      const headers = {
+        Authorization: 'Bearer ' + token,
+      };
+      const twitterRes = await axios.get(
+        'https://api.twitter.com/2/users/' + ids + '/followed_lists?max_results=100',
+        { headers: headers }
+      );
+      console.log(twitterRes.data);
+      return twitterRes.data;
+    } catch (err) {
+      console.log('twitter big error catch');
+      console.log(err)
+      return err;
+    }
+  };
+
+  exports.nonPublic = async function (req, res) {
+    try {
+      // console.log('In Twitter Tweet Likes Service');
+      const token = req.query.accessToken;
+      const tweetsIds = req.query.tweetsIds;
+      // console.log('IDs: ' + tweetsIds);
+  
+      const headers = {
+        Authorization: 'Bearer ' + token,
+      };
+      const twitterRes = await axios.get(
+        'https://api.twitter.com/2/tweets?tweet.fields=non_public_metrics&ids=' + tweetsIds,
+        { headers: headers }
+      );
+      return twitterRes.data;
+    } catch (err) {
+      console.log('twitter big error catch');
+      // console.log(err)
+      return err;
+    }
+  };
