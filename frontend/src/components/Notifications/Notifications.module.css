@@ -13,11 +13,12 @@
   display: flex;
   flex-direction: row;
   height: 100%;
+  overflow-x: scroll;
 }
 
 .centered {
   display: flex;
-  height: 100%;
+  height: 80%;
   flex-direction: column;
   align-items: center;
   overflow-y: scroll;

@@ -6,7 +6,6 @@ const { Agent } = require('http');
 var searchParams = require('url-search-params');
 const c = require('../constants/constants');
 
-
 if (process.env.DEV) {
   var redirectURI = 'https://127.0.0.1:3000/dashboard/';
 } else {
@@ -190,7 +189,27 @@ exports.redditMe = async function (req, res) {
   }
 };
 
-exports.userOverview = async function (token, username) {
+exports.redditUsername = async function (token) {
+  try {
+    // console.log('In Reddit Me Service');
+
+    const finalAuth = 'bearer ' + token;
+    const headers = {
+      Authorization: finalAuth,
+    };
+    const redditRes = await axios.get('https://oauth.reddit.com/api/v1/me', {
+      headers: headers,
+    });
+
+    return redditRes.data.name;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err);
+    return err;
+  }
+};
+
+exports.userOverview = async function (email, token, username) {
   try {
     console.log('In Reddit Overview Service');
     const finalAuth = 'bearer ' + token;
@@ -202,8 +221,30 @@ exports.userOverview = async function (token, username) {
       'https://oauth.reddit.com/user/' + username + '/overview.json?limit=100',
       { headers: headers }
     );
-
-    return redditRes.data;
+    const redditData = redditRes.data;
+    let posts = [];
+    let comments = [];
+    let messages = [];
+    let array = redditData.data.children;
+    array.forEach(function (item, index) {
+      switch (item.kind) {
+        case c.COMMENT:
+          comments.push(item.data);
+          break;
+        case c.MESSAGE:
+          messages.push(item.data);
+          break;
+        case c.LINK:
+          posts.push(item.data);
+      }
+    });
+    const data = {
+      posts: posts,
+      comments: comments,
+      messages: messages,
+    };
+    exports.updateRedditData(email, 'overview', data); //we don't need to await the result from this
+    return data;
   } catch (err) {
     console.log('big error catch');
     // console.log(err)
@@ -233,7 +274,7 @@ exports.userComments = async function (token, username) {
 };
 
 // I don't think we use this
-exports.userSubKarma = async function (token) {
+exports.userSubKarma = async function (email, token) {
   try {
     // console.log('In Reddit Sub Karma Service');
 
@@ -248,7 +289,9 @@ exports.userSubKarma = async function (token) {
       { headers: headers }
     );
 
-    return redditRes.data;
+    const subKarmaList = redditRes.data.data.slice(0, 5);
+    exports.updateRedditData(email, 'subKarma', subKarmaList);
+    return subKarmaList;
   } catch (err) {
     console.log('big error catch');
     // console.log(err)
@@ -257,7 +300,7 @@ exports.userSubKarma = async function (token) {
 };
 
 // I don't think we use this
-exports.userTotalKarma = async function (token, username) {
+exports.userTotalKarma = async function (email, token, username) {
   try {
     // console.log('In Reddit Total Karma Service');
 
@@ -272,21 +315,30 @@ exports.userTotalKarma = async function (token, username) {
       { headers: headers }
     );
 
-    return redditRes.data;
+    const karma = {
+      commentKarma: redditRes.data.data.comment_karma,
+      linkKarma: redditRes.data.data.link_karma,
+      awardKarma: redditRes.data.data.awardee_karma,
+      totalKarma: redditRes.data.data.total_karma,
+    };
+    // console.log(totalKarma)
+    // exports.updateRedditData(email, 'totalKarma', totalKarma);
+    exports.updateKarma(email, karma);
+
+    return karma;
   } catch (err) {
     console.log('big error catch');
-    // console.log(err)
     return err;
   }
 };
 
 exports.updateRedditData = async function (email, property, data) {
   try {
-    console.log('yo')
-    console.log(email)
+    // console.log('yo');
+    console.log(email);
     const user = await User.findOne({ email: email });
     if (!user) {
-      console.log('here')
+      console.log('here');
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.reddit) {
@@ -298,7 +350,51 @@ exports.updateRedditData = async function (email, property, data) {
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
-    console.log('success ' + property)
+    console.log('success ' + property);
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.updateKarma = async function (email, karma) {
+  try {
+    // console.log('yo');
+    console.log(email);
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      console.log('here');
+      return c.USER_NOT_FOUND;
+    }
+    if (!user.settings.permissions.reddit) {
+      return c.USER_INVALID_PERMISSIONS;
+    }
+    const filter = { email: email };
+    let update = { ['redditData.totalKarma']: karma };
+
+    const redditMilestones = user.notificationsHouse.redditMilestones;
+    if (redditMilestones.prevTotalKarma === null) {
+      update['notificationsHouse.redditMilestones.prevTotalKarma'] =
+        karma.totalKarma;
+    } else if (karma.totalKarma - redditMilestones.prevTotalKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevTotalKarma'] =
+        karma.totalKarma;
+      update['$push'] = {
+        ['notificationsHouse.notifications']: {
+          sm: 'reddit',
+          content:
+            'karma increased by ' +
+            (karma.totalKarma - redditMilestones.prevTotalKarma),
+        },
+      };
+    }
+
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
     return c.SUCCESS;
   } catch (err) {
     console.log(err);

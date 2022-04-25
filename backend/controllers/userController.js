@@ -71,6 +71,73 @@ exports.login = async function (req, res, next) {
   }
 };
 
+exports.getNotifications = async function (req, res, next) {
+
+  try {
+    let result = await userService.getNotifications(
+      req.query.email,
+    );
+    if (result !== c.GENERAL_TRY_CATCH_ERR || result !== c.USER_NOT_FOUND) {
+      return res.status(200).json(result);
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.updateNotification = async function (req, res, next) {
+
+  try {
+    let result = await userService.updateNotification(
+      req.body.email,
+      req.body.notifId
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.deleteNotification = async function (req, res, next) {
+
+  try {
+    let result = await userService.deleteNotification(
+      req.body.email,
+      req.body.notifId
+    );
+    if (result !== c.GENERAL_TRY_CATCH_ERR || result !== c.USER_NOT_FOUND) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    console.log(e.message)
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.deleteAllNotifications = async function (req, res, next) {
+
+  try {
+    let result = await userService.deleteAllNotifications(
+      req.body.email,
+    );
+    if (result !== c.GENERAL_TRY_CATCH_ERR || result !== c.USER_NOT_FOUND) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.updateDarkMode = async function (req, res, next) {
   // console.log('updateDarkMode')
 
@@ -142,6 +209,7 @@ exports.updatePermissions = async function (req, res, next) {
 exports.updateRedditData = async function (req, res, next) {
   // console.log('updateRedditData')
   try {
+
     let result = await userService.updateRedditData(
       req.body.email,
       req.body.property,

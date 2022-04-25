@@ -101,14 +101,14 @@ const RedditPage = (props) => {
           !isFalsy(ans.data.message.overview)
         ) {
           const redditData = ans.data.message;
-          console.log(redditData.overview);
+          console.log(redditData.karma)
           setPosts(redditData.overview.posts);
           setComments(redditData.overview.comments);
           setSubKarmaList(redditData.subKarma);
-          setCommentKarma(redditData.totalKarma.commentKarma);
-          setLinkKarma(redditData.totalKarma.linkKarma);
-          setAwardKarma(redditData.totalKarma.awardKarma);
-          setTotalKarma(redditData.totalKarma.totalKarma);
+          setCommentKarma(redditData.totakarmalKarma.commentKarma);
+          setLinkKarma(redditData.karma.linkKarma);
+          setAwardKarma(redditData.karma.awardKarma);
+          setTotalKarma(redditData.karma.totalKarma);
           console.log('loading done 1');
           return true;
         } else {
@@ -280,6 +280,7 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
+            console.log(ansTotalKarma.data)
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
