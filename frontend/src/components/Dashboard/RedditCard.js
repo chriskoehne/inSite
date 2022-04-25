@@ -166,6 +166,7 @@ const RedditCard = (props) => {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
+            console.log(ansOverview.data)
             setComments(ansOverview.data.comments);
           } else {
             setComments({});

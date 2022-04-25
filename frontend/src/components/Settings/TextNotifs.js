@@ -60,7 +60,7 @@ const TextNotifs = () => {
             <Switch
               onChange={() => toggle()}
               offColor={"#bebebe"}
-              onColor={"#ff4500"}
+              onColor={"#f9c449"}
               checked={optIn}
               /*TODO: Fix spacing */
             />
@@ -75,7 +75,7 @@ const TextNotifs = () => {
             }}
           />
           <Button
-            className={`${styles.buttons} ${styles.redditB}`}
+            // className={`${styles.buttons} ${styles.redditB}`}
             onClick={updateNumber}
           >
             Update Phone Number

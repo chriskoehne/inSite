@@ -104,6 +104,65 @@ exports.check = async function (email, password, secret) {
   }
 };
 
+exports.getNotifications = async function (email) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    return user.notificationsHouse.notifications;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.updateNotification = async function (email, notifId) {
+  try {
+    const filter = { email: email, ['notificationsHouse.notifications._id']: notifId };
+    const update = { $set: {['notificationsHouse.notifications.$.sent']: true }};
+    const user = await User.findOneAndUpdate(filter, update);
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.deleteNotification = async function (email, notifId) {
+  try {
+    const filter = { email: email };
+    const update = { $pull: {['notificationsHouse.notifications']: {_id: notifId} }};
+    const user = await User.findOneAndUpdate(filter, update);
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.deleteAllNotifications = async function (email, notifId) {
+  try {
+    const filter = { email: email };
+    const update = { ['notificationsHouse.notifications']: [] };
+    const user = await User.findOneAndUpdate(filter, update);
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+
 exports.updateDarkMode = async function (email, darkMode) {
   try {
     const filter = { email: email };
@@ -213,7 +272,6 @@ exports.getRedditData = async function (email) {
     if (!user.settings.permissions.reddit) {
       c.USER_INVALID_PERMISSIONS;
     }
-
     return user.redditData;
   } catch (err) {
     console.log(err);

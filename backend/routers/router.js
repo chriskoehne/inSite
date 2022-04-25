@@ -47,6 +47,28 @@ router.post(
   userController.updateDarkMode
 );
 
+router.get(
+  '/user/notifications',
+  auth.verifyToken,
+  userController.getNotifications
+);
+
+router.delete(
+  '/user/notifications/one',
+  auth.verifyToken,
+  userController.deleteNotification
+);
+router.delete(
+  '/user/notifications/all',
+  auth.verifyToken,
+  userController.deleteAllNotifications
+);
+router.put(
+  '/user/notifications/one',
+  auth.verifyToken,
+  userController.updateNotification
+);
+
 router.post(
   '/user/settings/toolTips',
   auth.verifyToken,

@@ -88,3 +88,10 @@
 .dnd {
   padding: 0;
 }
+
+.revokeButton{
+  margin-bottom: 10px;
+}
+.revokeButton:hover {
+  cursor: pointer;
+}

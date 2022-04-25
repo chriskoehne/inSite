@@ -4,6 +4,8 @@ import { SocialIcon } from 'react-social-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BsFillTrashFill } from 'react-icons/bs';
 import styles from './Notifications.module.css';
+import moment from 'moment';
+import axios from 'axios';
 
 const Notification = (props) => {
   const sm = props.sm;
@@ -69,7 +71,11 @@ const Notification = (props) => {
           <div className={`${styles.colcenter} ${styles.left}`}>{icon}</div>
           <div className={`${styles.colcenter} ${styles.middle}`}>
             <Card.Title>{official}</Card.Title>
-            00/00/0000
+            <div style={{ color: 'gray' }}>
+              {props.time}
+              <div />
+              <i>{props.sent}</i>
+            </div>
             <Card.Text>{props.content}</Card.Text>
           </div>
           <div className={`${styles.colcenter} ${styles.right}`}>
@@ -93,28 +99,52 @@ const Notifications = (props) => {
   const sms = ['reddit', 'twitter', 'youtube', 'twitch'];
   //setArray(oldArray => [...oldArray,newValue] );
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const tempRows = rows.filter((row) => row.id !== id);
+    const res = axios.delete('/user/notifications/one', {
+      data: { email: localStorage.getItem('email'), notifId: id },
+    });
+    // const res = await axios.put('/user/notifications/one', {
+    //   email: localStorage.getItem('email'),
+    //   notifId: id,
+    // });
+    console.log(res);
     setRows(tempRows);
   };
 
-  const clearNotifications = () => {
+  const clearNotifications = async () => {
+    const res = axios.delete('/user/notifications/all', {
+      data: { email: localStorage.getItem('email') },
+    });
     setRows([]);
   };
 
   useEffect(() => {
-    let tempRows = [];
-    for (let i = 0; i < 10; i++) {
-      tempRows.push({
-        id: i,
-        sm: sms[Math.floor(Math.random() * sms.length)],
-        // content: 'oh baby',
-        content: 'sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus sussus amogus'
-        // content:
-        //   'The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly, but gets faster each minute after you hear this signal. [beep] A single lap should be completed each time you hear this sound. [ding] Remember to run in a straight line, and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark, get ready, start.',
+    const doTheThing = async () => {
+      const params = {
+        email: localStorage.getItem('email'),
+      };
+      const result = await axios.get('/user/notifications', {
+        params: params,
       });
-    }
-    setRows(tempRows);
+      if (result.status === 200) {
+        const notifications = result.data.reverse();
+        console.log(notifications);
+        let tempRows = [];
+
+        for (const notification of notifications) {
+          tempRows.push({
+            id: notification._id,
+            sm: notification.sm,
+            time: Date.parse(notification.time),
+            sent: notification.sent === true ? 'sent' : 'not sent',
+            content: notification.content,
+          });
+        }
+        setRows(tempRows);
+      }
+    };
+    doTheThing();
   }, []);
 
   return (
@@ -130,10 +160,13 @@ const Notifications = (props) => {
             id={row.id}
             key={row.id}
             sm={row.sm}
+            time={moment(row.time).local().format('MMMM Do, h:mm a')}
+            sent={row.sent}
             content={row.content}
             handleDelete={handleDelete}
           />
         ))}
+        <h2>You're all caught up!</h2>
       </div>
     </div>
   );

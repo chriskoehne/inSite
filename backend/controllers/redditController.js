@@ -74,35 +74,9 @@ exports.userOverview = async function (req, res, next) {
     const token = req.query.accessToken;
     const username = req.query.username;
 
-    let result = await redditService.userOverview(token, username);
-
-    //result.data.children - divide by kind
-    var posts = [];
-    var comments = [];
-    var messages = [];
+    let result = await redditService.userOverview(email, token, username);
     if (result) {
-      let array = result.data.children;
-      array.forEach(function (item, index) {
-        switch (item.kind) {
-          case c.COMMENT:
-            comments.push(item.data);
-            break;
-          case c.MESSAGE:
-            messages.push(item.data);
-            break;
-          case c.LINK:
-            posts.push(item.data);
-        }
-      });
-
-      const data = {
-        posts: posts,
-        comments: comments,
-        messages: messages,
-      };
-
-      await redditService.updateRedditData(email, 'overview', data);
-      return res.status(200).json(data);
+      return res.status(200).json(result);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -129,15 +103,12 @@ exports.userSubKarma = async function (req, res, next) {
     console.log('In Reddit Sub Karma Controller');
     const email = req.query.email;
     const token = req.query.accessToken;
-    let result = await redditService.userSubKarma(token);
+    let result = await redditService.userSubKarma(email, token);
 
     if (result) {
-      const subKarmaList = result.data.slice(0, 5);
-
-      await redditService.updateRedditData(email, 'subKarma', subKarmaList);
+      
       return res.status(200).json({
-        success: true,
-        subKarmaList: subKarmaList,
+        subKarmaList: result,
       });
     }
   } catch (e) {
@@ -151,18 +122,12 @@ exports.userTotalKarma = async function (req, res, next) {
     const email = req.query.email;
     const token = req.query.accessToken;
     const username = req.query.username;
-    let result = await redditService.userTotalKarma(token, username);
+    let result = await redditService.userTotalKarma(email, token, username);
 
     if (result) {
-      const totalKarma = {
-        commentKarma: result.data.comment_karma,
-        linkKarma: result.data.link_karma,
-        awardKarma: result.data.awardee_karma,
-        totalKarma: result.data.total_karma,
-      };
-      await redditService.updateRedditData(email, 'totalKarma', totalKarma);
-
-      return res.status(200).json(totalKarma);
+      return res.status(200).json(result);
+    } else {
+      res.status(500);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
