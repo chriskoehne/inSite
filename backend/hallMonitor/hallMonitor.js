@@ -9,7 +9,7 @@ var userService = require('../services/userService');
 // for text, you need to be on the approved recipient list
 
 exports.monitor = async function (email, password) {
-  console.log('monitoring');
+  console.log('Monitoring...');
   // console.log(Date.now())
   let users = await User.find({});
   users.forEach(async (user) => {
@@ -45,6 +45,7 @@ exports.monitor = async function (email, password) {
 
 exports.socialsData = async () => {
   let users = await User.find({});
+  console.log("Updating...")
   users.forEach(async (user) => {
     if (user.reddit) {
       if (user.settings.permissions.reddit) {
@@ -57,13 +58,36 @@ exports.socialsData = async () => {
     }
     if (user.youtube) {
       if (user.settings.permissions.youtube) {
-        const token = user.youtube; //youtube uses the entire object
-        // const username = await redditService.redditUsername(token);
         youtubeService.checkSubsNotif(user.email, user.youtube)
-        // redditService.userOverview(user.email, token, username);
-        // redditService.userSubKarma(user.email, token, username);
-        // redditService.userTotalKarma(user.email, token, username);
+        // implement liked videos as well
       }
+    }
+    // after checking all socials
+    if (user.emailNotif) {
+      // console.log("can send email")
+      user.notificationsHouse.notifications.forEach(async (emailnotif) => {
+        if (!emailnotif.sentEmail) {
+          console.log("sending notif via email")
+          userService.sendemail(user.email, emailnotif.content)
+          //update that notif to now be sent
+          const filter = { email: user.email, "notificationsHouse.notifications._id": emailnotif._id };
+          let update = { "notificationsHouse.notifications.$.sentEmail": true };
+          let result = await User.findOneAndUpdate(filter, update);
+        }
+      });
+    }
+    if (user.phoneNotif) {
+      // console.log("can send text")
+      user.notificationsHouse.notifications.forEach(async (smsnotif) => {
+        if (!smsnotif.sentSMS) {
+          console.log("sending notif via text")
+          userService.sendsms(user.email, smsnotif.content)
+          //update that notif to now be sent
+          const filter = { email: user.email, "notificationsHouse.notifications._id": smsnotif._id };
+          let update = { "notificationsHouse.notifications.$.sentSMS": true };
+          let result = await User.findOneAndUpdate(filter, update);
+        }
+      });
     }
   });
 };

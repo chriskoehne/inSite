@@ -35,7 +35,8 @@ const notificationSchema = new mongoose.Schema({
     required: true,
     enum: ['reddit', 'twitter', 'youtube', 'twitch'],
   },
-  sent: {type: Boolean, required: true, default: false},
+  sentEmail: {type: Boolean, required: true, default: false},
+  sentSMS: {type: Boolean, required: true, default: false},
   time: { type: Date, required: true, default: Date.now },
   content: { type: String, required: true },
 });
