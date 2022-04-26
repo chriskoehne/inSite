@@ -46,11 +46,25 @@ const redditMilestonesSchema = new mongoose.Schema(
   },
   { _id: false }
 );
+
+const youtubeMilestonesSchema = new mongoose.Schema(
+  {
+    prevsubs: { type: Array, required: false, default: null },
+    prevlikedVids: { type: Array, required: false, default: null },
+  },
+  { _id: false }
+);
+
 const notificationsHouseSchema = new mongoose.Schema(
   {
     notifications: { type: [notificationSchema], required: true, default: [] },
     redditMilestones: {
       type: redditMilestonesSchema,
+      required: true,
+      default: {},
+    },
+    youtubeMilestones: {
+      type: youtubeMilestonesSchema,
       required: true,
       default: {},
     },
@@ -77,6 +91,14 @@ const redditDataSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const youtubeDataSchema = new mongoose.Schema(
+  {
+    subs: { type: Array, required: true, default: [] },
+    likedVids: { type: Array, required: true, default: [] },
+  },
+  { _id: false }
+);
+
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -92,6 +114,7 @@ const userSchema = new mongoose.Schema(
     settings: { type: settingsSchema, required: true, default: {} },
     mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },
+    youtubeData: {type: youtubeDataSchema, required: true, default: {} },
     notificationsHouse: {
       type: notificationsHouseSchema,
       required: true,

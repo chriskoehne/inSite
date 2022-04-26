@@ -2,6 +2,7 @@ const User = require('../database/models/User');
 var redditService = require('../services/redditService'); // skipping over the controller because im already in the backend. Sue me
 var twitterService = require('../services/twitterService'); // skipping over the controller because im already in the backend. Sue me
 var twitchService = require('../services/twitchService');
+var youtubeService = require('../services/youtubeService');
 var userService = require('../services/userService');
 
 // for notifications, check if they are allowed in the user object, then send either email or text
@@ -45,13 +46,23 @@ exports.monitor = async function (email, password) {
 exports.socialsData = async () => {
   let users = await User.find({});
   users.forEach(async (user) => {
-    if (user.reddit && user.email === 'cdkoehne@gmail.com') {
+    if (user.reddit) {
       if (user.settings.permissions.reddit) {
         const token = user.reddit.access_token;
         const username = await redditService.redditUsername(token);
         redditService.userOverview(user.email, token, username);
         redditService.userSubKarma(user.email, token, username);
         redditService.userTotalKarma(user.email, token, username);
+      }
+    }
+    if (user.youtube) {
+      if (user.settings.permissions.youtube) {
+        const token = user.youtube; //youtube uses the entire object
+        // const username = await redditService.redditUsername(token);
+        youtubeService.checkSubsNotif(user.email, user.youtube)
+        // redditService.userOverview(user.email, token, username);
+        // redditService.userSubKarma(user.email, token, username);
+        // redditService.userTotalKarma(user.email, token, username);
       }
     }
   });

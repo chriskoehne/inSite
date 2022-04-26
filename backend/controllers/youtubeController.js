@@ -123,7 +123,7 @@ exports.subscriptions = async function (req, res, next) {
     // console.log('In YouTube Subscriptions Controller');
     // console.log('In YouTube subs Controller');
     // console.log(req.query)
-    let result = await youtubeService.subscriptions(req.query.client); 
+    let result = await youtubeService.subscriptions(JSON.parse(req.query.client)); 
 
     if (result) {
       return res
