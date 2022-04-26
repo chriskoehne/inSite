@@ -343,4 +343,22 @@ exports.mostSubscribers = async function (req, res) {
   }
 };
 
+exports.mySubscribers = async function (req, res) {
+  try {
+    // console.log('In YouTube Subscriptions Service');
+    const result = await service.subscriptions.list({
+      auth: oauth2Client,
+      part: 'snippet',
+      myRecentSubscribers: true,
+      maxResults: 50
+    });
+
+    return result.data;
+  } catch (err) {
+    console.log('my subs big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
 

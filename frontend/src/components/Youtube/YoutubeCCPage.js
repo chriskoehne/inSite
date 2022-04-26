@@ -18,6 +18,7 @@ const YoutubeCCPage = (props) => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [videoList, setVideoList] = useState([]);
   const [myPopularVids, setMyPopularVids] = useState([]);
+  const [mySubscribers, setMySubscribers] = useState([]);
   const [myPopularCat, setMyPopularCat] = useState([]);
   const [activity, setActivity] = useState([]);
   const [likedVids, setLikedVids] = useState([]);
@@ -175,6 +176,13 @@ const YoutubeCCPage = (props) => {
       let lastArr = getUnique(catArr, maxCat)
 
       setFinalArr(lastArr)
+
+      const mySubscribers = await axios.get('/youtube/mySubscribers');
+      console.log('got mySubscribers');
+      console.log(mySubscribers);
+      if (mySubscribers.status === 200) {
+        setMySubscribers(myPopularVids.data.list);
+      }
 
       /*
       for (index = 0; index < myPopularVids.data.list.length; index++) {

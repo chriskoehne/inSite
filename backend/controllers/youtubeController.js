@@ -152,6 +152,21 @@ exports.myPopularVids = async function (req, res, next) {
   }
 };
 
+exports.mySubscribers = async function (req, res, next) {
+  try {
+    console.log('In YouTube MY SUBSCRIBERS Controller');
+    let result = await youtubeService.mySubscribers(req, res); 
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, list: result.items });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.myPopularCat = async function (req, res, next) {
   try {
     console.log('In YouTube MY POPULAR CATEGORIES Controller');
