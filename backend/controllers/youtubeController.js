@@ -73,7 +73,7 @@ exports.likedVideos = async function (req, res, next) {
   try {
     // console.log('In liked vid Controller');
     // console.log(req.query)
-    let result = await youtubeService.likedVideos(req.query.client);
+    let result = await youtubeService.likedVideos(JSON.parse(req.query.client));
     
     if (result) {
       return res
