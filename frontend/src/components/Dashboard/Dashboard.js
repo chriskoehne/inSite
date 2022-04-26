@@ -4,6 +4,7 @@ import InsightCard from './InsightCard';
 import RedditCard from './RedditCard';
 import TwitterCard from './TwitterCard';
 import YoutubeCard from './YoutubeCard';
+import TwitchCard from './TwitchCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 
@@ -20,22 +21,20 @@ const Dashboard = (props) => {
       key='twitter'
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
-    />,
-    <InsightCard
-      id='instagram'
-      key='instagram'
-      title='Instagram'
-      text='Instagram'
-      borderColor='var(--instagram)'
-      isLoggedIn={true}
-      navigate={props.navigate}
-    />,
+    />,    
     <YoutubeCard
       id='youtube'
       key='youtube'
       navigate={props.navigate}
       setExternalUrl={props.setExternalUrl}
     />,
+    <TwitchCard
+      id='twitch'
+      key='twitch'
+      navigate={props.navigate}
+      setExternalUrl={props.setExternalUrl}
+    />,
+
   ];
 
   const orderCards = () => {
@@ -45,10 +44,14 @@ const Dashboard = (props) => {
     ).cardOrder.entries()) {
       positions[val] = index;
     }
+    console.log("positions")
+    console.log(positions)
     let order = Array(4);
     for (const card of cards) {
       order[positions[card.props.id]] = card;
     }
+    console.log("order is")
+    console.log(order)
     return order;
   };
 

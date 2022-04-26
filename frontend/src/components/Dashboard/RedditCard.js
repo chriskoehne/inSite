@@ -30,6 +30,22 @@ const RedditCard = (props) => {
     return true;
   };
 
+  useEffect(async () => {
+    let ans = await axios.post('/reddit/check', {
+      params: { email: localStorage.getItem('email') },
+    });
+    console.log('in reddit card has token');
+    console.log(ans);
+    if (ans.data.success) {
+      // ans.data.reddit
+      localStorage.setItem(
+        'redditToken',
+        JSON.stringify({ token: ans.data.reddit.access_token })
+      );
+      setRedditToken(ans.data.reddit.access_token);
+    }
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     const getStoredRedditData = async () => {
@@ -41,10 +57,12 @@ const RedditCard = (props) => {
         let ans = await axios.get('/user/reddit', {
           params: { email: localStorage.getItem('email') },
         });
+        console.log(ans.data.message)
         if (
           ans.status === 200 &&
           ans.data.message !== null &&
-          !isFalsy(ans.data.message)
+          !isFalsy(ans.data.message) &&
+          !isFalsy(ans.data.message.overview)
         ) {
           setComments(ans.data.message.overview.comments);
           setHasStored(true);
@@ -93,9 +111,13 @@ const RedditCard = (props) => {
       if (!user.code) {
         return;
       }
+      const e = localStorage.getItem('email');
       const result = await axios.post('/reddit/codeToToken/', {
         code: user.code,
+        email: e,
       });
+      console.log('after conversion');
+      console.log(result);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -109,8 +131,6 @@ const RedditCard = (props) => {
     };
     if (!hasToken() && user.code) {
       convert();
-    } else if (hasToken()) {
-      setRedditToken(JSON.parse(localStorage.getItem('redditToken')).token);
     }
   }, [user]);
 
@@ -140,27 +160,13 @@ const RedditCard = (props) => {
           const redditUserQuery = {
             accessToken: redditToken,
             username: ansMe.data.name,
+            email: localStorage.getItem('email'),
           };
           const ansOverview = await axios.get('/reddit/userOverview', {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'overview',
-                  data: ansOverview.data,
-                };
-
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
+            console.log(ansOverview.data)
             setComments(ansOverview.data.comments);
           } else {
             setComments({});
@@ -168,45 +174,10 @@ const RedditCard = (props) => {
           const ansSubKarma = await axios.get('/reddit/userSubKarma', {
             params: redditUserQuery,
           });
-          if (ansSubKarma.status === 200) {
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'subKarma',
-                  data: ansSubKarma.data.subKarmaList,
-                };
-
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
-          }
 
           const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
             params: redditUserQuery,
           });
-          if (ansTotalKarma.status === 200) {
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'totalKarma',
-                  data: ansTotalKarma.data,
-                };
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
-          }
         }
       }
     };
@@ -276,7 +247,11 @@ const RedditCard = (props) => {
           <Button
             className={`${styles.buttons} ${styles.redditB}`}
             onClick={authenticateReddit}
-            data-tip={hasToolTips() ? 'Connect your Reddit account to inSite to begin seeing your Reddit usage metrics!' : ''}
+            data-tip={
+              hasToolTips()
+                ? 'Connect your Reddit account to inSite to begin seeing your Reddit usage metrics!'
+                : ''
+            }
           >
             Authorize Reddit
           </Button>
@@ -287,9 +262,23 @@ const RedditCard = (props) => {
   };
   const icon = () => {
     if (redditToken) {
-      return <SocialIcon fgColor='white' url='https://reddit.com/user/me' />;
+      return (
+        <SocialIcon
+          fgColor='white'
+          url='https://reddit.com/user/me'
+          target='blank'
+          rel='noreferrer'
+        />
+      );
     } else {
-      return <SocialIcon fgColor='white' url='https://reddit.com/' />;
+      return (
+        <SocialIcon
+          fgColor='white'
+          url='https://reddit.com/'
+          target='blank'
+          rel='noreferrer'
+        />
+      );
     }
   };
 
@@ -315,10 +304,14 @@ const RedditCard = (props) => {
         <Card.Body>
           <Card.Title>
             {icon()} Reddit
-            {redditToken || hasStored ?
+            {redditToken || hasStored ? (
               <Button
                 className={`${styles.seeMore} ${styles.redditB}`}
-                data-tip={hasToolTips() ? 'See more insights about your Reddit, such as most liked, controversial, and disliked post': ''}
+                data-tip={
+                  hasToolTips()
+                    ? 'See more insights about your Reddit, such as most liked, controversial, and disliked post'
+                    : ''
+                }
                 style={{ float: 'right' }}
                 onClick={function () {
                   props.navigate('reddit', {
@@ -328,7 +321,7 @@ const RedditCard = (props) => {
               >
                 See more
               </Button>
-          : null}
+            ) : null}
           </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>

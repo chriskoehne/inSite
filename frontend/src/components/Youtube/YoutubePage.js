@@ -52,13 +52,15 @@ const YoutubePage = (props) => {
     }
     const getData = async () => {
       setLoading(true);
+      console.log("in get data, token is")
+      console.log(youtubeToken)
       if (activity.length === 0) {
-        const act = await axios.get('/youtube/activity');
+        const act = await axios.get('/youtube/activity', {params: {client: youtubeToken}});
         console.log('got activity:');
         console.log(act);
         if (act.status === 200) {
           setActivity(act.data.list);
-          const subs = await axios.get('/youtube/subscriptions');
+          const subs = await axios.get('/youtube/subscriptions', {params: {client: youtubeToken}});
           console.log('got subs');
           console.log(subs);
           if (subs.status === 200) {
@@ -66,14 +68,12 @@ const YoutubePage = (props) => {
           }
         }
       }
-      const likedVids = await axios.get('/youtube/likedVideos');
+      const likedVids = await axios.get('/youtube/likedVideos', {params: {client: youtubeToken}});
       console.log('Liked Videos:');
       console.log(likedVids);
       setLikedVids(likedVids.data.list);
 
-      const popularVidsFromLiked = await axios.get(
-        '/youtube/popularVidsFromLiked'
-      );
+      const popularVidsFromLiked = await axios.get('/youtube/popularVidsFromLiked', {params: {client: youtubeToken}});
       console.log('Popular Vids From Liked:');
       console.log(popularVidsFromLiked);
       setPopularVids(popularVidsFromLiked.data.list);
@@ -81,7 +81,7 @@ const YoutubePage = (props) => {
         c[popularVidsFromLiked.data.list[0].snippet.categoryId]
       );
 
-      const youtubePlaylists = await axios.get('/youtube/playlists');
+      const youtubePlaylists = await axios.get('/youtube/playlists', {params: {client: youtubeToken}});
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
       let itemCounts = [];

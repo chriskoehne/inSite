@@ -1,0 +1,89 @@
+.notificationCard {
+  width: 80vw;
+  /* height: 120px; */
+  background-color: rgba(255, 255, 255, 0);
+  margin: 5px;
+  display: block;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow-x: scroll;
+}
+
+.centered {
+  display: flex;
+  height: 80%;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+  padding: 30px;
+}
+
+.colcenter {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.middle {
+  width: 80%;
+}
+.left {
+  align-items: center;
+  min-width: 100px;
+  margin-left: 0;
+  margin-right: auto;
+}
+.right {
+  align-items: center;
+  min-width: 100px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.alignClearButton {
+  padding-left: 10vw;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.trashButton {
+  color: var(--primary);
+}
+
+.trashButton:hover {
+  cursor: pointer;
+}
+
+.clearButton {
+  background-color: var(--primary);
+  color: black;
+}
+.clearButton {
+  background-color: var(--macaroni);
+  border-color: var(--macaroni);
+}
+.clearButton:hover {
+  background-color: #f8b720;
+  color:black;
+  border-color: #f8b720;
+}
+
+.clearButton:active {
+  background-color: var(--macaroni);
+  color:black;
+  border-color: var(--macaroni);
+}
+.clearButton:focus {
+  background-color: var(--macaroni);
+  color:black;
+  border-color: var(--macaroni);
+}
+
+

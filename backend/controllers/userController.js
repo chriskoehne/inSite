@@ -71,6 +71,73 @@ exports.login = async function (req, res, next) {
   }
 };
 
+exports.getNotifications = async function (req, res, next) {
+
+  try {
+    let result = await userService.getNotifications(
+      req.query.email,
+    );
+    if (result !== c.GENERAL_TRY_CATCH_ERR || result !== c.USER_NOT_FOUND) {
+      return res.status(200).json(result);
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.updateNotification = async function (req, res, next) {
+
+  try {
+    let result = await userService.updateNotification(
+      req.body.email,
+      req.body.notifId
+    );
+    if (result === c.SUCCESS) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.deleteNotification = async function (req, res, next) {
+
+  try {
+    let result = await userService.deleteNotification(
+      req.body.email,
+      req.body.notifId
+    );
+    if (result !== c.GENERAL_TRY_CATCH_ERR || result !== c.USER_NOT_FOUND) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    console.log(e.message)
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.deleteAllNotifications = async function (req, res, next) {
+
+  try {
+    let result = await userService.deleteAllNotifications(
+      req.body.email,
+    );
+    if (result !== c.GENERAL_TRY_CATCH_ERR || result !== c.USER_NOT_FOUND) {
+      return res.status(200).json({ message: result });
+    }
+    return res.status(400).json({ message: result });
+
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.updateDarkMode = async function (req, res, next) {
   // console.log('updateDarkMode')
 
@@ -142,6 +209,7 @@ exports.updatePermissions = async function (req, res, next) {
 exports.updateRedditData = async function (req, res, next) {
   // console.log('updateRedditData')
   try {
+
     let result = await userService.updateRedditData(
       req.body.email,
       req.body.property,
@@ -172,6 +240,117 @@ exports.getRedditData = async function (req, res, next) {
 
     return res.status(200).json({ message: result });
       
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getPhoneAndStatus = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+    console.log("getting phone and status")
+    console.log(req.query)
+    let result = await userService.getPhoneAndStatus(
+      req.query.email
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true, info: result });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getEmailStatus = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+    console.log("getting phone and status")
+    console.log(req.query)
+    let result = await userService.getEmailStatus(
+      req.query.email
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true, info: result });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.setPhone = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.setPhone(
+      req.body.email,
+      req.body.number,
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.toggleNotifs = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.toggleNotifs(
+      req.body.email,
+      req.body.status,
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.toggleEmailNotifs = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.toggleEmailNotifs(
+      req.body.email,
+      req.body.status,
+    );
+    if (!result) {
+      return res.status(200).json({ success: false });
+    }
+
+    return res.status(200).json({ success: true });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.revokeAccess = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.revokeAccess(
+      req.query.email,
+      req.query.social
+    );
+
+    return res.status(200).json({ success: result });
+          
   } catch (e) {
     return res.status(400).json({ message: e.message });
   }

@@ -18,6 +18,24 @@ exports.login = async function(req, res, next) {
   }
 };
 
+exports.check = async function (req, res, next) {
+  try {
+    // console.log('In Reddit Login Controller');
+    let result = await twitterService.check(req.body.params.email); 
+    
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        twitter: result
+      });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.convert = async function (req, res, next) {
   try {
     // console.log('In Twitter Convert Controller');
@@ -157,6 +175,36 @@ exports.followMetrics = async function (req, res, next) {
   try {
     // console.log('In Twitter Tweet Follow Metrics Controller');
     let result = await twitterService.followMetrics(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.ownedLists = async function (req, res, next) {
+  try {
+    console.log('In Twitter Tweet Follow Metrics Controller');
+    let result = await twitterService.ownedLists(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.nonPublic = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Tweet Likes Controller');
+    let result = await twitterService.nonPublic(req, res);
 
     if (result) {
       return res

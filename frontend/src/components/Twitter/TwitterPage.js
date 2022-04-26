@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router';
 import TwitterFollows from './TwitterFollows';
 import TwitterMost from './TwitterMost';
 import TwitterLikesGraph from './TwitterLikesGraph';
+//import TwitterList from './TwitterList'; Ignore for now until I can get it to work
+import TwitterNonPublic from './TwitterNonPublic';
 
 const c = require('../Reddit/constants/constants');
 
@@ -194,6 +196,9 @@ const TwitterPage = (props) => {
           </Carousel.Item>
           <Carousel.Item>
             <TwitterLikesGraph />
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterNonPublic />
           </Carousel.Item>
       </Carousel>
     </div>
