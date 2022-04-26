@@ -24,7 +24,7 @@ exports.monitor = async function (email, password) {
     if (user.youtube) {
       if (user.youtube.expiry_date <= Date.now()) {
         //refresh the token
-        console.log('youtube is expired. Does it still work on its own?'); //answer is yes.
+        console.log('.'); //refreshes on its own
       }
     }
     if (user.twitter) {
@@ -59,6 +59,7 @@ exports.socialsData = async () => {
     if (user.youtube) {
       if (user.settings.permissions.youtube) {
         youtubeService.checkSubsNotif(user.email, user.youtube)
+        youtubeService.checkLikedVidsNotif(user.email, user.youtube)
         // implement liked videos as well
       }
     }
