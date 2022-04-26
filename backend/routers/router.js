@@ -316,6 +316,17 @@ router.get(
   twitchController.getAutomodSettings
 );
 
+router.get(
+  '/twitch/getChannelInformation', 
+  auth.verifyToken, 
+  twitchController.getChannelInformation
+);
+
+router.get(
+  '/twitch/getBannedUsers', 
+  auth.verifyToken, 
+  twitchController.getBannedUsers
+);
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
 router.get(

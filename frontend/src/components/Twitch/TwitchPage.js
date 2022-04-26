@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitch.module.css';
 import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
+import TwitchCreatorSettings from './TwitchCreatorSettings'
 
 const TwitchPage = (props) => {
   // const [loading, setLoading] = useState(false);
@@ -17,6 +18,7 @@ const TwitchPage = (props) => {
   });
   const [channelData, setChannelData] = useState({});
   const [followers, setFollowers] = useState([]);
+  const [channelInfo, setChannelInfo] = useState({})
 
   // console.log(loading)
 
@@ -147,6 +149,16 @@ const TwitchPage = (props) => {
           ],
         };
         setChartData(dataset);
+
+        const twitchChannelRes = await axios.get('/twitch/getChannelInformation', {
+          params: twitchQuery,
+        });
+
+        if (twitchChannelRes) {
+          console.log('Recieved Channel Data!');
+          console.log(twitchChannelRes.data);
+          setChannelInfo(twitchChannelRes.data.data[0]);
+        }
       } 
       // else {
       //   console.log('Could not get Followers from Twitch!');
@@ -176,6 +188,8 @@ const TwitchPage = (props) => {
               Profile pic: <img src={channelData.profile_image_url} alt="" width="100" height="100"></img><br/>
               Views: {channelData.view_count}<br/>
               Created At: {channelData.created_at}<br/>
+              Most Recent Stream: <br/>
+              Game: {channelInfo.game_name} Title: {channelInfo.title}<br/>
             </Row>
             <Row>
               <h3>Five Most Recent Followers</h3><br/>
@@ -196,6 +210,9 @@ const TwitchPage = (props) => {
               data={chartData}
             />
           </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <TwitchCreatorSettings />
         </Carousel.Item>
       </Carousel>
     </div>

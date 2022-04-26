@@ -15,7 +15,7 @@ exports.login = async function (email) {
       const link = 'https://id.twitch.tv/oauth2/authorize?client_id=' 
       + process.env.TWITCH_CLIENT_ID + '&redirect_uri='
       + redirectURI + '&response_type=code&scope=' 
-      + 'analytics%3Aread%3Aextensions+analytics%3Aread%3Agames+bits%3Aread+channel%3Aread%3Aeditors+channel%3Aread%3Agoals+channel%3Aread%3Ahype_train+channel%3Aread%3Apolls+channel%3Aread%3Apredictions+channel%3Aread%3Aredemptions+channel%3Aread%3Asubscriptions+user%3Aread%3Aemail+user%3Aread%3Afollows+user%3Aread%3Asubscriptions' 
+      + 'moderation%3Aread+moderator%3Aread%3Aautomod_settings+analytics%3Aread%3Aextensions+analytics%3Aread%3Agames+bits%3Aread+channel%3Aread%3Aeditors+channel%3Aread%3Agoals+channel%3Aread%3Ahype_train+channel%3Aread%3Apolls+channel%3Aread%3Apredictions+channel%3Aread%3Aredemptions+channel%3Aread%3Asubscriptions+user%3Aread%3Aemail+user%3Aread%3Afollows+user%3Aread%3Asubscriptions' 
       + '&state=twitch';
 
       return { link: link, verificationString: email };
@@ -183,7 +183,7 @@ exports.getUserFollows = async function (req, res) {
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
@@ -200,7 +200,7 @@ exports.getCreatorGoals = async function (req, res) {
     };
 
     const result = await axios.get(
-      'https://api.twitch.tv/helix/users/follows?to_id=' + id,
+      'https://api.twitch.tv/helix/goals?broadcaster_id=' + id,
       {headers: headers}
     );
 
@@ -226,7 +226,7 @@ exports.getStreamTags = async function (req, res) {
     };
 
     const result = await axios.get(
-      'https://api.twitch.tv/helix/users/follows?to_id=' + id,
+      'https://api.twitch.tv/helix/streams/tags?broadcaster_id=' + id,
       {headers: headers}
     );
 
@@ -235,7 +235,7 @@ exports.getStreamTags = async function (req, res) {
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
@@ -252,7 +252,59 @@ exports.getAutomodSettings = async function (req, res) {
     };
 
     const result = await axios.get(
-      'https://api.twitch.tv/helix/users/follows?to_id=' + id,
+      'https://api.twitch.tv/helix/moderation/automod/settings?broadcaster_id=' + id + '&moderator_id=' + id,
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.getChannelInformation = async function (req, res) {
+  try {
+    // console.log('In Twitch Automod Settings Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/channels?broadcaster_id=' + id,
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.getBannedUsers = async function (req, res) {
+  try {
+    // console.log('In Twitch Automod Settings Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/moderation/banned?broadcaster_id=' + id,
       {headers: headers}
     );
 

@@ -135,3 +135,37 @@ exports.getAutomodSettings = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.getChannelInformation = async function (req, res, next) {
+  try {
+    // console.log('In Twitch User Controller');
+    let result = await twitchService.getChannelInformation(req, res); 
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getBannedUsers = async function (req, res, next) {
+  try {
+    // console.log('In Twitch User Controller');
+    let result = await twitchService.getBannedUsers(req, res); 
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
