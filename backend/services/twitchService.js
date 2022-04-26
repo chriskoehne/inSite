@@ -161,3 +161,107 @@ exports.getUser = async function (req, res) {
     return err;
   }
 };
+
+exports.getUserFollows = async function (req, res) {
+  try {
+    // console.log('In Twitch User Follows Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/users/follows?to_id=' + id,
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.getCreatorGoals = async function (req, res) {
+  try {
+    // console.log('In Twitch Creator Goals Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/users/follows?to_id=' + id,
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.getStreamTags = async function (req, res) {
+  try {
+    // console.log('In Twitch Stream Tags Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/users/follows?to_id=' + id,
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.getAutomodSettings = async function (req, res) {
+  try {
+    // console.log('In Twitch Automod Settings Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/users/follows?to_id=' + id,
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};

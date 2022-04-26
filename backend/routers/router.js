@@ -286,6 +286,36 @@ router.get(
   twitchController.getUser
 );
 
+router.get(
+  '/twitch/getUserFollows', 
+  auth.verifyToken, 
+  twitchController.getUserFollows
+);
+
+router.get(
+  '/twitch/getUserFollows', 
+  auth.verifyToken, 
+  twitchController.getUserFollows
+);
+
+router.get(
+  '/twitch/getCreatorGoals', 
+  auth.verifyToken, 
+  twitchController.getCreatorGoals
+);
+
+router.get(
+  '/twitch/getStreamTags', 
+  auth.verifyToken, 
+  twitchController.getStreamTags
+);
+
+router.get(
+  '/twitch/getAutomodSettings', 
+  auth.verifyToken, 
+  twitchController.getAutomodSettings
+);
+
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
 router.get(

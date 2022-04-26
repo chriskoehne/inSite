@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
-// import LineChart from '../Charts/LineChart';
+import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
@@ -14,6 +14,33 @@ const TwitchCard = (props) => {
   const [loading, setLoading] = useState(false);
   const [twitchToken, setTwitchToken] = useState('');
   const [userId, setUserId] = useState('');
+  const [chartData, setChartData] = useState({
+    datasets: [],
+  });
+
+  let getData = function (followers_data) {
+    let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let yearArr = ['', '', '', '', '', '', '', '', '', ''];
+    let date = new Date();
+    let year = date.getFullYear();
+    var start_year = year - 9
+    console.log('Date: ' + date + ' Year: ' + year);
+    for (let i = 0; i < 10; i++) {
+      yearArr[i] = start_year.toString();
+      start_year++;
+    }
+    console.log("year array:");
+    console.log(yearArr);
+    followers_data.data.forEach((e) => {
+      // console.log('CREATE TIME: ' + e.followed_at);
+      var year = e.followed_at.substring(0, 4)
+      var index = yearArr.indexOf(year);
+      if (index > -1) {
+        arr[index]++;
+      }
+    });
+    return({numFollowsArr: arr, years: yearArr});
+  };
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitchToken')) {
@@ -114,8 +141,9 @@ const TwitchCard = (props) => {
       });
       if (twitchRes) {
         // console.log('This is the user data');
-        // console.log(twitchRes.data);
-        setUserId(twitterRes.data.data.id);
+        console.log(twitchRes.data);
+        setUserId(twitchRes.data.data[0].id);
+        localStorage.setItem('twitch-user-id', twitchRes.data.data[0].id)
       }
       // else {
       //   console.log('Could not get User Info from Twitch!');
@@ -127,6 +155,52 @@ const TwitchCard = (props) => {
       getUser();
     }
   }, [twitchToken]);
+
+  useEffect(() => {
+    if (!hasToken() && twitchToken && userId) {
+      localStorage.setItem(
+        'twitchToken',
+        JSON.stringify({ token: twitchToken, date: Date.now() })
+      );
+    }
+
+    const callTwitch = async () => {
+      console.log('Calling Twitch Get User Follows');
+      const twitchQuery = {
+        accessToken: twitchToken,
+        id: userId,
+      };
+      const twitchRes = await axios.get('/twitch/getUserFollows', {
+        params: twitchQuery,
+      });
+      if (twitchRes) {
+        console.log('Received Followers from Twitch!');
+        console.log(twitchRes.data);
+        let chart_data = getData(twitchRes.data);
+        console.log(chart_data);
+        let dataset = {
+          labels: chart_data.years,
+          datasets: [
+            {
+              label: 'Number of Followers in the last 10 years',
+              data: chart_data.numFollowsArr,
+              borderColor: '#6441a5',
+              backgroundColor: '#6441a5',
+            },
+          ],
+        };
+        setChartData(dataset);
+      } 
+      // else {
+      //   console.log('Could not get Followers from Twitch!');
+      // }
+    };
+
+    if (twitchToken && userId) {
+      console.log('Calling Twitch User Follows');
+      callTwitch();
+    }
+  }, [twitchToken, userId]);
 
   const authenticateTwitch = async (e) => {
     e.preventDefault();
@@ -148,7 +222,12 @@ const TwitchCard = (props) => {
     if (twitchToken) {
       return (
         <div className={styles.centered}>
-          <LineChartDemo />
+          <LineChart
+            height={'20vh'}
+            width={'45vw'}
+            color={'#6441a5'}
+            data={chartData}
+          />
         </div>
       );
     } else {

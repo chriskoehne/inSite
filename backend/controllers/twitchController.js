@@ -67,3 +67,71 @@ exports.getUser = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.getUserFollows = async function (req, res, next) {
+  try {
+    // console.log('In Twitch User Follows Controller');
+    let result = await twitchService.getUserFollows(req, res); 
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getCreatorGoals = async function (req, res, next) {
+  try {
+    // console.log('In Twitch Creator Goals Controller');
+    let result = await twitchService.getCreatorGoals(req, res); 
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getStreamTags = async function (req, res, next) {
+  try {
+    // console.log('In Twitch Stream Tags Controller');
+    let result = await twitchService.getStreamTags(req, res); 
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.getAutomodSettings = async function (req, res, next) {
+  try {
+    // console.log('In Twitch User Controller');
+    let result = await twitchService.getAutomodSettings(req, res); 
+    
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
+    } else {
+      return res.status(200).json({ success: false });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
