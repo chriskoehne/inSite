@@ -268,7 +268,7 @@ exports.getAutomodSettings = async function (req, res) {
 
 exports.getChannelInformation = async function (req, res) {
   try {
-    // console.log('In Twitch Automod Settings Service');
+    // console.log('In Twitch Channel Info Service');
     const token = req.query.accessToken;
     const id = req.query.id;
 
@@ -294,7 +294,7 @@ exports.getChannelInformation = async function (req, res) {
 
 exports.getBannedUsers = async function (req, res) {
   try {
-    // console.log('In Twitch Automod Settings Service');
+    // console.log('In Twitch Banned Users Service');
     const token = req.query.accessToken;
     const id = req.query.id;
 
@@ -311,6 +311,99 @@ exports.getBannedUsers = async function (req, res) {
     // console.log(result.data)
 
     return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.getClips = async function (req, res) {
+  try {
+    // console.log('In Twitch Clips Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/clips?broadcaster_id=' + id,
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.getFollowedStreams = async function (req, res) {
+  try {
+    // console.log('In Twitch Followed Streams Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/streams/followed?user_id=' + id + '&first=5',
+      {headers: headers}
+    );
+
+    // console.log(result.data)
+
+    return result.data;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.getSubscriptions = async function (req, res) {
+  try {
+    // console.log('In Twitch Subscriptions Service');
+    const token = req.query.accessToken;
+    const id = req.query.id;
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      'Client-Id': process.env.TWITCH_CLIENT_ID
+    };
+
+    const result = await axios.get(
+      'https://api.twitch.tv/helix/users/follows?from_id=' + id + '&first=100',
+      {headers: headers}
+    );
+
+    const followsArr = result.data.data;
+    var subs = [];
+    var subResult;
+    for (let i = 0; i < followsArr.length; i++) {
+      try {
+        // console.log("Name: " + followsArr[i].to_name);
+        subResult = await axios.get(
+          'https://api.twitch.tv/helix/subscriptions/user?broadcaster_id=' + followsArr[i].to_id + '&user_id=' + id,
+          {headers: headers}
+        );
+        // console.log('Found Sub: ' + subResult.data.data[0].broadcaster_name);
+        subs.push({broadcaster: subResult.data.data[0].broadcaster_name, tier: subResult.data.data[0].tier});
+      } catch {
+
+      } 
+    }
+
+    return subs;
   } catch (err) {
     console.log('big error catch');
     console.log(err)

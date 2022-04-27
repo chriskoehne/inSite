@@ -293,12 +293,6 @@ router.get(
 );
 
 router.get(
-  '/twitch/getUserFollows', 
-  auth.verifyToken, 
-  twitchController.getUserFollows
-);
-
-router.get(
   '/twitch/getCreatorGoals', 
   auth.verifyToken, 
   twitchController.getCreatorGoals
@@ -327,6 +321,25 @@ router.get(
   auth.verifyToken, 
   twitchController.getBannedUsers
 );
+
+router.get(
+  '/twitch/getClips', 
+  auth.verifyToken, 
+  twitchController.getClips
+);
+
+router.get(
+  '/twitch/getFollowedStreams', 
+  auth.verifyToken, 
+  twitchController.getFollowedStreams
+);
+
+router.get(
+  '/twitch/getSubscriptions', 
+  auth.verifyToken, 
+  twitchController.getSubscriptions
+);
+
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
 router.get(

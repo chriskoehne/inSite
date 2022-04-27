@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import styles from './Twitch.module.css';
-// import { useNavigate } from 'react-router';
+import styles from './Twitch.module.css';
 
 const TwitchCreatorSettings = (props) => {
   const [twitchToken, setTwitchToken] = useState('');
@@ -33,7 +32,7 @@ const TwitchCreatorSettings = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log('In Twitch Page 3 useEffect')
+    // console.log('In Twitch Page 3 useEffect')
     if (!hasToken() && twitchToken) {
       localStorage.setItem(
         'twitchToken',
@@ -42,7 +41,7 @@ const TwitchCreatorSettings = (props) => {
     }
 
     const callTwitch = async () => {
-      console.log('Calling Twitch in Page 3');
+      // console.log('Calling Twitch in Page 3');
       const twitchQuery = {
         accessToken: twitchToken,
         id: localStorage.getItem('twitch-user-id'),
@@ -53,8 +52,8 @@ const TwitchCreatorSettings = (props) => {
       });
 
       if (twitchCreatorRes) {
-        console.log('Received Creator Goals from Twitch!');
-        console.log(twitchCreatorRes.data);
+        // console.log('Received Creator Goals from Twitch!');
+        // console.log(twitchCreatorRes.data);
         setCreatorGoals(twitchCreatorRes.data.data[0]);
       }
 
@@ -63,8 +62,8 @@ const TwitchCreatorSettings = (props) => {
       });
 
       if (twitchTagsRes) {
-        console.log('Received Stream Tags from Twitch!');
-        console.log(twitchTagsRes.data);
+        // console.log('Received Stream Tags from Twitch!');
+        // console.log(twitchTagsRes.data);
         setStreamTags(twitchTagsRes.data.data);
       }
 
@@ -73,8 +72,8 @@ const TwitchCreatorSettings = (props) => {
       });
 
       if (twitchAutomodRes) {
-        console.log('Received Automod Settings from Twitch!');
-        console.log(twitchAutomodRes.data);
+        // console.log('Received Automod Settings from Twitch!');
+        // console.log(twitchAutomodRes.data);
         setAutomodSettings(twitchAutomodRes.data.data[0]);
       } 
 
@@ -83,21 +82,20 @@ const TwitchCreatorSettings = (props) => {
       });
 
       if (twitchBannedRes) {
-        console.log('Received Banned Users from Twitch!');
-        console.log(twitchBannedRes.data);
+        // console.log('Received Banned Users from Twitch!');
+        // console.log(twitchBannedRes.data);
         setBannedUsers(twitchBannedRes.data.data);
       } 
     };
 
     if (twitchToken) {
-      console.log('Calling Twitch User Follows');
+      // console.log('Calling Twitch User Follows');
       callTwitch();
     }
   }, [twitchToken]);
   
   return (
-    <div>
-      <Card>
+    <Card className={styles.socialsCard}>
           <Row>
               <h3>Creator Goals</h3>
               You created a {creatorGoals.type} Goal at {creatorGoals.created_at} with the description {creatorGoals.description}<br/>
@@ -131,7 +129,6 @@ const TwitchCreatorSettings = (props) => {
               ))}
           </Row>
       </Card>
-    </div>
   );
 };
 

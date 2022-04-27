@@ -6,6 +6,8 @@ import styles from './Twitch.module.css';
 import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
 import TwitchCreatorSettings from './TwitchCreatorSettings'
+import TwitchClips from './TwitchClips';
+import TwitchCurrentlyStreaming from './TwitchCurrentlyStreaming';
 
 const TwitchPage = (props) => {
   // const [loading, setLoading] = useState(false);
@@ -88,7 +90,7 @@ const TwitchPage = (props) => {
     }
 
     const getUser = async () => {
-      console.log('Calling getUser');
+      // console.log('Calling getUser');
       const twitchQuery = {
         accessToken: twitchToken,
       };
@@ -97,7 +99,7 @@ const TwitchPage = (props) => {
       });
       if (twitchRes) {
         // console.log('This is the user data');
-        console.log(twitchRes.data);
+        // console.log(twitchRes.data);
         setChannelData(twitchRes.data.data[0]);
         setUserId(twitchRes.data.data[0].id);
       }
@@ -121,7 +123,7 @@ const TwitchPage = (props) => {
     }
 
     const callTwitch = async () => {
-      console.log('Calling Twitch Get User Follows');
+      // console.log('Calling Twitch Get User Follows');
       const twitchQuery = {
         accessToken: twitchToken,
         id: userId,
@@ -130,8 +132,8 @@ const TwitchPage = (props) => {
         params: twitchQuery,
       });
       if (twitchRes) {
-        console.log('Received Followers from Twitch!');
-        console.log(twitchRes.data);
+        // console.log('Received Followers from Twitch!');
+        // console.log(twitchRes.data);
         setFollowers(twitchRes.data.data.slice(0, 5));
 
         let chart_data = getData(twitchRes.data);
@@ -155,8 +157,8 @@ const TwitchPage = (props) => {
         });
 
         if (twitchChannelRes) {
-          console.log('Recieved Channel Data!');
-          console.log(twitchChannelRes.data);
+          // console.log('Recieved Channel Data!');
+          // console.log(twitchChannelRes.data);
           setChannelInfo(twitchChannelRes.data.data[0]);
         }
       } 
@@ -214,7 +216,14 @@ const TwitchPage = (props) => {
         <Carousel.Item className={styles.slideshowCard}>
           <TwitchCreatorSettings />
         </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <TwitchClips />
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <TwitchCurrentlyStreaming />
+        </Carousel.Item>
       </Carousel>
+      
     </div>
   );
 };

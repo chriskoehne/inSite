@@ -7,7 +7,6 @@ import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
-import LineChartDemo from '../Charts/LineChartDemo';
 
 const TwitchCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
@@ -24,13 +23,13 @@ const TwitchCard = (props) => {
     let date = new Date();
     let year = date.getFullYear();
     var start_year = year - 9
-    console.log('Date: ' + date + ' Year: ' + year);
+    // console.log('Date: ' + date + ' Year: ' + year);
     for (let i = 0; i < 10; i++) {
       yearArr[i] = start_year.toString();
       start_year++;
     }
-    console.log("year array:");
-    console.log(yearArr);
+    // console.log("year array:");
+    // console.log(yearArr);
     followers_data.data.forEach((e) => {
       // console.log('CREATE TIME: ' + e.followed_at);
       var year = e.followed_at.substring(0, 4)
@@ -104,7 +103,7 @@ const TwitchCard = (props) => {
         code: user.code,
         email: localStorage.getItem('email')
       });
-      console.log(result.data);
+      // console.log(result.data);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitchToken(token);
@@ -132,7 +131,7 @@ const TwitchCard = (props) => {
     }
 
     const getUser = async () => {
-      console.log('Calling getUser');
+      // console.log('Calling getUser');
       const twitchQuery = {
         accessToken: twitchToken,
       };
@@ -141,7 +140,7 @@ const TwitchCard = (props) => {
       });
       if (twitchRes) {
         // console.log('This is the user data');
-        console.log(twitchRes.data);
+        // console.log(twitchRes.data);
         setUserId(twitchRes.data.data[0].id);
         localStorage.setItem('twitch-user-id', twitchRes.data.data[0].id)
       }
@@ -165,7 +164,7 @@ const TwitchCard = (props) => {
     }
 
     const callTwitch = async () => {
-      console.log('Calling Twitch Get User Follows');
+      // console.log('Calling Twitch Get User Follows');
       const twitchQuery = {
         accessToken: twitchToken,
         id: userId,
@@ -174,10 +173,10 @@ const TwitchCard = (props) => {
         params: twitchQuery,
       });
       if (twitchRes) {
-        console.log('Received Followers from Twitch!');
-        console.log(twitchRes.data);
+        // console.log('Received Followers from Twitch!');
+        // console.log(twitchRes.data);
         let chart_data = getData(twitchRes.data);
-        console.log(chart_data);
+        // console.log(chart_data);
         let dataset = {
           labels: chart_data.years,
           datasets: [
@@ -197,7 +196,7 @@ const TwitchCard = (props) => {
     };
 
     if (twitchToken && userId) {
-      console.log('Calling Twitch User Follows');
+      // console.log('Calling Twitch User Follows');
       callTwitch();
     }
   }, [twitchToken, userId]);
