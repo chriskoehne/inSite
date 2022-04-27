@@ -106,7 +106,7 @@ exports.socialsDataTwitter = async () => {
   console.log('Updating Twitter...');
   users.forEach(async (user) => {
     if (user.email !== 'cdkoehne@gmail.com') {
-      return;
+      // return;
     }
     if (user.twitter) {
       if (user.settings.permissions.twitter) {
