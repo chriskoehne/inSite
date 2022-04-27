@@ -18,6 +18,7 @@ const YoutubeCard = (props) => {
   const [playlistCounts, setPlaylistCounts] = useState([]);
 
   const hasToken = () => {
+    // console.log(localStorage);
     if (!localStorage.hasOwnProperty('youtubeToken')) {
       return false;
     }
@@ -159,7 +160,7 @@ const YoutubeCard = (props) => {
     const result = await axios.post('/youtube/login/', {
       email: user.email,
     });
-    if (result.data.success) {
+    if (result.status === 200) {
       window.location.href = result.data.link;
     } else {
       console.log('there was an error in youtube user signup');

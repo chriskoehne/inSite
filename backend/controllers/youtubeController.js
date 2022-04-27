@@ -9,11 +9,10 @@ exports.login = async function (req, res, next) {
     
     if (result.link) {
         return res.status(200).json({
-          success: true,
           link: result.link,
         });
       } else {
-        return res.status(200).json({ success: false });
+        return res.status(400);
       }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -46,7 +45,7 @@ exports.convert = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, client: result });
+        .json({ client: result });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -62,7 +61,7 @@ exports.activity = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -78,7 +77,7 @@ exports.likedVideos = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -95,7 +94,7 @@ exports.playlists = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -111,7 +110,7 @@ exports.popularVidsFromLiked = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -128,7 +127,7 @@ exports.subscriptions = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -145,7 +144,7 @@ exports.mostSubscribers = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result });
+        .json({ list: result });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -161,7 +160,7 @@ exports.popularLikedVideos = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -178,7 +177,7 @@ exports.popularCategory = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -195,7 +194,7 @@ exports.popularComments = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, list: result.items });
+        .json({ list: result.items });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });

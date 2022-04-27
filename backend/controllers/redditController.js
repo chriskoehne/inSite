@@ -9,12 +9,11 @@ exports.login = async function (req, res, next) {
 
     if (result.link) {
       return res.status(200).json({
-        success: true,
         link: result.link,
-        verificationString: result.verificationString,
+        verificationString: result.verificationString
       });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -29,7 +28,7 @@ exports.check = async function (req, res, next) {
     if (result) {
       return res.status(200).json({
         success: true,
-        reddit: result,
+        reddit: result
       });
     } else {
       return res.status(200).json({ success: false });
@@ -47,7 +46,7 @@ exports.convert = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, accessToken: result.access_token });
+        .json({ accessToken: result.access_token });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -60,7 +59,7 @@ exports.redditMe = async function (req, res, next) {
     let result = await redditService.redditMe(req, res);
 
     if (result) {
-      return res.status(200).json({ success: true, name: result.name }); //only returns name for now
+      return res.status(200).json({ name: result.name }); //only returns name for now
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -91,7 +90,7 @@ exports.userComments = async function (req, res, next) {
     const username = req.query.username;
     let result = await redditService.userComments(token, username);
     if (result) {
-      return res.status(200).json({ success: true, overview: result });
+      return res.status(200).json({ overview: result });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
