@@ -77,7 +77,7 @@ exports.convert = async function (req, res) {
       { youtube: tokens}
     );
 
-    return oauth2Client; //perhaps unnecessary given it is stored in the backend client?
+    return tokens; //perhaps unnecessary given it is stored in the backend client?
   } catch (err) {
     console.log('big error catch');
     // console.log(err)

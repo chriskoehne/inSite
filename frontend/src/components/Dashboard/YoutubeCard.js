@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
 
@@ -65,7 +66,7 @@ const YoutubeCard = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     const convert = async () => {
       setLoading(true);
       if (!user.code) {
@@ -94,7 +95,7 @@ const YoutubeCard = (props) => {
   }, [user]);
 
   // a separate use effect to store the token in local storage and make a call for the initial graph
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (!hasToken() && youtubeToken) {
       localStorage.setItem(
         'youtubeToken',
