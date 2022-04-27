@@ -76,14 +76,23 @@ const TwitchCurrentlyStreaming = (props) => {
         params: twitchQuery,
       });
 
-      if (twitchFollowedRes) {
-        // console.log('Received Followed Streams from Twitch!');
-        // console.log(twitchFollowedRes.data);
+      if (twitchFollowedRes.data.data.length > 0) {
+        console.log('Received Followed Streams from Twitch!');
+        console.log(twitchFollowedRes);
         for (let i = 0; i < 5; i++) {
             var date = getTime(twitchFollowedRes.data.data[i].started_at);
             twitchFollowedRes.data.data[i].started_at = date;
           }
         setUrls(twitchFollowedRes.data.data);
+      } else {
+        setFollowedStreams([{ 
+          user_name: 'Jackson',
+          game_name: 'Pokemon',
+          title: 'Watch me play pokemon',
+          viewer_count: 1000,
+          started_at: "2021-03-31T20:57:26Z",
+          thumbnail_url: "https://seeklogo.com/images/T/twitch-tv-logo-51C922E0F0-seeklogo.com.png"
+        }])
       }
 
       const twitchSubRes = await axios.get('/twitch/getSubscriptions', {

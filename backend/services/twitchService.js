@@ -124,6 +124,7 @@ exports.check = async function (email) {
     let result = await User.findOne({ email: email })
     // console.log("in backend check, result is")
     // console.log(result)
+        
     if (result.twitch) {
       return result.twitch
     } else {
@@ -360,7 +361,7 @@ exports.getFollowedStreams = async function (req, res) {
       {headers: headers}
     );
 
-    // console.log(result.data)
+    console.log(result)
 
     return result.data;
   } catch (err) {

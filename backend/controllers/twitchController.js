@@ -6,12 +6,11 @@ exports.login = async function(req, res, next) {
     let result = await twitchService.login(req.body.email);
     if (result.link) {
       return res.status(200).json({
-        success: true,
         link: result.link,
         verificationString: result.verificationString,
       });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch(e) {
     return res.status(400).json({ message: e.message });
@@ -26,7 +25,7 @@ exports.convert = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, accessToken: result.access_token, refreshToken: result.refresh_token, expiries: result.expires_in });
+        .json({ accessToken: result.access_token, refreshToken: result.refresh_token, expiries: result.expires_in });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -59,9 +58,9 @@ exports.getUser = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -76,9 +75,9 @@ exports.getUserFollows = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -93,9 +92,9 @@ exports.getCreatorGoals = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -110,9 +109,9 @@ exports.getStreamTags = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -127,9 +126,9 @@ exports.getAutomodSettings = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -144,9 +143,9 @@ exports.getChannelInformation = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -161,9 +160,9 @@ exports.getBannedUsers = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -178,9 +177,9 @@ exports.getClips = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -195,9 +194,9 @@ exports.getFollowedStreams = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result.data });
+        .json({ data: result.data });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -212,9 +211,9 @@ exports.getSubscriptions = async function (req, res, next) {
     if (result) {
       return res
         .status(200)
-        .json({ success: true, data: result });
+        .json({ data: result });
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });

@@ -103,7 +103,7 @@ const TwitchCard = (props) => {
         code: user.code,
         email: localStorage.getItem('email')
       });
-      // console.log(result.data);
+      console.log(result);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitchToken(token);
@@ -206,7 +206,8 @@ const TwitchCard = (props) => {
     const result = await axios.post('/twitch/login/', {
       email: user.email,
     });
-    if (result.data.success) {
+    console.log(result)
+    if (result.status === 200) {
       // console.log('got the link!');
       window.location.href = result.data.link;
     } else {

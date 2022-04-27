@@ -254,10 +254,10 @@ exports.getPhoneAndStatus = async function (req, res, next) {
       req.query.email
     );
     if (!result) {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
 
-    return res.status(200).json({ success: true, info: result });
+    return res.status(200).json({ info: result });
       
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -273,10 +273,10 @@ exports.getEmailStatus = async function (req, res, next) {
       req.query.email
     );
     if (!result) {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
 
-    return res.status(200).json({ success: true, info: result });
+    return res.status(200).json({ info: result });
       
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -292,10 +292,10 @@ exports.setPhone = async function (req, res, next) {
       req.body.number,
     );
     if (!result) {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200);
       
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -311,10 +311,10 @@ exports.toggleNotifs = async function (req, res, next) {
       req.body.status,
     );
     if (!result) {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200);
       
   } catch (e) {
     return res.status(400).json({ message: e.message });
@@ -330,10 +330,10 @@ exports.toggleEmailNotifs = async function (req, res, next) {
       req.body.status,
     );
     if (!result) {
-      return res.status(200).json({ success: false });
+      return res.status(400);
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200);
       
   } catch (e) {
     return res.status(400).json({ message: e.message });
