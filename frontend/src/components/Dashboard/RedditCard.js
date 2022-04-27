@@ -191,7 +191,7 @@ const RedditCard = (props) => {
     const result = await axios.post('/reddit/login/', {
       email: localStorage.getItem('email'),
     });
-    if (result.data.success) {
+    if (result.status === 200) {
       // console.log('got the link!');
       window.location.href = result.data.link;
     } else {

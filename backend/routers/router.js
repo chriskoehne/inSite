@@ -261,6 +261,7 @@ router.get(
   auth.verifyToken, 
   twitterController.tweetLikes
 );
+
 router.get(
   '/twitter/followMetrics', 
   auth.verifyToken, 
@@ -277,6 +278,66 @@ router.post(
   '/twitch/convert', 
   auth.verifyToken, 
   twitchController.convert
+);
+
+router.get(
+  '/twitch/getUser', 
+  auth.verifyToken, 
+  twitchController.getUser
+);
+
+router.get(
+  '/twitch/getUserFollows', 
+  auth.verifyToken, 
+  twitchController.getUserFollows
+);
+
+router.get(
+  '/twitch/getCreatorGoals', 
+  auth.verifyToken, 
+  twitchController.getCreatorGoals
+);
+
+router.get(
+  '/twitch/getStreamTags', 
+  auth.verifyToken, 
+  twitchController.getStreamTags
+);
+
+router.get(
+  '/twitch/getAutomodSettings', 
+  auth.verifyToken, 
+  twitchController.getAutomodSettings
+);
+
+router.get(
+  '/twitch/getChannelInformation', 
+  auth.verifyToken, 
+  twitchController.getChannelInformation
+);
+
+router.get(
+  '/twitch/getBannedUsers', 
+  auth.verifyToken, 
+  twitchController.getBannedUsers
+);
+
+router.get(
+  '/twitch/getClips', 
+  auth.verifyToken, 
+  twitchController.getClips
+);
+
+router.get(
+  '/twitch/getFollowedStreams', 
+  auth.verifyToken, 
+  twitchController.getFollowedStreams
+);
+
+router.get(
+  '/twitch/getSubscriptions', 
+  auth.verifyToken, 
+  twitchController.getSubscriptions
 );
 
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
