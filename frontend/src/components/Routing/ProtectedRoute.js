@@ -15,6 +15,7 @@ const ProtectedRoute = (props) => {
   const getAuthenticated = async () => {
     try {
       await axios.post('/cookieCheck/');
+      console.log('here')
       setAuthed(true);
     } catch (err) {
       localStorage.clear();

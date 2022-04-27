@@ -33,20 +33,20 @@ const TwitchCard = (props) => {
     let ans = await axios.post('/twitch/check', {
       params: { email: localStorage.getItem('email') },
     });
-    console.log("in twitch card has token")
-    console.log(ans)
+    // console.log("in twitch card has token")
+    // console.log(ans)
     if (ans.data.success) {
       // ans.data.reddit
       localStorage.setItem(
         'twitchToken',
-        JSON.stringify({ token: ans.data.twitch.access_token })
+        JSON.stringify({ token: ans.data.twitch.access_token, date: Date.now() })
       );
       setTwitchToken(ans.data.twitch.access_token);
     } 
   }, []);
 
   useEffect(() => {
-    console.log("twitch card useeffect")
+    // console.log("twitch card useeffect")
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
@@ -76,7 +76,7 @@ const TwitchCard = (props) => {
         code: user.code,
         email: localStorage.getItem('email')
       });
-      console.log(result.data);
+      // console.log(result.data);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitchToken(token);

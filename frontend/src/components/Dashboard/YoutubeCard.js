@@ -11,7 +11,7 @@ import hasToolTips from '../../helpers/hasToolTips';
 const YoutubeCard = (props) => {
   const [youtubeToken, setYoutubeToken] = useState('');
   const [user, setUser] = useState({ email: '', code: '' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [subscriptions, setSubscriptions] = useState([]);
   const [activity, setActivity] = useState([]);
   const [playlistCounts, setPlaylistCounts] = useState([]);
@@ -32,8 +32,8 @@ const YoutubeCard = (props) => {
     let ans = await axios.post('/youtube/check', {
       params: { email: localStorage.getItem('email') },
     });
-    console.log("in youtube card has token")
-    console.log(ans)
+    // console.log("in youtube card has token")
+    // console.log(ans)
     if (ans.data.success) {
       // ans.data.reddit
       localStorage.setItem(
@@ -72,7 +72,7 @@ const YoutubeCard = (props) => {
         setLoading(false);
         return;
       }
-      console.log('getting youtube token');
+      // console.log('getting youtube token');
       const result = await axios.post('/youtube/codeToToken/', {
         email: user.email,
         code: user.code,
@@ -105,19 +105,19 @@ const YoutubeCard = (props) => {
     const callYoutube = async () => {
       setLoading(true);
       if (activity.length === 0) {
-        console.log("about to call youtube activity with")
-        console.log(youtubeToken)
+        // console.log("about to call youtube activity with")
+        // console.log(youtubeToken)
         const act = await axios.get('/youtube/activity', {params: {client: youtubeToken}});
-        console.log('got activity:');
-        console.log(act);
+        // console.log('got activity:');
+        // console.log(act);
         if (act.status === 200) {
           setActivity(act.data.list);
           const subs = await axios.get('/youtube/subscriptions', {params: {client: youtubeToken}});
-          console.log('got subs');
-          console.log(subs);
+          // console.log('got subs');
+          // console.log(subs);
           if (subs.status === 200) {
             setSubscriptions(subs.data.list);
-            console.log(subscriptions);
+            // console.log(subscriptions);
           }
         }
       }
@@ -133,7 +133,7 @@ const YoutubeCard = (props) => {
       setLoading(false);
     };
     if (youtubeToken) {
-      console.log('Calling YouTube');
+      // console.log('Calling YouTube');
       callYoutube();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

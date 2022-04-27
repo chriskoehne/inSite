@@ -58,14 +58,14 @@ exports.check = async function (email) {
     let result = await User.findOne({ email: email });
     // console.log("in backend check, result is")
     // console.log(result)
-    if (result.reddit) {
+    if (result.reddit && !result.reddit.error) {
       return result.reddit;
     } else {
       return false;
     }
   } catch (err) {
     console.log(err);
-    console.log('big error catch');
+    console.log('big error catch1');
     return err;
   }
 };
@@ -203,7 +203,7 @@ exports.redditUsername = async function (token) {
 
     return redditRes.data.name;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch 1');
     console.log(err);
     return err;
   }
@@ -338,7 +338,6 @@ exports.updateRedditData = async function (email, property, data) {
     // console.log(email);
     const user = await User.findOne({ email: email });
     if (!user) {
-      console.log('here');
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.reddit) {
@@ -363,33 +362,80 @@ exports.updateKarma = async function (email, karma) {
     // console.log('yo');
     // console.log(email);
     const user = await User.findOne({ email: email });
+
     if (!user) {
-      console.log('here');
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.reddit) {
       return c.USER_INVALID_PERMISSIONS;
     }
     const filter = { email: email };
-    let update = { ['redditData.totalKarma']: karma };
+    let update = { ['redditData.karma']: karma };
+
+    let notifications = [];
 
     const redditMilestones = user.notificationsHouse.redditMilestones;
-    if (redditMilestones.prevTotalKarma === null) {
+    if (isNaN(redditMilestones.prevTotalKarma)) {
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
         karma.totalKarma;
     } else if (karma.totalKarma - redditMilestones.prevTotalKarma >= 3) {
       // do an update and create a notification
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
         karma.totalKarma;
-      update['$push'] = {
-        ['notificationsHouse.notifications']: {
-          sm: 'reddit',
-          content:
-            'karma increased by ' +
-            (karma.totalKarma - redditMilestones.prevTotalKarma),
-        },
-      };
+
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'total karma increased by ' +
+          (karma.totalKarma - redditMilestones.prevTotalKarma),
+      });
     }
+    if (isNaN(redditMilestones.prevCommentKarma)) {
+      update['notificationsHouse.redditMilestones.prevCommentKarma'] =
+        karma.commentKarma;
+    } else if (karma.commentKarma - redditMilestones.prevCommentKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevCommentKarma'] =
+        karma.commentKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'comment karma increased by ' +
+          (karma.commentKarma - redditMilestones.prevCommentKarma),
+      });
+    }
+    if (isNaN(redditMilestones.prevLinkKarma)) {
+      update['notificationsHouse.redditMilestones.prevLinkKarma'] =
+        karma.linkKarma;
+    } else if (karma.linkKarma - redditMilestones.prevLinkKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevLinkKarma'] =
+        karma.linkKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'link karma increased by ' +
+          (karma.linkKarma - redditMilestones.prevLinkKarma),
+      });
+    }
+    if (isNaN(redditMilestones.prevAwardKarma)) {
+      update['notificationsHouse.redditMilestones.prevAwardKarma'] =
+        karma.awardKarma;
+    } else if (karma.awardKarma - redditMilestones.prevAwardKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevAwardKarma'] =
+        karma.awardKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'award karma increased by ' +
+          (karma.awardKarma - redditMilestones.prevAwardKarma),
+      });
+    }
+
+    update['$push'] = {
+      ['notificationsHouse.notifications']: notifications,
+    };
 
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {

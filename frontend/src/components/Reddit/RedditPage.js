@@ -105,7 +105,7 @@ const RedditPage = (props) => {
           setPosts(redditData.overview.posts);
           setComments(redditData.overview.comments);
           setSubKarmaList(redditData.subKarma);
-          setCommentKarma(redditData.totakarmalKarma.commentKarma);
+          setCommentKarma(redditData.karma.commentKarma);
           setLinkKarma(redditData.karma.linkKarma);
           setAwardKarma(redditData.karma.awardKarma);
           setTotalKarma(redditData.karma.totalKarma);

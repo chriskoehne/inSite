@@ -96,6 +96,7 @@ const Notification = (props) => {
 
 const Notifications = (props) => {
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
   const sms = ['reddit', 'twitter', 'youtube', 'twitch'];
   //setArray(oldArray => [...oldArray,newValue] );
 
@@ -137,39 +138,54 @@ const Notifications = (props) => {
             id: notification._id,
             sm: notification.sm,
             time: Date.parse(notification.time),
-            sent: notification.sent === true ? 'sent' : 'not sent',
+            sent:
+              notification.sentEmail || notification.sentSMS === true
+                ? 'sent'
+                : 'not sent',
             content: notification.content,
           });
         }
         setRows(tempRows);
+        setLoading(false);
       }
     };
     doTheThing();
   }, []);
 
-  return (
-    <div style={{ height: '100%' }}>
-      <div className={styles.alignClearButton}>
-        <Button onClick={clearNotifications} className={styles.clearButton}>
-          Clear Notifications
-        </Button>
+  const display = () => {
+    if (loading) {
+      return (
+        <div className={styles.alignClearButton}>
+          <h2>Loading...</h2>
+        </div>
+      );
+    }
+    return (
+      <div style={{ height: '100%' }}>
+        <div className={styles.alignClearButton}>
+          <Button onClick={clearNotifications} className={styles.clearButton}>
+            Clear Notifications
+          </Button>
+        </div>
+        <div className={styles.centered}>
+          {rows.map((row) => (
+            <Notification
+              id={row.id}
+              key={row.id}
+              sm={row.sm}
+              time={moment(row.time).local().format('MMMM Do, h:mm a')}
+              sent={row.sent}
+              content={row.content}
+              handleDelete={handleDelete}
+            />
+          ))}
+          <h2>You're all caught up!</h2>
+        </div>
       </div>
-      <div className={styles.centered}>
-        {rows.map((row) => (
-          <Notification
-            id={row.id}
-            key={row.id}
-            sm={row.sm}
-            time={moment(row.time).local().format('MMMM Do, h:mm a')}
-            sent={row.sent}
-            content={row.content}
-            handleDelete={handleDelete}
-          />
-        ))}
-        <h2>You're all caught up!</h2>
-      </div>
-    </div>
-  );
+    );
+  };
+
+  return <div>{display()}</div>;
 };
 
 export default Notifications;

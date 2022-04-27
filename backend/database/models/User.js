@@ -44,6 +44,17 @@ const notificationSchema = new mongoose.Schema({
 const redditMilestonesSchema = new mongoose.Schema(
   {
     prevTotalKarma: { type: Number, required: false, default: null },
+    prevCommentKarma: { type: Number, required: false, default: null },
+    prevLinkKarma: { type: Number, required: false, default: null },
+    prevAwardKarma: { type: Number, required: false, default: null },
+  },
+  { _id: false }
+);
+
+const twitterMilestonesSchema = new mongoose.Schema(
+  {
+    prevNumFollowers: { type: Number, required: false, default: null },
+    prevNumFollowing: { type: Number, required: false, default: null },
   },
   { _id: false }
 );
@@ -69,6 +80,11 @@ const notificationsHouseSchema = new mongoose.Schema(
       required: true,
       default: {},
     },
+    twitterMilestones: {
+      type: twitterMilestonesSchema,
+      required: true,
+      default: {},
+    },
   },
   { _id: false }
 );
@@ -91,6 +107,7 @@ const redditDataSchema = new mongoose.Schema(
   },
   { _id: false }
 );
+
 
 const youtubeDataSchema = new mongoose.Schema(
   {

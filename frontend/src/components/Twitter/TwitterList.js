@@ -80,7 +80,7 @@ const TwitterList = (props) => {
       console.log('yolo')
       const twitterQuery = {
         accessToken: twitterToken,
-        userID: localStorage.getItem('twitter-user-id'),
+        userId: localStorage.getItem('twitter-user-id'),
       };
       const twitterRes = await axios.get('/twitter/ownedLists', {
         params: twitterQuery,
