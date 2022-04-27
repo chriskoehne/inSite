@@ -3,6 +3,7 @@ const {google} = require('googleapis');
 // const { isAsyncFunction } = require('util/types');
 const youtubeClientId = process.env.YOUTUBE_CLIENT_ID;
 const youtubeClientSecret = process.env.YOUTUBE_CLIENT_SECRET;
+const c = require('../constants/constants');
 
 if (process.env.DEV) {
   var redirectURI = 'https://127.0.0.1:3000/dashboard'
@@ -107,7 +108,7 @@ exports.likedVideos = async function (client) {
   try {
     // console.log('In YouTube liked videos Service');
     // console.log(client)
-    oauth2Client.setCredentials(JSON.parse(client));
+    oauth2Client.setCredentials(client);
     const result = await service.videos.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails,statistics',
@@ -225,7 +226,7 @@ exports.subscriptions = async function (client) {
   try {
     // console.log('In YouTube Subscriptions Service');
     // console.log(client)
-    oauth2Client.setCredentials(JSON.parse(client));
+    oauth2Client.setCredentials(client);
 
     const result = await service.subscriptions.list({
       auth: oauth2Client,
@@ -340,7 +341,120 @@ exports.myVidComments = async function (req, res) {
   }
 };
 
-async function subCount(cid) {
+function getDifference(array1, array2) {
+  return array1.filter(object1 => {
+    return !array2.some(object2 => {
+      return object1.id === object2.id;
+    });
+  });
+}
+
+exports.checkSubsNotif = async function (email, client) {
+  try {
+    // console.log('In youtube check subs notif');
+    // console.log(email)
+    const ans = await exports.subscriptions(client);
+    const subs = ans.items;
+
+    let user = await User.findOne({ email: email })
+
+    const filter = { email: email };
+    let update = { ['youtubeData.subs']: subs };
+
+    const youtubeMilestones = user.notificationsHouse.youtubeMilestones;
+    
+    if (youtubeMilestones.prevsubs === null || youtubeMilestones.prevsubs.length === 0) {
+      console.log("initializing youtube prevsubs in db")
+      update['notificationsHouse.youtubeMilestones.prevsubs'] =
+        subs;
+    } else {
+      
+      update['notificationsHouse.youtubeMilestones.prevsubs'] = subs;
+
+      let newsubs = getDifference(subs, youtubeMilestones.prevsubs)
+      let unsubbed = getDifference(youtubeMilestones.prevsubs, subs)
+      newsubs.forEach(async (sub) => {
+        console.log('newsub: ' + sub.snippet.title)
+        update['$push'] = {
+          ['notificationsHouse.notifications']: {
+            sm: 'youtube',
+            content:
+              'subscribed to new channel: ' + sub.snippet.title,
+          },
+        };
+      });
+      unsubbed.forEach(async (unsub) => {
+        console.log("unsubbed: " + unsub.snippet.title)
+        update['$push'] = {
+          ['notificationsHouse.notifications']: {
+            sm: 'youtube',
+            content:
+              'unsubscribed from channel: ' + unsub.snippet.title,
+          },
+        };
+      });
+      
+    }
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+exports.checkLikedVidsNotif = async function (email, client) {
+  try {
+    // console.log('In youtube check subs notif');
+    // console.log(email)
+    const ans = await exports.likedVideos(client);
+    const vids = ans.items;
+
+    let user = await User.findOne({ email: email })
+
+    const filter = { email: email };
+    let update = { ['youtubeData.likedVids']: vids };
+
+    const youtubeMilestones = user.notificationsHouse.youtubeMilestones;
+    // console.log(youtubeMilestones)
+    if (youtubeMilestones.prevlikedVids === null || youtubeMilestones.prevlikedVids.length === 0) {
+      // console.log("initializing youtube prevlikedVids in db")
+      update['notificationsHouse.youtubeMilestones.prevlikedVids'] =
+        vids;
+    } else {
+      
+      update['notificationsHouse.youtubeMilestones.prevlikedVids'] = vids;
+
+      let liked = getDifference(vids, youtubeMilestones.prevlikedVids)
+      liked.forEach(async (like) => {
+        console.log('new like: ' + like.snippet.title)
+        update['$push'] = {
+          ['notificationsHouse.notifications']: {
+            sm: 'youtube',
+            content:
+              'Liked Video: ' + like.snippet.title,
+          },
+        };
+      });
+      
+    }
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log('big error catch');
+    console.log(err)
+    return err;
+  }
+};
+
+async function subCount(cid, client) {
   console.log('cid: ' + cid)
   oauth2Client.setCredentials(JSON.parse(client));
 
