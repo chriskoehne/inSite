@@ -299,7 +299,6 @@ exports.userSubKarma = async function (email, token) {
   }
 };
 
-// I don't think we use this
 exports.userTotalKarma = async function (email, token, username) {
   try {
     // console.log('In Reddit Total Karma Service');
@@ -314,12 +313,13 @@ exports.userTotalKarma = async function (email, token, username) {
       'https://oauth.reddit.com/user/' + username + '/about',
       { headers: headers }
     );
-
+    const user = await User.findOne({ email: email });
     const karma = {
       commentKarma: redditRes.data.data.comment_karma,
       linkKarma: redditRes.data.data.link_karma,
       awardKarma: redditRes.data.data.awardee_karma,
       totalKarma: redditRes.data.data.total_karma,
+      redditHistory: user.redditHistory
     };
     // console.log(totalKarma)
     // exports.updateRedditData(email, 'totalKarma', totalKarma);
@@ -374,6 +374,12 @@ exports.updateKarma = async function (email, karma) {
     let update = { ['redditData.totalKarma']: karma };
 
     const redditMilestones = user.notificationsHouse.redditMilestones;
+    
+    update['$push'] = {
+      ['redditHistory.karmaHistory']: {
+        karma: karma.totalKarma,
+      },
+    };
     if (redditMilestones.prevTotalKarma === null) {
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
         karma.totalKarma;

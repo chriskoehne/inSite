@@ -40,6 +40,15 @@ const notificationSchema = new mongoose.Schema({
   content: { type: String, required: true },
 });
 
+const redditObject = new mongoose.Schema({
+  karma: { type: Number, required: true, default: 0 },
+  time: { type: Date, required: true, default: Date.now },
+});
+
+const redditHistory = new mongoose.Schema({
+  karmaHistory: {type: [redditObject], required: true, default: []}
+});
+
 const redditMilestonesSchema = new mongoose.Schema(
   {
     prevTotalKarma: { type: Number, required: false, default: null },
@@ -92,6 +101,7 @@ const userSchema = new mongoose.Schema(
     settings: { type: settingsSchema, required: true, default: {} },
     mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },
+    redditHistory: { type: redditHistory, required: true, default: {} },
     notificationsHouse: {
       type: notificationsHouseSchema,
       required: true,
