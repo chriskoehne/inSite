@@ -11,6 +11,13 @@ const TwitchCreatorSettings = (props) => {
   const [creatorGoals, setCreatorGoals] = useState({})
   const [bannedUsers, setBannedUsers] = useState([])
 
+  const getDate = (twitchDate) => {
+    var original = twitchDate.toString();
+    // console.log('original' + original);
+    var newDate = new Date(original);
+    // console.log('newDate ' + newDate);
+    return((newDate.getMonth() + 1) + '/' + newDate.getDate() + '/' + newDate.getFullYear())
+  };
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitchToken')) {
@@ -54,6 +61,7 @@ const TwitchCreatorSettings = (props) => {
       if (twitchCreatorRes) {
         // console.log('Received Creator Goals from Twitch!');
         // console.log(twitchCreatorRes.data);
+        twitchCreatorRes.data.data[0].created_at = getDate(twitchCreatorRes.data.data[0].created_at);
         setCreatorGoals(twitchCreatorRes.data.data[0]);
       }
 
@@ -98,7 +106,7 @@ const TwitchCreatorSettings = (props) => {
     <Card className={styles.socialsCard}>
           <Row>
               <h3>Creator Goals</h3>
-              You created a {creatorGoals.type} Goal at {creatorGoals.created_at} with the description {creatorGoals.description}<br/>
+              You created a {creatorGoals.type} Goal on {creatorGoals.created_at} with the description {creatorGoals.description}<br/>
               The goal is to reach {creatorGoals.target_amount} and you are currently at {creatorGoals.current_amount}. Only {creatorGoals.target_amount - creatorGoals.current_amount} more to go!
           </Row>
           <Row>

@@ -32,6 +32,14 @@ const TwitchPage = (props) => {
     setIndex(selectedIndex);
   };
 
+  const getDate = (twitchDate) => {
+    var original = twitchDate.toString();
+    // console.log('original' + original);
+    var newDate = new Date(original);
+    // console.log('newDate ' + newDate);
+    return((newDate.getMonth() + 1) + '/' + newDate.getDate() + '/' + newDate.getFullYear())
+  };
+
   let getData = function (followers_data) {
     let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let yearArr = ['', '', '', '', '', '', '', '', '', ''];
@@ -100,6 +108,9 @@ const TwitchPage = (props) => {
       if (twitchRes) {
         // console.log('This is the user data');
         // console.log(twitchRes.data);
+        var date = getDate(twitchRes.data.data[0].created_at);
+        // console.log('Date: ' + twitchRes.data.data[0].created_at);
+        twitchRes.data.data[0].created_at = date;
         setChannelData(twitchRes.data.data[0]);
         setUserId(twitchRes.data.data[0].id);
       }
@@ -134,7 +145,8 @@ const TwitchPage = (props) => {
       if (twitchRes) {
         // console.log('Received Followers from Twitch!');
         // console.log(twitchRes.data);
-        setFollowers(twitchRes.data.data.slice(0, 5));
+        console.log(twitchRes.data.data);
+        
 
         let chart_data = getData(twitchRes.data);
         // console.log(chart_data);
@@ -151,6 +163,12 @@ const TwitchPage = (props) => {
           ],
         };
         setChartData(dataset);
+
+        for (let i = 0; i < 5; i++) {
+          var date = getDate(twitchRes.data.data[i].followed_at);
+          twitchRes.data.data[i].followed_at = date;
+        }
+        setFollowers(twitchRes.data.data.slice(0, 5));
 
         const twitchChannelRes = await axios.get('/twitch/getChannelInformation', {
           params: twitchQuery,
@@ -189,7 +207,7 @@ const TwitchPage = (props) => {
               Bio: {channelData.description}<br/>
               Profile pic: <img src={channelData.profile_image_url} alt="" width="100" height="100"></img><br/>
               Views: {channelData.view_count}<br/>
-              Created At: {channelData.created_at}<br/>
+              Created On: {channelData.created_at}<br/>
               Most Recent Stream: <br/>
               Game: {channelInfo.game_name} Title: {channelInfo.title}<br/>
             </Row>
@@ -197,7 +215,7 @@ const TwitchPage = (props) => {
               <h3>Five Most Recent Followers</h3><br/>
               {Object.keys(followers).map((key, index) => (
                 <div key={index}>
-                  Name: {followers[key].from_name}, Followed At: {followers[key].followed_at}
+                  Name: {followers[key].from_name}, Followed On: {followers[key].followed_at} 
                 </div>
               ))}
             </Row>

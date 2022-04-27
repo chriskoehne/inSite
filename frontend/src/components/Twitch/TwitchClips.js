@@ -8,6 +8,14 @@ const TwitchClips = (props) => {
   const [twitchToken, setTwitchToken] = useState('');
   const [clips, setClips] = useState([]);
 
+  const getDate = (twitchDate) => {
+    var original = twitchDate.toString();
+    // console.log('original' + original);
+    var newDate = new Date(original);
+    // console.log('newDate ' + newDate);
+    return((newDate.getMonth() + 1) + '/' + newDate.getDate() + '/' + newDate.getFullYear())
+  };
+
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitchToken')) {
       // console.log("no twitch token in localstorage")
@@ -48,8 +56,12 @@ const TwitchClips = (props) => {
       });
 
       if (twitchRes) {
-        console.log('Received Clips from Twitch!');
-        console.log(twitchRes.data);
+        // console.log('Received Clips from Twitch!');
+        // console.log(twitchRes.data);
+        for (let i = 0; i < 5; i++) {
+          var date = getDate(twitchRes.data.data[i].created_at);
+          twitchRes.data.data[i].created_at = date;
+        }
         setClips(twitchRes.data.data);
       }
     };
@@ -65,7 +77,7 @@ const TwitchClips = (props) => {
         <h3>Top 5 Clips</h3>
         {Object.keys(clips).map((key, index) => (
             <div key={index}>
-            Title: {clips[key].title}, Views: {clips[key].views}, Created By: {clips[key].creator_name}, Created At: {clips[key].created_at}<br/>
+            Title: {clips[key].title}, Views: {clips[key].views}, Created By: {clips[key].creator_name}, Created On: {clips[key].created_at}<br/>
             <iframe title={clips[key].title} width="500" height="400" src={clips[key].embed_url + '&parent=127.0.0.1'} allowFullScreen></iframe>
             </div>
         ))}
