@@ -76,32 +76,32 @@ const TwitterCard = (props) => {
           JSON.stringify({ token: ans.data.twitter.access_token })
         );
         setTwitterToken(ans.data.twitter.access_token);
+      } else {
+        let c = null;
+        const e = localStorage.getItem('email');
+        const currentUrl = window.location.href;
+        if (currentUrl.includes('state=twitter')) {
+          let start = currentUrl.indexOf('code') + 5;
+          c = currentUrl.substring(start);
+          setUser({
+            email: e,
+            code: c,
+          });
+        } else {
+          setUser({
+            email: e,
+          });
+          setLoading(false)
+        }
       }
     };
     doTheThing();
   }, []);
 
-  useEffect(() => {
-    let c = null;
-    const e = localStorage.getItem('email');
-    const currentUrl = window.location.href;
-    if (currentUrl.includes('state=twitter')) {
-      let start = currentUrl.indexOf('code') + 5;
-      c = currentUrl.substring(start);
-      setUser({
-        email: e,
-        code: c,
-      });
-    } else {
-      setUser({
-        email: e,
-      });
-    }
-  }, []);
+
 
   useDidMountEffect(() => {
     const convert = async () => {
-      setLoading(true);
       if (!user.code) {
         setLoading(false);
         return;
@@ -121,14 +121,14 @@ const TwitterCard = (props) => {
       } else {
         // console.log('could not convert token');
       }
-      console.log('uers')
+      console.log('uers');
       setLoading(false);
     };
 
     if (user.code) {
       convert();
     } else {
-      console.log('yarp')
+      console.log('yarp');
     }
   }, [user]);
 
@@ -188,14 +188,12 @@ const TwitterCard = (props) => {
         userId: userId,
         email: localStorage.getItem('email'),
       };
-      const twitterFollowersRes = axios.get(
-        '/twitter/followers',
-        { params: twitterQuery }
-      );
-      const twitterFollowedRes = await axios.get(
-        '/twitter/following',
-        { params: twitterQuery }
-      );
+      const twitterFollowersRes = axios.get('/twitter/followers', {
+        params: twitterQuery,
+      });
+      const twitterFollowedRes = await axios.get('/twitter/following', {
+        params: twitterQuery,
+      });
       const twitterRes = await axios.get('/twitter/tweetCount/', {
         params: twitterQuery,
       });
@@ -217,18 +215,16 @@ const TwitterCard = (props) => {
           ],
         };
         setChartDayData(dayDataset);
-        const twitterFollowersRes = axios.get(
-          '/twitter/followers',
-          { params: twitterQuery }
-        );
-        const twitterFollowedRes = await axios.get(
-          '/twitter/following',
-          { params: twitterQuery }
-        );
+        const twitterFollowersRes = axios.get('/twitter/followers', {
+          params: twitterQuery,
+        });
+        const twitterFollowedRes = await axios.get('/twitter/following', {
+          params: twitterQuery,
+        });
       } else {
         // console.log('Could not get Tweets from Twitter!');
       }
-      setLoading(false)
+      setLoading(false);
     };
 
     if (twitterToken && userId) {
@@ -236,6 +232,13 @@ const TwitterCard = (props) => {
       callTwitter();
     }
   }, [twitterToken, userId]);
+
+  // useDidMountEffect(() => {
+  //   if (!user.code && !twitterToken) {
+  //     console.log('yarp')
+  //     setLoading(false)
+  //   }
+  // })
 
   const authenticateTwitter = async (e) => {
     e.preventDefault();
@@ -256,7 +259,7 @@ const TwitterCard = (props) => {
     }
     if (twitterToken) {
       return (
-        <div className={styles.centered}>
+        <div className={styles.centered} style={{marginTop: '8%'}}>
           <LineChart
             height={'20vh'}
             width={'45vw'}

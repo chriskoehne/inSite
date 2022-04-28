@@ -21,12 +21,12 @@ exports.monitor = async function (email, password) {
         await redditService.refresh(user.reddit.refresh_token, user.email); //reddit refresh is working
       }
     }
-    if (user.youtube) {
-      if (user.youtube.expiry_date <= Date.now()) {
-        //refresh the token
-        console.log('.'); //refreshes on its own
-      }
-    }
+    // if (user.youtube) {
+    //   if (user.youtube.expiry_date <= Date.now()) {
+    //     //refresh the token
+    //     console.log('.'); //refreshes on its own
+    //   }
+    // }
     if (user.twitter) {
       if (user.twitter.expires_in <= Date.now()) {
         // refresh the token
@@ -111,9 +111,13 @@ exports.socialsDataTwitter = async () => {
     if (user.twitter) {
       if (user.settings.permissions.twitter) {
         const token = user.twitter.access_token;
+        try {
         const userId = (await twitterService.me(token)).data.id;
         twitterService.followers(token, userId, user.email);
         twitterService.following(token, userId, user.email);
+        } catch {
+          
+        }
       }
     }
   });

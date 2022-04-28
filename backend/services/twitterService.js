@@ -21,14 +21,14 @@ exports.login = async function (email) {
       process.env.TWITTER_CLIENT_ID +
       '&redirect_uri=' +
       redirectURI +
-      '&scope=tweet.read%20tweet.write%20users.read%20follows.read%20follows.write%20like.read%20offline.access&state=twitter&code_challenge=' +
+      '&scope=list.read%20mute.read%20tweet.read%20tweet.write%20users.read%20follows.read%20follows.write%20like.read%20offline.access&state=twitter&code_challenge=' +
       code_challenge +
       '&code_challenge_method=plain';
 
     return { link: link, verificationString: email };
   } catch (err) {
     console.log(err);
-    console.log('big error catch');
+    console.log('big error catch twitter login');
     return err;
   }
 };
@@ -81,7 +81,7 @@ exports.convert = async function (req, res) {
 
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 1');
+    console.log('big error catch twitter convert');
     // console.log(err)
     return err;
   }
@@ -131,8 +131,8 @@ exports.refresh = async function (email, token) {
 
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 2');
-    console.log(err);
+    console.log('big error catch twitter refresh', email);
+    console.log(err.message);
     return err;
   }
 };
@@ -173,7 +173,7 @@ exports.test = async function (req, res) {
     );
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 3');
+    console.log('big error catch twitter test');
     // console.log(err)
     return err;
   }
@@ -204,7 +204,7 @@ exports.tweetCount = async function (req, res) {
     // console.log('TWEETS RETURNED ARE: ' + twitterRes.data)
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 4');
+    console.log('big error catch twitter tweet count');
     console.log(err);
     return err;
   }
@@ -223,7 +223,7 @@ exports.me = async function (accessToken) {
     });
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 5');
+    console.log('big error catch twitter me');
     console.log(err);
     return err;
   }
@@ -244,7 +244,7 @@ exports.tweets = async function (req, res) {
     );
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 6');
+    console.log('big error catch twitter tweets');
     // console.log(err)
     return err;
   }
@@ -263,11 +263,14 @@ exports.followers = async function (token, userId, email) {
     );
     // console.log('followers');
     // console.log(twitterRes.data.meta.result_count);
-    exports.updateFollowersNotifications(email, twitterRes.data.meta.result_count)
+    exports.updateFollowersNotifications(
+      email,
+      twitterRes.data.meta.result_count
+    );
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 7');
-    console.log(err.status, err.message)
+    console.log('big error catch twitter followers');
+    console.log(email, err.message);
     return err;
   }
 };
@@ -285,11 +288,14 @@ exports.following = async function (token, userId, email) {
       { headers: headers }
     );
     // console.log(twitterRes.data.meta.result_count);
-    exports.updateFollowingNotifications(email, twitterRes.data.meta.result_count)
+    exports.updateFollowingNotifications(
+      email,
+      twitterRes.data.meta.result_count
+    );
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 8');
-    console.log(err.status, err.message)
+    console.log('big error catch twitter following');
+    console.log(email, err.message);
     // console.log(err)
     return err;
   }
@@ -312,7 +318,7 @@ exports.likes = async function (req, res) {
     );
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 9');
+    console.log('big error catch twitter likes');
     // console.log(err)
     return err;
   }
@@ -336,7 +342,7 @@ exports.tweetLikes = async function (req, res) {
     // console.log(twitterRes.data);
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 10');
+    console.log('big error catch twitter likes');
     // console.log(err)
     return err;
   }
@@ -359,13 +365,13 @@ exports.followMetrics = async function (req, res) {
     );
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 11');
+    console.log('big error catch twitter metrics');
     // console.log(err)
     return err;
   }
 };
 
-exports.ownedLists = async function (req, res) {
+exports.pinnedLists = async function (req, res) {
   try {
     const token = req.query.accessToken;
     const ids = req.query.userId;
@@ -377,14 +383,14 @@ exports.ownedLists = async function (req, res) {
     const twitterRes = await axios.get(
       'https://api.twitter.com/2/users/' +
         ids +
-        '/followed_lists?max_results=100',
+        '/pinned_lists?list.fields=name,description,follower_count,member_count,id',
       { headers: headers }
     );
-    // console.log(twitterRes.data);
+    //console.log(twitterRes.data);
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 12');
-    console.log(err);
+    console.log('big error catch twitter pinned');
+    //console.log(err)
     return err;
   }
 };
@@ -406,8 +412,31 @@ exports.nonPublic = async function (req, res) {
     );
     return twitterRes.data;
   } catch (err) {
-    console.log('twitter big error catch 13');
+    console.log('big error catch twitter nonPublic');
     // console.log(err)
+    return err;
+  }
+};
+
+exports.mutes = async function (req, res) {
+  try {
+    // console.log('In Twitter Tweet Likes Service');
+    const token = req.query.accessToken;
+    const userId = req.query.userId;
+    console.log(req.query);
+    // console.log('IDs: ' + tweetsIds);
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/' + userId + '/muting',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('wtf did i do wrong');
+    //console.log(err)
     return err;
   }
 };
@@ -418,14 +447,15 @@ exports.updateFollowersNotifications = async function (email, numFollowers) {
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
-      console.log('here')
+      console.log('here');
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.twitter) {
+
       return c.USER_INVALID_PERMISSIONS;
     }
     const filter = { email: email };
-    let update = { ['twitterData.numFollowers']: numFollowers };
+    let update = { };
     let notifications = [];
 
     const twitterMilestones = user.notificationsHouse.twitterMilestones;
@@ -463,15 +493,15 @@ exports.updateFollowingNotifications = async function (email, numFollowing) {
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
-      console.log('no user')
+      console.log('no user');
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.twitter) {
-      console.log('no permissions')
+      console.log('no permissions');
       return c.USER_INVALID_PERMISSIONS;
     }
     const filter = { email: email };
-    let update = { ['twitterData.numFollowing']: numFollowing };
+    let update = { };
     let notifications = [];
 
     const twitterMilestones = user.notificationsHouse.twitterMilestones;
@@ -481,7 +511,7 @@ exports.updateFollowingNotifications = async function (email, numFollowing) {
     } else if (numFollowing - twitterMilestones.prevNumFollowing >= 1) {
       // do an update and create a notification
       update['notificationsHouse.twitterMilestones.prevNumFollowing'] =
-      numFollowing;
+        numFollowing;
 
       notifications.push({
         sm: 'twitter',
@@ -504,3 +534,5 @@ exports.updateFollowingNotifications = async function (email, numFollowing) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
+
+

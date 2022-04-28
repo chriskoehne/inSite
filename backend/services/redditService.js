@@ -28,7 +28,7 @@ exports.test = async function (req, res) {
 
     return;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit test');
     return err;
   }
 };
@@ -47,7 +47,7 @@ exports.login = async function (email) {
     return { link: link, verificationString: email };
   } catch (err) {
     console.log(err);
-    console.log('big error catch');
+    console.log('big error catch reddit login');
     return err;
   }
 };
@@ -58,14 +58,16 @@ exports.check = async function (email) {
     let result = await User.findOne({ email: email });
     // console.log("in backend check, result is")
     // console.log(result)
-    if (result.reddit && !result.reddit.error) {
+    if (result.reddit) {
+    // if (result.reddit && !result.reddit.error) {
       return result.reddit;
     } else {
+      console.log(result.reddit.error)
       return false;
     }
   } catch (err) {
     console.log(err);
-    console.log('big error catch1');
+    console.log('big error catch reddit check');
     return err;
   }
 };
@@ -114,7 +116,7 @@ exports.convert = async function (code, email) {
 
     return redditRes.data;
   } catch (err) {
-    console.log('reddit big error catch');
+    console.log('big error catch reddit convert');
     // console.log(err)
     return err;
   }
@@ -160,7 +162,7 @@ exports.refresh = async function (token, email) {
 
     return redditRes.data; //includes access token, etc
   } catch (err) {
-    console.log('reddit big error catch');
+    console.log('big error catch reddit refresh');
     // console.log(err)
     return err;
   }
@@ -183,7 +185,7 @@ exports.redditMe = async function (req, res) {
 
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit me');
     // console.log(err)
     return err;
   }
@@ -203,8 +205,8 @@ exports.redditUsername = async function (token) {
 
     return redditRes.data.name;
   } catch (err) {
-    console.log('big error catch 1');
-    console.log(err);
+    console.log('big error catch reddit username');
+    console.log(err.message);
     return err;
   }
 };
@@ -246,7 +248,7 @@ exports.userOverview = async function (email, token, username) {
     exports.updateRedditData(email, 'overview', data); //we don't need to await the result from this
     return data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit overview');
     // console.log(err)
     return err;
   }
@@ -268,7 +270,7 @@ exports.userComments = async function (token, username) {
 
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit comments');
     return err;
   }
 };
@@ -293,7 +295,7 @@ exports.userSubKarma = async function (email, token) {
     exports.updateRedditData(email, 'subKarma', subKarmaList);
     return subKarmaList;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit subkarma');
     // console.log(err)
     return err;
   }
@@ -327,7 +329,7 @@ exports.userTotalKarma = async function (email, token, username) {
 
     return karma;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit total karma');
     return err;
   }
 };

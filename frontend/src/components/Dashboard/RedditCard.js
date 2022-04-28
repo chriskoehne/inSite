@@ -38,12 +38,12 @@ const RedditCard = (props) => {
       let ans = await axios.post('/reddit/check', {
         params: { email: localStorage.getItem('email') },
       });
-      console.log(ans);
+      // console.log(ans);
       if (ans.data.success && ans.data.reddit.access_token) {
         // ans.data.reddit
-        console.log('in reddit card has token');
-        console.log(ans.data);
-        console.log(ans.data.reddit.access_token);
+        // console.log('in reddit card has token');
+        // console.log(ans.data);
+        // console.log(ans.data.reddit.access_token);
         localStorage.setItem(
           'redditToken',
           JSON.stringify({
@@ -61,13 +61,13 @@ const RedditCard = (props) => {
     const getStoredRedditData = async () => {
       try {
         if (!JSON.parse(localStorage.getItem('settings')).permissions.reddit) {
-          console.log('no permissions');
+          // console.log('no permissions');
           return false;
         }
         let ans = await axios.get('/user/reddit', {
           params: { email: localStorage.getItem('email') },
         });
-        console.log(ans.data.message);
+        // console.log(ans.data.message);
         if (
           ans.status === 200 &&
           ans.data.message !== null &&
@@ -97,9 +97,10 @@ const RedditCard = (props) => {
         setCode(c);
         // will set loading as done after we make call to reddit api
       } else if (await getStoredRedditData()) {
-        console.log('loading done stored');
+        // console.log('loading done stored1');
         setLoading(false);
       } else if (!hasToken()) { //this could be wrong
+        // console.log('loading done stored2');
         setLoading(false)
       }
     };
@@ -115,8 +116,8 @@ const RedditCard = (props) => {
         code: code,
         email: localStorage.getItem('email'),
       });
-      console.log('after conversion');
-      console.log(result);
+      // console.log('after conversion');
+      // console.log(result);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -133,9 +134,6 @@ const RedditCard = (props) => {
     }
   }, [code]);
 
-  // useDidMountEffect(() => {
-  //   setLoading(false);
-  // }, [comments]);
 
   useDidMountEffect(() => {
     if (redditToken) {
@@ -146,7 +144,7 @@ const RedditCard = (props) => {
     }
 
     const callReddit = async () => {
-      console.log('called reddit');
+      // console.log('called reddit');
       const redditMeQuery = {
         accessToken: redditToken,
       };
@@ -164,7 +162,7 @@ const RedditCard = (props) => {
           params: redditUserQuery,
         });
         if (ansOverview.status === 200) {
-          console.log(ansOverview.data);
+          // console.log(ansOverview.data);
           setComments(ansOverview.data.comments);
         } else {
           setComments({});
@@ -177,7 +175,7 @@ const RedditCard = (props) => {
           params: redditUserQuery,
         });
       }
-      console.log('loading done reddit api');
+      // console.log('loading done reddit api');
       setLoading(false);
     };
     if (redditToken && !hasStored) {
@@ -185,6 +183,7 @@ const RedditCard = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redditToken]);
+
 
   const authenticateReddit = async (e) => {
     e.preventDefault();
@@ -281,6 +280,7 @@ const RedditCard = (props) => {
   };
 
   const refreshButton = () => {
+    return;
     if (comments !== undefined && comments.length) {
       return (
         <Button
