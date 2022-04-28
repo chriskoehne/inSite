@@ -7,12 +7,39 @@ import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
-import LineChartDemo from '../Charts/LineChartDemo';
 
 const TwitchCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [loading, setLoading] = useState(false);
   const [twitchToken, setTwitchToken] = useState('');
+  const [userId, setUserId] = useState('');
+  const [chartData, setChartData] = useState({
+    datasets: [],
+  });
+
+  let getData = function (followers_data) {
+    let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let yearArr = ['', '', '', '', '', '', '', '', '', ''];
+    let date = new Date();
+    let year = date.getFullYear();
+    var start_year = year - 9
+    // console.log('Date: ' + date + ' Year: ' + year);
+    for (let i = 0; i < 10; i++) {
+      yearArr[i] = start_year.toString();
+      start_year++;
+    }
+    // console.log("year array:");
+    // console.log(yearArr);
+    followers_data.data.forEach((e) => {
+      // console.log('CREATE TIME: ' + e.followed_at);
+      var year = e.followed_at.substring(0, 4)
+      var index = yearArr.indexOf(year);
+      if (index > -1) {
+        arr[index]++;
+      }
+    });
+    return({numFollowsArr: arr, years: yearArr});
+  };
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitchToken')) {
@@ -33,8 +60,8 @@ const TwitchCard = (props) => {
     let ans = await axios.post('/twitch/check', {
       params: { email: localStorage.getItem('email') },
     });
-    console.log("in twitch card has token")
-    console.log(ans)
+    // console.log("in twitch card has token")
+    // console.log(ans)
     if (ans.data.success) {
       // ans.data.reddit
       localStorage.setItem(
@@ -46,7 +73,7 @@ const TwitchCard = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log("twitch card useeffect")
+    // console.log("twitch card useeffect")
     let c = null;
     const e = localStorage.getItem('email');
     const currentUrl = window.location.href;
@@ -76,7 +103,7 @@ const TwitchCard = (props) => {
         code: user.code,
         email: localStorage.getItem('email')
       });
-      console.log(result.data);
+      console.log(result);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         setTwitchToken(token);
@@ -103,91 +130,84 @@ const TwitchCard = (props) => {
       );
     }
 
-    // const getUser = async () => {
-    //   // console.log('Calling Twitter API. Here is localStorage:');
-    //   // console.log(localStorage);
-    //   console.log('Calling getUser');
-    //   const twitterQuery = {
-    //     accessToken: twitterToken,
-    //   };
-    //   const twitterRes = await axios.get('/twitter/getUser/', {
-    //     params: twitterQuery,
-    //   });
-    //   if (twitterRes) {
-    //     //console.log('Received Tweets from Twitter!');
-    //     console.log('This is the user data');
-    //     console.log(twitterRes.data);
-    //     console.log('This is the user id');
-    //     console.log(twitterRes.data.data.id);
-    //     localStorage.setItem('twitter-user-id', twitterRes.data.data.id);
-    //     setUserId(twitterRes.data.data.id);
-    //   }
-    //   // else {
-    //   //   console.log('Could not get Tweets from Twitter!');
-    //   // }
-    // };
+    const getUser = async () => {
+      // console.log('Calling getUser');
+      const twitchQuery = {
+        accessToken: twitchToken,
+      };
+      const twitchRes = await axios.get('/twitch/getUser/', {
+        params: twitchQuery,
+      });
+      if (twitchRes) {
+        // console.log('This is the user data');
+        // console.log(twitchRes.data);
+        setUserId(twitchRes.data.data[0].id);
+        localStorage.setItem('twitch-user-id', twitchRes.data.data[0].id)
+      }
+      // else {
+      //   console.log('Could not get User Info from Twitch!');
+      // }
+    };
 
-    // if (twitterToken) {
-    //   // console.log('Calling Twitter');
-    //   getUser();
-    // }
+    if (twitchToken) {
+      // console.log('Calling Twitch');
+      getUser();
+    }
   }, [twitchToken]);
 
-//   useEffect(() => {
-//     if (!hasToken() && twitterToken && userId) {
-//       localStorage.setItem(
-//         'twitterToken',
-//         JSON.stringify({ token: twitterToken, date: Date.now() })
-//       );
-//     }
+  useEffect(() => {
+    if (!hasToken() && twitchToken && userId) {
+      localStorage.setItem(
+        'twitchToken',
+        JSON.stringify({ token: twitchToken, date: Date.now() })
+      );
+    }
 
-//     const callTwitter = async () => {
-//       // console.log('Calling Twitter API. Here is localStorage:');
-//       // console.log(localStorage);
-//       const id = localStorage.getItem('twitter-user-id');
-//       console.log('TWITTER ID IN CARD: ' + id);
-//       const twitterQuery = {
-//         accessToken: twitterToken,
-//         userId: userId,
-//       };
-//       const twitterRes = await axios.get('/twitter/tweetCount/', {
-//         params: twitterQuery,
-//       });
-//       if (twitterRes) {
-//         console.log('Received Tweets from Twitter!');
-//         console.log(twitterRes.data);
-//         let timeArr = twitterRes.data;
-//         //console.log('TIMEARR: ' + timeArr)
-//         let dayDate = getDays(timeArr);
-//         let dayDataset = {
-//           labels: dayDate.daysOfWeek.reverse(),
-//           datasets: [
-//             {
-//               label: 'Number of Tweets in last week',
-//               data: dayDate.numTweets.reverse(),
-//               borderColor: '#05aced',
-//               backgroundColor: '#05aced',
-//             },
-//           ],
-//         };
-//         setChartDayData(dayDataset);
-//       } else {
-//         console.log('Could not get Tweets from Twitter!');
-//       }
-//     };
+    const callTwitch = async () => {
+      // console.log('Calling Twitch Get User Follows');
+      const twitchQuery = {
+        accessToken: twitchToken,
+        id: userId,
+      };
+      const twitchRes = await axios.get('/twitch/getUserFollows', {
+        params: twitchQuery,
+      });
+      if (twitchRes) {
+        // console.log('Received Followers from Twitch!');
+        // console.log(twitchRes.data);
+        let chart_data = getData(twitchRes.data);
+        // console.log(chart_data);
+        let dataset = {
+          labels: chart_data.years,
+          datasets: [
+            {
+              label: 'Number of Followers in the last 10 years',
+              data: chart_data.numFollowsArr,
+              borderColor: '#6441a5',
+              backgroundColor: '#6441a5',
+            },
+          ],
+        };
+        setChartData(dataset);
+      } 
+      // else {
+      //   console.log('Could not get Followers from Twitch!');
+      // }
+    };
 
-//     if (twitterToken && userId) {
-//       console.log('Calling Twitter');
-//       callTwitter();
-//     }
-//   }, [twitterToken, userId]);
+    if (twitchToken && userId) {
+      // console.log('Calling Twitch User Follows');
+      callTwitch();
+    }
+  }, [twitchToken, userId]);
 
   const authenticateTwitch = async (e) => {
     e.preventDefault();
     const result = await axios.post('/twitch/login/', {
       email: user.email,
     });
-    if (result.data.success) {
+    console.log(result)
+    if (result.status === 200) {
       // console.log('got the link!');
       window.location.href = result.data.link;
     } else {
@@ -202,7 +222,12 @@ const TwitchCard = (props) => {
     if (twitchToken) {
       return (
         <div className={styles.centered}>
-          <LineChartDemo />
+          <LineChart
+            height={'20vh'}
+            width={'45vw'}
+            color={'#6441a5'}
+            data={chartData}
+          />
         </div>
       );
     } else {
@@ -249,7 +274,7 @@ const TwitchCard = (props) => {
                 style={{ float: 'right' }}
                 onClick={function () {
                   props.navigate('twitch', {
-                    state: { email: user.email, accessToken: twitchToken },
+                    state: { email: user.email, accessToken: twitchToken, id: userId },
                   });
                 }}
               >

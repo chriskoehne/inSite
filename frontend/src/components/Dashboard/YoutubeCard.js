@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Dashboard.module.css';
 import { SocialIcon } from 'react-social-icons';
 import BarChart from '../Charts/BarChart';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
 
@@ -17,6 +18,7 @@ const YoutubeCard = (props) => {
   const [playlistCounts, setPlaylistCounts] = useState([]);
 
   const hasToken = () => {
+    // console.log(localStorage);
     if (!localStorage.hasOwnProperty('youtubeToken')) {
       return false;
     }
@@ -65,7 +67,7 @@ const YoutubeCard = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     const convert = async () => {
       setLoading(true);
       if (!user.code) {
@@ -94,7 +96,7 @@ const YoutubeCard = (props) => {
   }, [user]);
 
   // a separate use effect to store the token in local storage and make a call for the initial graph
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (!hasToken() && youtubeToken) {
       localStorage.setItem(
         'youtubeToken',
@@ -158,7 +160,7 @@ const YoutubeCard = (props) => {
     const result = await axios.post('/youtube/login/', {
       email: user.email,
     });
-    if (result.data.success) {
+    if (result.status === 200) {
       window.location.href = result.data.link;
     } else {
       console.log('there was an error in youtube user signup');
