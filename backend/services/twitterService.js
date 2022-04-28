@@ -423,7 +423,7 @@ exports.mutes = async function (req, res) {
     // console.log('In Twitter Tweet Likes Service');
     const token = req.query.accessToken;
     const userId = req.query.userId;
-    console.log(req.query);
+    // console.log(req.query);
     // console.log('IDs: ' + tweetsIds);
 
     const headers = {
@@ -446,7 +446,7 @@ exports.mutes = async function (req, res) {
     // console.log('In Twitter Tweet Likes Service');
     const token = req.query.accessToken;
     const userID = req.query.userID;
-    console.log(req.query)
+    // console.log(req.query)
     // console.log('IDs: ' + tweetsIds);
 
     const headers = {
@@ -481,8 +481,14 @@ exports.updateFollowersNotifications = async function (email, numFollowers) {
     let update = { };
     let notifications = [];
 
+    update['$push'] = {
+      ['twitterHistory.followerHistory']: {
+        numFollowers: numFollowers,
+      },
+    };
+
     const twitterMilestones = user.notificationsHouse.twitterMilestones;
-    if (isNaN(twitterMilestones.prevNumFollowers)) {
+    if (typeof(twitterMilestones.prevNumFollowers) !== 'number') {
       update['notificationsHouse.twitterMilestones.prevNumFollowers'] =
         numFollowers;
     } else if (numFollowers - twitterMilestones.prevNumFollowers >= 1) {
@@ -500,7 +506,6 @@ exports.updateFollowersNotifications = async function (email, numFollowers) {
     update['$push'] = {
       ['notificationsHouse.notifications']: notifications,
     };
-
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
@@ -526,9 +531,10 @@ exports.updateFollowingNotifications = async function (email, numFollowing) {
     const filter = { email: email };
     let update = { };
     let notifications = [];
+    
 
     const twitterMilestones = user.notificationsHouse.twitterMilestones;
-    if (isNaN(twitterMilestones.prevNumFollowing)) {
+    if (typeof(twitterMilestones.prevNumFollowing) !== 'number') {
       update['notificationsHouse.twitterMilestones.prevNumFollowing'] =
         numFollowing;
     } else if (numFollowing - twitterMilestones.prevNumFollowing >= 1) {

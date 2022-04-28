@@ -301,7 +301,6 @@ exports.userSubKarma = async function (email, token) {
   }
 };
 
-// I don't think we use this
 exports.userTotalKarma = async function (email, token, username) {
   try {
     // console.log('In Reddit Total Karma Service');
@@ -316,12 +315,13 @@ exports.userTotalKarma = async function (email, token, username) {
       'https://oauth.reddit.com/user/' + username + '/about',
       { headers: headers }
     );
-
+    const user = await User.findOne({ email: email });
     const karma = {
       commentKarma: redditRes.data.data.comment_karma,
       linkKarma: redditRes.data.data.link_karma,
       awardKarma: redditRes.data.data.awardee_karma,
       totalKarma: redditRes.data.data.total_karma,
+      redditHistory: user.redditHistory
     };
     // console.log(totalKarma)
     // exports.updateRedditData(email, 'totalKarma', totalKarma);
@@ -377,7 +377,12 @@ exports.updateKarma = async function (email, karma) {
     let notifications = [];
 
     const redditMilestones = user.notificationsHouse.redditMilestones;
-    if (isNaN(redditMilestones.prevTotalKarma)) {
+    update['$push'] = {
+      ['redditHistory.karmaHistory']: {
+        karma: karma.totalKarma,
+      },
+    };
+    if (typeof(redditMilestones.prevTotalKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
         karma.totalKarma;
     } else if (karma.totalKarma - redditMilestones.prevTotalKarma >= 3) {
@@ -392,7 +397,7 @@ exports.updateKarma = async function (email, karma) {
           (karma.totalKarma - redditMilestones.prevTotalKarma),
       });
     }
-    if (isNaN(redditMilestones.prevCommentKarma)) {
+    if (typeof(redditMilestones.prevCommentKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevCommentKarma'] =
         karma.commentKarma;
     } else if (karma.commentKarma - redditMilestones.prevCommentKarma >= 3) {
@@ -406,7 +411,7 @@ exports.updateKarma = async function (email, karma) {
           (karma.commentKarma - redditMilestones.prevCommentKarma),
       });
     }
-    if (isNaN(redditMilestones.prevLinkKarma)) {
+    if (typeof(redditMilestones.prevLinkKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevLinkKarma'] =
         karma.linkKarma;
     } else if (karma.linkKarma - redditMilestones.prevLinkKarma >= 3) {
@@ -420,7 +425,7 @@ exports.updateKarma = async function (email, karma) {
           (karma.linkKarma - redditMilestones.prevLinkKarma),
       });
     }
-    if (isNaN(redditMilestones.prevAwardKarma)) {
+    if (typeof(redditMilestones.prevAwardKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevAwardKarma'] =
         karma.awardKarma;
     } else if (karma.awardKarma - redditMilestones.prevAwardKarma >= 3) {
