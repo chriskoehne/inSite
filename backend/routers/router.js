@@ -154,6 +154,48 @@ router.get(
   youtubeController.subscriptions
 );
 
+router.get(
+  '/youtube/channelInfo',
+  auth.verifyToken,
+  youtubeController.channelInfo
+);
+
+router.get(
+  '/youtube/videoList',
+  auth.verifyToken,
+  youtubeController.videoList
+);
+
+router.get(
+  '/youtube/myPopularVids',
+  auth.verifyToken,
+  youtubeController.myPopularVids
+);
+
+router.get(
+ '/youtube/mySubscribers',
+ auth.verifyToken,
+ youtubeController.mySubscribers
+);
+
+router.get(
+  '/youtube/myPopularCat',
+  auth.verifyToken,
+  youtubeController.myPopularCat
+);
+
+router.get(
+  '/youtube/myVidCats',
+  auth.verifyToken,
+  youtubeController.myVidCats
+);
+
+router.get(
+  '/youtube/myVidComments',
+  auth.verifyToken,
+  youtubeController.myVidComments
+);
+
 router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostSubscribers);
 
 router.get('/youtube/likedVideos', auth.verifyToken, youtubeController.likedVideos);

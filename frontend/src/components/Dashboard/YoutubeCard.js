@@ -140,9 +140,8 @@ const YoutubeCard = (props) => {
           }
         }
       }
-      const youtubePlaylists = await axios.get('/youtube/playlists', {
-        params: { client: youtubeToken },
-      });
+      
+      const youtubePlaylists = await axios.get('/youtube/playlists', {params: {client: youtubeToken}});
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
       let itemCounts = [];
@@ -150,7 +149,7 @@ const YoutubeCard = (props) => {
         itemCounts.push(item.contentDetails.itemCount);
       });
       setPlaylistCounts(itemCounts);
-
+      
       setLoading(false);
     };
     if (youtubeToken) {
