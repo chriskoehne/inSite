@@ -70,12 +70,12 @@ const RedditCard = (props) => {
         // console.log(ans.data.message);
         if (
           ans.status === 200 &&
-          ans.data.message !== null &&
+          ans.data.message[0] !== null &&
           !isFalsy(ans.data.message) &&
-          !isFalsy(ans.data.message.overview)
+          !isFalsy(ans.data.message[0].overview)
         ) {
           setHasStored(true);
-          setComments(ans.data.message.overview.comments);
+          setComments(ans.data.message[0].overview.comments);
           return true;
         } else {
           return false;
@@ -167,13 +167,14 @@ const RedditCard = (props) => {
         } else {
           setComments({});
         }
+        /*
         const ansSubKarma = await axios.get('/reddit/userSubKarma', {
           params: redditUserQuery,
         });
 
         const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
           params: redditUserQuery,
-        });
+        }); */
       }
       // console.log('loading done reddit api');
       setLoading(false);
@@ -281,6 +282,7 @@ const RedditCard = (props) => {
 
   const refreshButton = () => {
     return;
+    /*
     if (comments !== undefined && comments.length) {
       return (
         <Button
@@ -291,6 +293,7 @@ const RedditCard = (props) => {
         </Button>
       );
     }
+    */
   };
 
   return (

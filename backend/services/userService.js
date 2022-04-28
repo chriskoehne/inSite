@@ -277,7 +277,7 @@ exports.getRedditData = async function (email) {
     if (!user.settings.permissions.reddit) {
       c.USER_INVALID_PERMISSIONS;
     }
-    return user.redditData;
+    return [user.redditData, user.redditHistory];
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;

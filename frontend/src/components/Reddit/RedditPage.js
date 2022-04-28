@@ -57,9 +57,6 @@ const RedditPage = (props) => {
   const [commentGraphMonth, setCommentGraphMonth] = useState(false);
   const [mostControversialPost, setmostControversialPost] = useState({});
   const [mostControversialComment, setMostControversialComment] = useState({});
-  const [karmaHistory, setKarmaHistory] = useState([]);
-  const [historyLabels, setHistoryLabels] = useState([]);
-  const [karmaScores, setKarmaScores] = useState([]);
   //chartComment
   const [chartCommentData, setChartCommentData] = useState({
     datasets: [],
@@ -102,13 +99,16 @@ const RedditPage = (props) => {
         const ans = await axios.get('/user/reddit', {
           params: { email: localStorage.getItem('email') },
         });
+        console.log('ans');
+        console.log(ans);
+        console.log(ans.data.message[0])
         if (
           ans.status === 200 &&
           ans.data.message !== null &&
           !isFalsy(ans.data.message) &&
-          !isFalsy(ans.data.message.overview)
+          !isFalsy(ans.data.message[0].overview)
         ) {
-          const redditData = ans.data.message;
+          const redditData = ans.data.message[0];
           console.log(redditData.karma)
           setPosts(redditData.overview.posts);
           setComments(redditData.overview.comments);
@@ -118,6 +118,31 @@ const RedditPage = (props) => {
           setAwardKarma(redditData.karma.awardKarma);
           setTotalKarma(redditData.karma.totalKarma);
           console.log('loading done 1');
+
+          const history = ans.data.message[1].karmaHistory;
+            console.log('history is')
+            console.log(history)
+            let labels = []
+            let karmaScores = []
+            
+            history.forEach(obj => {
+              let date = new Date(obj.time);
+              labels.push(date.toLocaleString());
+              karmaScores.push(obj.karma);
+            });
+            let historyDataset = {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Total Karma',
+                  data: karmaScores,
+                  borderColor: '#ff4500',
+                  backgroundColor: '#ff4500',
+                },
+              ],
+            };
+
+            setChartHistoryData(historyDataset);
           return true;
         } else {
           return false;
@@ -290,38 +315,10 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
-
-            const history = ansTotalKarma.data.redditHistory.karmaHistory;
-            console.log('history is')
-            console.log(history)
-            let labels = []
-            let karmaScores = []
-            setKarmaHistory(ansTotalKarma.data.redditHistory.karmaHistory);
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
             setTotalKarma(ansTotalKarma.data.totalKarma);
-
-            
-            history.forEach(obj => {
-              
-              let date = new Date(obj.time);
-              labels.push(date.toLocaleString());
-              karmaScores.push(obj.karma);
-            });
-            let historyDataset = {
-              labels: labels,
-              datasets: [
-                {
-                  label: 'Total Karma',
-                  data: karmaScores,
-                  borderColor: '#ff4500',
-                  backgroundColor: '#ff4500',
-                },
-              ],
-            };
-
-            setChartHistoryData(historyDataset);
           } else {
             console.log('uhhh')
           }
