@@ -10,8 +10,8 @@ let getMonths = function (subscribers) {
         subscribers.forEach(e => {
             //e.data.created
             let dt = new Date(e.snippet.publishedAt)
-            if (dt >= currentYear.getTime() / 1000 - 31556926) {
-                let d = new Date(dt * 1000); //get current Date
+            if ((dt.getTime()/1000) >= (currentYear.getTime() / 1000 - 31556926)) {
+                let d = new Date(dt.getTime()); //get current Date
                 arr[d.getMonth()] += 1;
             } 
         });
@@ -36,9 +36,9 @@ let getDays = function(subscribers) {
         //e.data.created
         let dt = new Date(e.snippet.publishedAt)
         console.log("Published At Time is: " + e.snippet.publishedAt)
-        console.log("DT is: " + dt + "current year.getTime(): " + currentYear.getTime())
-        if (dt >= currentYear.getTime() / 1000 - 604800) {
-            let d = new Date(dt * 1000); //get current Date
+        console.log("DT.getTime is: " + dt.getTime() + "current year.getTime() with math: " + (currentYear.getTime() / 1000 - 604800))
+        if ((dt.getTime()/1000) >= (currentYear.getTime() / 1000 - 604800)) {
+            let d = new Date(dt.getTime()); //get current Date
             arr[d.getDay()] += 1;
         }
     });
@@ -60,10 +60,10 @@ let getLastThirty = function (subscribers) {
     let currentYear = new Date()
     subscribers.forEach(e => {
       let dt = new Date(e.snippet.publishedAt)
-        if (dt >= currentYear.getTime() / 1000 - 86400 * 30) {
-            let day = Math.ceil((currentYear.getTime() / 1000 - dt)/ 86400);
-            if ((currentYear.getTime() / 1000 - dt)/ 86400 <= .5) {
-                day = Math.floor((currentYear.getTime() / 1000 - dt)/ 86400);
+        if ((dt.getTime()/1000) >= (currentYear.getTime() / 1000 - 86400 * 30)) {
+            let day = Math.ceil((currentYear.getTime() / 1000 - dt.getTime())/ 86400);
+            if ((currentYear.getTime() / 1000 - dt.getTime())/ 86400 <= .5) {
+                day = Math.floor((currentYear.getTime() / 1000 - dt.getTime())/ 86400);
             }
             arr[day] += 1;
         }
