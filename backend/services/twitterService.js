@@ -17,7 +17,7 @@ exports.login = async function (email) {
     const link =
     'https://twitter.com/i/oauth2/authorize?response_type=code&client_id=' +
     process.env.TWITTER_CLIENT_ID +
-    '&redirect_uri=' +  redirectURI + '&scope=tweet.read%20tweet.write%20users.read%20follows.read%20follows.write%20like.read%20offline.access&state=twitter&code_challenge=' + 
+    '&redirect_uri=' +  redirectURI + '&scope=list.read%20mute.read%20tweet.read%20tweet.write%20users.read%20follows.read%20follows.write%20like.read%20offline.access&state=twitter&code_challenge=' + 
     code_challenge + 
     '&code_challenge_method=plain'
 
@@ -352,7 +352,7 @@ exports.followMetrics = async function (req, res) {
   }
 };
 
-  exports.ownedLists = async function (req, res) {
+  exports.pinnedLists = async function (req, res) {
     try {
       
       const token = req.query.accessToken;
@@ -363,14 +363,14 @@ exports.followMetrics = async function (req, res) {
         Authorization: 'Bearer ' + token,
       };
       const twitterRes = await axios.get(
-        'https://api.twitter.com/2/users/' + ids + '/followed_lists?max_results=100',
+        "https://api.twitter.com/2/users/" + ids + "/pinned_lists?list.fields=name,description,follower_count,member_count,id", 
         { headers: headers }
       );
-      console.log(twitterRes.data);
+      //console.log(twitterRes.data);
       return twitterRes.data;
     } catch (err) {
       console.log('twitter big error catch');
-      console.log(err)
+      //console.log(err)
       return err;
     }
   };
@@ -393,6 +393,29 @@ exports.followMetrics = async function (req, res) {
     } catch (err) {
       console.log('twitter big error catch');
       // console.log(err)
+      return err;
+    }
+  };
+
+  exports.mutes = async function (req, res) {
+    try {
+      // console.log('In Twitter Tweet Likes Service');
+      const token = req.query.accessToken;
+      const userID = req.query.userID;
+      console.log(req.query)
+      // console.log('IDs: ' + tweetsIds);
+  
+      const headers = {
+        Authorization: 'Bearer ' + token,
+      };
+      const twitterRes = await axios.get(
+        'https://api.twitter.com/2/users/' + userID + '/muting',
+        { headers: headers }
+      );
+      return twitterRes.data;
+    } catch (err) {
+      console.log('wtf did i do wrong');
+      //console.log(err)
       return err;
     }
   };
