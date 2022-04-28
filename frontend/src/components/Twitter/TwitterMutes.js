@@ -76,7 +76,7 @@ const TwitterMutes = (props) => {
         // console.log(localStorage);
         const twitterQuery = {
             accessToken: twitterToken,
-            userID: localStorage.getItem('twitter-user-id'),
+            userId: localStorage.getItem('twitter-user-id'),
         };
         const twitterRes = await axios.get('/twitter/mutes', {
             params: twitterQuery,

@@ -83,7 +83,7 @@ exports.tweetCount = async function (req, res, next) {
 exports.me = async function (req, res, next) {
   try {
     // console.log('In Twitter Test Controller');
-    let result = await twitterService.me(req, res);
+    let result = await twitterService.me(req.query.accessToken);
 
     if (result) {
       return res
@@ -113,7 +113,11 @@ exports.tweets = async function (req, res, next) {
 exports.followers = async function (req, res, next) {
   try {
     // console.log('In Twitter Followers Controller');
-    let result = await twitterService.followers(req, res);
+    const token = req.query.accessToken;
+    const userId = req.query.userId;
+    const email = req.query.email;
+    // console.log(token, userId, email)
+    let result = await twitterService.followers(token, userId, email);
 
     if (result) {
       return res
@@ -127,8 +131,11 @@ exports.followers = async function (req, res, next) {
 
 exports.following = async function (req, res, next) {
   try {
+    const token = req.query.accessToken;
+    const userId = req.query.userId;
+    const email = req.query.email
     // console.log('In Twitter Following Controller');
-    let result = await twitterService.following(req, res);
+    let result = await twitterService.following(token, userId, email);
 
     if (result) {
       return res
@@ -157,6 +164,7 @@ exports.likes = async function (req, res, next) {
 
 exports.tweetLikes = async function (req, res, next) {
   try {
+    // console.log(req.query)
     // console.log('In Twitter Tweet Likes Controller');
     let result = await twitterService.tweetLikes(req, res);
 

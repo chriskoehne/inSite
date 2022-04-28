@@ -36,7 +36,7 @@ exports.login = async function (email) {
     return {link: url}
   } catch (err) {
     // console.log(err);
-    console.log('big error catch');
+    console.log('big error catch youtube login');
     return err;
   }
 };
@@ -55,7 +55,7 @@ exports.check = async function (email) {
 
   } catch (err) {
     // console.log(err);
-    console.log('big error catch');
+    console.log('big error catch youtube check');
     return err;
   }
 };
@@ -79,7 +79,7 @@ exports.convert = async function (req, res) {
 
     return tokens; //perhaps unnecessary given it is stored in the backend client?
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube convert');
     // console.log(err)
     return err;
   }
@@ -98,7 +98,7 @@ exports.activity = async function (client) {
     });
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube activity');
     console.log(err)
     return err;
   }
@@ -117,7 +117,7 @@ exports.likedVideos = async function (client) {
     });
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube liked');
     // console.log(err)
     return err;
   }
@@ -136,7 +136,7 @@ exports.playlists = async function (client) {
     // console.log(result)
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube playlists');
     // console.log(err)
     return err;
   }
@@ -157,7 +157,7 @@ exports.popularVidsFromLiked = async function (client) {
     });
 
     //console.log('result: ' + result)
-    var vidList = result.data.items
+    let vidList = result.data.items
     const catArr = [] 
       vidList.forEach(vid => {
         catArr.push(vid.snippet.categoryId)
@@ -177,7 +177,7 @@ exports.popularVidsFromLiked = async function (client) {
     //console.log('response: ' + response)
     return response.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube popular');
     console.log(err)
     return err;
   }
@@ -186,11 +186,11 @@ exports.popularVidsFromLiked = async function (client) {
 function mode(array) {
   if(array.length == 0)
       return null;
-  var modeMap = {};
-  var maxEl = array[0], maxCount = 1;
-  for(var i = 0; i < array.length; i++)
+  let modeMap = {};
+  let maxEl = array[0], maxCount = 1;
+  for(let i = 0; i < array.length; i++)
   {
-      var el = array[i];
+      let el = array[i];
       if(modeMap[el] == null)
           modeMap[el] = 1;
       else
@@ -218,7 +218,7 @@ exports.subscriptions = async function (client) {
     });
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube subs');
     // console.log(err)
     return err;
   }
@@ -284,7 +284,7 @@ exports.checkSubsNotif = async function (email, client) {
     }
     return c.SUCCESS;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube subs notif');
     console.log(err)
     return err;
   }
@@ -331,7 +331,7 @@ exports.checkLikedVidsNotif = async function (email, client) {
     }
     return c.SUCCESS;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube liked vids notif');
     console.log(err)
     return err;
   }
@@ -364,10 +364,10 @@ exports.mostSubscribers = async function (client) {
       maxResults: 50
     });
 
-    var channelList = result.data.items
+    let channelList = result.data.items
     const channelArr = [] 
     const subscriberCountArr = []
-    var i = 0
+    let i = 0
     channelList.forEach(cid => {
       channelArr[i] = cid.snippet.resourceId.channelId
       console.log('CHANNEL ID: ' + cid.snippet.resourceId.channelId)
@@ -377,7 +377,7 @@ exports.mostSubscribers = async function (client) {
       
     return channelList[0];
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch youtube most subs');
     // console.log(err)
     return err;
   }
