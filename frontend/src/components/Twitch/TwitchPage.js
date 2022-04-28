@@ -203,7 +203,7 @@ const TwitchPage = (props) => {
           <Card className={styles.socialsCard} style={{ borderColor: 'var(--twitch)'}}>
             <Row>
               <h3>Profile Info</h3><br/>
-              Name: {channelData.display_name}<br/>
+              Name: {channelData.display_name}
               Bio: {channelData.description}<br/>
               Profile pic: <img src={channelData.profile_image_url} alt="" width="100" height="100"></img><br/>
               Views: {channelData.view_count}<br/>
@@ -212,7 +212,7 @@ const TwitchPage = (props) => {
               Game: {channelInfo.game_name} Title: {channelInfo.title}<br/>
             </Row>
             <Row>
-              <h3>Five Most Recent Followers</h3><br/>
+              <h3>Five Most Recent Followers</h3>
               {Object.keys(followers).map((key, index) => (
                 <div key={index}>
                   Name: {followers[key].from_name}, Followed On: {followers[key].followed_at} 

@@ -76,10 +76,11 @@ const TwitchCurrentlyStreaming = (props) => {
         params: twitchQuery,
       });
 
-      if (twitchFollowedRes.data.data.length > 0) {
+      const len = twitchFollowedRes.data.data.length;
+      if (len > 0) {
         console.log('Received Followed Streams from Twitch!');
         console.log(twitchFollowedRes);
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < len; i++) {
             var date = getTime(twitchFollowedRes.data.data[i].started_at);
             twitchFollowedRes.data.data[i].started_at = date;
           }

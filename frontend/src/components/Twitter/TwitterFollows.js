@@ -180,7 +180,7 @@ const TwitterFollows = (props) => {
                   </Col>
                 </Row>
               </div>
-            }>
+              }>
                 <div style={{ fontWeight: 'bold' }}>Followers: {followersMetrics[key].public_metrics.followers_count}, Following: {followersMetrics[key].public_metrics.following_count}, Tweets: {followersMetrics[key].public_metrics.tweet_count}, <a href={"https://www.twitter.com/" + followersMetrics[key].username} target="_blank" rel="noreferrer">View Profile</a></div>
               </Collapsible>
             ))}

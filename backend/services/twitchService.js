@@ -361,7 +361,7 @@ exports.getFollowedStreams = async function (req, res) {
       {headers: headers}
     );
 
-    console.log(result)
+    // console.log(result)
 
     return result.data;
   } catch (err) {
@@ -373,7 +373,7 @@ exports.getFollowedStreams = async function (req, res) {
 
 exports.getSubscriptions = async function (req, res) {
   try {
-    // console.log('In Twitch Subscriptions Service');
+    console.log('In Twitch Subscriptions Service');
     const token = req.query.accessToken;
     const id = req.query.id;
 
