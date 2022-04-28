@@ -441,6 +441,29 @@ exports.mutes = async function (req, res) {
   }
 };
 
+exports.mutes = async function (req, res) {
+  try {
+    // console.log('In Twitter Tweet Likes Service');
+    const token = req.query.accessToken;
+    const userID = req.query.userID;
+    console.log(req.query)
+    // console.log('IDs: ' + tweetsIds);
+
+    const headers = {
+      Authorization: 'Bearer ' + token,
+    };
+    const twitterRes = await axios.get(
+      'https://api.twitter.com/2/users/' + userID + '/muting',
+      { headers: headers }
+    );
+    return twitterRes.data;
+  } catch (err) {
+    console.log('wtf did i do wrong');
+    //console.log(err)
+    return err;
+  }
+};
+
 exports.updateFollowersNotifications = async function (email, numFollowers) {
   // console.log('updating follower')
 
