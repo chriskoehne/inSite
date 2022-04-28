@@ -41,22 +41,22 @@ const notificationSchema = new mongoose.Schema({
   content: { type: String, required: true },
 });
 
-const redditObject = new mongoose.Schema({
+const redditObjectSchema = new mongoose.Schema({
   karma: { type: Number, required: true, default: 0 },
   time: { type: Date, required: true, default: Date.now },
 });
 
-const redditHistory = new mongoose.Schema({
-  karmaHistory: {type: [redditObject], required: true, default: []}
+const redditHistorySchema = new mongoose.Schema({
+  karmaHistory: {type: [redditObjectSchema], required: true, default: []}
 });
 
-const twitterObject = new mongoose.Schema({
+const twitterObjectSchema = new mongoose.Schema({
   numFollowers: { type: Number, required: true, default: 0 },
   time: { type: Date, required: true, default: Date.now },
 });
 
-const twitterHistory = new mongoose.Schema({
-  followerHistory: {type: [twitterObject], required: true, default: []}
+const twitterHistorySchema = new mongoose.Schema({
+  followerHistory: {type: [twitterObjectSchema], required: true, default: []}
 });
 
 const redditMilestonesSchema = new mongoose.Schema(
@@ -150,8 +150,8 @@ const userSchema = new mongoose.Schema(
     settings: { type: settingsSchema, required: true, default: {} },
     mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },
-    redditHistory: { type: redditHistory, required: true, default: {} },
-    twitterHistory: { type: twitterHistory, required: true, default: {} },
+    redditHistory: { type: redditHistorySchema, required: true, default: {} },
+    twitterHistory: { type: twitterHistorySchema, required: true, default: {} },
     youtubeData: {type: youtubeDataSchema, required: true, default: {} },
     notificationsHouse: {
       type: notificationsHouseSchema,

@@ -292,6 +292,8 @@ const RedditPage = (props) => {
           if (ansTotalKarma.status === 200) {
 
             const history = ansTotalKarma.data.redditHistory.karmaHistory;
+            console.log('history is')
+            console.log(history)
             let labels = []
             let karmaScores = []
             setKarmaHistory(ansTotalKarma.data.redditHistory.karmaHistory);
@@ -320,6 +322,8 @@ const RedditPage = (props) => {
             };
 
             setChartHistoryData(historyDataset);
+          } else {
+            console.log('uhhh')
           }
         }
       }

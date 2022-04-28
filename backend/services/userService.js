@@ -221,9 +221,14 @@ exports.updatePermissions = async function (email, permissions) {
         subKarma: null,
         totalKarma: null,
       };
+      update['redditHistory'] = {};
+      update['notificationsHouse.redditMilestones'] = {}
     }
     if (!permissions.twitter) {
       update['twitterData'] = null;
+      update['twitterHistory'] = {};
+      update['notificationsHouse.twitterMilestones'] = {}
+
     }
     if (!permissions.youtube) {
       update['youtubeData'] = null;
