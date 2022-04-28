@@ -787,9 +787,11 @@ const RedditPage = (props) => {
                 data={chartHistoryData}
                 options={options}
               />
+            { chartHistoryData.datasets ?
               <div style={{ paddingTop: '2%' }}>
+              
                 Here we see a graphical representation of a user's total karma score over time
-              </div>
+              </div> : <div>No data (give inSite permissions to collect data in Settings)</div>}
             </Row>
           </Card>
         </Carousel.Item>
