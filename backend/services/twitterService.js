@@ -23,7 +23,7 @@ exports.login = async function (email) {
 
     return { link: link, verificationString: email };
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     console.log('big error catch');
     return err;
   }
@@ -109,7 +109,7 @@ exports.refresh = async function (email, token) {
     );
 
     console.log("after refresh")
-    console.log(twitterRes.data)
+    // console.log(twitterRes.data)
 
     var intermediate = twitterRes.data;
 
@@ -124,7 +124,7 @@ exports.refresh = async function (email, token) {
     return twitterRes.data;
   } catch (err) {
     console.log('twitter big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };
@@ -142,7 +142,7 @@ exports.check = async function (email) {
     }
 
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     console.log('big error catch');
     return err;
   }
@@ -197,7 +197,7 @@ exports.tweetCount = async function (req, res) {
     return twitterRes.data;
   } catch (err) {
     console.log('twitter big error catch');
-    console.log(err)
+    // console.log(err)
     return err;
   }
 };

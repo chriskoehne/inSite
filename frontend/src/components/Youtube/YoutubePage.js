@@ -80,16 +80,18 @@ const YoutubePage = (props) => {
       setPopularVidsCategory(
         c[popularVidsFromLiked.data.list[0].snippet.categoryId]
       );
-
+      
       const youtubePlaylists = await axios.get('/youtube/playlists', {params: {client: youtubeToken}});
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
+      console.log("Youtube Playlists:")
+      console.log(youtubePlaylists)
       let itemCounts = [];
       youtubePlaylists.data.list.forEach((item) => {
         itemCounts.push(item.contentDetails.itemCount);
       });
       setPlaylistCounts(itemCounts);
-
+      
       setLoading(false);
 
     };

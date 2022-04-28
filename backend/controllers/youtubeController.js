@@ -137,7 +137,7 @@ exports.subscriptions = async function (req, res, next) {
 exports.channelInfo = async function (req, res, next) {
   try {
     console.log('In YouTube CHANNEL INFO Controller');
-    let result = await youtubeService.channelInfo(req, res); 
+    let result = await youtubeService.channelInfo(req.query.client); 
 
     if (result) {
       return res
@@ -152,7 +152,7 @@ exports.channelInfo = async function (req, res, next) {
 exports.videoList = async function (req, res, next) {
   try {
     console.log('In YouTube VIDEO LIST Controller');
-    let result = await youtubeService.videoList(req, res); 
+    let result = await youtubeService.videoList(req.query.client, req.query.channelId); 
 
     if (result) {
       return res
@@ -167,7 +167,7 @@ exports.videoList = async function (req, res, next) {
 exports.myPopularVids = async function (req, res, next) {
   try {
     console.log('In YouTube MY POPULAR VIDS Controller');
-    let result = await youtubeService.myPopularVids(req, res); 
+    let result = await youtubeService.myPopularVids(req.query.client); 
 
     if (result) {
       return res
@@ -182,7 +182,7 @@ exports.myPopularVids = async function (req, res, next) {
 exports.mySubscribers = async function (req, res, next) {
   try {
     console.log('In YouTube MY SUBSCRIBERS Controller');
-    let result = await youtubeService.mySubscribers(req, res); 
+    let result = await youtubeService.mySubscribers(req.query.client); 
 
     if (result) {
       return res
@@ -197,7 +197,7 @@ exports.mySubscribers = async function (req, res, next) {
 exports.myPopularCat = async function (req, res, next) {
   try {
     console.log('In YouTube MY POPULAR CATEGORIES Controller');
-    let result = await youtubeService.myPopularCat(req, res); 
+    let result = await youtubeService.myPopularCat(req.query.client); 
 
     if (result) {
       return res
@@ -212,7 +212,7 @@ exports.myPopularCat = async function (req, res, next) {
 exports.myVidCats = async function (req, res, next) {
   try {
     console.log('In YouTube MY VIDCATS Controller');
-    let result = await youtubeService.myVidCats(req, res); 
+    let result = await youtubeService.myVidCats(req.query.client, req.query.videoId); 
 
     if (result) {
       return res
@@ -227,7 +227,7 @@ exports.myVidCats = async function (req, res, next) {
 exports.myVidComments = async function (req, res, next) {
   try {
     console.log('In YouTube MY VIDCOMMENTS Controller');
-    let result = await youtubeService.myVidComments(req, res); 
+    let result = await youtubeService.myVidComments(JSON.parse(req.query.client)); 
 
     if (result) {
       return res

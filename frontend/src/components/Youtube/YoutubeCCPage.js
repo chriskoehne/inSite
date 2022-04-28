@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Row, Card, Carousel, Container } from 'react-bootstrap';
+import { Button, Row, Card, Carousel, Container, ButtonGroup } from 'react-bootstrap';
 import BarChart from '../Charts/BarChart';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import LineChart from '../Charts/LineChart';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getMonths, getDays, getLastThirty } from './mySubscribers';
 import styles from './Youtube.module.css';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
@@ -18,6 +20,9 @@ const YoutubeCCPage = (props) => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [videoList, setVideoList] = useState([]);
   const [myPopularVids, setMyPopularVids] = useState([]);
+  const [commentGraphDay, setCommentGraphDay] = useState(true);
+  const [commentGraphThirty, setCommentGraphThirty] = useState(false);
+  const [commentGraphMonth, setCommentGraphMonth] = useState(false);
   const [mySubscribers, setMySubscribers] = useState([]);
   const [myPopularCat, setMyPopularCat] = useState([]);
   const [activity, setActivity] = useState([]);
@@ -28,7 +33,33 @@ const YoutubeCCPage = (props) => {
   const [playlistCounts, setPlaylistCounts] = useState([]);
   const [maxCatString, setMaxCatString] = useState('');
   const [finalArr, setFinalArr] = useState([]);
+  const [chartMonthData, setChartMonthData] = useState({
+    datasets: [],
+  });
+  const [chartDayData, setChartDayData] = useState({
+    datasets: [],
+  });
+  const [chartThirtyData, setChartThirtyData] = useState({
+    datasets: [],
+  });
   
+  const commentMonthClick = () => {
+    setCommentGraphDay(false);
+    setCommentGraphThirty(false);
+    setCommentGraphMonth(true);
+  };
+
+  const commentWeekClick = () => {
+    setCommentGraphDay(false);
+    setCommentGraphThirty(true);
+    setCommentGraphMonth(false);
+  };
+
+  const commentDayClick = () => {
+    setCommentGraphDay(true);
+    setCommentGraphThirty(false);
+    setCommentGraphMonth(false);
+  };
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
@@ -109,7 +140,7 @@ const YoutubeCCPage = (props) => {
     }
   const getData = async () => {
       setLoading(true);
-    const subs = await axios.get('/youtube/channelInfo');
+    const subs = await axios.get('/youtube/channelInfo', {params: {client: youtubeToken}});
       console.log('got channelInfo');
       console.log(subs);
       if (subs.status === 200) {
@@ -117,25 +148,24 @@ const YoutubeCCPage = (props) => {
       }
      let channelId = subs.data.list[0].id
 
-     const youtubeQuery = {
-      channelId: channelId
-    };
+     console.log("CHANNEL ID IS: " + channelId)
 
-     const vids = await axios.get('/youtube/videoList', { params: youtubeQuery });
+    
+     const vids = await axios.get('/youtube/videoList', {params: {client: youtubeToken, channelId: channelId}});
       console.log('got videoList');
       console.log(vids);
       if (vids.status === 200) {
         setVideoList(vids.data.list);
       }
-
-      const myPopularVids = await axios.get('/youtube/myPopularVids');
+      
+      const myPopularVids = await axios.get('/youtube/myPopularVids', {params: {client: youtubeToken}});
       console.log('got myPopularVids');
       console.log(myPopularVids);
       if (myPopularVids.status === 200) {
         setMyPopularVids(myPopularVids.data.list);
       }
-
-      const myPopularCat = await axios.get('/youtube/myPopularCat');
+      
+      const myPopularCat = await axios.get('/youtube/myPopularCat', {params: {client: youtubeToken}});
       console.log('got myPopularCat');
       console.log(myPopularCat);
       if (myPopularCat.status === 200) {
@@ -151,11 +181,9 @@ const YoutubeCCPage = (props) => {
         let videoId = myPopularCat.data.list[index].id.videoId
         console.log("videoId: " + videoId)
 
-        const youtubeVideoQuery = {
-          videoId: videoId
-        };
 
-        const myVidCats = await axios.get('/youtube/myVidCats', { params: youtubeVideoQuery });
+
+        const myVidCats = await axios.get('/youtube/myVidCats',  {params: {client: youtubeToken, videoId: videoId }});
         console.log('got myVidCats');
         console.log(myVidCats);
         if (myVidCats.status === 200) {
@@ -176,14 +204,54 @@ const YoutubeCCPage = (props) => {
       let lastArr = getUnique(catArr, maxCat)
 
       setFinalArr(lastArr)
-
-      const mySubscribers = await axios.get('/youtube/mySubscribers');
+      
+      const mySubscribers = await axios.get('/youtube/mySubscribers', {params: {client: youtubeToken}});
       console.log('got mySubscribers');
       console.log(mySubscribers);
       if (mySubscribers.status === 200) {
-        setMySubscribers(myPopularVids.data.list);
+        setMySubscribers(mySubscribers.data.list);
       }
-
+      let monthsData = getMonths(mySubscribers.data.list);
+    let monthsDataset = {
+      labels: monthsData.monthYear.reverse(),
+      datasets: [
+        {
+          label: 'Number of Subscribers',
+          data: monthsData.numSubscribers.reverse(),
+          borderColor: '#ff4500',
+          backgroundColor: '#ff4500',
+          xaxis: 'Months',
+        },
+      ],
+    };
+    let dayDate = getDays(mySubscribers.data.list);
+    let dayDataset = {
+      labels: dayDate.daysOfWeek.reverse(),
+      datasets: [
+        {
+          label: 'Number of Subscribers',
+          data: dayDate.numSubscribers.reverse(),
+          borderColor: '#ff4500',
+          backgroundColor: '#ff4500',
+        },
+      ],
+    };
+    let thirtyDate = getLastThirty(mySubscribers.data.list);
+    let thirtyDataset = {
+      labels: thirtyDate.lastThirty.reverse(),
+      datasets: [
+        {
+          label: 'Number of Subscribers',
+          data: thirtyDate.numSubscribers.reverse(),
+          borderColor: '#ff4500',
+          backgroundColor: '#ff4500',
+        },
+      ],
+    };
+    setChartThirtyData(thirtyDataset);
+    setChartDayData(dayDataset);
+    setChartMonthData(monthsDataset);
+    
       /*
       for (index = 0; index < myPopularVids.data.list.length; index++) {
         let videoId = myPopularVids.data.list[index].id.videoId
@@ -368,6 +436,51 @@ const YoutubeCCPage = (props) => {
                 </h2>
               </div >
             </Container>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.channelCard}>
+            <Row>
+              <h1>My Subscribers over time</h1>
+
+              <div className={styles.chartContainer}>
+                {commentGraphMonth ? (
+                  <LineChart
+                    height={'50vh'}
+                    width={'75vw'}
+                    color={'#ff4500'}
+                    data={chartMonthData}
+                  />
+                ) : null}
+                {commentGraphDay ? (
+                  <LineChart
+                    height={'50vh'}
+                    width={'75vw'}
+                    color={'#ff4500'}
+                    data={chartDayData}
+                  />
+                ) : null}
+                {commentGraphThirty ? (
+                  <LineChart
+                    height={'50vh'}
+                    width={'75vw'}
+                    color={'#ff4500'}
+                    data={chartThirtyData}
+                  />
+                ) : null}
+              </div>
+              <ButtonGroup aria-label='Basic example'>
+                <Button variant='secondary' onClick={commentDayClick}>
+                  Past Week
+                </Button>
+                <Button variant='secondary' onClick={commentWeekClick}>
+                  Past Month
+                </Button>
+                <Button variant='secondary' onClick={commentMonthClick}>
+                  Past Year
+                </Button>
+              </ButtonGroup>
+            </Row>
           </Card>
         </Carousel.Item>
       </Carousel>

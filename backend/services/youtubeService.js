@@ -123,8 +123,9 @@ exports.likedVideos = async function (client) {
   }
 };
 
-exports.myPopularCat = async function (req, res) {
+exports.myPopularCat = async function (client) {
   try {
+    oauth2Client.setCredentials(JSON.parse(client));
     console.log('In YouTube POPULAR CATEGORY Service');
     const result = await service.search.list({
       auth: oauth2Client,
@@ -141,7 +142,7 @@ exports.myPopularCat = async function (req, res) {
   }
 };
 
-exports.playlists = async function (req, res) {
+exports.playlists = async function (client) {
   try {
     // console.log("playlists:")
     oauth2Client.setCredentials(JSON.parse(client));
@@ -242,8 +243,10 @@ exports.subscriptions = async function (client) {
   }
 };
 
-exports.channelInfo = async function (req, res) {
+exports.channelInfo = async function (client) {
+  
   try {
+    oauth2Client.setCredentials(JSON.parse(client));
     console.log('In YouTube CHANNEL INFO Service');
     const result = await service.channels.list({
       auth: oauth2Client,
@@ -260,9 +263,10 @@ exports.channelInfo = async function (req, res) {
   }
 };
 
-exports.videoList = async function (req, res) {
+exports.videoList = async function (client, channelId) {
   try {
-    const channelId = req.query.channelId;
+    oauth2Client.setCredentials(JSON.parse(client));
+    // const channelId = req.query.channelId;
     console.log('In YouTube VIDEO LIST for channel: ' + channelId);
     const result = await service.search.list({
       auth: oauth2Client,
@@ -281,10 +285,11 @@ exports.videoList = async function (req, res) {
   }
 };
 
-exports.myPopularVids = async function (req, res) {
+exports.myPopularVids = async function (client) {
   try {
-    const channelId = req.query.myPopularVids;
-    console.log('In YouTube MY POPULAR VIDS for channel: ' + channelId);
+    oauth2Client.setCredentials(JSON.parse(client));
+    // const channelId = req.query.myPopularVids;
+    // console.log('In YouTube MY POPULAR VIDS for channel: ' + channelId);
     const result = await service.search.list({
       auth: oauth2Client,
         part: 'snippet',
@@ -303,9 +308,10 @@ exports.myPopularVids = async function (req, res) {
   }
 };
 
-exports.myVidCats = async function (req, res) {
+exports.myVidCats = async function (client, videoId) {
   try {
-    const videoId = req.query.videoId;
+    oauth2Client.setCredentials(JSON.parse(client));
+    // const videoId = req.query.videoId;
     console.log('In YouTube MY VIDCATS for video: ' + videoId);
     const result = await service.videos.list({
       auth: oauth2Client,
@@ -322,8 +328,9 @@ exports.myVidCats = async function (req, res) {
   }
 };
 
-exports.myVidComments = async function (req, res) {
+exports.myVidComments = async function (client) {
   try {
+    oauth2Client.setCredentials(JSON.parse(client));
     const videoId = req.query.videoId;
     console.log('In YouTube MY VIDCOMMENTS for video: ' + videoId);
     const result = await service.commentThreads.list({
@@ -500,8 +507,9 @@ exports.mostSubscribers = async function (client) {
   }
 };
 
-exports.mySubscribers = async function (req, res) {
+exports.mySubscribers = async function (client) {
   try {
+    oauth2Client.setCredentials(JSON.parse(client));
     // console.log('In YouTube Subscriptions Service');
     const result = await service.subscriptions.list({
       auth: oauth2Client,
