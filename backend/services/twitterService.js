@@ -257,10 +257,31 @@ exports.followers = async function (req, res) {
       'https://api.twitter.com/2/users/' + userID + '/followers',
       { headers: headers }
     );
+    numFollowers = twitterRes.data.meta.result_count;
+    const user = await User.findOne({ ['twitter.access_token']: token });
+    if (!user) {
+      console.log('here');
+      return c.USER_NOT_FOUND;
+    }
+    if (!user.settings.permissions.reddit) {
+      return c.USER_INVALID_PERMISSIONS;
+    }
+    const filter = { ['twitter.access_token']: token };
+    let update = {};
+    
+    update['$push'] = {
+      ['twitterHistory.followerHistory']: {
+        numFollowers: numFollowers,
+      },
+    };
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
     return twitterRes.data;
   } catch (err) {
     console.log('twitter big error catch');
-    // console.log(err)
+    //console.log(err)
     return err;
   }
 };

@@ -49,6 +49,15 @@ const redditHistory = new mongoose.Schema({
   karmaHistory: {type: [redditObject], required: true, default: []}
 });
 
+const twitterObject = new mongoose.Schema({
+  numFollowers: { type: Number, required: true, default: 0 },
+  time: { type: Date, required: true, default: Date.now },
+});
+
+const twitterHistory = new mongoose.Schema({
+  followerHistory: {type: [twitterObject], required: true, default: []}
+});
+
 const redditMilestonesSchema = new mongoose.Schema(
   {
     prevTotalKarma: { type: Number, required: false, default: null },
@@ -102,6 +111,7 @@ const userSchema = new mongoose.Schema(
     mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },
     redditHistory: { type: redditHistory, required: true, default: {} },
+    twitterHistory: { type: twitterHistory, required: true, default: {} },
     notificationsHouse: {
       type: notificationsHouseSchema,
       required: true,
