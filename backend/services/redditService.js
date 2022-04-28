@@ -211,7 +211,7 @@ exports.redditUsername = async function (token) {
 
 exports.userOverview = async function (email, token, username) {
   try {
-    console.log('In Reddit Overview Service');
+    // console.log('In Reddit Overview Service');
     const finalAuth = 'bearer ' + token;
 
     const headers = {
@@ -335,7 +335,7 @@ exports.userTotalKarma = async function (email, token, username) {
 exports.updateRedditData = async function (email, property, data) {
   try {
     // console.log('yo');
-    console.log(email);
+    // console.log(email);
     const user = await User.findOne({ email: email });
     if (!user) {
       console.log('here');
@@ -350,7 +350,7 @@ exports.updateRedditData = async function (email, property, data) {
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
     }
-    console.log('success ' + property);
+    // console.log('success ' + property);
     return c.SUCCESS;
   } catch (err) {
     console.log(err);
@@ -361,7 +361,7 @@ exports.updateRedditData = async function (email, property, data) {
 exports.updateKarma = async function (email, karma) {
   try {
     // console.log('yo');
-    console.log(email);
+    // console.log(email);
     const user = await User.findOne({ email: email });
     if (!user) {
       console.log('here');

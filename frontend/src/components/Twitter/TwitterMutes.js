@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
-import { Timeline, Tweet } from 'react-twitter-widgets';
+import { Timeline } from 'react-twitter-widgets';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
 // import LineChart from '../Charts/LineChart';
@@ -21,11 +21,10 @@ function getTweetsID(data) {
   return ids;
 }
 
-const TwitterList = (props) => {
+const TwitterMutes = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [twitterToken, setTwitterToken] = useState('');
-  const [mostMember, setMostMember] = useState({});
-  const [mostFollower, setMostFollower] = useState({});
+  const [mutedUser, setMutedUser] = useState('');
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {
@@ -72,37 +71,24 @@ const TwitterList = (props) => {
       );
     }
 
-    const getList = async () => {
+    const getLikes = async () => {
         // console.log('Calling Twitter API. Here is localStorage:');
         // console.log(localStorage);
-        console.log('yolo')
         const twitterQuery = {
-          accessToken: twitterToken,
-          userID: localStorage.getItem('twitter-user-id'),
+            accessToken: twitterToken,
+            userID: localStorage.getItem('twitter-user-id'),
         };
-        const twitterRes = await axios.get('/twitter/pinnedLists', {
-          params: twitterQuery,
+        const twitterRes = await axios.get('/twitter/mutes', {
+            params: twitterQuery,
         });
-        let mostFollower = -1, mostMember = -1
-        let mostFollowerList = {}, mostMemberList = {}
         if (twitterRes) {
-          console.log(twitterRes)
-          let dataStore = []
-          let data = twitterRes.data.data
-          data.forEach((e, index) => {
-            if (e.member_count > mostMember) {
-              mostMember = e.member_count
-              mostMemberList = e
-            }
-            if (e.follower_count > mostFollower) {
-              mostFollower = e.follower_count
-              mostFollowerList = e
-            }
-          })
-        }
-        console.log(mostFollowerList)
-        setMostFollower(mostFollowerList)
-        setMostMember(mostMemberList)
+            let dataStore = []
+            let data = twitterRes.data.data
+            data.forEach((e, index) => {
+                dataStore.push(e.username)
+            })
+            setMutedUser(dataStore[Math.floor(Math.random()*dataStore.length)])
+      }
       // else {
       //   console.log('Could not get Tweets from Twitter for Likes!');
       // }
@@ -110,7 +96,7 @@ const TwitterList = (props) => {
 
     if (twitterToken) {
       // console.log('Calling Twitter');
-      getList();
+      getLikes();
     }
   }, [twitterToken]);
 
@@ -120,24 +106,14 @@ const TwitterList = (props) => {
         style={{ borderColor: 'var(--twitter)' }}
         className={styles.socialsCard}
       >
-          <h1>This is your most popular pinned list</h1>
-          <Timeline dataSource={{
-              sourceType: "list",
-              id: mostFollower.id
-            }}
-            options={{ width: "50vw", height: "90vh" }}
-          />
-          <h1>This pinned list has the most accounts</h1>
-          <Timeline dataSource={{
-              sourceType: "list",
-              id: mostMember.id
-            }}
-            options={{ width: "50vw", height: "90vh" }}
-          />
+          <h1>These guys have been HUSHED for a while. You want to see whats new?</h1>
+          <Timeline dataSource={{ sourceType: "profile", screenName: mutedUser }}
+          options={{ width: "50vw", height: "90vh" }} />
+          
       </Card>
       <ReactTooltip />
     </div>
   );
 };
 
-export default TwitterList;
+export default TwitterMutes;
