@@ -209,36 +209,12 @@ const RedditPage = (props) => {
         },
       ],
     };
-
-    karmaHistory.forEach(obj => {
-      let date = obj.time;
-      let string = date.getDate()+
-      "/"+(date.getMonth()+1)+
-      "/"+date.getFullYear()+
-      " "+date.getHours()+
-      ":"+date.getMinutes()+
-      ":"+date.getSeconds();
-
-      setHistoryLabels(historyLabels => [...historyLabels, string]);
-      setKarmaScores(karmaScores => [...karmaScores, obj.karma]);
-    });
-    console.log(historyLabels);
-    let historyDataset = {
-      labels: historyLabels,
-      datasets: [
-        {
-          label: 'Total Karma',
-          data: karmaScores,
-          borderColor: '#ff4500',
-          backgroundColor: '#ff4500',
-        },
-      ],
-    };
+    
     setChartThirtyData(thirtyDataset);
     setChartDayData(dayDataset);
     setChartMonthData(monthsDataset);
     setMostControversialComment(mostControversial);
-    setChartHistoryData(historyDataset);
+    
   }, [comments]);
 
   useDidMountEffect(() => {
@@ -314,17 +290,36 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
-            console.log('ansTotalKarma')
-            console.log(ansTotalKarma.data)
-            console.log(ansTotalKarma.data.redditHistory.karmaHistory);
 
-            
-            
+            const history = ansTotalKarma.data.redditHistory.karmaHistory;
+            let labels = []
+            let karmaScores = []
             setKarmaHistory(ansTotalKarma.data.redditHistory.karmaHistory);
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
             setTotalKarma(ansTotalKarma.data.totalKarma);
+
+            
+            history.forEach(obj => {
+              
+              let date = new Date(obj.time);
+              labels.push(date.toLocaleString());
+              karmaScores.push(obj.karma);
+            });
+            let historyDataset = {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Total Karma',
+                  data: karmaScores,
+                  borderColor: '#ff4500',
+                  backgroundColor: '#ff4500',
+                },
+              ],
+            };
+
+            setChartHistoryData(historyDataset);
           }
         }
       }
