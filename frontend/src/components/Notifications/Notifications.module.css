@@ -18,11 +18,12 @@
 
 .centered {
   display: flex;
-  height: 80%;
+  height: 80vh;
   flex-direction: column;
   align-items: center;
   overflow-y: scroll;
   padding: 30px;
+  margin-bottom: 20px;
 }
 
 .colcenter {

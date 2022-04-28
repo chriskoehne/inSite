@@ -66,7 +66,7 @@ const TwitchCard = (props) => {
       // ans.data.reddit
       localStorage.setItem(
         'twitchToken',
-        JSON.stringify({ token: ans.data.twitch.access_token })
+        JSON.stringify({ token: ans.data.twitch.access_token, date: Date.now() })
       );
       setTwitchToken(ans.data.twitch.access_token);
     } 

@@ -28,7 +28,7 @@ exports.test = async function (req, res) {
 
     return;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit test');
     return err;
   }
 };
@@ -47,7 +47,7 @@ exports.login = async function (email) {
     return { link: link, verificationString: email };
   } catch (err) {
     console.log(err);
-    console.log('big error catch');
+    console.log('big error catch reddit login');
     return err;
   }
 };
@@ -59,13 +59,15 @@ exports.check = async function (email) {
     // console.log("in backend check, result is")
     // console.log(result)
     if (result.reddit) {
+    // if (result.reddit && !result.reddit.error) {
       return result.reddit;
     } else {
+      console.log(result.reddit.error)
       return false;
     }
   } catch (err) {
     console.log(err);
-    console.log('big error catch');
+    console.log('big error catch reddit check');
     return err;
   }
 };
@@ -114,7 +116,7 @@ exports.convert = async function (code, email) {
 
     return redditRes.data;
   } catch (err) {
-    console.log('reddit big error catch');
+    console.log('big error catch reddit convert');
     // console.log(err)
     return err;
   }
@@ -160,7 +162,7 @@ exports.refresh = async function (token, email) {
 
     return redditRes.data; //includes access token, etc
   } catch (err) {
-    console.log('reddit big error catch');
+    console.log('big error catch reddit refresh');
     // console.log(err)
     return err;
   }
@@ -183,7 +185,7 @@ exports.redditMe = async function (req, res) {
 
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit me');
     // console.log(err)
     return err;
   }
@@ -203,8 +205,8 @@ exports.redditUsername = async function (token) {
 
     return redditRes.data.name;
   } catch (err) {
-    console.log('big error catch');
-    console.log(err);
+    console.log('big error catch reddit username');
+    console.log(err.message);
     return err;
   }
 };
@@ -246,7 +248,7 @@ exports.userOverview = async function (email, token, username) {
     exports.updateRedditData(email, 'overview', data); //we don't need to await the result from this
     return data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit overview');
     // console.log(err)
     return err;
   }
@@ -268,7 +270,7 @@ exports.userComments = async function (token, username) {
 
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit comments');
     return err;
   }
 };
@@ -293,13 +295,12 @@ exports.userSubKarma = async function (email, token) {
     exports.updateRedditData(email, 'subKarma', subKarmaList);
     return subKarmaList;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit subkarma');
     // console.log(err)
     return err;
   }
 };
 
-// I don't think we use this
 exports.userTotalKarma = async function (email, token, username) {
   try {
     // console.log('In Reddit Total Karma Service');
@@ -314,12 +315,13 @@ exports.userTotalKarma = async function (email, token, username) {
       'https://oauth.reddit.com/user/' + username + '/about',
       { headers: headers }
     );
-
+    const user = await User.findOne({ email: email });
     const karma = {
       commentKarma: redditRes.data.data.comment_karma,
       linkKarma: redditRes.data.data.link_karma,
       awardKarma: redditRes.data.data.awardee_karma,
       totalKarma: redditRes.data.data.total_karma,
+      redditHistory: user.redditHistory
     };
     // console.log(totalKarma)
     // exports.updateRedditData(email, 'totalKarma', totalKarma);
@@ -327,7 +329,7 @@ exports.userTotalKarma = async function (email, token, username) {
 
     return karma;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit total karma');
     return err;
   }
 };
@@ -338,7 +340,6 @@ exports.updateRedditData = async function (email, property, data) {
     // console.log(email);
     const user = await User.findOne({ email: email });
     if (!user) {
-      console.log('here');
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.reddit) {
@@ -363,33 +364,85 @@ exports.updateKarma = async function (email, karma) {
     // console.log('yo');
     // console.log(email);
     const user = await User.findOne({ email: email });
+
     if (!user) {
-      console.log('here');
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.reddit) {
       return c.USER_INVALID_PERMISSIONS;
     }
     const filter = { email: email };
-    let update = { ['redditData.totalKarma']: karma };
+    let update = { ['redditData.karma']: karma };
+
+    let notifications = [];
 
     const redditMilestones = user.notificationsHouse.redditMilestones;
-    if (redditMilestones.prevTotalKarma === null) {
+    update['$push'] = {
+      ['redditHistory.karmaHistory']: {
+        karma: karma.totalKarma,
+      },
+    };
+    if (typeof(redditMilestones.prevTotalKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
         karma.totalKarma;
     } else if (karma.totalKarma - redditMilestones.prevTotalKarma >= 3) {
       // do an update and create a notification
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
         karma.totalKarma;
-      update['$push'] = {
-        ['notificationsHouse.notifications']: {
-          sm: 'reddit',
-          content:
-            'karma increased by ' +
-            (karma.totalKarma - redditMilestones.prevTotalKarma),
-        },
-      };
+
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'total karma increased by ' +
+          (karma.totalKarma - redditMilestones.prevTotalKarma),
+      });
     }
+    if (typeof(redditMilestones.prevCommentKarma) !== 'number') {
+      update['notificationsHouse.redditMilestones.prevCommentKarma'] =
+        karma.commentKarma;
+    } else if (karma.commentKarma - redditMilestones.prevCommentKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevCommentKarma'] =
+        karma.commentKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'comment karma increased by ' +
+          (karma.commentKarma - redditMilestones.prevCommentKarma),
+      });
+    }
+    if (typeof(redditMilestones.prevLinkKarma) !== 'number') {
+      update['notificationsHouse.redditMilestones.prevLinkKarma'] =
+        karma.linkKarma;
+    } else if (karma.linkKarma - redditMilestones.prevLinkKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevLinkKarma'] =
+        karma.linkKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'link karma increased by ' +
+          (karma.linkKarma - redditMilestones.prevLinkKarma),
+      });
+    }
+    if (typeof(redditMilestones.prevAwardKarma) !== 'number') {
+      update['notificationsHouse.redditMilestones.prevAwardKarma'] =
+        karma.awardKarma;
+    } else if (karma.awardKarma - redditMilestones.prevAwardKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevAwardKarma'] =
+        karma.awardKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'award karma increased by ' +
+          (karma.awardKarma - redditMilestones.prevAwardKarma),
+      });
+    }
+
+    update['$push'] = {
+      ['notificationsHouse.notifications']: notifications,
+    };
 
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {

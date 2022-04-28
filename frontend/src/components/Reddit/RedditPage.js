@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import BarChart from '../Charts/BarChart';
 import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -56,6 +57,9 @@ const RedditPage = (props) => {
   const [commentGraphMonth, setCommentGraphMonth] = useState(false);
   const [mostControversialPost, setmostControversialPost] = useState({});
   const [mostControversialComment, setMostControversialComment] = useState({});
+  const [karmaHistory, setKarmaHistory] = useState([]);
+  const [historyLabels, setHistoryLabels] = useState([]);
+  const [karmaScores, setKarmaScores] = useState([]);
   //chartComment
   const [chartCommentData, setChartCommentData] = useState({
     datasets: [],
@@ -70,6 +74,10 @@ const RedditPage = (props) => {
   const [chartThirtyData, setChartThirtyData] = useState({
     datasets: [],
   });
+  const [chartHistoryData, setChartHistoryData] = useState({
+    datasets: [],
+  });
+  
   // const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
@@ -105,7 +113,7 @@ const RedditPage = (props) => {
           setPosts(redditData.overview.posts);
           setComments(redditData.overview.comments);
           setSubKarmaList(redditData.subKarma);
-          setCommentKarma(redditData.totakarmalKarma.commentKarma);
+          setCommentKarma(redditData.karma.commentKarma);
           setLinkKarma(redditData.karma.linkKarma);
           setAwardKarma(redditData.karma.awardKarma);
           setTotalKarma(redditData.karma.totalKarma);
@@ -201,10 +209,12 @@ const RedditPage = (props) => {
         },
       ],
     };
+    
     setChartThirtyData(thirtyDataset);
     setChartDayData(dayDataset);
     setChartMonthData(monthsDataset);
     setMostControversialComment(mostControversial);
+    
   }, [comments]);
 
   useDidMountEffect(() => {
@@ -280,11 +290,40 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
-            console.log(ansTotalKarma.data)
+
+            const history = ansTotalKarma.data.redditHistory.karmaHistory;
+            console.log('history is')
+            console.log(history)
+            let labels = []
+            let karmaScores = []
+            setKarmaHistory(ansTotalKarma.data.redditHistory.karmaHistory);
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
             setTotalKarma(ansTotalKarma.data.totalKarma);
+
+            
+            history.forEach(obj => {
+              
+              let date = new Date(obj.time);
+              labels.push(date.toLocaleString());
+              karmaScores.push(obj.karma);
+            });
+            let historyDataset = {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Total Karma',
+                  data: karmaScores,
+                  borderColor: '#ff4500',
+                  backgroundColor: '#ff4500',
+                },
+              ],
+            };
+
+            setChartHistoryData(historyDataset);
+          } else {
+            console.log('uhhh')
           }
         }
       }
@@ -740,7 +779,25 @@ const RedditPage = (props) => {
             </Row>
           </Card>
         </Carousel.Item>
+        {console.log(chartHistoryData)}
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row className={styles.chartContainer}>
+              <Line
+                height={'50vh'}
+                width={'75vw'}
+                color={'#ff4500'}
+                data={chartHistoryData}
+                options={options}
+              />
+              <div style={{ paddingTop: '2%' }}>
+                Here we see a graphical representation of a user's total karma score over time
+              </div>
+            </Row>
+          </Card>
+        </Carousel.Item>
       </Carousel>
+      
       <ReactTooltip />
     </div>
   );

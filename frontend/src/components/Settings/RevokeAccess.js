@@ -29,6 +29,8 @@ const RevokeAccess = () => {
     });
     if (redditAns.data.success) {
       setShowReddit(true);
+    } else {
+      console.log(redditAns.data)
     }
     let twitterAns = await axios.post('/twitter/check', {
       params: { email: localStorage.getItem('email') },
