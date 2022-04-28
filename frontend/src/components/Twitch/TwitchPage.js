@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Row, Card, Carousel } from 'react-bootstrap';
+import { Col, Row, Card, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitch.module.css';
 import LineChart from '../Charts/LineChart';
@@ -200,24 +200,42 @@ const TwitchPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard} style={{ borderColor: 'var(--twitch)'}}>
+          <Card style={{ borderColor: 'var(--twitch)' }} className={styles.socialsCard} >
             <Row>
-              <h3>Profile Info</h3><br/>
-              Name: {channelData.display_name}
+            <Col>
+              <h1>Profile Info</h1><br/>
+              <div alt="" className={styles.pfp} >
+                <img src={channelData.profile_image_url} alt="" width="200" height="200"></img><br/>
+              </div>
+              <a href={"https://twitch.tv/" + channelData.display_name} style={{color: 'var(--twitch)'}} target="_blank" rel="noreferrer" >
+              <h3>{channelData.display_name}</h3>
+              </a>
+              <div style={{ fontWeight: 'bold', fontSize: 22 }}>
+              Total Views: {channelData.view_count}<br/>
               Bio: {channelData.description}<br/>
-              Profile pic: <img src={channelData.profile_image_url} alt="" width="100" height="100"></img><br/>
-              Views: {channelData.view_count}<br/>
               Created On: {channelData.created_at}<br/>
-              Most Recent Stream: <br/>
-              Game: {channelInfo.game_name} Title: {channelInfo.title}<br/>
-            </Row>
-            <Row>
-              <h3>Five Most Recent Followers</h3>
+              </div>
+            </Col>
+            <Col>
+              <h1>Five Most Recent Followers</h1><br/>
               {Object.keys(followers).map((key, index) => (
-                <div key={index}>
-                  Name: {followers[key].from_name}, Followed On: {followers[key].followed_at} 
+                <div key={index} style={{ fontWeight: 'bold', fontSize: 22 }}>
+                  Name:
+                  <a href={"https://twitch.tv/" + followers[key].from_name} style={{color: 'var(--twitch)', marginLeft: 3.2}} target="_blank" rel="noreferrer" >{followers[key].from_name}</a>, Followed On: {followers[key].followed_at} 
                 </div>
               ))}
+            </Col>
+            </Row>
+            <Row>
+              <Col>
+              <br/>
+              <br/>
+              <h1>Most Recent Stream:</h1>
+              <div style={{ fontWeight: 'bold', fontSize: 22}}>
+              Game: {channelInfo.game_name} <br/>
+              Title: {channelInfo.title}<br/>
+              </div>
+              </Col>
             </Row>
           </Card>
         </Carousel.Item>

@@ -114,3 +114,13 @@
   width: 5vw;
   border: 0;
 }
+
+.centered {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 30px;
+  margin-left: 20%;
+  margin-right: 20%;
+}
