@@ -76,10 +76,10 @@ const TwitchClips = (props) => {
     <Card className={styles.socialsCard}>
         <h1>Top 5 Clips</h1>
         {Object.keys(clips).map((key, index) => (
-            
             <div key={index}>
             <br/>
-            Title:<a href={clips[key].url} style={{color: 'var(--twitch)', marginLeft: 3.2}} target="_blank" rel="noreferrer">{clips[key].title}</a>, Views: {clips[key].view_count}, Created By: <a href={"https://twitch.tv/" + clips[key].creator_name} style={{color: 'var(--twitch)', marginLeft: 3.2}} target="_blank" rel="noreferrer" >{clips[key].creator_name}</a>, Created On: {clips[key].created_at}<br/>
+            <h3><a href={clips[key].url} style={{color: 'var(--twitch)', marginLeft: 3.2}} target="_blank" rel="noreferrer">{clips[key].title}</a></h3><br/>
+            Views: {clips[key].view_count}, Created By: <a href={"https://twitch.tv/" + clips[key].creator_name} style={{color: 'var(--twitch)', marginLeft: 3.2}} target="_blank" rel="noreferrer" >{clips[key].creator_name}</a>, Created On: {clips[key].created_at}<br/>
             <iframe title={clips[key].title} width="500" height="400" src={clips[key].embed_url + '&parent=127.0.0.1'} allowFullScreen></iframe>
             </div>
         ))}

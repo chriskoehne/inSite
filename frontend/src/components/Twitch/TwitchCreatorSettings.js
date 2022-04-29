@@ -108,7 +108,7 @@ const TwitchCreatorSettings = (props) => {
           <Row>
               <Col>
               <h3>Creator Goals</h3>
-              You created a {creatorGoals.type} Goal on {creatorGoals.created_at} with the description {creatorGoals.description}<br/>
+              You created a {creatorGoals.type} Goal on {creatorGoals.created_at} with the description "{creatorGoals.description}"<br/>
               The goal is to reach {creatorGoals.target_amount} and you are currently at {creatorGoals.current_amount}. Only {creatorGoals.target_amount - creatorGoals.current_amount} more to go!
               </Col><Col>
               <h3>AutoMod Hostility Levels (0-4)</h3>
@@ -134,12 +134,12 @@ const TwitchCreatorSettings = (props) => {
           </Row>
           <Row>
               <Col>
-                
-
                 <h3>Stream Tags</h3>
               {Object.keys(streamTags).map((key, index) => (
                 <div key={index}>
-                  Name: {streamTags[key].localization_names['en-us']}, Description: {streamTags[key].localization_descriptions['en-us']}
+                  Name: {streamTags[key].localization_names['en-us']}<br/>
+                  Description: {streamTags[key].localization_descriptions['en-us']}<br/>
+                  <br/>
                 </div>
               ))}
               </Col>
@@ -147,7 +147,10 @@ const TwitchCreatorSettings = (props) => {
               <h3>Banned Users</h3>
               {Object.keys(bannedUsers).map((key, index) => (
                 <div key={index}>
-                  Name: {bannedUsers[key].user_name}, Reason: {bannedUsers[key].reason}, Banned By: {bannedUsers[key].moderator_name}
+                  Name: <a href={"https://twitch.tv/" + bannedUsers[key].user_name} style={{color: 'var(--twitch)'}} target="_blank" rel="noreferrer" >{bannedUsers[key].user_name}</a><br/>
+                  Reason: {bannedUsers[key].reason}<br/>
+                  Banned By: <a href={"https://twitch.tv/" + bannedUsers[key].moderator_name} style={{color: 'var(--twitch)'}} target="_blank" rel="noreferrer" >{bannedUsers[key].moderator_name}</a><br/>
+                  <br/>
                 </div>
               ))}
               </Col>

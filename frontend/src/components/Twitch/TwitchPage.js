@@ -20,7 +20,9 @@ const TwitchPage = (props) => {
   });
   const [channelData, setChannelData] = useState({});
   const [followers, setFollowers] = useState([]);
+  const [followersLength, setFollowersLength] = useState(0);
   const [channelInfo, setChannelInfo] = useState({})
+  const [gameName, setGameName] = useState('')
 
   // console.log(loading)
 
@@ -168,6 +170,7 @@ const TwitchPage = (props) => {
           var date = getDate(twitchRes.data.data[i].followed_at);
           twitchRes.data.data[i].followed_at = date;
         }
+        setFollowersLength(twitchRes.data.data.length);
         setFollowers(twitchRes.data.data.slice(0, 5));
 
         const twitchChannelRes = await axios.get('/twitch/getChannelInformation', {
@@ -177,6 +180,10 @@ const TwitchPage = (props) => {
         if (twitchChannelRes) {
           // console.log('Recieved Channel Data!');
           // console.log(twitchChannelRes.data);
+          setGameName(twitchChannelRes.data.data[0].game_name);
+          var uri = twitchChannelRes.data.data[0].game_name;
+          uri = uri.replace('/', '%2F');
+          twitchChannelRes.data.data[0].game_name = uri;
           setChannelInfo(twitchChannelRes.data.data[0]);
         }
       } 
@@ -212,6 +219,7 @@ const TwitchPage = (props) => {
               </a>
               <div style={{ fontWeight: 'bold', fontSize: 22 }}>
               Total Views: {channelData.view_count}<br/>
+              Followers: {followersLength}<br/>
               Bio: {channelData.description}<br/>
               Created On: {channelData.created_at}<br/>
               </div>
@@ -230,10 +238,10 @@ const TwitchPage = (props) => {
               <Col>
               <br/>
               <br/>
-              <h1>Most Recent Stream:</h1>
+              <h1>Most Recent Stream</h1>
               <div style={{ fontWeight: 'bold', fontSize: 22}}>
-              Game: {channelInfo.game_name} <br/>
-              Title: {channelInfo.title}<br/>
+                Title: {channelInfo.title}<br/>
+                Game: <a href={"https://twitch.tv/directory/game/" + channelInfo.game_name} style={{color: 'var(--twitch)'}} target="_blank" rel="noreferrer" >{gameName}</a> <br/>
               </div>
               </Col>
             </Row>
