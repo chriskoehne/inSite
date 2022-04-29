@@ -211,9 +211,7 @@ const TwitchPage = (props) => {
             <Row>
             <Col>
               <h1>Profile Info</h1><br/>
-              <div alt="" className={styles.pfp} >
-                <img src={channelData.profile_image_url} alt="" width="200" height="200"></img><br/>
-              </div>
+              <img src={channelData.profile_image_url} alt="" width="200" height="200"></img><br/>
               <a href={"https://twitch.tv/" + channelData.display_name} style={{color: 'var(--twitch)'}} target="_blank" rel="noreferrer" >
               <h3>{channelData.display_name}</h3>
               </a>
