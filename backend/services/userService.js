@@ -4,19 +4,19 @@ const { findOne } = require('../database/models/User');
 const speakeasy = require('speakeasy');
 
 // for notifications
-const Nexmo = require('nexmo')
+const Nexmo = require('nexmo');
 const nodemailer = require('nodemailer');
 
 const nexmo = new Nexmo({
   apiKey: process.env.NEXMO_API_KEY,
-  apiSecret: process.env.NEXMO_API_SECRET
-})
+  apiSecret: process.env.NEXMO_API_SECRET,
+});
 
 const transport = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-      user: 'inSiteEmail407@gmail.com',
-      pass: 'insite407',
+    user: 'inSiteEmail407@gmail.com',
+    pass: 'insite407',
   },
 });
 
@@ -119,8 +119,13 @@ exports.getNotifications = async function (email) {
 
 exports.updateNotification = async function (email, notifId) {
   try {
-    const filter = { email: email, ['notificationsHouse.notifications._id']: notifId };
-    const update = { $set: {['notificationsHouse.notifications.$.sent']: true }};
+    const filter = {
+      email: email,
+      ['notificationsHouse.notifications._id']: notifId,
+    };
+    const update = {
+      $set: { ['notificationsHouse.notifications.$.sent']: true },
+    };
     const user = await User.findOneAndUpdate(filter, update);
     if (!user) {
       return c.USER_NOT_FOUND;
@@ -135,7 +140,9 @@ exports.updateNotification = async function (email, notifId) {
 exports.deleteNotification = async function (email, notifId) {
   try {
     const filter = { email: email };
-    const update = { $pull: {['notificationsHouse.notifications']: {_id: notifId} }};
+    const update = {
+      $pull: { ['notificationsHouse.notifications']: { _id: notifId } },
+    };
     const user = await User.findOneAndUpdate(filter, update);
     if (!user) {
       return c.USER_NOT_FOUND;
@@ -161,7 +168,6 @@ exports.deleteAllNotifications = async function (email, notifId) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
-
 
 exports.updateDarkMode = async function (email, darkMode) {
   try {
@@ -222,13 +228,12 @@ exports.updatePermissions = async function (email, permissions) {
         totalKarma: null,
       };
       update['redditHistory'] = {};
-      update['notificationsHouse.redditMilestones'] = {}
+      update['notificationsHouse.redditMilestones'] = {};
     }
     if (!permissions.twitter) {
       update['twitterData'] = null;
       update['twitterHistory'] = {};
-      update['notificationsHouse.twitterMilestones'] = {}
-
+      update['notificationsHouse.twitterMilestones'] = {};
     }
     if (!permissions.youtube) {
       update['youtubeData'] = null;
@@ -284,6 +289,23 @@ exports.getRedditData = async function (email) {
   }
 };
 
+exports.getTwitterHistory = async function (email) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    // console.log(user);
+    if (!user.settings.permissions.twitter) {
+      c.USER_INVALID_PERMISSIONS;
+    }
+    return user.twitterHistory;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
 exports.getPhoneAndStatus = async function (email) {
   try {
     const user = await User.findOne({ email: email });
@@ -291,7 +313,7 @@ exports.getPhoneAndStatus = async function (email) {
       return false;
     }
 
-    return {phone: user.phone, status: user.phoneNotif};
+    return { phone: user.phone, status: user.phoneNotif };
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;
@@ -305,7 +327,7 @@ exports.getEmailStatus = async function (email) {
       return false;
     }
 
-    return {status: user.emailNotif};
+    return { status: user.emailNotif };
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;
@@ -375,24 +397,31 @@ exports.sendsms = async function (email, message) {
     if (!user) {
       return false;
     }
-    console.log("about to send")
-    nexmo.message.sendSms("18554306125", user.phone, message, {
-      type: "unicode"
-    }, (err, responseData) => {
-      if (err) {
-        console.log(err);
-        return false;
-      } else {
-        if (responseData.messages[0]['status'] === "0") {
-          console.log("Message sent successfully.");
-          return true;
-        } else {
-          console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
+    console.log('about to send');
+    nexmo.message.sendSms(
+      '18554306125',
+      user.phone,
+      message,
+      {
+        type: 'unicode',
+      },
+      (err, responseData) => {
+        if (err) {
+          console.log(err);
           return false;
+        } else {
+          if (responseData.messages[0]['status'] === '0') {
+            console.log('Message sent successfully.');
+            return true;
+          } else {
+            console.log(
+              `Message failed with error: ${responseData.messages[0]['error-text']}`
+            );
+            return false;
+          }
         }
       }
-    })
-
+    );
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;
@@ -405,21 +434,19 @@ exports.sendemail = async function (email, message) {
     if (!user) {
       return false;
     }
-    console.log("about to send")
+    console.log('about to send');
     const mailOptions = {
       from: 'inSiteEmail407@gmail.com',
       to: email,
       subject: 'inSite notification',
       html: message,
-  };
-  transport.sendMail(mailOptions, (error, info) => {
-    if (error) {
+    };
+    transport.sendMail(mailOptions, (error, info) => {
+      if (error) {
         console.log(error);
-    }
-    console.log(`Message sent: ${info.response}`);
-});
-    
-
+      }
+      console.log(`Message sent: ${info.response}`);
+    });
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;
@@ -428,63 +455,62 @@ exports.sendemail = async function (email, message) {
 
 exports.revokeAccess = async function (email, social) {
   try {
-    console.log(email)
-    console.log(social)
+    console.log(email);
+    console.log(social);
     const user = await User.findOne({ email: email });
     var result;
     if (!user) {
       return false;
     }
-    console.log("revoking access for ")
-    console.log(social)
+    console.log('revoking access for ');
+    console.log(social);
     switch (social) {
       case 'reddit':
-        console.log("its reddit")
+        console.log('its reddit');
         if (!user.reddit) {
           return false;
         }
         result = await User.updateOne(
           { email: email },
-          { $unset: {reddit: "", redditData: ""}}
+          { $unset: { reddit: '', redditData: '' } }
         );
         return true;
-        break
+        break;
       case 'twitter':
-        console.log("its twitter")
+        console.log('its twitter');
         if (!user.twitter) {
           return false;
         }
         result = await User.updateOne(
           { email: email },
-          { $unset: {twitter: "", twitterData: ""}}
+          { $unset: { twitter: '', twitterData: '' } }
         );
         return true;
-        break
+        break;
       case 'youtube':
-        console.log("its youtube")
+        console.log('its youtube');
         if (!user.youtube) {
           return false;
         }
         result = await User.updateOne(
           { email: email },
-          { $unset: {youtube: "", youtubeData: ""}}
+          { $unset: { youtube: '', youtubeData: '' } }
         );
         return true;
-        break
+        break;
       case 'twitch':
-          console.log("its twitch")
-          if (!user.twitch) {
-            return false;
-          }
-          result = await User.updateOne(
-            { email: email },
-            { $unset: {twitch: "", twitchData: ""}}
-          );
-          return true;
-          break
+        console.log('its twitch');
+        if (!user.twitch) {
+          return false;
+        }
+        result = await User.updateOne(
+          { email: email },
+          { $unset: { twitch: '', twitchData: '' } }
+        );
+        return true;
+        break;
     }
     return false;
-
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;

@@ -224,7 +224,7 @@ exports.me = async function (accessToken) {
     return twitterRes.data;
   } catch (err) {
     console.log('big error catch twitter me');
-    console.log(err);
+    console.log(err.message);
     return err;
   }
 };
@@ -423,7 +423,7 @@ exports.mutes = async function (req, res) {
     // console.log('In Twitter Tweet Likes Service');
     const token = req.query.accessToken;
     const userId = req.query.userId;
-    // console.log(req.query);
+    // console.log(req.query)
     // console.log('IDs: ' + tweetsIds);
 
     const headers = {
@@ -436,30 +436,7 @@ exports.mutes = async function (req, res) {
     return twitterRes.data;
   } catch (err) {
     console.log('wtf did i do wrong');
-    //console.log(err)
-    return err;
-  }
-};
-
-exports.mutes = async function (req, res) {
-  try {
-    // console.log('In Twitter Tweet Likes Service');
-    const token = req.query.accessToken;
-    const userID = req.query.userID;
-    // console.log(req.query)
-    // console.log('IDs: ' + tweetsIds);
-
-    const headers = {
-      Authorization: 'Bearer ' + token,
-    };
-    const twitterRes = await axios.get(
-      'https://api.twitter.com/2/users/' + userID + '/muting',
-      { headers: headers }
-    );
-    return twitterRes.data;
-  } catch (err) {
-    console.log('wtf did i do wrong');
-    //console.log(err)
+    console.log(err.message);
     return err;
   }
 };
@@ -474,21 +451,15 @@ exports.updateFollowersNotifications = async function (email, numFollowers) {
       return c.USER_NOT_FOUND;
     }
     if (!user.settings.permissions.twitter) {
-
       return c.USER_INVALID_PERMISSIONS;
     }
     const filter = { email: email };
-    let update = { };
+    let update = {};
     let notifications = [];
 
-    update['$push'] = {
-      ['twitterHistory.followerHistory']: {
-        numFollowers: numFollowers,
-      },
-    };
-
     const twitterMilestones = user.notificationsHouse.twitterMilestones;
-    if (typeof(twitterMilestones.prevNumFollowers) !== 'number') {
+    if (false) {
+      // if (typeof(twitterMilestones.prevNumFollowers) !== 'number') {
       update['notificationsHouse.twitterMilestones.prevNumFollowers'] =
         numFollowers;
     } else if (numFollowers - twitterMilestones.prevNumFollowers >= 1) {
@@ -503,9 +474,14 @@ exports.updateFollowersNotifications = async function (email, numFollowers) {
           (numFollowers - twitterMilestones.prevNumFollowers),
       });
     }
-    update['$push'] = {
-      ['notificationsHouse.notifications']: notifications,
-    };
+    update['$push'] = {};
+    if (numFollowers !== twitterMilestones.prevNumFollowers) {
+      update['$push']['twitterHistory.followerHistory'] = {
+        numFollowers: numFollowers,
+      };
+    }
+    update['$push']['notificationsHouse.notifications'] = notifications;
+    // console.log(update);
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
@@ -529,12 +505,13 @@ exports.updateFollowingNotifications = async function (email, numFollowing) {
       return c.USER_INVALID_PERMISSIONS;
     }
     const filter = { email: email };
-    let update = { };
+    let update = {};
     let notifications = [];
-    
 
     const twitterMilestones = user.notificationsHouse.twitterMilestones;
-    if (typeof(twitterMilestones.prevNumFollowing) !== 'number') {
+
+    if (false) {
+      // if (typeof(twitterMilestones.prevNumFollowing) !== 'number') {
       update['notificationsHouse.twitterMilestones.prevNumFollowing'] =
         numFollowing;
     } else if (numFollowing - twitterMilestones.prevNumFollowing >= 1) {
@@ -563,5 +540,3 @@ exports.updateFollowingNotifications = async function (email, numFollowing) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
-
-

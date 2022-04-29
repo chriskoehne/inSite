@@ -59,10 +59,10 @@ exports.check = async function (email) {
     // console.log("in backend check, result is")
     // console.log(result)
     if (result.reddit) {
-    // if (result.reddit && !result.reddit.error) {
+      // if (result.reddit && !result.reddit.error) {
       return result.reddit;
     } else {
-      console.log(result.reddit.error)
+      // console.log(result.reddit.error)
       return false;
     }
   } catch (err) {
@@ -321,7 +321,7 @@ exports.userTotalKarma = async function (email, token, username) {
       linkKarma: redditRes.data.data.link_karma,
       awardKarma: redditRes.data.data.awardee_karma,
       totalKarma: redditRes.data.data.total_karma,
-      redditHistory: user.redditHistory
+      redditHistory: user.redditHistory,
     };
     // console.log(totalKarma)
     // exports.updateRedditData(email, 'totalKarma', totalKarma);
@@ -377,12 +377,16 @@ exports.updateKarma = async function (email, karma) {
     let notifications = [];
 
     const redditMilestones = user.notificationsHouse.redditMilestones;
-    update['$push'] = {
-      ['redditHistory.karmaHistory']: {
-        karma: karma.totalKarma,
-      },
-    };
-    if (typeof(redditMilestones.prevTotalKarma) !== 'number') {
+
+    if (karma.totalKarma !== redditMilestones.prevTotalKarma) {
+      update['$push'] = {
+        ['redditHistory.karmaHistory']: {
+          karma: karma.totalKarma,
+        },
+      };
+    }
+    if (false) {
+      // if (typeof(redditMilestones.prevTotalKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
         karma.totalKarma;
     } else if (karma.totalKarma - redditMilestones.prevTotalKarma >= 3) {
@@ -397,7 +401,8 @@ exports.updateKarma = async function (email, karma) {
           (karma.totalKarma - redditMilestones.prevTotalKarma),
       });
     }
-    if (typeof(redditMilestones.prevCommentKarma) !== 'number') {
+    if (false) {
+      // if (typeof(redditMilestones.prevCommentKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevCommentKarma'] =
         karma.commentKarma;
     } else if (karma.commentKarma - redditMilestones.prevCommentKarma >= 3) {
@@ -411,7 +416,8 @@ exports.updateKarma = async function (email, karma) {
           (karma.commentKarma - redditMilestones.prevCommentKarma),
       });
     }
-    if (typeof(redditMilestones.prevLinkKarma) !== 'number') {
+    if (false) {
+      // if (typeof(redditMilestones.prevLinkKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevLinkKarma'] =
         karma.linkKarma;
     } else if (karma.linkKarma - redditMilestones.prevLinkKarma >= 3) {
@@ -425,7 +431,8 @@ exports.updateKarma = async function (email, karma) {
           (karma.linkKarma - redditMilestones.prevLinkKarma),
       });
     }
-    if (typeof(redditMilestones.prevAwardKarma) !== 'number') {
+    if (false) {
+      // if (typeof(redditMilestones.prevAwardKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevAwardKarma'] =
         karma.awardKarma;
     } else if (karma.awardKarma - redditMilestones.prevAwardKarma >= 3) {

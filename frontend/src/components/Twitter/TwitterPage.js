@@ -12,6 +12,7 @@ import TwitterLikesGraph from './TwitterLikesGraph';
 import TwitterList from './TwitterList'; 
 import TwitterNonPublic from './TwitterNonPublic';
 import TwitterMutes from './TwitterMutes';
+import TwitterFollowersHistory from './TwitterFollowersHistory';
 
 const c = require('../Reddit/constants/constants');
 
@@ -206,6 +207,9 @@ const TwitterPage = (props) => {
           </Carousel.Item>
           <Carousel.Item>
             <TwitterList />
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterFollowersHistory />
           </Carousel.Item>
       </Carousel>
     </div>

@@ -245,6 +245,27 @@ exports.getRedditData = async function (req, res, next) {
   }
 };
 
+exports.getTwitterHistory = async function (req, res, next) {
+  console.log('getTwitterHistory')
+  try {
+
+    let result = await userService.getTwitterHistory(
+      req.query.email,
+    );
+    switch (result) {
+      case c.USER_INVALID_PERMISSIONS:
+      case c.USER_NOT_FOUND:
+      case c.GENERAL_TRY_CATCH_ERR:
+        return res.status(400).json({ message: result });
+    }
+
+    return res.status(200).json({ message: result });
+      
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
 exports.getPhoneAndStatus = async function (req, res, next) {
   // console.log('getRedditData')
   try {
