@@ -378,13 +378,6 @@ exports.updateKarma = async function (email, karma) {
 
     const redditMilestones = user.notificationsHouse.redditMilestones;
 
-    if (karma.totalKarma !== redditMilestones.prevTotalKarma) {
-      update['$push'] = {
-        ['redditHistory.karmaHistory']: {
-          karma: karma.totalKarma,
-        },
-      };
-    }
     if (false) {
       // if (typeof(redditMilestones.prevTotalKarma) !== 'number') {
       update['notificationsHouse.redditMilestones.prevTotalKarma'] =
@@ -447,9 +440,17 @@ exports.updateKarma = async function (email, karma) {
       });
     }
 
-    update['$push'] = {
-      ['notificationsHouse.notifications']: notifications,
-    };
+    update['$push'] = {};
+    update['$push']['notificationsHouse.notifications'] = { notifications };
+    // if (
+    //   karma.totalKarma !== redditMilestones.prevTotalKarma ||
+    //   user.redditHistory.karmaHistory === []
+    // ) {
+      update['$push']['redditHistory.karmaHistory'] = {
+        karma: karma.totalKarma,
+      };
+    // }
+    // console.log(update);
 
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {

@@ -282,7 +282,24 @@ exports.getRedditData = async function (email) {
     if (!user.settings.permissions.reddit) {
       c.USER_INVALID_PERMISSIONS;
     }
-    return user.redditData;
+    return [user.redditData, user.redditHistory];
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.getTwitterHistory = async function (email) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    // console.log(user);
+    if (!user.settings.permissions.twitter) {
+      c.USER_INVALID_PERMISSIONS;
+    }
+    return user.twitterHistory;
   } catch (err) {
     console.log(err);
     return c.GENERAL_TRY_CATCH_ERR;
