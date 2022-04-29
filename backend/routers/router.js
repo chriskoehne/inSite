@@ -87,18 +87,15 @@ router.post(
   userController.updatePermissions
 );
 
-
 router.post(
   '/user/reddit/store',
   auth.verifyToken,
   userController.updateRedditData
 );
 
-router.get(
-  '/user/reddit/',
-  auth.verifyToken,
-  userController.getRedditData
-);
+router.get('/user/reddit/', auth.verifyToken, userController.getRedditData);
+
+router.get('/user/twitter/', auth.verifyToken, userController.getTwitterHistory);
 
 router.get(
   '/user/phoneStatus/',
@@ -112,11 +109,7 @@ router.get(
   userController.getEmailStatus
 );
 
-router.post(
-  '/user/setPhone/',
-  auth.verifyToken,
-  userController.setPhone
-);
+router.post('/user/setPhone/', auth.verifyToken, userController.setPhone);
 
 router.post(
   '/user/togglePhone/',
@@ -130,11 +123,7 @@ router.post(
   userController.toggleEmailNotifs
 );
 
-router.get(
-  '/user/revoke/',
-  auth.verifyToken,
-  userController.revokeAccess
-);
+router.get('/user/revoke/', auth.verifyToken, userController.revokeAccess);
 
 router.post('/youtube/login', auth.verifyToken, youtubeController.login);
 
@@ -154,13 +143,25 @@ router.get(
   youtubeController.subscriptions
 );
 
-router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostSubscribers);
+router.get(
+  '/youtube/mostSubscribers',
+  auth.verifyToken,
+  youtubeController.mostSubscribers
+);
 
-router.get('/youtube/likedVideos', auth.verifyToken, youtubeController.likedVideos);
+router.get(
+  '/youtube/likedVideos',
+  auth.verifyToken,
+  youtubeController.likedVideos
+);
 
 router.get('/youtube/playlists', auth.verifyToken, youtubeController.playlists);
 
-router.get('/youtube/popularVidsFromLiked', auth.verifyToken, youtubeController.popularVidsFromLiked);
+router.get(
+  '/youtube/popularVidsFromLiked',
+  auth.verifyToken,
+  youtubeController.popularVidsFromLiked
+);
 
 router.post('/reddit/login', auth.verifyToken, redditController.login);
 
@@ -221,145 +222,106 @@ router.post(
 // router.get('/twitter/test', auth.verifyToken, twitterController.test);
 
 router.get(
-  '/twitter/tweetCount', 
-  auth.verifyToken, 
+  '/twitter/tweetCount',
+  auth.verifyToken,
   twitterController.tweetCount
 );
 
-router.get(
-  '/twitter/getUser', 
-  auth.verifyToken, 
-  twitterController.me
-);
+router.get('/twitter/getUser', auth.verifyToken, twitterController.me);
+
+router.get('/twitter/tweets', auth.verifyToken, twitterController.tweets);
+
+router.get('/twitter/followers', auth.verifyToken, twitterController.followers);
+
+router.get('/twitter/following', auth.verifyToken, twitterController.following);
+
+router.get('/twitter/likes', auth.verifyToken, twitterController.likes);
 
 router.get(
-  '/twitter/tweets', 
-  auth.verifyToken, 
-  twitterController.tweets
-);
-
-router.get(
-  '/twitter/followers', 
-  auth.verifyToken, 
-  twitterController.followers
-);
-
-router.get(
-  '/twitter/following', 
-  auth.verifyToken, 
-  twitterController.following
-);
-
-router.get(
-  '/twitter/likes', 
-  auth.verifyToken, 
-  twitterController.likes
-);
-
-router.get(
-  '/twitter/tweetLikes', 
-  auth.verifyToken, 
+  '/twitter/tweetLikes',
+  auth.verifyToken,
   twitterController.tweetLikes
 );
 
 router.get(
-  '/twitter/followMetrics', 
-  auth.verifyToken, 
+  '/twitter/followMetrics',
+  auth.verifyToken,
   twitterController.followMetrics
 );
 
-router.post(
-  '/twitch/login', 
-  auth.verifyToken, 
-  twitchController.login
-);
+router.post('/twitch/login', auth.verifyToken, twitchController.login);
 
-router.post(
-  '/twitch/convert', 
-  auth.verifyToken, 
-  twitchController.convert
-);
+router.post('/twitch/convert', auth.verifyToken, twitchController.convert);
+
+router.get('/twitch/getUser', auth.verifyToken, twitchController.getUser);
 
 router.get(
-  '/twitch/getUser', 
-  auth.verifyToken, 
-  twitchController.getUser
-);
-
-router.get(
-  '/twitch/getUserFollows', 
-  auth.verifyToken, 
+  '/twitch/getUserFollows',
+  auth.verifyToken,
   twitchController.getUserFollows
 );
 
 router.get(
-  '/twitch/getCreatorGoals', 
-  auth.verifyToken, 
+  '/twitch/getCreatorGoals',
+  auth.verifyToken,
   twitchController.getCreatorGoals
 );
 
 router.get(
-  '/twitch/getStreamTags', 
-  auth.verifyToken, 
+  '/twitch/getStreamTags',
+  auth.verifyToken,
   twitchController.getStreamTags
 );
 
 router.get(
-  '/twitch/getAutomodSettings', 
-  auth.verifyToken, 
+  '/twitch/getAutomodSettings',
+  auth.verifyToken,
   twitchController.getAutomodSettings
 );
 
 router.get(
-  '/twitch/getChannelInformation', 
-  auth.verifyToken, 
+  '/twitch/getChannelInformation',
+  auth.verifyToken,
   twitchController.getChannelInformation
 );
 
 router.get(
-  '/twitch/getBannedUsers', 
-  auth.verifyToken, 
+  '/twitch/getBannedUsers',
+  auth.verifyToken,
   twitchController.getBannedUsers
 );
 
-router.get(
-  '/twitch/getClips', 
-  auth.verifyToken, 
-  twitchController.getClips
-);
+router.get('/twitch/getClips', auth.verifyToken, twitchController.getClips);
 
 router.get(
-  '/twitch/getFollowedStreams', 
-  auth.verifyToken, 
+  '/twitch/getFollowedStreams',
+  auth.verifyToken,
   twitchController.getFollowedStreams
 );
 
 router.get(
-  '/twitch/getSubscriptions', 
-  auth.verifyToken, 
+  '/twitch/getSubscriptions',
+  auth.verifyToken,
   twitchController.getSubscriptions
 );
 
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
 router.get(
-  '/twitter/pinnedLists', 
-  auth.verifyToken, 
+  '/twitter/pinnedLists',
+  auth.verifyToken,
   twitterController.pinnedLists
 );
 
 router.get(
-  '/twitter/tweetNonPublic', 
-  auth.verifyToken, 
+  '/twitter/tweetNonPublic',
+  auth.verifyToken,
   twitterController.nonPublic
 );
 
-router.get(
-  '/twitter/mutes', 
-  auth.verifyToken, 
-  twitterController.mutedUsers
-);
+router.get('/twitter/mutes', auth.verifyToken, twitterController.mutedUsers);
 
+router.get('/twitter/mutes', auth.verifyToken, twitterController.mutedUsers);
 
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);

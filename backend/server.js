@@ -46,4 +46,4 @@ server.listen(PORT, () => {
 
 setInterval(hallMonitor.monitor, 60000); // every 60 seconds
 setInterval(hallMonitor.socialsData, 30000);
-setInterval(hallMonitor.socialsDataTwitter, 120000);
+setInterval(hallMonitor.socialsDataTwitter, 960000);

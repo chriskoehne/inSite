@@ -48,7 +48,7 @@ const redditObjectSchema = new mongoose.Schema({
 
 const redditHistorySchema = new mongoose.Schema({
   karmaHistory: {type: [redditObjectSchema], required: true, default: []}
-});
+}, { _id: false });
 
 const twitterObjectSchema = new mongoose.Schema({
   numFollowers: { type: Number, required: true, default: 0 },
@@ -57,7 +57,8 @@ const twitterObjectSchema = new mongoose.Schema({
 
 const twitterHistorySchema = new mongoose.Schema({
   followerHistory: {type: [twitterObjectSchema], required: true, default: []}
-});
+  
+}, { _id: false });
 
 const redditMilestonesSchema = new mongoose.Schema(
   {
