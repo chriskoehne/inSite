@@ -148,7 +148,7 @@ exports.check = async function (email) {
       return false;
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     console.log('big error catch');
     return err;
   }
