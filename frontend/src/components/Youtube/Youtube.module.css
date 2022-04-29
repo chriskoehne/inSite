@@ -29,7 +29,7 @@
 .channelCard {
   padding: 1%;
   height: 80vh;
-  border-color: var(--reddit);
+  border-color: var(--youtube);
   margin-left: 10%;
   margin-right: 10%;
   overflow-y: scroll;
@@ -48,7 +48,7 @@
 .socialsCard {
   padding: 1%;
   height: 80vh;
-  border-color: var(--reddit);
+  border-color: var(--youtube);
   margin-left: 10%;
   margin-right: 10%;
   overflow-y: scroll;

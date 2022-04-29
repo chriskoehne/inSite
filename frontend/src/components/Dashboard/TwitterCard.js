@@ -259,7 +259,7 @@ const TwitterCard = (props) => {
     }
     if (twitterToken) {
       return (
-        <div className={styles.centered} style={{marginTop: '8%'}}>
+        <div className={styles.centered} style={{marginTop: '5%'}}>
           <LineChart
             height={'20vh'}
             width={'45vw'}

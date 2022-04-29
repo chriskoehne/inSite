@@ -24,33 +24,31 @@ const RevokeAccess = () => {
   const [showTwitch, setShowTwitch] = useState(false);
 
   useEffect(async () => {
-    let redditAns = await axios.post('/reddit/check', {
+
+    let userAns = await axios.get('user/check', {
       params: { email: localStorage.getItem('email') },
-    });
-    if (redditAns.data.success) {
-      setShowReddit(true);
-    } else {
-      console.log(redditAns.data)
+    })
+    if (userAns.status === 200) {
+      const accessDetails = userAns.data
+
+      if (accessDetails.reddit) {
+        setShowReddit(true);
+
+      }
+      if (accessDetails.twitter) {
+        setShowTwitter(true);
+
+      }
+      if (accessDetails.youtube) {
+        setShowYoutube(true);
+
+      }
+      if (accessDetails.twitch) {
+        setShowTwitch(true);
+
+      }
     }
-    let twitterAns = await axios.post('/twitter/check', {
-      params: { email: localStorage.getItem('email') },
-    });
-    if (twitterAns.data.success) {
-      setShowTwitter(true);
-    }
-    let youtubeAns = await axios.post('/youtube/check', {
-      params: { email: localStorage.getItem('email') },
-    });
-    if (youtubeAns.data.success) {
-      setShowYoutube(true);
-    }
-    let twitchAns = await axios.post('/twitch/check', {
-      params: { email: localStorage.getItem('email') },
-    });
-    if (twitchAns.data.success) {
-      setShowTwitch(true);
-    }
-  }, [showReddit, showTwitter, showYoutube, showTwitch]);
+  }, []);
 
   const revoke = async () => {
     // revoke access for current and delete data?

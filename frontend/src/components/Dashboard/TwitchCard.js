@@ -10,7 +10,7 @@ import hasToolTips from '../../helpers/hasToolTips';
 
 const TwitchCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [twitchToken, setTwitchToken] = useState('');
   const [userId, setUserId] = useState('');
   const [chartData, setChartData] = useState({
@@ -69,32 +69,29 @@ const TwitchCard = (props) => {
         JSON.stringify({ token: ans.data.twitch.access_token, date: Date.now() })
       );
       setTwitchToken(ans.data.twitch.access_token);
-    } 
-  }, []);
-
-  useEffect(() => {
-    // console.log("twitch card useeffect")
-    let c = null;
-    const e = localStorage.getItem('email');
-    const currentUrl = window.location.href;
-    if (currentUrl.includes('state=twitch')) {
-      let start = currentUrl.indexOf('code') + 5;
-      let end = currentUrl.indexOf('scope') - 1;
-      c = currentUrl.substring(start, end);
-      setUser({
-        email: e,
-        code: c,
-      });
     } else {
-      setUser({
-        email: e,
-      });
+      let c = null;
+      const e = localStorage.getItem('email');
+      const currentUrl = window.location.href;
+      if (currentUrl.includes('state=twitch')) {
+        let start = currentUrl.indexOf('code') + 5;
+        let end = currentUrl.indexOf('scope') - 1;
+        c = currentUrl.substring(start, end);
+        setUser({
+          email: e,
+          code: c,
+        });
+      } else {
+        setUser({
+          email: e,
+        });
+        setLoading(false)
+      }
     }
   }, []);
 
   useEffect(() => {
     const convert = async () => {
-      setLoading(true);
       if (!user.code) {
         setLoading(false);
         return;
@@ -144,6 +141,7 @@ const TwitchCard = (props) => {
         setUserId(twitchRes.data.data[0].id);
         localStorage.setItem('twitch-user-id', twitchRes.data.data[0].id)
       }
+      setLoading(false)
       // else {
       //   console.log('Could not get User Info from Twitch!');
       // }
@@ -190,6 +188,7 @@ const TwitchCard = (props) => {
         };
         setChartData(dataset);
       } 
+      setLoading(false);
       // else {
       //   console.log('Could not get Followers from Twitch!');
       // }

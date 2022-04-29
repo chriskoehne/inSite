@@ -38,7 +38,7 @@ const SettingsDrawer = (props) => {
       </Nav.Item>
       <Nav.Item>
         <Nav.Link className={styles.settingsLinks} href='/settings#revokeAccess'>
-          Access Revoke
+          Revoke Access
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>

@@ -1,15 +1,14 @@
 const User = require('../database/models/User');
-const {google} = require('googleapis');
+const { google } = require('googleapis');
 // const { isAsyncFunction } = require('util/types');
 const youtubeClientId = process.env.YOUTUBE_CLIENT_ID;
 const youtubeClientSecret = process.env.YOUTUBE_CLIENT_SECRET;
 const c = require('../constants/constants');
 
 if (process.env.DEV) {
-  var redirectURI = 'https://127.0.0.1:3000/dashboard'
-
+  var redirectURI = 'https://127.0.0.1:3000/dashboard';
 } else {
-  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard' //may need an extra slash at the end
+  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard'; //may need an extra slash at the end
 }
 
 const oauth2Client = new google.auth.OAuth2(
@@ -23,17 +22,15 @@ const service = google.youtube('v3');
 exports.login = async function (email) {
   try {
     // console.log('In YouTube Login Service');
-      
-      const scopes = [
-        'https://www.googleapis.com/auth/youtube.readonly',
-      ];
 
-      const url = oauth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: scopes
-      });
+    const scopes = ['https://www.googleapis.com/auth/youtube.readonly'];
 
-    return {link: url}
+    const url = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: scopes,
+    });
+
+    return { link: url };
   } catch (err) {
     // console.log(err);
     console.log('big error catch youtube login');
@@ -44,15 +41,14 @@ exports.login = async function (email) {
 exports.check = async function (email) {
   try {
     // console.log('In Reddit Login Service');
-    let result = await User.findOne({ email: email })
+    let result = await User.findOne({ email: email });
     // console.log("in backend check, result is")
     // console.log(result)
     if (result.youtube) {
-      return result.youtube
+      return result.youtube;
     } else {
-      return false
+      return false;
     }
-
   } catch (err) {
     // console.log(err);
     console.log('big error catch youtube check');
@@ -66,7 +62,7 @@ exports.convert = async function (req, res) {
     // console.log(req.body);
     const code = req.body.code;
 
-    const {tokens} = await oauth2Client.getToken(decodeURIComponent(code))
+    const { tokens } = await oauth2Client.getToken(decodeURIComponent(code));
 
     oauth2Client.setCredentials(tokens);
 
@@ -74,7 +70,7 @@ exports.convert = async function (req, res) {
     // store the oauth2Client directly in the db
     let result = await User.findOneAndUpdate(
       { email: email },
-      { youtube: tokens}
+      { youtube: tokens }
     );
 
     return tokens; //perhaps unnecessary given it is stored in the backend client?
@@ -94,12 +90,12 @@ exports.activity = async function (client) {
       auth: oauth2Client,
       part: 'snippet,contentDetails',
       mine: true,
-      maxResults: 25
+      maxResults: 25,
     });
     return result.data;
   } catch (err) {
     console.log('big error catch youtube activity');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
@@ -113,7 +109,7 @@ exports.likedVideos = async function (client) {
       auth: oauth2Client,
       part: 'snippet,contentDetails,statistics',
       myRating: 'like',
-       //maxResults: 2
+      //maxResults: 2
     });
     return result.data;
   } catch (err) {
@@ -132,12 +128,12 @@ exports.myPopularCat = async function (client) {
       part: 'snippet',
       type: 'video',
       forMine: true,
-      maxResults: 30
+      maxResults: 30,
     });
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
@@ -150,7 +146,7 @@ exports.playlists = async function (client) {
     const result = await service.playlists.list({
       auth: oauth2Client,
       part: 'snippet,contentDetails',
-      mine: true
+      mine: true,
     });
     // console.log(result)
     return result.data;
@@ -172,53 +168,48 @@ exports.popularVidsFromLiked = async function (client) {
       auth: oauth2Client,
       part: 'snippet,contentDetails,statistics',
       maxResults: 10,
-      myRating: 'like', 
+      myRating: 'like',
     });
 
     //console.log('result: ' + result)
-    let vidList = result.data.items
-    const catArr = [] 
-      vidList.forEach(vid => {
-        catArr.push(vid.snippet.categoryId)
-      });
+    let vidList = result.data.items;
+    const catArr = [];
+    vidList.forEach((vid) => {
+      catArr.push(vid.snippet.categoryId);
+    });
 
-      const maxCat = mode(catArr)
-      // console.log('maxCat: ' + maxCat)
+    const maxCat = mode(catArr);
+    // console.log('maxCat: ' + maxCat)
 
-      const response = await service.videos.list({
-        auth: oauth2Client,
-        part: 'snippet,contentDetails,statistics',
-        maxResults: 5,
-        chart: 'mostPopular',
-        videoCategoryId: maxCat
-      
+    const response = await service.videos.list({
+      auth: oauth2Client,
+      part: 'snippet,contentDetails,statistics',
+      maxResults: 5,
+      chart: 'mostPopular',
+      videoCategoryId: maxCat,
     });
     //console.log('response: ' + response)
     return response.data;
   } catch (err) {
     console.log('big error catch youtube popular');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
 
 function mode(array) {
-  if(array.length == 0)
-      return null;
+  if (array.length == 0) return null;
   let modeMap = {};
-  let maxEl = array[0], maxCount = 1;
-  for(let i = 0; i < array.length; i++)
-  {
-      let el = array[i];
-      if(modeMap[el] == null)
-          modeMap[el] = 1;
-      else
-          modeMap[el]++;  
-      if(modeMap[el] > maxCount)
-      {
-          maxEl = el;
-          maxCount = modeMap[el];
-      }
+  let maxEl = array[0],
+    maxCount = 1;
+  for (let i = 0; i < array.length; i++) {
+    let el = array[i];
+    if (modeMap[el] == null) modeMap[el] = 1;
+    else modeMap[el]++;
+    if (modeMap[el] > maxCount) {
+      maxEl = el;
+      maxCount = modeMap[el];
+    }
   }
   return maxEl;
 }
@@ -233,7 +224,7 @@ exports.subscriptions = async function (client) {
       auth: oauth2Client,
       part: 'snippet,contentDetails',
       mine: true,
-      maxResults: 50
+      maxResults: 50,
     });
     return result.data;
   } catch (err) {
@@ -244,7 +235,6 @@ exports.subscriptions = async function (client) {
 };
 
 exports.channelInfo = async function (client) {
-  
   try {
     oauth2Client.setCredentials(JSON.parse(client));
     console.log('In YouTube CHANNEL INFO Service');
@@ -252,13 +242,13 @@ exports.channelInfo = async function (client) {
       auth: oauth2Client,
       part: 'snippet,statistics',
       mine: true,
-      maxResults: 50
+      maxResults: 50,
     });
-    console.log('channelInfo returns: ' + result.data)
+    console.log('channelInfo returns: ' + result.data);
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
@@ -270,17 +260,16 @@ exports.videoList = async function (client, channelId) {
     console.log('In YouTube VIDEO LIST for channel: ' + channelId);
     const result = await service.search.list({
       auth: oauth2Client,
-        part: 'snippet',
-        maxResults: 50,
-        type: 'video',
-        channelId: channelId
-
+      part: 'snippet',
+      maxResults: 50,
+      type: 'video',
+      channelId: channelId,
     });
-    console.log('videoList returns: ' + result.data)
+    console.log('videoList returns: ' + result.data);
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
@@ -292,18 +281,17 @@ exports.myPopularVids = async function (client) {
     // console.log('In YouTube MY POPULAR VIDS for channel: ' + channelId);
     const result = await service.search.list({
       auth: oauth2Client,
-        part: 'snippet',
-        maxResults: 5,
-        type: 'video',
-        forMine: true,
-        order: 'viewCount'
-
+      part: 'snippet',
+      maxResults: 5,
+      type: 'video',
+      forMine: true,
+      order: 'viewCount',
     });
-    console.log('myPopularVids returns: ' + result.data)
+    console.log('myPopularVids returns: ' + result.data);
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
@@ -315,15 +303,14 @@ exports.myVidCats = async function (client, videoId) {
     console.log('In YouTube MY VIDCATS for video: ' + videoId);
     const result = await service.videos.list({
       auth: oauth2Client,
-        part: 'snippet',
-        id: videoId
-
+      part: 'snippet',
+      id: videoId,
     });
-    console.log('myVidCats returns: ' + result.data)
+    console.log('myVidCats returns: ' + result.data);
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
@@ -335,22 +322,21 @@ exports.myVidComments = async function (client) {
     console.log('In YouTube MY VIDCOMMENTS for video: ' + videoId);
     const result = await service.commentThreads.list({
       auth: oauth2Client,
-        part: 'snippet',
-        videoId: videoId
-
+      part: 'snippet',
+      videoId: videoId,
     });
-    console.log('myVidComments returns: ' + result.data)
+    console.log('myVidComments returns: ' + result.data);
     return result.data;
   } catch (err) {
     console.log('big error catch');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
 
 function getDifference(array1, array2) {
-  return array1.filter(object1 => {
-    return !array2.some(object2 => {
+  return array1.filter((object1) => {
+    return !array2.some((object2) => {
       return object1.id === object2.id;
     });
   });
@@ -363,45 +349,48 @@ exports.checkSubsNotif = async function (email, client) {
     const ans = await exports.subscriptions(client);
     const subs = ans.items;
 
-    let user = await User.findOne({ email: email })
+    let user = await User.findOne({ email: email });
 
     const filter = { email: email };
-    let update = { ['youtubeData.subs']: subs };
+    let update = {}
+    // let update = { ['youtubeData.subs']: subs };
 
     const youtubeMilestones = user.notificationsHouse.youtubeMilestones;
-    
-    if (youtubeMilestones.prevsubs === null || youtubeMilestones.prevsubs.length === 0) {
-      console.log("initializing youtube prevsubs in db")
-      update['notificationsHouse.youtubeMilestones.prevsubs'] =
-        subs;
+
+    if (
+      youtubeMilestones.prevsubs === null ||
+      youtubeMilestones.prevsubs.length === 0
+    ) {
+      console.log('initializing youtube prevsubs in db');
+      update['notificationsHouse.youtubeMilestones.prevsubs'] = subs;
     } else {
-      
       update['notificationsHouse.youtubeMilestones.prevsubs'] = subs;
 
-      let newsubs = getDifference(subs, youtubeMilestones.prevsubs)
-      let unsubbed = getDifference(youtubeMilestones.prevsubs, subs)
+
+      let newsubs = getDifference(subs, youtubeMilestones.prevsubs);
+      let unsubbed = getDifference(youtubeMilestones.prevsubs, subs);
+
       newsubs.forEach(async (sub) => {
-        console.log('newsub: ' + sub.snippet.title)
+        console.log('newsub: ' + sub.snippet.title);
+
         update['$push'] = {
           ['notificationsHouse.notifications']: {
             sm: 'youtube',
-            content:
-              'subscribed to new channel: ' + sub.snippet.title,
+            content: 'subscribed to new channel: ' + sub.snippet.title,
           },
         };
       });
       unsubbed.forEach(async (unsub) => {
-        console.log("unsubbed: " + unsub.snippet.title)
+        console.log('unsubbed: ' + unsub.snippet.title);
         update['$push'] = {
           ['notificationsHouse.notifications']: {
             sm: 'youtube',
-            content:
-              'unsubscribed from channel: ' + unsub.snippet.title,
+            content: 'unsubscribed from channel: ' + unsub.snippet.title,
           },
         };
       });
-      
     }
+    // console.log(update)
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
@@ -409,7 +398,7 @@ exports.checkSubsNotif = async function (email, client) {
     return c.SUCCESS;
   } catch (err) {
     console.log('big error catch youtube subs notif');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
@@ -421,33 +410,33 @@ exports.checkLikedVidsNotif = async function (email, client) {
     const ans = await exports.likedVideos(client);
     const vids = ans.items;
 
-    let user = await User.findOne({ email: email })
+    let user = await User.findOne({ email: email });
 
     const filter = { email: email };
-    let update = { ['youtubeData.likedVids']: vids };
+    // let update = { ['youtubeData.likedVids']: vids };
+    let update = {}
 
     const youtubeMilestones = user.notificationsHouse.youtubeMilestones;
     // console.log(youtubeMilestones)
-    if (youtubeMilestones.prevlikedVids === null || youtubeMilestones.prevlikedVids.length === 0) {
-      // console.log("initializing youtube prevlikedVids in db")
-      update['notificationsHouse.youtubeMilestones.prevlikedVids'] =
-        vids;
+    if (
+      youtubeMilestones.prevlikedVids === null ||
+      youtubeMilestones.prevlikedVids.length === 0
+    ) {
+      console.log("initializing youtube prevlikedVids in db")
+      update['notificationsHouse.youtubeMilestones.prevlikedVids'] = vids;
     } else {
-      
       update['notificationsHouse.youtubeMilestones.prevlikedVids'] = vids;
 
-      let liked = getDifference(vids, youtubeMilestones.prevlikedVids)
+      let liked = getDifference(vids, youtubeMilestones.prevlikedVids);
       liked.forEach(async (like) => {
-        console.log('new like: ' + like.snippet.title)
+        console.log('new like: ' + like.snippet.title);
         update['$push'] = {
           ['notificationsHouse.notifications']: {
             sm: 'youtube',
-            content:
-              'Liked Video: ' + like.snippet.title,
+            content: 'Liked Video: ' + like.snippet.title,
           },
         };
       });
-      
     }
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
@@ -456,24 +445,24 @@ exports.checkLikedVidsNotif = async function (email, client) {
     return c.SUCCESS;
   } catch (err) {
     console.log('big error catch youtube liked vids notif');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
 
 async function subCount(cid, client) {
-  console.log('cid: ' + cid)
+  console.log('cid: ' + cid);
   oauth2Client.setCredentials(JSON.parse(client));
 
   const response = await service.channels.list({
-    auth: oauth2Client, 
+    auth: oauth2Client,
     part: 'snippet,statistics',
-    id: cid
+    id: cid,
   });
-  const c = response.data.items[0].statistics.subscriberCount
-  console.log('CHANNEL TITLE: ' + response.data.items[0].snippet.title)
-  console.log('c: ' + c)
-  return c
+  const c = response.data.items[0].statistics.subscriberCount;
+  console.log('CHANNEL TITLE: ' + response.data.items[0].snippet.title);
+  console.log('c: ' + c);
+  return c;
 }
 
 exports.mostSubscribers = async function (client) {
@@ -485,20 +474,20 @@ exports.mostSubscribers = async function (client) {
       auth: oauth2Client,
       part: 'snippet,contentDetails',
       mine: true,
-      maxResults: 50
+      maxResults: 50,
     });
 
-    let channelList = result.data.items
-    const channelArr = [] 
-    const subscriberCountArr = []
-    let i = 0
-    channelList.forEach(cid => {
-      channelArr[i] = cid.snippet.resourceId.channelId
-      console.log('CHANNEL ID: ' + cid.snippet.resourceId.channelId)
-      subscriberCountArr[i] = subCount(channelArr[i], client)
-      i++
+    let channelList = result.data.items;
+    const channelArr = [];
+    const subscriberCountArr = [];
+    let i = 0;
+    channelList.forEach((cid) => {
+      channelArr[i] = cid.snippet.resourceId.channelId;
+      console.log('CHANNEL ID: ' + cid.snippet.resourceId.channelId);
+      subscriberCountArr[i] = subCount(channelArr[i], client);
+      i++;
     });
-      
+
     return channelList[0];
   } catch (err) {
     console.log('big error catch youtube most subs');
@@ -515,15 +504,13 @@ exports.mySubscribers = async function (client) {
       auth: oauth2Client,
       part: 'snippet',
       myRecentSubscribers: true,
-      maxResults: 50
+      maxResults: 50,
     });
 
     return result.data;
   } catch (err) {
     console.log('my subs big error catch');
-    console.log(err)
+    console.log(err);
     return err;
   }
 };
-
-

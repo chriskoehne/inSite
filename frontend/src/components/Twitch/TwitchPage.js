@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Row, Card, Carousel } from 'react-bootstrap';
+import { Col, Row, Card, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitch.module.css';
 import LineChart from '../Charts/LineChart';
@@ -20,7 +20,9 @@ const TwitchPage = (props) => {
   });
   const [channelData, setChannelData] = useState({});
   const [followers, setFollowers] = useState([]);
+  const [followersLength, setFollowersLength] = useState(0);
   const [channelInfo, setChannelInfo] = useState({})
+  const [gameName, setGameName] = useState('')
 
   // console.log(loading)
 
@@ -168,6 +170,7 @@ const TwitchPage = (props) => {
           var date = getDate(twitchRes.data.data[i].followed_at);
           twitchRes.data.data[i].followed_at = date;
         }
+        setFollowersLength(twitchRes.data.data.length);
         setFollowers(twitchRes.data.data.slice(0, 5));
 
         const twitchChannelRes = await axios.get('/twitch/getChannelInformation', {
@@ -177,6 +180,10 @@ const TwitchPage = (props) => {
         if (twitchChannelRes) {
           // console.log('Recieved Channel Data!');
           // console.log(twitchChannelRes.data);
+          setGameName(twitchChannelRes.data.data[0].game_name);
+          var uri = twitchChannelRes.data.data[0].game_name;
+          uri = uri.replace('/', '%2F');
+          twitchChannelRes.data.data[0].game_name = uri;
           setChannelInfo(twitchChannelRes.data.data[0]);
         }
       } 
@@ -200,24 +207,41 @@ const TwitchPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card className={styles.socialsCard} style={{ borderColor: 'var(--twitch)'}}>
+          <Card style={{ borderColor: 'var(--twitch)' }} className={styles.socialsCard} >
             <Row>
-              <h3>Profile Info</h3><br/>
-              Name: {channelData.display_name}<br/>
+            <Col>
+              <h1>Profile Info</h1><br/>
+              <img src={channelData.profile_image_url} alt="" width="200" height="200"></img><br/>
+              <a href={"https://twitch.tv/" + channelData.display_name} style={{color: 'var(--twitch)'}} target="_blank" rel="noreferrer" >
+              <h3>{channelData.display_name}</h3>
+              </a>
+              <div style={{ fontWeight: 'bold', fontSize: 22 }}>
+              Total Views: {channelData.view_count}<br/>
+              Followers: {followersLength}<br/>
               Bio: {channelData.description}<br/>
-              Profile pic: <img src={channelData.profile_image_url} alt="" width="100" height="100"></img><br/>
-              Views: {channelData.view_count}<br/>
               Created On: {channelData.created_at}<br/>
-              Most Recent Stream: <br/>
-              Game: {channelInfo.game_name} Title: {channelInfo.title}<br/>
-            </Row>
-            <Row>
-              <h3>Five Most Recent Followers</h3><br/>
+              </div>
+            </Col>
+            <Col>
+              <h1>Five Most Recent Followers</h1><br/>
               {Object.keys(followers).map((key, index) => (
-                <div key={index}>
-                  Name: {followers[key].from_name}, Followed On: {followers[key].followed_at} 
+                <div key={index} style={{ fontWeight: 'bold', fontSize: 22 }}>
+                  Name:
+                  <a href={"https://twitch.tv/" + followers[key].from_name} style={{color: 'var(--twitch)', marginLeft: 3.2}} target="_blank" rel="noreferrer" >{followers[key].from_name}</a>, Followed On: {followers[key].followed_at} 
                 </div>
               ))}
+            </Col>
+            </Row>
+            <Row>
+              <Col>
+              <br/>
+              <br/>
+              <h1>Most Recent Stream</h1>
+              <div style={{ fontWeight: 'bold', fontSize: 22}}>
+                Title: {channelInfo.title}<br/>
+                Game: <a href={"https://twitch.tv/directory/game/" + channelInfo.game_name} style={{color: 'var(--twitch)'}} target="_blank" rel="noreferrer" >{gameName}</a> <br/>
+              </div>
+              </Col>
             </Row>
           </Card>
         </Carousel.Item>

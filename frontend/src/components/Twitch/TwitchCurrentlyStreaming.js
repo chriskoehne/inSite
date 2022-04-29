@@ -76,10 +76,11 @@ const TwitchCurrentlyStreaming = (props) => {
         params: twitchQuery,
       });
 
-      if (twitchFollowedRes.data.data.length > 0) {
+      const len = twitchFollowedRes.data.data.length;
+      if (len > 0) {
         console.log('Received Followed Streams from Twitch!');
         console.log(twitchFollowedRes);
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < len; i++) {
             var date = getTime(twitchFollowedRes.data.data[i].started_at);
             twitchFollowedRes.data.data[i].started_at = date;
           }
@@ -115,26 +116,26 @@ const TwitchCurrentlyStreaming = (props) => {
   
   return (
     <Card className={styles.socialsCard}>
-        <Row>
-            <h3>Current Subscriptions</h3>
+            <h3>Current Subscriptions:</h3> <br/>
             {Object.keys(subStreams).map((key, index) => (
                 <div key={index}>
-                  Name: {subStreams[key].broadcaster}, Tier: {subStreams[key].tier / 1000}
+                  Name: <a href={"https://twitch.tv/" + subStreams[key].broadcaster} target="_blank" rel="noreferrer" style={{color: 'purple'}}>{subStreams[key].broadcaster}</a>, Tier: {subStreams[key].tier / 1000}
                 </div>
             ))}
-        </Row>
-        <Row>
+            <br/>
             <h3>Who's Streaming Now?</h3>
             {Object.keys(followedStreams).map((key, index) => (
                 <div key={index}>
-                  Name: {followedStreams[key].user_name}, Viewers: {followedStreams[key].viewer_count}, Title: {followedStreams[key].title}, Category: {followedStreams[key].game_name}, Started At: {followedStreams[key].started_at} <br/>
-                  Watch Now: 
+                  <br/>
+                  <h4><u>{followedStreams[key].user_name}</u></h4>
+                  <a href={"https://twitch.tv/" + followedStreams[key].user_name} target="_blank" rel="noreferrer" style={{color: 'purple'}}>{followedStreams[key].title}</a><br/>
+                  Viewers: {followedStreams[key].viewer_count}, Category: {followedStreams[key].game_name}, Started At: {followedStreams[key].started_at} <br/>
                   <a href={"https://twitch.tv/" + followedStreams[key].user_name} target="_blank" rel="noreferrer">
-                      <img src={followedStreams[key].thumbnail_url} alt="" width="100" height="100"></img>
+                      <img src={followedStreams[key].thumbnail_url} alt="" width="400" height="300"></img>
                   </a>
+                  <br/>
                 </div>
             ))}
-        </Row>
     </Card>
   );
 };

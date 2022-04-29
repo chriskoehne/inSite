@@ -56,13 +56,13 @@ exports.socialsData = async () => {
         redditService.userTotalKarma(user.email, token, username);
       }
     }
-    // if (user.youtube) {
-    //   if (user.settings.permissions.youtube) {
-    //     youtubeService.checkSubsNotif(user.email, user.youtube);
-    //     youtubeService.checkLikedVidsNotif(user.email, user.youtube);
-    //     // implement liked videos as well
-    //   }
-    // }
+    if (user.youtube) {
+      if (user.settings.permissions.youtube) {
+        youtubeService.checkSubsNotif(user.email, user.youtube);
+        youtubeService.checkLikedVidsNotif(user.email, user.youtube);
+        // implement liked videos as well
+      }
+    }
     // after checking all socials
     if (user.emailNotif) {
       // console.log("can send email")
@@ -106,7 +106,7 @@ exports.socialsDataTwitter = async () => {
   console.log('Updating Twitter...');
   users.forEach(async (user) => {
     if (user.email !== 'cdkoehne@gmail.com') {
-      // return;
+      return;
     }
     if (user.twitter) {
       if (user.settings.permissions.twitter) {
