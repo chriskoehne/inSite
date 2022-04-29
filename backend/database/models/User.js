@@ -41,9 +41,38 @@ const notificationSchema = new mongoose.Schema({
   content: { type: String, required: true },
 });
 
+const redditObjectSchema = new mongoose.Schema({
+  karma: { type: Number, required: true, default: 0 },
+  time: { type: Date, required: true, default: Date.now },
+});
+
+const redditHistorySchema = new mongoose.Schema({
+  karmaHistory: {type: [redditObjectSchema], required: true, default: []}
+});
+
+const twitterObjectSchema = new mongoose.Schema({
+  numFollowers: { type: Number, required: true, default: 0 },
+  time: { type: Date, required: true, default: Date.now },
+});
+
+const twitterHistorySchema = new mongoose.Schema({
+  followerHistory: {type: [twitterObjectSchema], required: true, default: []}
+});
+
 const redditMilestonesSchema = new mongoose.Schema(
   {
     prevTotalKarma: { type: Number, required: false, default: null },
+    prevCommentKarma: { type: Number, required: false, default: null },
+    prevLinkKarma: { type: Number, required: false, default: null },
+    prevAwardKarma: { type: Number, required: false, default: null },
+  },
+  { _id: false }
+);
+
+const twitterMilestonesSchema = new mongoose.Schema(
+  {
+    prevNumFollowers: { type: Number, required: false, default: null },
+    prevNumFollowing: { type: Number, required: false, default: null },
   },
   { _id: false }
 );
@@ -66,6 +95,11 @@ const notificationsHouseSchema = new mongoose.Schema(
     },
     youtubeMilestones: {
       type: youtubeMilestonesSchema,
+      required: true,
+      default: {},
+    },
+    twitterMilestones: {
+      type: twitterMilestonesSchema,
       required: true,
       default: {},
     },
@@ -92,6 +126,7 @@ const redditDataSchema = new mongoose.Schema(
   { _id: false }
 );
 
+
 const youtubeDataSchema = new mongoose.Schema(
   {
     subs: { type: Array, required: true, default: [] },
@@ -115,6 +150,8 @@ const userSchema = new mongoose.Schema(
     settings: { type: settingsSchema, required: true, default: {} },
     mfaSecret: { type: mfaSchema, required: true, default: {} },
     redditData: { type: redditDataSchema, required: true, default: {} },
+    redditHistory: { type: redditHistorySchema, required: true, default: {} },
+    twitterHistory: { type: twitterHistorySchema, required: true, default: {} },
     youtubeData: {type: youtubeDataSchema, required: true, default: {} },
     notificationsHouse: {
       type: notificationsHouseSchema,

@@ -12,61 +12,70 @@ import hasToolTips from '../../helpers/hasToolTips';
 
 const RedditCard = (props) => {
   const [redditToken, setRedditToken] = useState('');
-  const [user, setUser] = useState({ email: '', code: '', stored: false });
-  const [loading, setLoading] = useState(false);
+  const [code, setCode] = useState('');
+  const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);
-  const [me, setMe] = useState({});
   const [hasStored, setHasStored] = useState(false);
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('redditToken')) {
+      // console.log("no twitch token in localstorage")
       return false;
     }
     const date = JSON.parse(localStorage.getItem('redditToken')).date;
     if ((Date.now() - date) / 36e5 >= 1) {
+      // console.log("too old reddit token")
       localStorage.removeItem('redditToken');
       return false;
     }
+    // console.log("yea localstorage has the twitch token")
     return true;
   };
+  
 
-  useEffect(async () => {
-    let ans = await axios.post('/reddit/check', {
-      params: { email: localStorage.getItem('email') },
-    });
-    console.log('in reddit card has token');
-    console.log(ans);
-    if (ans.data.success) {
-      // ans.data.reddit
-      localStorage.setItem(
-        'redditToken',
-        JSON.stringify({ token: ans.data.reddit.access_token })
-      );
-      setRedditToken(ans.data.reddit.access_token);
-    }
+  useEffect(() => {
+    const doTheThing = async () => {
+      let ans = await axios.post('/reddit/check', {
+        params: { email: localStorage.getItem('email') },
+      });
+      // console.log(ans);
+      if (ans.data.success && ans.data.reddit.access_token) {
+        // ans.data.reddit
+        // console.log('in reddit card has token');
+        // console.log(ans.data);
+        // console.log(ans.data.reddit.access_token);
+        localStorage.setItem(
+          'redditToken',
+          JSON.stringify({
+            token: ans.data.reddit.access_token,
+            date: Date.now(),
+          })
+        );
+        setRedditToken(ans.data.reddit.access_token);
+      }
+    };
+    doTheThing();
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     const getStoredRedditData = async () => {
       try {
         if (!JSON.parse(localStorage.getItem('settings')).permissions.reddit) {
-          console.log('no permissions');
+          // console.log('no permissions');
           return false;
         }
         let ans = await axios.get('/user/reddit', {
           params: { email: localStorage.getItem('email') },
         });
-        console.log(ans.data.message)
+        // console.log(ans.data.message);
         if (
           ans.status === 200 &&
           ans.data.message !== null &&
           !isFalsy(ans.data.message) &&
           !isFalsy(ans.data.message.overview)
         ) {
-          setComments(ans.data.message.overview.comments);
           setHasStored(true);
-          console.log('loading done 1');
+          setComments(ans.data.message.overview.comments);
           return true;
         } else {
           return false;
@@ -77,30 +86,22 @@ const RedditCard = (props) => {
       }
     };
     const doTheThing = async () => {
-      let c = null;
-      const e = localStorage.getItem('email');
+      let c = '';
       const currentUrl = window.location.href;
-
-      // Get the code from the url if redirected and add it to the user state
+      // Get the code from the url if redirected
+      // console.log(window.performance.getEntriesByType('navigation')[0].type);
       if (currentUrl.includes('state=reddit')) {
-        console.log('here');
         let start = currentUrl.indexOf('code') + 5;
         const almostCode = currentUrl.substring(start);
         c = almostCode.substring(0, almostCode.length - 2);
-        setUser({
-          email: e,
-          code: c,
-        });
-        console.log('loading done 2');
-        setLoading(false);
+        setCode(c);
+        // will set loading as done after we make call to reddit api
       } else if (await getStoredRedditData()) {
+        // console.log('loading done stored1');
         setLoading(false);
-      } else {
-        setUser({
-          email: e,
-        });
-        console.log('loading done 3');
-        setLoading(false);
+      } else if (!hasToken()) { //this could be wrong
+        // console.log('loading done stored2');
+        setLoading(false)
       }
     };
     doTheThing();
@@ -108,16 +109,15 @@ const RedditCard = (props) => {
 
   useDidMountEffect(() => {
     const convert = async () => {
-      if (!user.code) {
+      if (!code) {
         return;
       }
-      const e = localStorage.getItem('email');
       const result = await axios.post('/reddit/codeToToken/', {
-        code: user.code,
-        email: e,
+        code: code,
+        email: localStorage.getItem('email'),
       });
-      console.log('after conversion');
-      console.log(result);
+      // console.log('after conversion');
+      // console.log(result);
       if (result.data.accessToken) {
         const token = result.data.accessToken;
         localStorage.setItem(
@@ -129,17 +129,14 @@ const RedditCard = (props) => {
         // console.log('could not convert token');
       }
     };
-    if (!hasToken() && user.code) {
+    if (code) {
       convert();
     }
-  }, [user]);
+  }, [code]);
+
 
   useDidMountEffect(() => {
-    setLoading(false);
-  }, [comments]);
-
-  useDidMountEffect(() => {
-    if (!hasToken() && redditToken) {
+    if (redditToken) {
       localStorage.setItem(
         'redditToken',
         JSON.stringify({ token: redditToken, date: Date.now() })
@@ -147,50 +144,51 @@ const RedditCard = (props) => {
     }
 
     const callReddit = async () => {
+      // console.log('called reddit');
       const redditMeQuery = {
         accessToken: redditToken,
       };
-      if (me && !me.name) {
-        const ansMe = await axios.get('/reddit/me', {
-          params: redditMeQuery,
+      const me = await axios.get('/reddit/me', {
+        params: redditMeQuery,
+      });
+
+      if (me.status === 200) {
+        const redditUserQuery = {
+          accessToken: redditToken,
+          username: me.data.name,
+          email: localStorage.getItem('email'),
+        };
+        const ansOverview = await axios.get('/reddit/userOverview', {
+          params: redditUserQuery,
+        });
+        if (ansOverview.status === 200) {
+          // console.log(ansOverview.data);
+          setComments(ansOverview.data.comments);
+        } else {
+          setComments({});
+        }
+        const ansSubKarma = await axios.get('/reddit/userSubKarma', {
+          params: redditUserQuery,
         });
 
-        if (ansMe.status === 200) {
-          setMe(ansMe.data);
-          const redditUserQuery = {
-            accessToken: redditToken,
-            username: ansMe.data.name,
-            email: localStorage.getItem('email'),
-          };
-          const ansOverview = await axios.get('/reddit/userOverview', {
-            params: redditUserQuery,
-          });
-          if (ansOverview.status === 200) {
-            console.log(ansOverview.data)
-            setComments(ansOverview.data.comments);
-          } else {
-            setComments({});
-          }
-          const ansSubKarma = await axios.get('/reddit/userSubKarma', {
-            params: redditUserQuery,
-          });
-
-          const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
-            params: redditUserQuery,
-          });
-        }
+        const ansTotalKarma = await axios.get('/reddit/userTotalKarma', {
+          params: redditUserQuery,
+        });
       }
+      // console.log('loading done reddit api');
+      setLoading(false);
     };
-    if (redditToken) {
+    if (redditToken && !hasStored) {
       callReddit();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redditToken]);
 
+
   const authenticateReddit = async (e) => {
     e.preventDefault();
     const result = await axios.post('/reddit/login/', {
-      email: user.email,
+      email: localStorage.getItem('email'),
     });
     if (result.status === 200) {
       // console.log('got the link!');
@@ -229,9 +227,7 @@ const RedditCard = (props) => {
   const display = () => {
     if (loading) {
       return <h2>Loading...</h2>;
-    }
-
-    if (hasToken() || (comments !== undefined && comments.length)) {
+    } else if (comments !== undefined && comments.length) {
       return (
         <BarChart
           data={getScores(comments)}
@@ -241,7 +237,8 @@ const RedditCard = (props) => {
           color={'#ff4500'}
         />
       );
-    } else {
+    } else if (!hasToken()) {
+      console.log(localStorage.getItem('redditToken'));
       return (
         <div className={styles.centered}>
           <Button
@@ -283,7 +280,8 @@ const RedditCard = (props) => {
   };
 
   const refreshButton = () => {
-    if (hasStored && !loading) {
+    return;
+    if (comments !== undefined && comments.length) {
       return (
         <Button
           className={`${styles.refreshButton} ${styles.redditB}`}
@@ -304,7 +302,7 @@ const RedditCard = (props) => {
         <Card.Body>
           <Card.Title>
             {icon()} Reddit
-            {redditToken || hasStored ? (
+            {comments !== undefined && comments.length ? (
               <Button
                 className={`${styles.seeMore} ${styles.redditB}`}
                 data-tip={
@@ -315,7 +313,10 @@ const RedditCard = (props) => {
                 style={{ float: 'right' }}
                 onClick={function () {
                   props.navigate('reddit', {
-                    state: { email: user.email, accessToken: redditToken },
+                    state: {
+                      email: localStorage.getItem('email'),
+                      accessToken: redditToken,
+                    },
                   });
                 }}
               >

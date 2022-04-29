@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Card, Carousel } from 'react-bootstrap';
+import { Button, Row, Card, Carousel } from 'react-bootstrap';
 import BarChart from '../Charts/BarChart';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
@@ -21,6 +21,7 @@ const YoutubePage = (props) => {
   const [popularVidsFromLiked, setPopularVids] = useState([]);
   const [popularVidsCategory, setPopularVidsCategory] = useState('');
   const [playlistCounts, setPlaylistCounts] = useState([]);
+  const [user, setUser] = useState({ email: '', code: '' });
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
@@ -79,17 +80,20 @@ const YoutubePage = (props) => {
       setPopularVidsCategory(
         c[popularVidsFromLiked.data.list[0].snippet.categoryId]
       );
-
+      
       const youtubePlaylists = await axios.get('/youtube/playlists', {params: {client: youtubeToken}});
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
+      console.log("Youtube Playlists:")
+      console.log(youtubePlaylists)
       let itemCounts = [];
       youtubePlaylists.data.list.forEach((item) => {
         itemCounts.push(item.contentDetails.itemCount);
       });
       setPlaylistCounts(itemCounts);
-
+      
       setLoading(false);
+
     };
     getData();
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,6 +205,7 @@ const YoutubePage = (props) => {
             </div>
           </Card>
         </Carousel.Item>
+        
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <h3>Popular Videos From Your Favorite Category</h3>
@@ -232,6 +237,27 @@ const YoutubePage = (props) => {
                   </tr>
                 ))}
             </div>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+          <h3>Want to see metrics for your own videos?</h3>
+          <Button
+              className={`${styles.seeMore} ${styles.youtubeB}`}
+              data-tip={
+                hasToolTips()
+                  ? 'See more insights about your YouTube, such as playlist count and recommendations'
+                  : ''
+              }
+              //style={styles.seeMore}
+              onClick={function () {
+                props.navigate('youtubecc', {
+                  state: { email: user.email, accessToken: youtubeToken },
+                });
+              }}
+            >
+              Click Here
+            </Button>
           </Card>
         </Carousel.Item>
       </Carousel>

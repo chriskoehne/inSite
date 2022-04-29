@@ -21,7 +21,7 @@ exports.login = async function (email) {
       return { link: link, verificationString: email };
   } catch (err) {
       console.log(err);
-      console.log('big error catch');
+      console.log('big error catch twitch login');
       return err;
   }
 };
@@ -65,7 +65,7 @@ exports.convert = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch convert');
     console.log(err)
     return err;
   }
@@ -112,7 +112,7 @@ exports.refresh = async function (email, token) {
 
     return result.data;
   } catch (err) {
-    console.log('twitch big error catch');
+    console.log('big error catch twitch refresh');
     console.log(err)
     return err;
   }
@@ -133,7 +133,7 @@ exports.check = async function (email) {
 
   } catch (err) {
     console.log(err);
-    console.log('big error catch');
+    console.log('big error catch twitch check');
     return err;
   }
 };
@@ -157,7 +157,7 @@ exports.getUser = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch user');
     // console.log(err)
     return err;
   }
@@ -183,7 +183,7 @@ exports.getUserFollows = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch followers');
     // console.log(err)
     return err;
   }
@@ -209,7 +209,7 @@ exports.getCreatorGoals = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch goals');
     console.log(err)
     return err;
   }
@@ -235,7 +235,7 @@ exports.getStreamTags = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch tags');
     // console.log(err)
     return err;
   }
@@ -261,7 +261,7 @@ exports.getAutomodSettings = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch automod');
     // console.log(err)
     return err;
   }
@@ -287,7 +287,7 @@ exports.getChannelInformation = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch channel info');
     // console.log(err)
     return err;
   }
@@ -313,7 +313,7 @@ exports.getBannedUsers = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch banned');
     console.log(err)
     return err;
   }
@@ -339,7 +339,7 @@ exports.getClips = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch clips');
     console.log(err)
     return err;
   }
@@ -365,7 +365,7 @@ exports.getFollowedStreams = async function (req, res) {
 
     return result.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch followed');
     console.log(err)
     return err;
   }
@@ -406,7 +406,7 @@ exports.getSubscriptions = async function (req, res) {
 
     return subs;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch twitch subs');
     console.log(err)
     return err;
   }

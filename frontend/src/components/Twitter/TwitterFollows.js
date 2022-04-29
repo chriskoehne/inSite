@@ -78,7 +78,8 @@ const TwitterFollows = (props) => {
       // console.log(localStorage);
       const twitterQuery = {
         accessToken: twitterToken,
-        userID: localStorage.getItem('twitter-user-id')
+        userId: localStorage.getItem('twitter-user-id'),
+        email: localStorage.getItem('email'),
       };
       const twitterFollowersRes = await axios.get(
         '/twitter/followers',

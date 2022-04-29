@@ -83,7 +83,7 @@ exports.tweetCount = async function (req, res, next) {
 exports.me = async function (req, res, next) {
   try {
     // console.log('In Twitter Test Controller');
-    let result = await twitterService.me(req, res);
+    let result = await twitterService.me(req.query.accessToken);
 
     if (result) {
       return res
@@ -113,7 +113,11 @@ exports.tweets = async function (req, res, next) {
 exports.followers = async function (req, res, next) {
   try {
     // console.log('In Twitter Followers Controller');
-    let result = await twitterService.followers(req, res);
+    const token = req.query.accessToken;
+    const userId = req.query.userId;
+    const email = req.query.email;
+    // console.log(token, userId, email)
+    let result = await twitterService.followers(token, userId, email);
 
     if (result) {
       return res
@@ -127,8 +131,11 @@ exports.followers = async function (req, res, next) {
 
 exports.following = async function (req, res, next) {
   try {
+    const token = req.query.accessToken;
+    const userId = req.query.userId;
+    const email = req.query.email
     // console.log('In Twitter Following Controller');
-    let result = await twitterService.following(req, res);
+    let result = await twitterService.following(token, userId, email);
 
     if (result) {
       return res
@@ -157,6 +164,7 @@ exports.likes = async function (req, res, next) {
 
 exports.tweetLikes = async function (req, res, next) {
   try {
+    // console.log(req.query)
     // console.log('In Twitter Tweet Likes Controller');
     let result = await twitterService.tweetLikes(req, res);
 
@@ -185,10 +193,10 @@ exports.followMetrics = async function (req, res, next) {
   }
 };
 
-exports.ownedLists = async function (req, res, next) {
+exports.pinnedLists = async function (req, res, next) {
   try {
     console.log('In Twitter Tweet Follow Metrics Controller');
-    let result = await twitterService.ownedLists(req, res);
+    let result = await twitterService.pinnedLists(req, res);
 
     if (result) {
       return res
@@ -209,6 +217,21 @@ exports.nonPublic = async function (req, res, next) {
       return res
         .status(200)
         .json({ data: result.data });
+    }
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+
+exports.mutedUsers = async function (req, res, next) {
+  try {
+    // console.log('In Twitter Tweet Likes Controller');
+    let result = await twitterService.mutes(req, res);
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, data: result.data });
     }
   } catch (e) {
     return res.status(400).json({ message: e.message });

@@ -154,6 +154,48 @@ router.get(
   youtubeController.subscriptions
 );
 
+router.get(
+  '/youtube/channelInfo',
+  auth.verifyToken,
+  youtubeController.channelInfo
+);
+
+router.get(
+  '/youtube/videoList',
+  auth.verifyToken,
+  youtubeController.videoList
+);
+
+router.get(
+  '/youtube/myPopularVids',
+  auth.verifyToken,
+  youtubeController.myPopularVids
+);
+
+router.get(
+ '/youtube/mySubscribers',
+ auth.verifyToken,
+ youtubeController.mySubscribers
+);
+
+router.get(
+  '/youtube/myPopularCat',
+  auth.verifyToken,
+  youtubeController.myPopularCat
+);
+
+router.get(
+  '/youtube/myVidCats',
+  auth.verifyToken,
+  youtubeController.myVidCats
+);
+
+router.get(
+  '/youtube/myVidComments',
+  auth.verifyToken,
+  youtubeController.myVidComments
+);
+
 router.get('/youtube/mostSubscribers', auth.verifyToken, youtubeController.mostSubscribers);
 
 router.get('/youtube/likedVideos', auth.verifyToken, youtubeController.likedVideos);
@@ -343,9 +385,9 @@ router.get(
 router.post('/twitch/check', auth.verifyToken, twitchController.check);
 
 router.get(
-  '/twitter/ownedLists', 
+  '/twitter/pinnedLists', 
   auth.verifyToken, 
-  twitterController.ownedLists
+  twitterController.pinnedLists
 );
 
 router.get(
@@ -353,6 +395,13 @@ router.get(
   auth.verifyToken, 
   twitterController.nonPublic
 );
+
+router.get(
+  '/twitter/mutes', 
+  auth.verifyToken, 
+  twitterController.mutedUsers
+);
+
 
 /* Don't delete this, I use it to help update the schemas */
 router.post('/updateSchema', demoController.updateSchema);
