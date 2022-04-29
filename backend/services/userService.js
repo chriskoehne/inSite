@@ -533,3 +533,24 @@ exports.revokeAccess = async function (email, social) {
     return c.GENERAL_TRY_CATCH_ERR;
   }
 };
+
+exports.getAccessDetails = async function (email) {
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    // console.log(user);
+    return {
+      reddit: user.reddit,
+      twitter: user.twitter,
+      youtube: user.youtube,
+      twitch: user.twitch,
+
+    }
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+

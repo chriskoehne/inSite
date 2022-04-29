@@ -376,3 +376,19 @@ exports.revokeAccess = async function (req, res, next) {
     return res.status(400).json({ message: e.message });
   }
 };
+
+exports.getAccessDetails = async function (req, res, next) {
+  // console.log('getRedditData')
+  try {
+
+    let result = await userService.getAccessDetails(
+      req.query.email,
+    );
+
+    return res.status(200).json(result);
+  
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+};
+

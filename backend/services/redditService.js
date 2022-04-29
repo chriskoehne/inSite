@@ -441,16 +441,18 @@ exports.updateKarma = async function (email, karma) {
     }
 
     update['$push'] = {};
-    update['$push']['notificationsHouse.notifications'] = { notifications };
+    if (notifications.length !== 0) {
+      update['$push']['notificationsHouse.notifications'] = notifications;
+    }
     // if (
     //   karma.totalKarma !== redditMilestones.prevTotalKarma ||
     //   user.redditHistory.karmaHistory === []
     // ) {
-      update['$push']['redditHistory.karmaHistory'] = {
-        karma: karma.totalKarma,
-      };
+    update['$push']['redditHistory.karmaHistory'] = {
+      karma: karma.totalKarma,
+    };
     // }
-    // console.log(update);
+    console.log(update);
 
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {

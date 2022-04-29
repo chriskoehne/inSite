@@ -62,12 +62,13 @@ const YoutubeCard = (props) => {
       let end = currentUrl.indexOf('&scope');
       c = currentUrl.substring(start, end);
       setCode(c);
-    } else if (!hasToken()) { //this could be wrong
-      console.log(currentUrl.includes('code'))
-      console.log(currentUrl.includes('scope'))
-      console.log(currentUrl.includes('youtube'))
+    } else if (!hasToken()) {
+      //this could be wrong
+      console.log(currentUrl.includes('code'));
+      console.log(currentUrl.includes('scope'));
+      console.log(currentUrl.includes('youtube'));
       console.log('loading done stored2');
-      setLoading(false)
+      setLoading(false);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,7 +77,7 @@ const YoutubeCard = (props) => {
   useDidMountEffect(() => {
     const convert = async () => {
       if (!code) {
-        console.log('uhh')
+        console.log('uhh');
         setLoading(false);
         return;
       }
@@ -99,8 +100,8 @@ const YoutubeCard = (props) => {
     if (!hasToken() && code) {
       convert();
     } else {
-      console.log('hereee')
-      console.log(youtubeToken, code)
+      console.log('hereee');
+      console.log(youtubeToken, code);
       //this could be wrong
       console.log('loading done stored1');
 
@@ -140,8 +141,10 @@ const YoutubeCard = (props) => {
           }
         }
       }
-      
-      const youtubePlaylists = await axios.get('/youtube/playlists', {params: {client: youtubeToken}});
+
+      const youtubePlaylists = await axios.get('/youtube/playlists', {
+        params: { client: youtubeToken },
+      });
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
       let itemCounts = [];
@@ -149,7 +152,7 @@ const YoutubeCard = (props) => {
         itemCounts.push(item.contentDetails.itemCount);
       });
       setPlaylistCounts(itemCounts);
-      
+
       setLoading(false);
     };
     if (youtubeToken) {
@@ -186,6 +189,20 @@ const YoutubeCard = (props) => {
     return;
   };
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scale: {
+      ticks: {
+        precision: 0,
+        stepSize: 1,
+      },
+    },
+    // animation: {
+    //   duration: 0,
+    // },
+  };
+
   const display = () => {
     if (loading) {
       return <h2>Loading...</h2>;
@@ -200,6 +217,7 @@ const YoutubeCard = (props) => {
           label='Playlist Counts'
           xaxis='PlaylistCounts'
           color={'#ff3333'}
+          options={options}
         />
       );
     } else {

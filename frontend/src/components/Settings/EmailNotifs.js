@@ -50,7 +50,7 @@ const EmailNotifs = () => {
             <Switch
               onChange={() => toggle()}
               offColor={"#bebebe"}
-              onColor={"#ff4500"}
+              onColor={"#f9c449"}
               checked={optIn}
               /*TODO: Fix spacing */
             />

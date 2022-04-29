@@ -480,8 +480,11 @@ exports.updateFollowersNotifications = async function (email, numFollowers) {
         numFollowers: numFollowers,
       };
     }
-    update['$push']['notificationsHouse.notifications'] = notifications;
-    // console.log(update);
+    if (notifications && notifications.length !== 0 && notifications !== []) {
+      console.log(notifications);
+      update['$push']['notificationsHouse.notifications'] = notifications ;
+    }
+    console.log(update);
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;
@@ -526,10 +529,12 @@ exports.updateFollowingNotifications = async function (email, numFollowing) {
           (numFollowing - twitterMilestones.prevNumFollowing),
       });
     }
-    update['$push'] = {
-      ['notificationsHouse.notifications']: notifications,
-    };
-
+    if (notifications && notifications.length !== 0 && notifications !== []) {
+      update['$push'] = {
+        ['notificationsHouse.notifications']: notifications,
+      };
+    }
+    console.log(update)
     let result = await User.findOneAndUpdate(filter, update);
     if (result === null || result === undefined) {
       return c.USER_FIND_AND_UPDATE_ERR;

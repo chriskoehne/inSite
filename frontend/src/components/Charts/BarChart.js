@@ -7,7 +7,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  defaults
+  defaults,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
@@ -24,8 +24,7 @@ ChartJS.register(
   Legend
 );
 
-defaults.color  = document.body.classList.contains('dark') ? '#e3e3e3' : 'grey'
-
+defaults.color = document.body.classList.contains('dark') ? '#e3e3e3' : 'grey';
 
 const generateList = (min, max, steps) => {
   // minimum step size
@@ -132,6 +131,18 @@ const BarChart = (props) => {
     ],
   };
 
+  let options = props.options
+    ? props.options
+    : {
+        responsive: true,
+        maintainAspectRatio: false,
+        // animation: {
+        //   duration: 0,
+        // },
+      };
+
+  console.log(options)
+
   return (
     <div>
       <div style={{ height: props.height }}>
@@ -139,13 +150,7 @@ const BarChart = (props) => {
           data={data}
           onClick={props.onClick}
           ref={chartRef}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            // animation: {
-            //   duration: 0,
-            // },
-          }}
+          options={options}
         />
       </div>
       <RWebShare

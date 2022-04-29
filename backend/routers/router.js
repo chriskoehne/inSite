@@ -97,6 +97,9 @@ router.get('/user/reddit/', auth.verifyToken, userController.getRedditData);
 
 router.get('/user/twitter/', auth.verifyToken, userController.getTwitterHistory);
 
+router.get('/user/check/', auth.verifyToken, userController.getAccessDetails);
+
+
 router.get(
   '/user/phoneStatus/',
   auth.verifyToken,
