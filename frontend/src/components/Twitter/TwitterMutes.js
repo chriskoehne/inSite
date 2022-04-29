@@ -24,7 +24,7 @@ function getTweetsID(data) {
 const TwitterMutes = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
   const [twitterToken, setTwitterToken] = useState('');
-  const [mutedUser, setMutedUser] = useState('');
+  const [mutedUser, setMutedUser] = useState([]);
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {
@@ -72,7 +72,7 @@ const TwitterMutes = (props) => {
     }
 
     const getLikes = async () => {
-        // console.log('Calling Twitter API. Here is localStorage:');
+        console.log('Calling Twitter API. Here is localStorage:');
         // console.log(localStorage);
         const twitterQuery = {
             accessToken: twitterToken,
@@ -81,6 +81,7 @@ const TwitterMutes = (props) => {
         const twitterRes = await axios.get('/twitter/mutes', {
             params: twitterQuery,
         });
+        console.log(twitterRes)
         if (twitterRes) {
             let dataStore = []
             let data = twitterRes.data.data

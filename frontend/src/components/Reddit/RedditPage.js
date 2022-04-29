@@ -409,6 +409,8 @@ const RedditPage = (props) => {
       yAxes: [
         {
           ticks: {
+            stepSize: 1,
+            precision: 0,
             beginAtZero: true,
           },
         },
