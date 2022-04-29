@@ -6,14 +6,15 @@ import { Modal } from 'react-bootstrap';
 import styles from './createAccount.module.css';
 import ReactTooltip from 'react-tooltip';
 
+const QRCode = require('qrcode');
+
 const CreateAccount = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [phone, setPhone] = useState('');
-  const [formatPhone, setFormatPhone] = useState(''); //Different from phone (Visual Purposes Only)
-  const [smsCode, setSMSCode] = useState('');
+  const [secretCode, setSecretCode] = useState('');
+  const [qr, setqr] = useState('');
   const [errorText, setErrorText] = useState('');
   const [showErrorModal, setErrorModal] = useState('');
   const [verifyText, setVerifyText] = useState('');
@@ -29,14 +30,14 @@ const CreateAccount = (props) => {
   const handleCloseError = () => setErrorModal(false); // Handles Error Modal Close
   const handleClose = async (e) => {
     e.preventDefault();
-    console.log('verifying sms code');
+    console.log('verifying secret code');
     const body = {
       email: email,
-      code: smsCode,
+      code: secretCode,
     };
     try {
       const res = await axios.post('/verifyUser/', body);
-      if (res.status === 200) {
+      if (res.data.user.verified) {
         console.log(res.data.user);
         if (res.data.user.settings.darkMode) {
           document.body.classList.add('dark');
@@ -60,7 +61,6 @@ const CreateAccount = (props) => {
     const body = {
       email: email,
       password: password,
-      phone: phone,
     };
     console.log('lasdas');
     if (
@@ -88,12 +88,21 @@ const CreateAccount = (props) => {
     } else {
       axios
         .post('/userCreation/', body)
-        .then((res) => {
+        .then(async (res) => {
           console.log('now res is');
           console.log(res);
           if (res.status === 200) {
             console.log('the modal should popup now');
-            setShowModal(true);
+            try {
+              const data_url = await QRCode.toDataURL(res.data.message.otpauth_url)
+              console.log("qr code url is")
+              console.log(data_url);
+              setqr(data_url)
+              setShowModal(true);
+            } catch (err) {
+              console.log("qrcode generation error catch")
+              console.log(err)
+            }
           } else {
             // console.log('there was an error in user creation');
             setErrorText('there was an error in user creation');
@@ -111,21 +120,6 @@ const CreateAccount = (props) => {
     }
   };
 
-  // Formats Phone Number
-  function formatPhoneNumber(value) {
-    if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, '');
-    const phoneNumberLength = phoneNumber.length;
-    if (phoneNumberLength < 4) return phoneNumber;
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
-  }
-
   return (
     <div>
       <ReactTooltip/>
@@ -139,23 +133,22 @@ const CreateAccount = (props) => {
             }}
           >
             <Modal.Header>
-              <Modal.Title>Verify phone number</Modal.Title>
+              <Modal.Title>Scan QR code</Modal.Title>
             </Modal.Header>
             <Modal.Body className={styles.modalText}>
-              The phone number provided was used to create a two factor user.
-              Please enter the code sent to your phone to verify this
-              connection.
+              Please scan the qr code below with an authenticator.
               <div style={{ color: 'red' }}> {verifyText} </div>
               <form onSubmit={handleClose}>
+                <img src={qr}></img>
                 <div className='form-group'>
-                  <label>Code: </label>
+                  <label>Secret Code: </label>
                   <input
                     type='text'
                     className='form-control'
                     placeholder='Code'
                     ref={verifyRef}
                     onChange={(e) => {
-                      setSMSCode(e.target.value);
+                      setSecretCode(e.target.value);
                     }}
                   />
                 </div>
@@ -211,21 +204,6 @@ const CreateAccount = (props) => {
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
                 }}
-              />
-            </div>
-            <div className='form-group'>
-              <label>Phone: </label>
-              <input
-                data-tip='This phone # will be used for two-factor authentication on log-in'
-                type='text'
-                className='form-control'
-                placeholder='phone'
-                onChange={(e) => {
-                  const phoneNum = formatPhoneNumber(e.target.value);
-                  setFormatPhone(phoneNum);
-                  setPhone(e.target.value);
-                }}
-                value={formatPhone}
               />
             </div>
             <br></br>

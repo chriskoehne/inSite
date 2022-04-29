@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Row, Card, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Twitter.module.css';
+import Collapsible from 'react-collapsible';
+import { FaTwitter } from 'react-icons/fa';
 // import LineChart from '../Charts/LineChart';
 
 const TwitterFollows = (props) => {
@@ -76,7 +78,8 @@ const TwitterFollows = (props) => {
       // console.log(localStorage);
       const twitterQuery = {
         accessToken: twitterToken,
-        userID: localStorage.getItem('twitter-user-id')
+        userId: localStorage.getItem('twitter-user-id'),
+        email: localStorage.getItem('email'),
       };
       const twitterFollowersRes = await axios.get(
         '/twitter/followers',
@@ -147,7 +150,7 @@ const TwitterFollows = (props) => {
   }, [twitterToken]);
   
   return (
-    <Card style={{ borderColor: 'var(--twitter)', justifyContent: 'center'}} className={styles.socialsCard}>
+    <Card style={{ borderColor: 'var(--twitter)'}} className={styles.socialsCard}>
       <Row>
         <Col>
           <h1>
@@ -157,11 +160,30 @@ const TwitterFollows = (props) => {
             Most Recent Followers:<br></br>
           </h3>
             {Object.keys(followersMetrics).map((key, index) => (
-              <p key={index}>
-                <img style={{paddingRight : '10px'}} src={followersMetrics[key].profile_image_url} alt=""></img>
-                <a href={"https://www.twitter.com/" + followersMetrics[key].username} target="_blank" rel="noreferrer">{followersMetrics[key].name}</a>: 
-                Username: {followersMetrics[key].username}, Following: {followersMetrics[key].public_metrics.following_count}, Followers: {followersMetrics[key].public_metrics.followers_count}, Tweets: {followersMetrics[key].public_metrics.tweet_count}
-              </p>
+              <Collapsible trigger= {
+              <div key={index} className={styles.profile}>
+                <Row>              
+                  <Col xs={3}>
+                    <img style={{paddingRight : '10px'}} src={followersMetrics[key].profile_image_url} alt="" className={styles.pfp}></img>
+                  </Col>
+                  <Col xs={3} style={{marginTop: '.5vh'}}>
+                    <Row style={{ fontWeight: 'bold', fontSize: "20px" }}>
+                      {followersMetrics[key].name}
+                    </Row>
+                    <Row style={{ color: 'grey' }}>
+                      @{followersMetrics[key].username} 
+                    </Row>
+                  </Col>
+                  <Col>
+                    <Row style={{marginTop : '2.7vh', color: '#05aced'}}>
+                      <div>Click to View their Information      <FaTwitter /></div>
+                    </Row>
+                  </Col>
+                </Row>
+              </div>
+              }>
+                <div style={{ fontWeight: 'bold' }}>Followers: {followersMetrics[key].public_metrics.followers_count}, Following: {followersMetrics[key].public_metrics.following_count}, Tweets: {followersMetrics[key].public_metrics.tweet_count}, <a href={"https://www.twitter.com/" + followersMetrics[key].username} target="_blank" rel="noreferrer">View Profile</a></div>
+              </Collapsible>
             ))}
         </Col>
         <Col>
@@ -171,15 +193,36 @@ const TwitterFollows = (props) => {
           <h3>
             Most Recent Accounts You've Followed:<br></br>
           </h3>
-            {Object.keys(followedMetrics).map((key, index) => (
-              <p key={index}>
-                <img style={{paddingRight : '10px'}} src={followedMetrics[key].profile_image_url} alt=""></img> 
-                <a href={"https://www.twitter.com/" + followedMetrics[key].username} target="_blank" rel="noreferrer">{followedMetrics[key].name}</a>: 
-                Username: {followedMetrics[key].username}, Following: {followedMetrics[key].public_metrics.following_count}, Followers: {followedMetrics[key].public_metrics.followers_count}, Tweets: {followedMetrics[key].public_metrics.tweet_count}
-              </p>
+          {Object.keys(followedMetrics).map((key, index) => (
+              <Collapsible trigger= {
+              <div key={index} className={styles.profile}>
+                <Row>              
+                  <Col xs={3}>
+                    <img style={{paddingRight : '10px'}} src={followedMetrics[key].profile_image_url} alt="" className={styles.pfp}></img>
+                  </Col>
+                  <Col xs={3} style={{marginTop: '.5vh'}}>
+                    <Row style={{ fontWeight: 'bold', fontSize: "20px" }}>
+                      {followedMetrics[key].name}
+                    </Row>
+                    <Row style={{ color: 'grey' }}>
+                      @{followedMetrics[key].username} 
+                    </Row>
+                  </Col>
+                  <Col>
+                    <Row style={{marginTop : '2.7vh', marginLeft: '1vw', color: '#05aced'}}>
+                    <div>Click to View their Information      <FaTwitter /></div>
+                    </Row>
+                  </Col>
+                </Row>
+              </div>
+            }>
+                <div style={{ fontWeight: 'bold' }}>Followers: {followedMetrics[key].public_metrics.followers_count}, Following: {followedMetrics[key].public_metrics.following_count}, Tweets: {followedMetrics[key].public_metrics.tweet_count}, <a href={"https://www.twitter.com/" + followedMetrics[key].username} target="_blank" rel="noreferrer">View Profile</a></div>
+              </Collapsible>
             ))}
+            
         </Col>
       </Row>
+      
     </Card>
   );
 };

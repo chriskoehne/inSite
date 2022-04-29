@@ -3,13 +3,13 @@
  * @author Chris Koehne <cdkoehne@gmail.com>
  */
 
-
 console.log('\x1b[36m%s\x1b[0m', 'Starting BACKEND...');
 
 const express = require('express');
 var cors = require('cors');
 const cookieParser = require('cookie-parser');
 require('dotenv').config()
+var hallMonitor = require('./hallMonitor/hallMonitor');
 
 const PORT = process.env.PORT || 5000; //config port in env or jwt (dotenv required)
 
@@ -44,3 +44,6 @@ server.listen(PORT, () => {
   console.log(`BACKEND listening on port ${PORT} uwu...`);
 });
 
+setInterval(hallMonitor.monitor, 60000); // every 60 seconds
+setInterval(hallMonitor.socialsData, 30000);
+setInterval(hallMonitor.socialsDataTwitter, 10000);

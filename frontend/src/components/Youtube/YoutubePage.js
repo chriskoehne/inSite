@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Card, Carousel } from 'react-bootstrap';
+import { Button, Row, Card, Carousel } from 'react-bootstrap';
 import BarChart from '../Charts/BarChart';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
@@ -21,6 +21,7 @@ const YoutubePage = (props) => {
   const [popularVidsFromLiked, setPopularVids] = useState([]);
   const [popularVidsCategory, setPopularVidsCategory] = useState('');
   const [playlistCounts, setPlaylistCounts] = useState([]);
+  const [user, setUser] = useState({ email: '', code: '' });
 
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('youtubeToken')) {
@@ -51,13 +52,15 @@ const YoutubePage = (props) => {
     }
     const getData = async () => {
       setLoading(true);
+      console.log("in get data, token is")
+      console.log(youtubeToken)
       if (activity.length === 0) {
-        const act = await axios.get('/youtube/activity');
+        const act = await axios.get('/youtube/activity', {params: {client: youtubeToken}});
         console.log('got activity:');
         console.log(act);
         if (act.status === 200) {
           setActivity(act.data.list);
-          const subs = await axios.get('/youtube/subscriptions');
+          const subs = await axios.get('/youtube/subscriptions', {params: {client: youtubeToken}});
           console.log('got subs');
           console.log(subs);
           if (subs.status === 200) {
@@ -65,31 +68,32 @@ const YoutubePage = (props) => {
           }
         }
       }
-      const likedVids = await axios.get('/youtube/likedVideos');
+      const likedVids = await axios.get('/youtube/likedVideos', {params: {client: youtubeToken}});
       console.log('Liked Videos:');
       console.log(likedVids);
       setLikedVids(likedVids.data.list);
 
-      const popularVidsFromLiked = await axios.get(
-        '/youtube/popularVidsFromLiked'
-      );
+      const popularVidsFromLiked = await axios.get('/youtube/popularVidsFromLiked', {params: {client: youtubeToken}});
       console.log('Popular Vids From Liked:');
       console.log(popularVidsFromLiked);
       setPopularVids(popularVidsFromLiked.data.list);
       setPopularVidsCategory(
         c[popularVidsFromLiked.data.list[0].snippet.categoryId]
       );
-
-      const youtubePlaylists = await axios.get('/youtube/playlists');
+      
+      const youtubePlaylists = await axios.get('/youtube/playlists', {params: {client: youtubeToken}});
       // for each in youtubePlaylists.data.list:
       // item.contentDetails.itemCount
+      console.log("Youtube Playlists:")
+      console.log(youtubePlaylists)
       let itemCounts = [];
       youtubePlaylists.data.list.forEach((item) => {
         itemCounts.push(item.contentDetails.itemCount);
       });
       setPlaylistCounts(itemCounts);
-
+      
       setLoading(false);
+
     };
     getData();
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,7 +168,13 @@ const YoutubePage = (props) => {
                 subscriptions.map((sub) => (
                   <tr key={sub.id}>
                     <td>{sub.snippet.title}</td>
-                    <img alt='' src={sub.snippet.thumbnails.medium.url} />
+                    <a
+                      href={'https://youtube.com/c/' + sub.snippet.title}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <img alt='' src={sub.snippet.thumbnails.medium.url} />
+                    </a>
                   </tr>
                 ))}
             </div>
@@ -183,12 +193,19 @@ const YoutubePage = (props) => {
                       view count: {vid.statistics.viewCount} like count:{' '}
                       {vid.statistics.likeCount}
                     </td>
-                    <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    <a
+                      href={'https://youtube.com/watch?v=' + vid.id}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    </a>
                   </tr>
                 ))}
             </div>
           </Card>
         </Carousel.Item>
+        
         <Carousel.Item className={styles.slideshowCard}>
           <Card className={styles.socialsCard}>
             <h3>Popular Videos From Your Favorite Category</h3>
@@ -210,10 +227,37 @@ const YoutubePage = (props) => {
                       view count: {vid.statistics.viewCount} like count:{' '}
                       {vid.statistics.likeCount}
                     </td>
-                    <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    <a
+                      href={'https://youtube.com/watch?v=' + vid.id}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <img alt='' src={vid.snippet.thumbnails.medium.url} />
+                    </a>
                   </tr>
                 ))}
             </div>
+          </Card>
+        </Carousel.Item>
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+          <h3>Want to see metrics for your own videos?</h3>
+          <Button
+              className={`${styles.seeMore} ${styles.youtubeB}`}
+              data-tip={
+                hasToolTips()
+                  ? 'See more insights about your YouTube, such as playlist count and recommendations'
+                  : ''
+              }
+              //style={styles.seeMore}
+              onClick={function () {
+                props.navigate('youtubecc', {
+                  state: { email: user.email, accessToken: youtubeToken },
+                });
+              }}
+            >
+              Click Here
+            </Button>
           </Card>
         </Carousel.Item>
       </Carousel>

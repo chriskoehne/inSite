@@ -4,11 +4,12 @@ var btoa = require('btoa');
 var axios = require('axios');
 const { Agent } = require('http');
 var searchParams = require('url-search-params');
+const c = require('../constants/constants');
 
 if (process.env.DEV) {
-  var redirectURI = 'https://127.0.0.1:3000/dashboard/'
+  var redirectURI = 'https://127.0.0.1:3000/dashboard/';
 } else {
-  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard'
+  var redirectURI = 'https://d33jcvm0fuhn35.cloudfront.net/dashboard';
 }
 
 exports.test = async function (req, res) {
@@ -27,7 +28,7 @@ exports.test = async function (req, res) {
 
     return;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit test');
     return err;
   }
 };
@@ -36,26 +37,44 @@ exports.login = async function (email) {
   try {
     // console.log('In Reddit Login Service');
     const clientID = process.env.REDDIT_APP_ID;
-    
     const link =
       'https://www.reddit.com/api/v1/authorize?client_id=' +
       clientID +
-      '&response_type=code&state=reddit&redirect_uri=' + redirectURI + 
-      '&duration=temporary&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
+      '&response_type=code&state=reddit&redirect_uri=' +
+      redirectURI +
+      '&duration=permanent&scope=subscribe,vote,mysubreddits,save,read,privatemessages,identity,account,history';
 
     return { link: link, verificationString: email };
   } catch (err) {
     console.log(err);
-    console.log('big error catch');
+    console.log('big error catch reddit login');
     return err;
   }
 };
 
-exports.convert = async function (req, res) {
+exports.check = async function (email) {
+  try {
+    // console.log('In Reddit Login Service');
+    let result = await User.findOne({ email: email });
+    // console.log("in backend check, result is")
+    // console.log(result)
+    if (result.reddit) {
+      // if (result.reddit && !result.reddit.error) {
+      return result.reddit;
+    } else {
+      // console.log(result.reddit.error)
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+    console.log('big error catch reddit check');
+    return err;
+  }
+};
+
+exports.convert = async function (code, email) {
   try {
     // console.log("In Reddit Convert Service");
-    
-    const code = req.body.code;
 
     var params = new searchParams();
     params.set('grant_type', 'authorization_code');
@@ -66,9 +85,7 @@ exports.convert = async function (req, res) {
     const redditAppId = process.env.REDDIT_APP_ID;
     const redditSecret = process.env.REDDIT_SECRET;
 
-    const auth = btoa(
-      redditAppId + ':' + redditSecret
-    );
+    const auth = btoa(redditAppId + ':' + redditSecret);
     const finalAuth = 'Basic ' + auth;
 
     const headers = {
@@ -76,16 +93,76 @@ exports.convert = async function (req, res) {
       'User-Agent': 'inSite by inSite',
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    
+
     const redditRes = await axios.post(
       'https://www.reddit.com/api/v1/access_token',
       body,
       { headers: headers }
     );
-    
+
+    var intermediate = redditRes.data;
+
+    // delete intermediate.expires_in;
+    intermediate.expires_in =
+      Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
+
+    //for testing purposes
+    // intermediate.expires_in = Date.now() +  30000; // ten seconds before it actually expires
+
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { reddit: intermediate }
+    );
+
     return redditRes.data;
   } catch (err) {
-    console.log('reddit big error catch');
+    console.log('big error catch reddit convert');
+    // console.log(err)
+    return err;
+  }
+};
+
+exports.refresh = async function (token, email) {
+  try {
+    console.log('In Reddit refresh');
+
+    var params = new searchParams();
+    params.set('grant_type', 'refresh_token');
+    params.set('refresh_token', token);
+
+    const body = params;
+    const redditAppId = process.env.REDDIT_APP_ID;
+    const redditSecret = process.env.REDDIT_SECRET;
+
+    const auth = btoa(redditAppId + ':' + redditSecret);
+    const finalAuth = 'Basic ' + auth;
+
+    const headers = {
+      Authorization: finalAuth,
+      'User-Agent': 'inSite by inSite',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    const redditRes = await axios.post(
+      'https://www.reddit.com/api/v1/access_token',
+      body,
+      { headers: headers }
+    );
+
+    var intermediate = redditRes.data;
+
+    // delete intermediate.expires_in;
+    intermediate.expires_in =
+      Date.now() + intermediate.expires_in * 1000 - 10000; // ten seconds before it actually expires
+
+    let result = await User.findOneAndUpdate(
+      { email: email },
+      { reddit: intermediate }
+    );
+
+    return redditRes.data; //includes access token, etc
+  } catch (err) {
+    console.log('big error catch reddit refresh');
     // console.log(err)
     return err;
   }
@@ -94,9 +171,9 @@ exports.convert = async function (req, res) {
 exports.redditMe = async function (req, res) {
   try {
     // console.log('In Reddit Me Service');
-    
+
     const token = req.query.accessToken;
-    
+
     const finalAuth = 'bearer ' + token;
 
     const headers = {
@@ -108,19 +185,35 @@ exports.redditMe = async function (req, res) {
 
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit me');
     // console.log(err)
     return err;
   }
 };
 
-exports.userOverview = async function (req, res) {
+exports.redditUsername = async function (token) {
+  try {
+    // console.log('In Reddit Me Service');
+
+    const finalAuth = 'bearer ' + token;
+    const headers = {
+      Authorization: finalAuth,
+    };
+    const redditRes = await axios.get('https://oauth.reddit.com/api/v1/me', {
+      headers: headers,
+    });
+
+    return redditRes.data.name;
+  } catch (err) {
+    console.log('big error catch reddit username');
+    console.log(err.message);
+    return err;
+  }
+};
+
+exports.userOverview = async function (email, token, username) {
   try {
     // console.log('In Reddit Overview Service');
-    
-    const token = req.query.accessToken;
-    const username = req.query.username;
-    
     const finalAuth = 'bearer ' + token;
 
     const headers = {
@@ -130,21 +223,42 @@ exports.userOverview = async function (req, res) {
       'https://oauth.reddit.com/user/' + username + '/overview.json?limit=100',
       { headers: headers }
     );
-
-    return redditRes.data;
+    const redditData = redditRes.data;
+    let posts = [];
+    let comments = [];
+    let messages = [];
+    let array = redditData.data.children;
+    array.forEach(function (item, index) {
+      switch (item.kind) {
+        case c.COMMENT:
+          comments.push(item.data);
+          break;
+        case c.MESSAGE:
+          messages.push(item.data);
+          break;
+        case c.LINK:
+          posts.push(item.data);
+      }
+    });
+    const data = {
+      posts: posts,
+      comments: comments,
+      messages: messages,
+    };
+    exports.updateRedditData(email, 'overview', data); //we don't need to await the result from this
+    return data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit overview');
     // console.log(err)
     return err;
   }
 };
 
-exports.userComments = async function (req, res) {
+// I don't think we use this
+exports.userComments = async function (token, username) {
   try {
     // console.log('In Reddit Comments Service');
-    const token = req.query.accessToken;
-    const username = req.query.username;
-    
+
     const finalAuth = 'bearer ' + token;
     const headers = {
       Authorization: finalAuth,
@@ -153,18 +267,18 @@ exports.userComments = async function (req, res) {
       'https://oauth.reddit.com/user/' + username + '/comments.json?limit=100',
       { headers: headers }
     );
-    
+
     return redditRes.data;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit comments');
     return err;
   }
 };
 
-exports.userSubKarma = async function (req, res) {
+// I don't think we use this
+exports.userSubKarma = async function (email, token) {
   try {
     // console.log('In Reddit Sub Karma Service');
-    const token = req.query.accessToken;
 
     const finalAuth = 'bearer ' + token;
 
@@ -177,21 +291,19 @@ exports.userSubKarma = async function (req, res) {
       { headers: headers }
     );
 
-    return redditRes.data;
+    const subKarmaList = redditRes.data.data.slice(0, 5);
+    exports.updateRedditData(email, 'subKarma', subKarmaList);
+    return subKarmaList;
   } catch (err) {
-    console.log('big error catch');
+    console.log('big error catch reddit subkarma');
     // console.log(err)
-    const headers = {
-      Authorization: finalAuth,
-    };
+    return err;
   }
 };
 
-exports.userTotalKarma = async function (req, res) {
+exports.userTotalKarma = async function (email, token, username) {
   try {
     // console.log('In Reddit Total Karma Service');
-    const token = req.query.accessToken;
-    const username = req.query.username;
 
     const finalAuth = 'bearer ' + token;
 
@@ -199,69 +311,156 @@ exports.userTotalKarma = async function (req, res) {
       Authorization: finalAuth,
     };
 
-
     const redditRes = await axios.get(
       'https://oauth.reddit.com/user/' + username + '/about',
       { headers: headers }
     );
-    
-    return redditRes.data;
+    const user = await User.findOne({ email: email });
+    const karma = {
+      commentKarma: redditRes.data.data.comment_karma,
+      linkKarma: redditRes.data.data.link_karma,
+      awardKarma: redditRes.data.data.awardee_karma,
+      totalKarma: redditRes.data.data.total_karma,
+      redditHistory: user.redditHistory,
+    };
+    // console.log(totalKarma)
+    // exports.updateRedditData(email, 'totalKarma', totalKarma);
+    exports.updateKarma(email, karma);
+
+    return karma;
   } catch (err) {
-    console.log('big error catch');
-    // console.log(err)
-    const headers = {
-      Authorization: finalAuth,
+    console.log('big error catch reddit total karma');
+    return err;
+  }
+};
+
+exports.updateRedditData = async function (email, property, data) {
+  try {
+    // console.log('yo');
+    // console.log(email);
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    if (!user.settings.permissions.reddit) {
+      return c.USER_INVALID_PERMISSIONS;
+    }
+    const filter = { email: email };
+    const update = { [`redditData.${property}`]: data };
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    // console.log('success ' + property);
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
+  }
+};
+
+exports.updateKarma = async function (email, karma) {
+  try {
+    // console.log('yo');
+    // console.log(email);
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return c.USER_NOT_FOUND;
+    }
+    if (!user.settings.permissions.reddit) {
+      return c.USER_INVALID_PERMISSIONS;
+    }
+    const filter = { email: email };
+    let update = { ['redditData.karma']: karma };
+
+    let notifications = [];
+
+    const redditMilestones = user.notificationsHouse.redditMilestones;
+
+    if (false) {
+      // if (typeof(redditMilestones.prevTotalKarma) !== 'number') {
+      update['notificationsHouse.redditMilestones.prevTotalKarma'] =
+        karma.totalKarma;
+    } else if (karma.totalKarma - redditMilestones.prevTotalKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevTotalKarma'] =
+        karma.totalKarma;
+
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'total karma increased by ' +
+          (karma.totalKarma - redditMilestones.prevTotalKarma),
+      });
+    }
+    if (false) {
+      // if (typeof(redditMilestones.prevCommentKarma) !== 'number') {
+      update['notificationsHouse.redditMilestones.prevCommentKarma'] =
+        karma.commentKarma;
+    } else if (karma.commentKarma - redditMilestones.prevCommentKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevCommentKarma'] =
+        karma.commentKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'comment karma increased by ' +
+          (karma.commentKarma - redditMilestones.prevCommentKarma),
+      });
+    }
+    if (false) {
+      // if (typeof(redditMilestones.prevLinkKarma) !== 'number') {
+      update['notificationsHouse.redditMilestones.prevLinkKarma'] =
+        karma.linkKarma;
+    } else if (karma.linkKarma - redditMilestones.prevLinkKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevLinkKarma'] =
+        karma.linkKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'link karma increased by ' +
+          (karma.linkKarma - redditMilestones.prevLinkKarma),
+      });
+    }
+    if (false) {
+      // if (typeof(redditMilestones.prevAwardKarma) !== 'number') {
+      update['notificationsHouse.redditMilestones.prevAwardKarma'] =
+        karma.awardKarma;
+    } else if (karma.awardKarma - redditMilestones.prevAwardKarma >= 3) {
+      // do an update and create a notification
+      update['notificationsHouse.redditMilestones.prevAwardKarma'] =
+        karma.awardKarma;
+      notifications.push({
+        sm: 'reddit',
+        content:
+          'award karma increased by ' +
+          (karma.awardKarma - redditMilestones.prevAwardKarma),
+      });
+    }
+
+    update['$push'] = {};
+    if (notifications.length !== 0) {
+      update['$push']['notificationsHouse.notifications'] = notifications;
+    }
+    // if (
+    //   karma.totalKarma !== redditMilestones.prevTotalKarma ||
+    //   user.redditHistory.karmaHistory === []
+    // ) {
+    update['$push']['redditHistory.karmaHistory'] = {
+      karma: karma.totalKarma,
     };
+    // }
+    console.log(update);
 
-    exports.userOverview = async function (req, res) {
-      try {
-        // console.log('In Reddit Overview Controversial Service');
-        
-        const token = req.query.accessToken;
-        const username = req.query.username;
-        
-        const finalAuth = 'bearer ' + token;
-
-        const headers = {
-          Authorization: finalAuth,
-        };
-        const redditRes = await axios.get(
-          'https://oauth.reddit.com/user/' +
-            username +
-            '/overview?limit=100&sort=controversial',
-          { headers: headers }
-        );
-
-        return redditRes.data;
-      } catch (err) {
-        console.log('big error catch');
-        // console.log(err)
-        return err;
-      }
-    };
-
-    exports.userComments = async function (req, res) {
-      try {
-        // console.log('In Reddit Comments Controversial Service');
-        const token = req.query.accessToken;
-        const username = req.query.username;
-        
-        const finalAuth = 'bearer ' + token;
-        const headers = {
-          Authorization: finalAuth,
-        };
-        const redditRes = await axios.get(
-          'https://oauth.reddit.com/user/' +
-            username +
-            '/comments.json?limit=100&sort=controversial',
-          { headers: headers }
-        );
-        
-        return redditRes.data;
-      } catch (err) {
-        console.log('big error catch');
-        return err;
-      }
-    };
+    let result = await User.findOneAndUpdate(filter, update);
+    if (result === null || result === undefined) {
+      return c.USER_FIND_AND_UPDATE_ERR;
+    }
+    return c.SUCCESS;
+  } catch (err) {
+    console.log(err);
+    return c.GENERAL_TRY_CATCH_ERR;
   }
 };

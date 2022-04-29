@@ -7,12 +7,13 @@ import LineChart from '../Charts/LineChart';
 import { SocialIcon } from 'react-social-icons';
 import ReactTooltip from 'react-tooltip';
 import hasToolTips from '../../helpers/hasToolTips';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 
 const c = require('../Reddit/constants/constants');
 
 const TwitterCard = (props) => {
   const [user, setUser] = useState({ email: '', code: '' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [twitterToken, setTwitterToken] = useState('');
   const [chartDayData, setChartDayData] = useState({
     datasets: [],
@@ -44,6 +45,7 @@ const TwitterCard = (props) => {
     return { daysOfWeek: dayArr, numTweets: numComm };
   };
 
+  /* checks if localstorage has the token*/
   const hasToken = () => {
     if (!localStorage.hasOwnProperty('twitterToken')) {
       // console.log("no twitter token in localstorage")
@@ -59,33 +61,54 @@ const TwitterCard = (props) => {
     return true;
   };
 
+  /* gets the token from the database and sets it if there is one*/
   useEffect(() => {
-    let c = null;
-    const e = localStorage.getItem('email');
-    const currentUrl = window.location.href;
-    if (currentUrl.includes('state=twitter')) {
-      let start = currentUrl.indexOf('code') + 5;
-      c = currentUrl.substring(start);
-      setUser({
-        email: e,
-        code: c,
+    const doTheThing = async () => {
+      let ans = await axios.post('/twitter/check', {
+        params: { email: localStorage.getItem('email') },
       });
-    } else {
-      setUser({
-        email: e,
-      });
-    }
+      // console.log('in twitter card has token');
+      // console.log(ans);
+      if (ans.data.success) {
+        // ans.data.reddit
+        localStorage.setItem(
+          'twitterToken',
+          JSON.stringify({ token: ans.data.twitter.access_token })
+        );
+        setTwitterToken(ans.data.twitter.access_token);
+      } else {
+        let c = null;
+        const e = localStorage.getItem('email');
+        const currentUrl = window.location.href;
+        if (currentUrl.includes('state=twitter')) {
+          let start = currentUrl.indexOf('code') + 5;
+          c = currentUrl.substring(start);
+          setUser({
+            email: e,
+            code: c,
+          });
+        } else {
+          setUser({
+            email: e,
+          });
+          setLoading(false)
+        }
+      }
+    };
+    doTheThing();
   }, []);
 
-  useEffect(() => {
+
+
+  useDidMountEffect(() => {
     const convert = async () => {
-      setLoading(true);
       if (!user.code) {
         setLoading(false);
         return;
       }
       const result = await axios.post('/twitter/codeToToken/', {
         code: user.code,
+        email: user.email,
       });
       // console.log(result.data);
       if (result.data.accessToken) {
@@ -98,13 +121,14 @@ const TwitterCard = (props) => {
       } else {
         // console.log('could not convert token');
       }
+      console.log('uers');
       setLoading(false);
     };
 
-    if (!hasToken() && user.code) {
+    if (user.code) {
       convert();
-    } else if (hasToken()) {
-      setTwitterToken(JSON.parse(localStorage.getItem('twitterToken')).token);
+    } else {
+      console.log('yarp');
     }
   }, [user]);
 
@@ -119,7 +143,7 @@ const TwitterCard = (props) => {
     const getUser = async () => {
       // console.log('Calling Twitter API. Here is localStorage:');
       // console.log(localStorage);
-      console.log('Calling getUser');
+      // console.log('Calling getUser');
       const twitterQuery = {
         accessToken: twitterToken,
       };
@@ -128,10 +152,10 @@ const TwitterCard = (props) => {
       });
       if (twitterRes) {
         //console.log('Received Tweets from Twitter!');
-        console.log('This is the user data');
-        console.log(twitterRes.data);
-        console.log('This is the user id');
-        console.log(twitterRes.data.data.id);
+        // console.log('This is the user data');
+        // console.log(twitterRes.data);
+        // console.log('This is the user id');
+        // console.log(twitterRes.data.data.id);
         localStorage.setItem('twitter-user-id', twitterRes.data.data.id);
         setUserId(twitterRes.data.data.id);
       }
@@ -158,17 +182,24 @@ const TwitterCard = (props) => {
       // console.log('Calling Twitter API. Here is localStorage:');
       // console.log(localStorage);
       const id = localStorage.getItem('twitter-user-id');
-      console.log('TWITTER ID IN CARD: ' + id);
+      // console.log('TWITTER ID IN CARD: ' + id);
       const twitterQuery = {
         accessToken: twitterToken,
         userId: userId,
+        email: localStorage.getItem('email'),
       };
+      const twitterFollowersRes = axios.get('/twitter/followers', {
+        params: twitterQuery,
+      });
+      const twitterFollowedRes = await axios.get('/twitter/following', {
+        params: twitterQuery,
+      });
       const twitterRes = await axios.get('/twitter/tweetCount/', {
         params: twitterQuery,
       });
       if (twitterRes) {
-        console.log('Received Tweets from Twitter!');
-        console.log(twitterRes.data);
+        // console.log('Received Tweets from Twitter!');
+        // console.log(twitterRes.data);
         let timeArr = twitterRes.data;
         //console.log('TIMEARR: ' + timeArr)
         let dayDate = getDays(timeArr);
@@ -184,23 +215,37 @@ const TwitterCard = (props) => {
           ],
         };
         setChartDayData(dayDataset);
+        const twitterFollowersRes = axios.get('/twitter/followers', {
+          params: twitterQuery,
+        });
+        const twitterFollowedRes = await axios.get('/twitter/following', {
+          params: twitterQuery,
+        });
       } else {
-        console.log('Could not get Tweets from Twitter!');
+        // console.log('Could not get Tweets from Twitter!');
       }
+      setLoading(false);
     };
 
     if (twitterToken && userId) {
-      console.log('Calling Twitter');
+      // console.log('Calling Twitter');
       callTwitter();
     }
   }, [twitterToken, userId]);
+
+  // useDidMountEffect(() => {
+  //   if (!user.code && !twitterToken) {
+  //     console.log('yarp')
+  //     setLoading(false)
+  //   }
+  // })
 
   const authenticateTwitter = async (e) => {
     e.preventDefault();
     const result = await axios.post('/twitter/login/', {
       email: user.email,
     });
-    if (result.data.success) {
+    if (result.status === 200) {
       // console.log('got the link!');
       window.location.href = result.data.link;
     } else {
@@ -214,7 +259,7 @@ const TwitterCard = (props) => {
     }
     if (twitterToken) {
       return (
-        <div className={styles.centered}>
+        <div className={styles.centered} style={{marginTop: '5%'}}>
           <LineChart
             height={'20vh'}
             width={'45vw'}
@@ -244,7 +289,14 @@ const TwitterCard = (props) => {
   };
 
   const icon = () => {
-    return <SocialIcon fgColor='white' url='https://twitter.com/' />;
+    return (
+      <SocialIcon
+        fgColor='white'
+        url='https://twitter.com/'
+        target='blank'
+        rel='noreferrer'
+      />
+    );
   };
 
   return (
@@ -256,7 +308,7 @@ const TwitterCard = (props) => {
         <Card.Body>
           <Card.Title>
             {icon()} Twitter
-            {twitterToken ?
+            {twitterToken && chartDayData.datasets.length ? (
               <Button
                 className={`${styles.seeMore} ${styles.twitterB}`}
                 data-tip={
@@ -273,7 +325,7 @@ const TwitterCard = (props) => {
               >
                 See more
               </Button>
-          : null}
+            ) : null}
           </Card.Title>
           <Card.Text></Card.Text>
           <div>{display()}</div>

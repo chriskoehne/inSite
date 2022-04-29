@@ -7,6 +7,9 @@ import Customization from './Customization';
 import ChangePassword from './ChangePassword';
 import DeleteAccount from './DeleteAccount';
 import Permissions from './Permissions';
+import RevokeAccess from './RevokeAccess';
+import TextNotifs from './TextNotifs';
+import EmailNotifs from './EmailNotifs';
 
 const SettingsDrawer = (props) => {
   return (
@@ -31,6 +34,21 @@ const SettingsDrawer = (props) => {
       <Nav.Item>
         <Nav.Link className={styles.settingsLinks} href='/settings#permissions'>
           Permissions
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link className={styles.settingsLinks} href='/settings#revokeAccess'>
+          Revoke Access
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link className={styles.settingsLinks} href='/settings#textNotifs'>
+          Text Notifications
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link className={styles.settingsLinks} href='/settings#emailNotifs'>
+          Email Notifications
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
@@ -84,6 +102,12 @@ const Settings = (props) => {
           <ChangePassword />
           <hr />
           <Permissions />
+          <hr />
+          <RevokeAccess />
+          <hr />
+          <TextNotifs />
+          <hr />
+          <EmailNotifs />
           <hr />
           <Logout />
           <hr />

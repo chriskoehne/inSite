@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import BarChart from '../Charts/BarChart';
 import LineChart from '../Charts/LineChart';
 import { useNavigate } from 'react-router';
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -70,6 +71,10 @@ const RedditPage = (props) => {
   const [chartThirtyData, setChartThirtyData] = useState({
     datasets: [],
   });
+  const [chartHistoryData, setChartHistoryData] = useState({
+    datasets: [],
+  });
+  
   // const [chartOptions, setChartOptions] = useState({});
 
   const hasToken = () => {
@@ -94,21 +99,50 @@ const RedditPage = (props) => {
         const ans = await axios.get('/user/reddit', {
           params: { email: localStorage.getItem('email') },
         });
+        console.log('ans');
+        console.log(ans);
+        console.log(ans.data.message[0])
         if (
           ans.status === 200 &&
           ans.data.message !== null &&
-          !isFalsy(ans.data.message)
+          !isFalsy(ans.data.message) &&
+          !isFalsy(ans.data.message[0].overview)
         ) {
-          const redditData = ans.data.message;
-          console.log(redditData.overview);
+          const redditData = ans.data.message[0];
+          console.log(redditData.karma)
           setPosts(redditData.overview.posts);
           setComments(redditData.overview.comments);
           setSubKarmaList(redditData.subKarma);
-          setCommentKarma(redditData.totalKarma.commentKarma);
-          setLinkKarma(redditData.totalKarma.linkKarma);
-          setAwardKarma(redditData.totalKarma.awardKarma);
-          setTotalKarma(redditData.totalKarma.totalKarma);
+          setCommentKarma(redditData.karma.commentKarma);
+          setLinkKarma(redditData.karma.linkKarma);
+          setAwardKarma(redditData.karma.awardKarma);
+          setTotalKarma(redditData.karma.totalKarma);
           console.log('loading done 1');
+
+          const history = ans.data.message[1].karmaHistory;
+            console.log('history is')
+            console.log(history)
+            let labels = []
+            let karmaScores = []
+            
+            history.forEach(obj => {
+              let date = new Date(obj.time);
+              labels.push(date.toLocaleString());
+              karmaScores.push(obj.karma);
+            });
+            let historyDataset = {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Total Karma',
+                  data: karmaScores,
+                  borderColor: '#ff4500',
+                  backgroundColor: '#ff4500',
+                },
+              ],
+            };
+
+            setChartHistoryData(historyDataset);
           return true;
         } else {
           return false;
@@ -200,10 +234,12 @@ const RedditPage = (props) => {
         },
       ],
     };
+    
     setChartThirtyData(thirtyDataset);
     setChartDayData(dayDataset);
     setChartMonthData(monthsDataset);
     setMostControversialComment(mostControversial);
+    
   }, [comments]);
 
   useDidMountEffect(() => {
@@ -257,28 +293,13 @@ const RedditPage = (props) => {
           const redditUserQuery = {
             accessToken: redditToken,
             username: ansMe.data.name,
+            email: localStorage.getItem('email'),
           };
           const ansOverview = await axios.get('/reddit/userOverview', {
             params: redditUserQuery,
           });
           if (ansOverview.status === 200) {
             // console.log('reddit overview worked');
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'overview',
-                  data: ansOverview.data,
-                };
-
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
             setPosts(ansOverview.data.posts);
             setComments(ansOverview.data.comments);
           }
@@ -287,22 +308,6 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansSubKarma.status === 200) {
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'subKarma',
-                  data: ansSubKarma.data.subKarmaList,
-                };
-
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
             setSubKarmaList(ansSubKarma.data.subKarmaList);
           }
 
@@ -310,26 +315,12 @@ const RedditPage = (props) => {
             params: redditUserQuery,
           });
           if (ansTotalKarma.status === 200) {
-            // console.log('reddit karma worked');
-            try {
-              if (
-                JSON.parse(localStorage.getItem('settings')).permissions.reddit
-              ) {
-                const body = {
-                  email: localStorage.getItem('email'),
-                  property: 'totalKarma',
-                  data: ansTotalKarma.data,
-                };
-                const storeData = await axios.post('/user/reddit', body);
-                console.log(storeData);
-              }
-            } catch (err) {
-              console.log(err);
-            }
             setCommentKarma(ansTotalKarma.data.commentKarma);
             setLinkKarma(ansTotalKarma.data.linkKarma);
             setAwardKarma(ansTotalKarma.data.awardKarma);
             setTotalKarma(ansTotalKarma.data.totalKarma);
+          } else {
+            console.log('uhhh')
           }
         }
       }
@@ -418,6 +409,8 @@ const RedditPage = (props) => {
       yAxes: [
         {
           ticks: {
+            stepSize: 1,
+            precision: 0,
             beginAtZero: true,
           },
         },
@@ -449,10 +442,15 @@ const RedditPage = (props) => {
         onSelect={handleSelect}
       >
         <Carousel.Item className={styles.slideshowCard}>
-          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
+          <Card
+            style={{ justifyContent: 'center' }}
+            className={styles.socialsCard}
+          >
             <Row>
               <h2>Karma Overview</h2>
-              <br /><br /><br />
+              <br />
+              <br />
+              <br />
               <Col>
                 <h4
                   data-tip={
@@ -494,10 +492,14 @@ const RedditPage = (props) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col><h5>Number of Posts: {posts.length}</h5></Col>
-                  <Col><h5>Number of Comments: {comments.length}</h5></Col>
+                  <Col>
+                    <h5>Number of Posts: {posts.length}</h5>
+                  </Col>
+                  <Col>
+                    <h5>Number of Comments: {comments.length}</h5>
+                  </Col>
                 </Row>
-                <br/>
+                <br />
                 <Row>
                   <h3>Top Subreddits</h3>
                   {Object.keys(subKarmaList).map((key, index) => (
@@ -714,7 +716,10 @@ const RedditPage = (props) => {
           </Card>
         </Carousel.Item>
         <Carousel.Item className={styles.slideshowCard}>
-          <Card style={{justifyContent: 'center'}} className={styles.socialsCard}>
+          <Card
+            style={{ justifyContent: 'center' }}
+            className={styles.socialsCard}
+          >
             <Row>
               <Col>
                 <h3>
@@ -773,7 +778,27 @@ const RedditPage = (props) => {
             </Row>
           </Card>
         </Carousel.Item>
+        {console.log(chartHistoryData)}
+        <Carousel.Item className={styles.slideshowCard}>
+          <Card className={styles.socialsCard}>
+            <Row className={styles.chartContainer}>
+              <Line
+                height={'50vh'}
+                width={'75vw'}
+                color={'#ff4500'}
+                data={chartHistoryData}
+                options={options}
+              />
+            { chartHistoryData.datasets ?
+              <div style={{ paddingTop: '2%' }}>
+              
+                Here we see a graphical representation of a user's total karma score over time
+              </div> : <div>No data (give inSite permissions to collect data in Settings)</div>}
+            </Row>
+          </Card>
+        </Carousel.Item>
       </Carousel>
+      
       <ReactTooltip />
     </div>
   );
