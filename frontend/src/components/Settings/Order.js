@@ -36,25 +36,25 @@ let socialMedias = [
     ),
   },
   {
-    id: 'instagram',
-    name: 'Instagram',
-    icon: (
-      <SocialIcon
-        fgColor='white'
-        network='instagram'
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      />
-    ),
-  },
-  {
     id: 'youtube',
     name: 'YouTube',
     icon: (
       <SocialIcon
         fgColor='white'
         network='youtube'
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      />
+    ),
+  },  
+  {
+    id: 'twitch',
+    name: 'Twitch',
+    icon: (
+      <SocialIcon
+        fgColor='white'
+        network='twitch'
         onClick={(e) => {
           e.preventDefault();
         }}

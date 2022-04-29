@@ -21,6 +21,30 @@
   padding-bottom: 2%;
 }
 
+.centered {
+  display: flex;
+  text-align: center;
+}
+
+.channelCard {
+  padding: 1%;
+  height: 80vh;
+  border-color: var(--reddit);
+  margin-left: 10%;
+  margin-right: 10%;
+  overflow-y: scroll;
+  background-color: rgba(255, 255, 255, 0);
+  /* border-width: 0.5vh; */
+}
+
+.left {
+  display: flexbox;
+  flex-flow: column;
+  height: 100vh;
+  text-align: left;
+  margin-top: 2%;
+}
+
 .socialsCard {
   padding: 1%;
   height: 80vh;
@@ -67,3 +91,13 @@
   height: 139px;
   border: none;
 }
+
+.seeMore {
+  font-size: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 10%;
+  color: white;
+  font-weight: bold;
+}      

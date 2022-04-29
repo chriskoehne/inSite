@@ -9,6 +9,10 @@ import { useNavigate } from 'react-router';
 import TwitterFollows from './TwitterFollows';
 import TwitterMost from './TwitterMost';
 import TwitterLikesGraph from './TwitterLikesGraph';
+import TwitterList from './TwitterList'; 
+import TwitterNonPublic from './TwitterNonPublic';
+import TwitterMutes from './TwitterMutes';
+import TwitterFollowersHistory from './TwitterFollowersHistory';
 
 const c = require('../Reddit/constants/constants');
 
@@ -54,14 +58,14 @@ const TwitterPage = (props) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-      if (!hasToken() && twitterToken) {
-        localStorage.setItem(
-          'twitterToken',
-          JSON.stringify({ token: twitterToken, date: Date.now() })
-        );
-      }
-    
+  useEffect(() => {
+    if (!hasToken() && twitterToken) {
+      localStorage.setItem(
+        'twitterToken',
+        JSON.stringify({ token: twitterToken, date: Date.now() })
+      );
+    }
+  
     const getUser = async () => {
       // console.log('Calling Twitter API. Here is localStorage:');
       // console.log(localStorage);
@@ -194,6 +198,18 @@ const TwitterPage = (props) => {
           </Carousel.Item>
           <Carousel.Item>
             <TwitterLikesGraph />
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterNonPublic />
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterMutes />
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterList />
+          </Carousel.Item>
+          <Carousel.Item>
+            <TwitterFollowersHistory />
           </Carousel.Item>
       </Carousel>
     </div>
